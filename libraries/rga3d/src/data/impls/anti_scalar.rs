@@ -79,7 +79,7 @@ impl std::ops::Add<Horizon> for AntiScalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -89,9 +89,9 @@ impl std::ops::Add<Line> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().extend_to_4(self[e1234]),
+            other.group0().with_w(self[e1234]),
             // e23, e31, e12, scalar
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
         );
     }
 }
@@ -105,7 +105,7 @@ impl std::ops::Add<Motor> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e1234]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e1234]),
             // e23, e31, e12, scalar
             other.group1(),
         );
@@ -141,7 +141,7 @@ impl std::ops::Add<Origin> for AntiScalar {
             // scalar, e1234
             Simd32x2::from([0.0, self[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -433,7 +433,7 @@ impl std::ops::Sub<Horizon> for AntiScalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -450,9 +450,9 @@ impl std::ops::Sub<Line> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, scalar
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -469,7 +469,7 @@ impl std::ops::Sub<Motor> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().truncate_to_3().extend_to_4(self[e1234] - other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e1234] - other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, scalar
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -513,7 +513,7 @@ impl std::ops::Sub<Origin> for AntiScalar {
             // scalar, e1234
             Simd32x2::from([0.0, self[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12

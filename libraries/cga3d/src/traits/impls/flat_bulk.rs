@@ -45,7 +45,7 @@ impl FlatBulk for AntiDipoleInversion {
             // e235, e315, e125, e321
             Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(self[e5]),
+            Simd32x3::from(0.0).with_w(self[e5]),
         );
     }
 }
@@ -104,7 +104,7 @@ impl FlatBulk for AntiFlector {
             // e235, e315, e125, e321
             Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(self[e5]),
+            Simd32x3::from(0.0).with_w(self[e5]),
         );
     }
 }
@@ -117,7 +117,7 @@ impl std::ops::Div<flat_bulk> for AntiLine {
 impl FlatBulk for AntiLine {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group1().extend_to_4(0.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group1().with_w(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for AntiMotor {
@@ -134,7 +134,7 @@ impl FlatBulk for AntiMotor {
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -160,7 +160,7 @@ impl std::ops::Div<flat_bulk> for Circle {
 impl FlatBulk for Circle {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group2().extend_to_4(0.0));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group2().with_w(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for CircleRotor {
@@ -185,7 +185,7 @@ impl std::ops::Div<flat_bulk> for Dipole {
 impl FlatBulk for Dipole {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group2().extend_to_4(0.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group2().with_w(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for DipoleInversion {
@@ -202,7 +202,7 @@ impl FlatBulk for DipoleInversion {
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -261,7 +261,7 @@ impl FlatBulk for Flector {
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -274,7 +274,7 @@ impl std::ops::Div<flat_bulk> for Line {
 impl FlatBulk for Line {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group1().extend_to_4(0.0));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group1().with_w(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for Motor {
@@ -291,7 +291,7 @@ impl FlatBulk for Motor {
             // e235, e315, e125, e321
             Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(self[e5]),
+            Simd32x3::from(0.0).with_w(self[e5]),
         );
     }
 }
@@ -330,7 +330,7 @@ impl FlatBulk for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -389,7 +389,7 @@ impl FlatBulk for VersorEven {
             // e235, e315, e125, e321
             Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(self[e5]),
+            Simd32x3::from(0.0).with_w(self[e5]),
         );
     }
 }
@@ -407,7 +407,7 @@ impl FlatBulk for VersorOdd {
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }

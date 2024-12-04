@@ -36,7 +36,7 @@ impl UnitizedCenterNormSquared for AntiCircleRotor {
     //  no simd        6       16        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for AntiDipoleInversion {
@@ -55,7 +55,7 @@ impl UnitizedCenterNormSquared for AntiDipoleInversion {
     //  no simd        9       20        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for Circle {
@@ -74,7 +74,7 @@ impl UnitizedCenterNormSquared for Circle {
     //  no simd        5       13        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for CircleRotor {
@@ -93,7 +93,7 @@ impl UnitizedCenterNormSquared for CircleRotor {
     //  no simd        6       14        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for Dipole {
@@ -112,7 +112,7 @@ impl UnitizedCenterNormSquared for Dipole {
     //  no simd        5       15        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for DipoleInversion {
@@ -131,7 +131,7 @@ impl UnitizedCenterNormSquared for DipoleInversion {
     //  no simd        9       28        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for MultiVector {
@@ -151,7 +151,7 @@ impl UnitizedCenterNormSquared for MultiVector {
     //  no simd       95      123        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for VersorEven {
@@ -170,7 +170,7 @@ impl UnitizedCenterNormSquared for VersorEven {
     //  no simd       10       21        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_center_norm_squared> for VersorOdd {
@@ -189,6 +189,6 @@ impl UnitizedCenterNormSquared for VersorOdd {
     //  no simd       10       29        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }

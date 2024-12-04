@@ -27,9 +27,9 @@ impl std::ops::Add<AntiScalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(0.0),
+            self.group1().with_w(0.0),
         );
     }
 }
@@ -39,9 +39,9 @@ impl std::ops::Add<DualNum> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(other[scalar]),
+            self.group1().with_w(other[scalar]),
         );
     }
 }
@@ -76,7 +76,7 @@ impl std::ops::Add<Horizon> for Line {
             // e23, e31, e12
             self.group1(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -105,9 +105,9 @@ impl std::ops::Add<Motor> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(other[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1().with_w(other[scalar]),
         );
     }
 }
@@ -140,7 +140,7 @@ impl std::ops::Add<Origin> for Line {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
@@ -190,9 +190,9 @@ impl std::ops::Add<Scalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(0.0),
+            self.group0().with_w(0.0),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(other[scalar]),
+            self.group1().with_w(other[scalar]),
         );
     }
 }
@@ -481,9 +481,9 @@ impl std::ops::Sub<AntiScalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(0.0),
+            self.group1().with_w(0.0),
         );
     }
 }
@@ -496,9 +496,9 @@ impl std::ops::Sub<DualNum> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(other[scalar] * -1.0),
+            self.group1().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -540,7 +540,7 @@ impl std::ops::Sub<Horizon> for Line {
             // e23, e31, e12
             self.group1(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -572,9 +572,9 @@ impl std::ops::Sub<Motor> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() - other.group0().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group0().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, scalar
-            (self.group1() - other.group1().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group1() - other.group1().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -614,7 +614,7 @@ impl std::ops::Sub<Origin> for Line {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
@@ -675,9 +675,9 @@ impl std::ops::Sub<Scalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().extend_to_4(0.0),
+            self.group0().with_w(0.0),
             // e23, e31, e12, scalar
-            self.group1().extend_to_4(other[scalar] * -1.0),
+            self.group1().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -707,12 +707,7 @@ impl TryFrom<Motor> for Line {
             error.push('}');
             return Err(error);
         }
-        return Ok(Line::from_groups(
-            // e41, e42, e43
-            motor.group0().truncate_to_3(),
-            // e23, e31, e12
-            motor.group1().truncate_to_3(),
-        ));
+        return Ok(Line::from_groups(/* e41, e42, e43 */ motor.group0().xyz(), /* e23, e31, e12 */ motor.group1().xyz()));
     }
 }
 

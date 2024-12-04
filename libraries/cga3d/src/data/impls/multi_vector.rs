@@ -41,11 +41,11 @@ impl std::ops::Add<AntiCircleRotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -70,11 +70,11 @@ impl std::ops::AddAssign<AntiCircleRotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -104,7 +104,7 @@ impl std::ops::Add<AntiDipoleInversion> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + other.group3().truncate_to_3().extend_to_4(other[e4]),
+            self.group1() + other.group3().xyz().with_w(other[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -118,7 +118,7 @@ impl std::ops::Add<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             other.group0() + self.group7(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -133,7 +133,7 @@ impl std::ops::AddAssign<AntiDipoleInversion> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + other.group3().truncate_to_3().extend_to_4(other[e4]),
+            self.group1() + other.group3().xyz().with_w(other[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -147,7 +147,7 @@ impl std::ops::AddAssign<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             other.group0() + self.group7(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -186,7 +186,7 @@ impl std::ops::Add<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9().truncate_to_3().extend_to_4(other[e3215] + self[e3215]),
+            self.group9().xyz().with_w(other[e3215] + self[e3215]),
             // e1234
             self[e1234],
         );
@@ -215,7 +215,7 @@ impl std::ops::AddAssign<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9().truncate_to_3().extend_to_4(other[e3215] + self[e3215]),
+            self.group9().xyz().with_w(other[e3215] + self[e3215]),
             // e1234
             self[e1234],
         );
@@ -246,11 +246,11 @@ impl std::ops::Add<AntiFlatPoint> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6().truncate_to_3().extend_to_4(other[e321] + self[e321]),
+            self.group6().xyz().with_w(other[e321] + self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group0().truncate_to_3(),
+            self.group8() + other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -275,11 +275,11 @@ impl std::ops::AddAssign<AntiFlatPoint> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6().truncate_to_3().extend_to_4(other[e321] + self[e321]),
+            self.group6().xyz().with_w(other[e321] + self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group0().truncate_to_3(),
+            self.group8() + other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -303,7 +303,7 @@ impl std::ops::Add<AntiFlector> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().xyz().with_w(self[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -313,11 +313,11 @@ impl std::ops::Add<AntiFlector> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6().truncate_to_3().extend_to_4(other[e321] + self[e321]),
+            self.group6().xyz().with_w(other[e321] + self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group0().truncate_to_3(),
+            self.group8() + other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -332,7 +332,7 @@ impl std::ops::AddAssign<AntiFlector> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().xyz().with_w(self[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -342,11 +342,11 @@ impl std::ops::AddAssign<AntiFlector> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6().truncate_to_3().extend_to_4(other[e321] + self[e321]),
+            self.group6().xyz().with_w(other[e321] + self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group0().truncate_to_3(),
+            self.group8() + other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -373,7 +373,7 @@ impl std::ops::Add<AntiLine> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e45]),
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
@@ -402,7 +402,7 @@ impl std::ops::AddAssign<AntiLine> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e45]),
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
@@ -441,11 +441,11 @@ impl std::ops::Add<AntiMotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e45]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e45]),
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
-            self.group5() + other.group0().truncate_to_3(),
+            self.group5() + other.group0().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -453,7 +453,7 @@ impl std::ops::Add<AntiMotor> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9().truncate_to_3().extend_to_4(other[e3215] + self[e3215]),
+            self.group9().xyz().with_w(other[e3215] + self[e3215]),
             // e1234
             self[e1234],
         );
@@ -470,11 +470,11 @@ impl std::ops::AddAssign<AntiMotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e45]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e45]),
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
-            self.group5() + other.group0().truncate_to_3(),
+            self.group5() + other.group0().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -482,7 +482,7 @@ impl std::ops::AddAssign<AntiMotor> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9().truncate_to_3().extend_to_4(other[e3215] + self[e3215]),
+            self.group9().xyz().with_w(other[e3215] + self[e3215]),
             // e1234
             self[e1234],
         );
@@ -503,7 +503,7 @@ impl std::ops::Add<AntiPlane> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().xyz().with_w(self[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -532,7 +532,7 @@ impl std::ops::AddAssign<AntiPlane> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().xyz().with_w(self[e4]),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -713,7 +713,7 @@ impl std::ops::Add<CircleRotor> for MultiVector {
             // e423, e431, e412
             other.group0() + self.group7(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -742,7 +742,7 @@ impl std::ops::AddAssign<CircleRotor> for MultiVector {
             // e423, e431, e412
             other.group0() + self.group7(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -769,11 +769,11 @@ impl std::ops::Add<Dipole> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().extend_to_4(other[e45]),
+            self.group3() + other.group2().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -798,11 +798,11 @@ impl std::ops::AddAssign<Dipole> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().extend_to_4(other[e45]),
+            self.group3() + other.group2().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -836,11 +836,11 @@ impl std::ops::Add<DipoleInversion> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -865,11 +865,11 @@ impl std::ops::AddAssign<DipoleInversion> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             other.group0() + self.group4(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -1100,7 +1100,7 @@ impl std::ops::Add<Line> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
@@ -1129,7 +1129,7 @@ impl std::ops::AddAssign<Line> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
@@ -1168,11 +1168,11 @@ impl std::ops::Add<Motor> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e321]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().xyz().with_w(self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group1().truncate_to_3(),
+            self.group8() + other.group1().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -1197,11 +1197,11 @@ impl std::ops::AddAssign<Motor> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e321]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().xyz().with_w(self[e321]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() + other.group1().truncate_to_3(),
+            self.group8() + other.group1().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -1564,9 +1564,9 @@ impl std::ops::Add<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             self.group6() + other.group1(),
             // e423, e431, e412
-            self.group7() + other.group0().truncate_to_3(),
+            self.group7() + other.group0().xyz(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -1593,9 +1593,9 @@ impl std::ops::AddAssign<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             self.group6() + other.group1(),
             // e423, e431, e412
-            self.group7() + other.group0().truncate_to_3(),
+            self.group7() + other.group0().xyz(),
             // e235, e315, e125
-            self.group8() + other.group2().truncate_to_3(),
+            self.group8() + other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -1624,11 +1624,11 @@ impl std::ops::Add<VersorOdd> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
-            self.group4() + other.group0().truncate_to_3(),
+            self.group4() + other.group0().xyz(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -1653,11 +1653,11 @@ impl std::ops::AddAssign<VersorOdd> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() + other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() + other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
-            self.group4() + other.group0().truncate_to_3(),
+            self.group4() + other.group0().xyz(),
             // e23, e31, e12
-            self.group5() + other.group1().truncate_to_3(),
+            self.group5() + other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -2151,7 +2151,7 @@ impl From<AntiCircleRotor> for MultiVector {
             // e41, e42, e43
             from_anti_circle_rotor.group0(),
             // e23, e31, e12
-            from_anti_circle_rotor.group1().truncate_to_3(),
+            from_anti_circle_rotor.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2192,7 +2192,7 @@ impl From<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             from_anti_dipole_inversion.group0(),
             // e235, e315, e125
-            from_anti_dipole_inversion.group2().truncate_to_3(),
+            from_anti_dipole_inversion.group2().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2224,7 +2224,7 @@ impl From<AntiDualNum> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_anti_dual_num[e3215]),
+            Simd32x3::from(0.0).with_w(from_anti_dual_num[e3215]),
             // e1234
             0.0,
         );
@@ -2248,11 +2248,11 @@ impl From<AntiFlatPoint> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(from_anti_flat_point[e321]),
+            Simd32x3::from(0.0).with_w(from_anti_flat_point[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            from_anti_flat_point.group0().truncate_to_3(),
+            from_anti_flat_point.group0().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2278,11 +2278,11 @@ impl From<AntiFlector> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(from_anti_flector[e321]),
+            Simd32x3::from(0.0).with_w(from_anti_flector[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            from_anti_flector.group0().truncate_to_3(),
+            from_anti_flector.group0().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2336,7 +2336,7 @@ impl From<AntiMotor> for MultiVector {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            from_anti_motor.group0().truncate_to_3(),
+            from_anti_motor.group0().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2344,7 +2344,7 @@ impl From<AntiMotor> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_anti_motor[e3215]),
+            Simd32x3::from(0.0).with_w(from_anti_motor[e3215]),
             // e1234
             0.0,
         );
@@ -2461,7 +2461,7 @@ impl From<CircleRotor> for MultiVector {
             // e423, e431, e412
             from_circle_rotor.group0(),
             // e235, e315, e125
-            from_circle_rotor.group2().truncate_to_3(),
+            from_circle_rotor.group2().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2485,7 +2485,7 @@ impl From<Dipole> for MultiVector {
             // e41, e42, e43
             from_dipole.group0(),
             // e23, e31, e12
-            from_dipole.group1().truncate_to_3(),
+            from_dipole.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2515,7 +2515,7 @@ impl From<DipoleInversion> for MultiVector {
             // e41, e42, e43
             from_dipole_inversion.group0(),
             // e23, e31, e12
-            from_dipole_inversion.group1().truncate_to_3(),
+            from_dipole_inversion.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2669,7 +2669,7 @@ impl From<Motor> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            from_motor.group1().truncate_to_3(),
+            from_motor.group1().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2816,9 +2816,9 @@ impl From<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             from_versor_even.group1(),
             // e423, e431, e412
-            from_versor_even.group0().truncate_to_3(),
+            from_versor_even.group0().xyz(),
             // e235, e315, e125
-            from_versor_even.group2().truncate_to_3(),
+            from_versor_even.group2().xyz(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2840,9 +2840,9 @@ impl From<VersorOdd> for MultiVector {
             // e15, e25, e35, e45
             Simd32x4::from([from_versor_odd[e15], from_versor_odd[e25], from_versor_odd[e35], from_versor_odd[e45]]),
             // e41, e42, e43
-            from_versor_odd.group0().truncate_to_3(),
+            from_versor_odd.group0().xyz(),
             // e23, e31, e12
-            from_versor_odd.group1().truncate_to_3(),
+            from_versor_odd.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -3429,11 +3429,11 @@ impl std::ops::Sub<AntiCircleRotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -3458,11 +3458,11 @@ impl std::ops::SubAssign<AntiCircleRotor> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -3492,7 +3492,7 @@ impl std::ops::Sub<AntiDipoleInversion> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() - other.group3().truncate_to_3().extend_to_4(other[e4]),
+            self.group1() - other.group3().xyz().with_w(other[e4]),
             // e5
             self[e5] - other[e5],
             // e15, e25, e35, e45
@@ -3506,7 +3506,7 @@ impl std::ops::Sub<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             self.group7() - other.group0(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3521,7 +3521,7 @@ impl std::ops::SubAssign<AntiDipoleInversion> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() - other.group3().truncate_to_3().extend_to_4(other[e4]),
+            self.group1() - other.group3().xyz().with_w(other[e4]),
             // e5
             self[e5] - other[e5],
             // e15, e25, e35, e45
@@ -3535,7 +3535,7 @@ impl std::ops::SubAssign<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             self.group7() - other.group0(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3575,7 +3575,7 @@ impl std::ops::Sub<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group9() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
             // e1234
             self[e1234],
         );
@@ -3604,7 +3604,7 @@ impl std::ops::SubAssign<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group9() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
             // e1234
             self[e1234],
         );
@@ -3636,11 +3636,11 @@ impl std::ops::Sub<AntiFlatPoint> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group6() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group0().truncate_to_3(),
+            self.group8() - other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3665,11 +3665,11 @@ impl std::ops::SubAssign<AntiFlatPoint> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group6() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group0().truncate_to_3(),
+            self.group8() - other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3703,11 +3703,11 @@ impl std::ops::Sub<AntiFlector> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group6() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group0().truncate_to_3(),
+            self.group8() - other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3732,11 +3732,11 @@ impl std::ops::SubAssign<AntiFlector> for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            self.group6() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group6() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group0().truncate_to_3(),
+            self.group8() - other.group0().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -3836,7 +3836,7 @@ impl std::ops::Sub<AntiMotor> for MultiVector {
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
-            self.group5() - other.group0().truncate_to_3(),
+            self.group5() - other.group0().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -3844,7 +3844,7 @@ impl std::ops::Sub<AntiMotor> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group9() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
             // e1234
             self[e1234],
         );
@@ -3865,7 +3865,7 @@ impl std::ops::SubAssign<AntiMotor> for MultiVector {
             // e41, e42, e43
             self.group4(),
             // e23, e31, e12
-            self.group5() - other.group0().truncate_to_3(),
+            self.group5() - other.group0().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -3873,7 +3873,7 @@ impl std::ops::SubAssign<AntiMotor> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group9() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
             // e1234
             self[e1234],
         );
@@ -4108,7 +4108,7 @@ impl std::ops::Sub<CircleRotor> for MultiVector {
             // e423, e431, e412
             self.group7() - other.group0(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -4137,7 +4137,7 @@ impl std::ops::SubAssign<CircleRotor> for MultiVector {
             // e423, e431, e412
             self.group7() - other.group0(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -4164,11 +4164,11 @@ impl std::ops::Sub<Dipole> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().extend_to_4(other[e45]),
+            self.group3() - other.group2().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -4193,11 +4193,11 @@ impl std::ops::SubAssign<Dipole> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().extend_to_4(other[e45]),
+            self.group3() - other.group2().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -4231,11 +4231,11 @@ impl std::ops::Sub<DipoleInversion> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -4260,11 +4260,11 @@ impl std::ops::SubAssign<DipoleInversion> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
             self.group4() - other.group0(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -4568,7 +4568,7 @@ impl std::ops::Sub<Motor> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group1().truncate_to_3(),
+            self.group8() - other.group1().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -4597,7 +4597,7 @@ impl std::ops::SubAssign<Motor> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            self.group8() - other.group1().truncate_to_3(),
+            self.group8() - other.group1().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -4963,9 +4963,9 @@ impl std::ops::Sub<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             self.group6() - other.group1(),
             // e423, e431, e412
-            self.group7() - other.group0().truncate_to_3(),
+            self.group7() - other.group0().xyz(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -4992,9 +4992,9 @@ impl std::ops::SubAssign<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             self.group6() - other.group1(),
             // e423, e431, e412
-            self.group7() - other.group0().truncate_to_3(),
+            self.group7() - other.group0().xyz(),
             // e235, e315, e125
-            self.group8() - other.group2().truncate_to_3(),
+            self.group8() - other.group2().xyz(),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -5023,11 +5023,11 @@ impl std::ops::Sub<VersorOdd> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
-            self.group4() - other.group0().truncate_to_3(),
+            self.group4() - other.group0().xyz(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -5052,11 +5052,11 @@ impl std::ops::SubAssign<VersorOdd> for MultiVector {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            self.group3() - other.group2().truncate_to_3().extend_to_4(other[e45]),
+            self.group3() - other.group2().xyz().with_w(other[e45]),
             // e41, e42, e43
-            self.group4() - other.group0().truncate_to_3(),
+            self.group4() - other.group0().xyz(),
             // e23, e31, e12
-            self.group5() - other.group1().truncate_to_3(),
+            self.group5() - other.group1().xyz(),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412

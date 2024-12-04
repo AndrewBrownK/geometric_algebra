@@ -28,7 +28,7 @@ impl std::ops::Add<AntiScalar> for Origin {
             // scalar, e1234
             Simd32x2::from([0.0, other[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -46,7 +46,7 @@ impl std::ops::Add<DualNum> for Origin {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -66,7 +66,7 @@ impl std::ops::Add<Flector> for Origin {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e4]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e4]),
             // e423, e431, e412, e321
             other.group1(),
         );
@@ -78,9 +78,9 @@ impl std::ops::Add<Horizon> for Origin {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -92,7 +92,7 @@ impl std::ops::Add<Line> for Origin {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
@@ -110,11 +110,11 @@ impl std::ops::Add<Motor> for Origin {
             // scalar, e1234
             Simd32x2::from([other[scalar], other[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -132,7 +132,7 @@ impl std::ops::Add<MultiVector> for Origin {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e4]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             other.group2(),
             // e23, e31, e12
@@ -162,7 +162,7 @@ impl std::ops::Add<Plane> for Origin {
     type Output = Flector;
     fn add(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).extend_to_4(self[e4]), /* e423, e431, e412, e321 */ other.group0());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(self[e4]), /* e423, e431, e412, e321 */ other.group0());
     }
 }
 impl std::ops::Add<Point> for Origin {
@@ -173,7 +173,7 @@ impl std::ops::Add<Point> for Origin {
     // no simd        4        0        0
     fn add(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ other.group0() + Simd32x3::from(0.0).extend_to_4(self[e4]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ other.group0() + Simd32x3::from(0.0).with_w(self[e4]));
     }
 }
 impl std::ops::Add<Scalar> for Origin {
@@ -184,7 +184,7 @@ impl std::ops::Add<Scalar> for Origin {
             // scalar, e1234
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -424,7 +424,7 @@ impl std::ops::Sub<AntiScalar> for Origin {
             // scalar, e1234
             Simd32x2::from([1.0, other[e1234]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -446,7 +446,7 @@ impl std::ops::Sub<DualNum> for Origin {
             // scalar, e1234
             other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -469,7 +469,7 @@ impl std::ops::Sub<Flector> for Origin {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            other.group0().truncate_to_3().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412, e321
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -484,9 +484,9 @@ impl std::ops::Sub<Horizon> for Origin {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -502,7 +502,7 @@ impl std::ops::Sub<Line> for Origin {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -527,11 +527,11 @@ impl std::ops::Sub<Motor> for Origin {
             // scalar, e1234
             Simd32x2::from([other[scalar], other[e1234]]) * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -554,7 +554,7 @@ impl std::ops::Sub<MultiVector> for Origin {
             // scalar, e1234
             other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            other.group1().truncate_to_3().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e41, e42, e43
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -590,7 +590,7 @@ impl std::ops::Sub<Plane> for Origin {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e423, e431, e412, e321
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -607,10 +607,7 @@ impl std::ops::Sub<Point> for Origin {
     //  no simd        1        4        0
     fn sub(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        return Point::from_groups(
-            // e1, e2, e3, e4
-            other.group0().truncate_to_3().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
+        return Point::from_groups(/* e1, e2, e3, e4 */ other.group0().xyz().with_w(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
 impl std::ops::Sub<Scalar> for Origin {
@@ -625,7 +622,7 @@ impl std::ops::Sub<Scalar> for Origin {
             // scalar, e1234
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e4]),
+            Simd32x3::from(0.0).with_w(self[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12

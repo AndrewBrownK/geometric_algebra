@@ -36,7 +36,7 @@ impl UnitizedFlatNormSquared for AntiCircleRotor {
     //  no simd        8       17        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for AntiDipoleInversion {
@@ -56,7 +56,7 @@ impl UnitizedFlatNormSquared for AntiDipoleInversion {
     //  no simd       25       52        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Circle {
@@ -75,7 +75,7 @@ impl UnitizedFlatNormSquared for Circle {
     //  no simd        9       22        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for CircleRotor {
@@ -94,7 +94,7 @@ impl UnitizedFlatNormSquared for CircleRotor {
     //  no simd       10       23        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Dipole {
@@ -113,7 +113,7 @@ impl UnitizedFlatNormSquared for Dipole {
     //  no simd        8       17        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for DipoleInversion {
@@ -133,7 +133,7 @@ impl UnitizedFlatNormSquared for DipoleInversion {
     //  no simd       15       27        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for DualNum {
@@ -152,7 +152,7 @@ impl UnitizedFlatNormSquared for DualNum {
     //  no simd        0       10        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for FlatPoint {
@@ -171,7 +171,7 @@ impl UnitizedFlatNormSquared for FlatPoint {
     //  no simd        8       17        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Flector {
@@ -191,7 +191,7 @@ impl UnitizedFlatNormSquared for Flector {
     //  no simd       15       27        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Line {
@@ -210,7 +210,7 @@ impl UnitizedFlatNormSquared for Line {
     //  no simd        9       22        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Motor {
@@ -230,7 +230,7 @@ impl UnitizedFlatNormSquared for Motor {
     //  no simd       26       53        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for MultiVector {
@@ -250,7 +250,7 @@ impl UnitizedFlatNormSquared for MultiVector {
     //  no simd      111      144        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Plane {
@@ -269,7 +269,7 @@ impl UnitizedFlatNormSquared for Plane {
     //  no simd       17       25        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for Sphere {
@@ -288,7 +288,7 @@ impl UnitizedFlatNormSquared for Sphere {
     //  no simd       17       25        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for VersorEven {
@@ -308,7 +308,7 @@ impl UnitizedFlatNormSquared for VersorEven {
     //  no simd       26       53        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_flat_norm_squared> for VersorOdd {
@@ -328,6 +328,6 @@ impl UnitizedFlatNormSquared for VersorOdd {
     //  no simd       15       27        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]));
+        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
     }
 }

@@ -225,12 +225,12 @@ impl ConstraintViolation for MultiVector {
                 - (Simd32x2::from([reverse[e321], reverse[e1]]) * self.group4().wx()),
             // e1, e2, e3, e4
             (Simd32x4::from(reverse[scalar]) * self.group1())
-                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], reverse[e3]]) * self.group3().zyz().extend_to_4(self[e43]))
-                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e2]]) * self.group3().xxy().extend_to_4(self[e42]))
-                + (self.group0().xx().extend_to_4(self[scalar], reverse[e1234]) * reverse.group1().truncate_to_3().extend_to_4(self[e321]))
-                + (self.group1().zx().extend_to_4(self[e321], reverse[e1]) * reverse.group3().yzz().extend_to_4(self[e41]))
-                + (self.group4().ww().extend_to_4(self[e2], reverse[e4]) * reverse.group3().xyx().extend_to_4(self[scalar]))
-                + Simd32x3::from(0.0).extend_to_4(
+                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], reverse[e3]]) * self.group3().zyz().with_w(self[e43]))
+                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e2]]) * self.group3().xxy().with_w(self[e42]))
+                + (self.group0().xx().with_zw(self[scalar], reverse[e1234]) * reverse.group1().xyz().with_w(self[e321]))
+                + (self.group1().zx().with_zw(self[e321], reverse[e1]) * reverse.group3().yzz().with_w(self[e41]))
+                + (self.group4().ww().with_zw(self[e2], reverse[e4]) * reverse.group3().xyx().with_w(self[scalar]))
+                + Simd32x3::from(0.0).with_w(
                     -(reverse[e42] * self[e2])
                         - (reverse[e43] * self[e3])
                         - (reverse[e23] * self[e423])
@@ -240,8 +240,8 @@ impl ConstraintViolation for MultiVector {
                         - (reverse[e431] * self[e31])
                         - (reverse[e412] * self[e12]),
                 )
-                - (reverse.group3().zxy() * self.group1().yzx()).extend_to_4(reverse[e321] * self[e1234])
-                - (self.group3().yzx() * reverse.group1().zxy()).extend_to_4(reverse[e41] * self[e1]),
+                - (reverse.group3().zxy() * self.group1().yzx()).with_w(reverse[e321] * self[e1234])
+                - (self.group3().yzx() * reverse.group1().zxy()).with_w(reverse[e41] * self[e1]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12

@@ -31,7 +31,7 @@ impl std::ops::Add<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -42,7 +42,7 @@ impl std::ops::AddAssign<AntiScalar> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -57,9 +57,9 @@ impl std::ops::Add<DualNum> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().truncate_to_3().extend_to_4(other[e1234] + self[e1234]),
+            self.group0().xyz().with_w(other[e1234] + self[e1234]),
             // e23, e31, e12, scalar
-            self.group1().truncate_to_3().extend_to_4(other[scalar] + self[scalar]),
+            self.group1().xyz().with_w(other[scalar] + self[scalar]),
         );
     }
 }
@@ -68,9 +68,9 @@ impl std::ops::AddAssign<DualNum> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0().truncate_to_3().extend_to_4(other[e1234] + self[e1234]),
+            self.group0().xyz().with_w(other[e1234] + self[e1234]),
             // e23, e31, e12, scalar
-            self.group1().truncate_to_3().extend_to_4(other[scalar] + self[scalar]),
+            self.group1().xyz().with_w(other[scalar] + self[scalar]),
         );
     }
 }
@@ -84,9 +84,9 @@ impl std::ops::Add<Flector> for Motor {
             // e1, e2, e3, e4
             other.group0(),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             other.group1(),
         );
@@ -102,11 +102,11 @@ impl std::ops::Add<Horizon> for Motor {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -120,9 +120,9 @@ impl std::ops::Add<Line> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -131,9 +131,9 @@ impl std::ops::AddAssign<Line> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -179,9 +179,9 @@ impl std::ops::Add<MultiVector> for Motor {
             // e1, e2, e3, e4
             other.group1(),
             // e41, e42, e43
-            other.group2() + self.group0().truncate_to_3(),
+            other.group2() + self.group0().xyz(),
             // e23, e31, e12
-            other.group3() + self.group1().truncate_to_3(),
+            other.group3() + self.group1().xyz(),
             // e423, e431, e412, e321
             other.group4(),
         );
@@ -195,11 +195,11 @@ impl std::ops::Add<Origin> for Motor {
             // scalar, e1234
             Simd32x2::from([self[scalar], self[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -215,9 +215,9 @@ impl std::ops::Add<Plane> for Motor {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             other.group0(),
         );
@@ -233,9 +233,9 @@ impl std::ops::Add<Point> for Motor {
             // e1, e2, e3, e4
             other.group0(),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -253,7 +253,7 @@ impl std::ops::Add<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -264,7 +264,7 @@ impl std::ops::AddAssign<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -426,7 +426,7 @@ impl From<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x3::from(0.0).extend_to_4(from_anti_scalar[e1234]),
+            Simd32x3::from(0.0).with_w(from_anti_scalar[e1234]),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );
@@ -438,9 +438,9 @@ impl From<DualNum> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x3::from(0.0).extend_to_4(from_dual_num[e1234]),
+            Simd32x3::from(0.0).with_w(from_dual_num[e1234]),
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4(from_dual_num[scalar]),
+            Simd32x3::from(0.0).with_w(from_dual_num[scalar]),
         );
     }
 }
@@ -464,7 +464,7 @@ impl From<Scalar> for Motor {
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4(from_scalar[scalar]),
+            Simd32x3::from(0.0).with_w(from_scalar[scalar]),
         );
     }
 }
@@ -668,7 +668,7 @@ impl std::ops::Sub<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -679,7 +679,7 @@ impl std::ops::SubAssign<AntiScalar> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -698,9 +698,9 @@ impl std::ops::Sub<DualNum> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -709,9 +709,9 @@ impl std::ops::SubAssign<DualNum> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -729,9 +729,9 @@ impl std::ops::Sub<Flector> for Motor {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -750,11 +750,11 @@ impl std::ops::Sub<Horizon> for Motor {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -831,9 +831,9 @@ impl std::ops::Sub<MultiVector> for Motor {
             // e1, e2, e3, e4
             other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group2(),
+            self.group0().xyz() - other.group2(),
             // e23, e31, e12
-            self.group1().truncate_to_3() - other.group3(),
+            self.group1().xyz() - other.group3(),
             // e423, e431, e412, e321
             other.group4() * Simd32x4::from(-1.0),
         );
@@ -850,11 +850,11 @@ impl std::ops::Sub<Origin> for Motor {
             // scalar, e1234
             Simd32x2::from([self[scalar], self[e1234]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -874,9 +874,9 @@ impl std::ops::Sub<Plane> for Motor {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -896,9 +896,9 @@ impl std::ops::Sub<Point> for Motor {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -919,7 +919,7 @@ impl std::ops::Sub<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -930,7 +930,7 @@ impl std::ops::SubAssign<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }

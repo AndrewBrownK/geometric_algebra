@@ -84,7 +84,7 @@ impl std::ops::Add<Horizon> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -94,9 +94,9 @@ impl std::ops::Add<Line> for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().extend_to_4(self[e1234]),
+            other.group0().with_w(self[e1234]),
             // e23, e31, e12, scalar
-            other.group1().extend_to_4(self[scalar]),
+            other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -109,9 +109,9 @@ impl std::ops::Add<Motor> for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().truncate_to_3().extend_to_4(self[e1234] + other[e1234]),
+            other.group0().xyz().with_w(self[e1234] + other[e1234]),
             // e23, e31, e12, scalar
-            other.group1().truncate_to_3().extend_to_4(self[scalar] + other[scalar]),
+            other.group1().xyz().with_w(self[scalar] + other[scalar]),
         );
     }
 }
@@ -144,7 +144,7 @@ impl std::ops::Add<Origin> for DualNum {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -558,7 +558,7 @@ impl std::ops::Sub<Horizon> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -572,9 +572,9 @@ impl std::ops::Sub<Line> for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, scalar
-            other.group1().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -591,9 +591,9 @@ impl std::ops::Sub<Motor> for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            other.group0().truncate_to_3().extend_to_4(self[e1234] - other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e1234] - other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, scalar
-            other.group1().truncate_to_3().extend_to_4(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -633,7 +633,7 @@ impl std::ops::Sub<Origin> for DualNum {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12

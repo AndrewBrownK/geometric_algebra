@@ -33,15 +33,15 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -63,15 +63,15 @@ impl std::ops::Add<AntiCircleRotor> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]),
+            other.group0().with_w(other[e45]),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -93,15 +93,15 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -125,13 +125,13 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiDipoleOnOrig
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -153,15 +153,15 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -189,9 +189,9 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -214,9 +214,9 @@ impl std::ops::Add<AntiDipoleInversion> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e321]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e4
             other.group2(),
             // e1, e2, e3, e5
@@ -234,11 +234,11 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e321]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e4
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e1, e2, e3, e5
             other.group2(),
         );
@@ -264,13 +264,13 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            other.group0().truncate_to_3() + self.group0().truncate_to_3(),
+            other.group0().xyz() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]),
+            other.group1().with_w(self[e321]),
             // e235, e315, e125, e4
             other.group2(),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5]),
+            Simd32x3::from(0.0).with_w(other[e5]),
         );
     }
 }
@@ -307,9 +307,9 @@ impl std::ops::Add<AntiDualNum> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -327,13 +327,13 @@ impl std::ops::Add<AntiFlatOrigin> for AntiDipoleOnOrigin {
     // no simd        4        0        0
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321]));
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).with_w(other[e321]));
     }
 }
 impl std::ops::AddAssign<AntiFlatOrigin> for AntiDipoleOnOrigin {
     fn add_assign(&mut self, other: AntiFlatOrigin) {
         use crate::elements::*;
-        *self = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321]));
+        *self = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).with_w(other[e321]));
     }
 }
 impl std::ops::Add<AntiFlatPoint> for AntiDipoleOnOrigin {
@@ -346,9 +346,9 @@ impl std::ops::Add<AntiFlatPoint> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
         );
     }
 }
@@ -362,7 +362,7 @@ impl std::ops::Add<AntiFlector> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]),
             // e1, e2, e3, e4
@@ -380,7 +380,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversionOnOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321]),
             // e4, e1, e2, e3
             Simd32x4::from([0.0, other[e1], other[e2], other[e3]]),
         );
@@ -404,9 +404,9 @@ impl std::ops::Add<AntiLine> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -434,9 +434,9 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -460,13 +460,13 @@ impl std::ops::Add<AntiMotor> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -492,11 +492,11 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiDipoleOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -518,15 +518,15 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -545,13 +545,13 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group0().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e4
             Simd32x4::from(0.0),
             // e1, e2, e3, e5
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
         );
     }
 }
@@ -563,7 +563,7 @@ impl std::ops::Add<AntiPlane> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5]),
+            Simd32x3::from(0.0).with_w(other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
         );
@@ -587,11 +587,11 @@ impl std::ops::Add<AntiScalar> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345]),
+            Simd32x3::from(0.0).with_w(other[e12345]),
         );
     }
 }
@@ -617,11 +617,11 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiDipoleOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -644,9 +644,9 @@ impl std::ops::Add<Circle> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group1().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125
             other.group2(),
         );
@@ -662,9 +662,9 @@ impl std::ops::Add<CircleAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]),
+            other.group1().with_w(self[e321]),
             // e235, e315, e125
             other.group2(),
         );
@@ -679,9 +679,9 @@ impl std::ops::Add<CircleAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group0().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125
             other.group1(),
         );
@@ -697,7 +697,7 @@ impl std::ops::Add<CircleAtOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e321]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().with_w(self[e321]),
             // e235, e315, e125
             other.group1(),
         );
@@ -713,9 +713,9 @@ impl std::ops::Add<CircleOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]),
+            other.group1().with_w(self[e321]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -744,9 +744,9 @@ impl std::ops::Add<CircleRotor> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group1().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e12345
             other.group2(),
         );
@@ -762,9 +762,9 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]),
+            other.group1().with_w(self[e321]),
             // e235, e315, e125, e12345
             other.group2(),
         );
@@ -776,9 +776,9 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]),
+            other.group0().with_w(self[e321]),
             // e235, e315, e125, e12345
             other.group1(),
         );
@@ -793,9 +793,9 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group0().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e12345
             other.group1(),
         );
@@ -811,11 +811,11 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() + other.group0().truncate_to_3(),
+            self.group0().xyz() + other.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]),
+            other.group1().with_w(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345]),
+            Simd32x3::from(0.0).with_w(other[e12345]),
         );
     }
 }
@@ -831,15 +831,15 @@ impl std::ops::Add<Dipole> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]),
+            other.group0().with_w(other[e45]),
             // e15, e25, e35
             other.group2(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -867,9 +867,9 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -891,15 +891,15 @@ impl std::ops::Add<DipoleAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -921,15 +921,15 @@ impl std::ops::Add<DipoleAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -951,15 +951,15 @@ impl std::ops::Add<DipoleInversion> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]),
+            other.group0().with_w(other[e45]),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -983,13 +983,13 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1011,15 +1011,15 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1043,13 +1043,13 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1077,9 +1077,9 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1103,13 +1103,13 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1137,9 +1137,9 @@ impl std::ops::Add<DipoleOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1161,15 +1161,15 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e15, e25, e35
             other.group2(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1187,11 +1187,11 @@ impl std::ops::Add<DualNum> for AntiDipoleOnOrigin {
             // e423, e431, e412, e12345
             Simd32x4::from([self[e423], self[e431], self[e412], other[e12345]]),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
         );
     }
 }
@@ -1207,15 +1207,15 @@ impl std::ops::Add<FlatOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1237,15 +1237,15 @@ impl std::ops::Add<FlatPoint> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1273,9 +1273,9 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1297,15 +1297,15 @@ impl std::ops::Add<Flector> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1329,13 +1329,13 @@ impl std::ops::Add<FlectorAtInfinity> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1357,15 +1357,15 @@ impl std::ops::Add<FlectorOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1393,9 +1393,9 @@ impl std::ops::Add<Horizon> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1413,7 +1413,7 @@ impl std::ops::Add<Infinity> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5]),
+            Simd32x3::from(0.0).with_w(other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -1425,9 +1425,9 @@ impl std::ops::Add<Line> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]),
+            other.group0().with_w(self[e321]),
             // e235, e315, e125
             other.group1(),
         );
@@ -1445,9 +1445,9 @@ impl std::ops::Add<LineOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]),
+            other.group0().with_w(self[e321]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -1488,11 +1488,11 @@ impl std::ops::Add<MotorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321]]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345]),
+            Simd32x3::from(0.0).with_w(other[e12345]),
         );
     }
 }
@@ -1521,9 +1521,9 @@ impl std::ops::Add<MultiVector> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group5(),
             // e415, e425, e435, e321
-            other.group6().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group6().xyz().with_w(self[e321] + other[e321]),
             // e423, e431, e412
-            other.group7() + self.group0().truncate_to_3(),
+            other.group7() + self.group0().xyz(),
             // e235, e315, e125
             other.group8(),
             // e1234, e4235, e4315, e4125
@@ -1542,9 +1542,9 @@ impl std::ops::Add<MysteryCircle> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group0().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -1559,11 +1559,11 @@ impl std::ops::Add<MysteryCircleRotor> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group0().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345]),
+            Simd32x3::from(0.0).with_w(other[e12345]),
         );
     }
 }
@@ -1579,15 +1579,15 @@ impl std::ops::Add<MysteryDipole> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1609,15 +1609,15 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1638,7 +1638,7 @@ impl std::ops::Add<MysteryVersorEven> for AntiDipoleOnOrigin {
             // e423, e431, e412, e12345
             Simd32x4::from([self[e423], self[e431], self[e412], other[e12345]]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group1().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
@@ -1658,15 +1658,15 @@ impl std::ops::Add<MysteryVersorOdd> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1686,7 +1686,7 @@ impl std::ops::Add<NullCircleAtOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e321]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().with_w(self[e321]),
         );
     }
 }
@@ -1695,7 +1695,7 @@ impl std::ops::AddAssign<NullCircleAtOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         *self = AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e321]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().with_w(self[e321]),
         );
     }
 }
@@ -1711,15 +1711,15 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1747,9 +1747,9 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1777,9 +1777,9 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1830,9 +1830,9 @@ impl std::ops::Add<Plane> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1860,9 +1860,9 @@ impl std::ops::Add<PlaneOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1880,7 +1880,7 @@ impl std::ops::Add<RoundPoint> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5]),
+            Simd32x3::from(0.0).with_w(other[e5]),
             // e1, e2, e3, e4
             other.group0(),
         );
@@ -1894,9 +1894,9 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5]),
+            Simd32x3::from(0.0).with_w(other[e5]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
         );
     }
 }
@@ -1918,9 +1918,9 @@ impl std::ops::Add<Scalar> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1948,9 +1948,9 @@ impl std::ops::Add<Sphere> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1978,9 +1978,9 @@ impl std::ops::Add<SphereAtOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2008,9 +2008,9 @@ impl std::ops::Add<SphereOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2033,9 +2033,9 @@ impl std::ops::Add<VersorEven> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[e12345]),
+            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().xyz().with_w(other[e12345]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group1().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
@@ -2053,13 +2053,13 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[e12345]),
+            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().xyz().with_w(other[e12345]),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321]]),
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
         );
     }
 }
@@ -2074,7 +2074,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiDipoleOnOrigin {
             // e423, e431, e412, e12345
             Simd32x4::from([self[e423], self[e431], self[e412], other[e12345]]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] + other[e321]),
+            other.group1().xyz().with_w(self[e321] + other[e321]),
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
@@ -2096,7 +2096,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiDipoleOnOrigin {
             // e235, e315, e125, e5
             other.group1(),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
         );
     }
 }
@@ -2110,13 +2110,13 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[e12345]),
+            Simd32x4::from([other[e423], other[e431], other[e412], 0.0]) + self.group0().xyz().with_w(other[e12345]),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321]]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
         );
     }
 }
@@ -2151,13 +2151,13 @@ impl std::ops::Add<VersorOdd> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2179,15 +2179,15 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35
             other.group0().yzw(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2211,13 +2211,13 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2914,7 +2914,7 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiDipoleOnOrigin {
 impl From<AntiFlatOrigin> for AntiDipoleOnOrigin {
     fn from(from_anti_flat_origin: AntiFlatOrigin) -> Self {
         use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(from_anti_flat_origin[e321]));
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(from_anti_flat_origin[e321]));
     }
 }
 
@@ -4222,15 +4222,15 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4260,15 +4260,15 @@ impl std::ops::Sub<AntiCircleRotor> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
+            other.group0().with_w(other[e45]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4297,15 +4297,15 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4336,13 +4336,13 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiDipoleOnOrig
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4372,15 +4372,15 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4409,15 +4409,15 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4441,9 +4441,9 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
@@ -4465,11 +4465,11 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e1, e2, e3, e5
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -4504,13 +4504,13 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0().truncate_to_3(),
+            self.group0().xyz() - other.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e5] * -1.0),
         );
     }
 }
@@ -4554,9 +4554,9 @@ impl std::ops::Sub<AntiDualNum> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4577,13 +4577,13 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiDipoleOnOrigin {
     //  no simd        4        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0));
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).with_w(other[e321] * -1.0));
     }
 }
 impl std::ops::SubAssign<AntiFlatOrigin> for AntiDipoleOnOrigin {
     fn sub_assign(&mut self, other: AntiFlatOrigin) {
         use crate::elements::*;
-        *self = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0));
+        *self = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() + Simd32x3::from(0.0).with_w(other[e321] * -1.0));
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for AntiDipoleOnOrigin {
@@ -4600,9 +4600,9 @@ impl std::ops::Sub<AntiFlatPoint> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -4620,11 +4620,11 @@ impl std::ops::Sub<AntiFlector> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e235, e315, e125, e5
-            other.group0().truncate_to_3().extend_to_4(other[e5]) * Simd32x4::from(-1.0),
+            other.group0().xyz().with_w(other[e5]) * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -4641,7 +4641,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversionOnOrigin::from_groups(
             // e423, e431, e412, e321
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e4, e1, e2, e3
             Simd32x4::from([0.0, other[e1], other[e2], other[e3]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
         );
@@ -4669,9 +4669,9 @@ impl std::ops::Sub<AntiLine> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4703,9 +4703,9 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4737,13 +4737,13 @@ impl std::ops::Sub<AntiMotor> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4776,11 +4776,11 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiDipoleOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4810,15 +4810,15 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4842,13 +4842,13 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
             Simd32x4::from(0.0),
             // e1, e2, e3, e5
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -4867,9 +4867,9 @@ impl std::ops::Sub<AntiPlane> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e5] * -1.0),
             // e1, e2, e3, e4
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -4898,11 +4898,11 @@ impl std::ops::Sub<AntiScalar> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e12345] * -1.0),
         );
     }
 }
@@ -4936,15 +4936,15 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4968,9 +4968,9 @@ impl std::ops::Sub<Circle> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             other.group2() * Simd32x3::from(-1.0),
         );
@@ -4989,9 +4989,9 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             other.group2() * Simd32x3::from(-1.0),
         );
@@ -5011,9 +5011,9 @@ impl std::ops::Sub<CircleAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -5052,9 +5052,9 @@ impl std::ops::Sub<CircleOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -5092,9 +5092,9 @@ impl std::ops::Sub<CircleRotor> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -5113,9 +5113,9 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -5131,9 +5131,9 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -5152,9 +5152,9 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -5174,11 +5174,11 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group0().truncate_to_3(),
+            self.group0().xyz() - other.group0().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e12345] * -1.0),
         );
     }
 }
@@ -5201,15 +5201,15 @@ impl std::ops::Sub<Dipole> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
+            other.group0().with_w(other[e45]) * Simd32x4::from(-1.0),
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5244,9 +5244,9 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5275,15 +5275,15 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5309,15 +5309,15 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5347,15 +5347,15 @@ impl std::ops::Sub<DipoleInversion> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
+            other.group0().with_w(other[e45]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5387,13 +5387,13 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5423,15 +5423,15 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5461,15 +5461,15 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5501,9 +5501,9 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5533,15 +5533,15 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5573,9 +5573,9 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5601,15 +5601,15 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5632,13 +5632,13 @@ impl std::ops::Sub<DualNum> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            self.group0().truncate_to_3().extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
         );
     }
 }
@@ -5657,15 +5657,15 @@ impl std::ops::Sub<FlatOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5694,15 +5694,15 @@ impl std::ops::Sub<FlatPoint> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5734,9 +5734,9 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5766,15 +5766,15 @@ impl std::ops::Sub<Flector> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5805,13 +5805,13 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiDipoleOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5840,15 +5840,15 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5879,9 +5879,9 @@ impl std::ops::Sub<Horizon> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5902,7 +5902,7 @@ impl std::ops::Sub<Infinity> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e5] * -1.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -5921,9 +5921,9 @@ impl std::ops::Sub<Line> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -5949,9 +5949,9 @@ impl std::ops::Sub<LineOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -5967,9 +5967,9 @@ impl std::ops::Sub<Motor> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            self.group0().truncate_to_3().extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             other.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
@@ -6007,11 +6007,11 @@ impl std::ops::Sub<MotorOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e12345] * -1.0),
         );
     }
 }
@@ -6042,9 +6042,9 @@ impl std::ops::Sub<MultiVector> for AntiDipoleOnOrigin {
             // e23, e31, e12
             other.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            other.group6().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group6().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412
-            self.group0().truncate_to_3() - other.group7(),
+            self.group0().xyz() - other.group7(),
             // e235, e315, e125
             other.group8() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -6067,9 +6067,9 @@ impl std::ops::Sub<MysteryCircle> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -6088,11 +6088,11 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e415, e425, e435, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e12345] * -1.0),
         );
     }
 }
@@ -6115,15 +6115,15 @@ impl std::ops::Sub<MysteryDipole> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6153,15 +6153,15 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6185,13 +6185,13 @@ impl std::ops::Sub<MysteryVersorEven> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            self.group0().truncate_to_3().extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -6216,15 +6216,15 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6276,15 +6276,15 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6313,15 +6313,15 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6353,9 +6353,9 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6425,9 +6425,9 @@ impl std::ops::Sub<Plane> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6459,9 +6459,9 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6486,7 +6486,7 @@ impl std::ops::Sub<RoundPoint> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e5] * -1.0),
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -6503,9 +6503,9 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiDipoleOnOrigin {
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
         );
     }
 }
@@ -6531,9 +6531,9 @@ impl std::ops::Sub<Scalar> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6568,9 +6568,9 @@ impl std::ops::Sub<Sphere> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6605,9 +6605,9 @@ impl std::ops::Sub<SphereAtOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6639,9 +6639,9 @@ impl std::ops::Sub<SphereOnOrigin> for AntiDipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6665,9 +6665,9 @@ impl std::ops::Sub<VersorEven> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
@@ -6689,13 +6689,13 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
         );
     }
 }
@@ -6713,13 +6713,13 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            self.group0().truncate_to_3().extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -6740,7 +6740,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiDipoleOnOrigin {
             // e235, e315, e125, e5
             other.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
         );
     }
 }
@@ -6758,13 +6758,13 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiDipoleOnOrigin {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
         );
     }
 }
@@ -6806,15 +6806,15 @@ impl std::ops::Sub<VersorOdd> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            other.group0().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
+            other.group0().xyz().with_w(other[e45]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6845,15 +6845,15 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35
             other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6884,15 +6884,15 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiDipoleOnOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
             // e423, e431, e412
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -7085,7 +7085,7 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(anti_dipole_inversion_at_infinity[e321]),
+            Simd32x3::from(0.0).with_w(anti_dipole_inversion_at_infinity[e321]),
         ));
     }
 }
@@ -7243,10 +7243,7 @@ impl TryFrom<AntiFlatPoint> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(anti_flat_point[e321]),
-        ));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(anti_flat_point[e321])));
     }
 }
 
@@ -7311,7 +7308,7 @@ impl TryFrom<AntiFlector> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(anti_flector[e321])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(anti_flector[e321])));
     }
 }
 
@@ -7350,7 +7347,7 @@ impl TryFrom<AntiFlectorOnOrigin> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(anti_flector_on_origin[e321]),
+            Simd32x3::from(0.0).with_w(anti_flector_on_origin[e321]),
         ));
     }
 }
@@ -7411,7 +7408,7 @@ impl TryFrom<AntiMysteryDipoleInversion> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(anti_mystery_dipole_inversion[e321]),
+            Simd32x3::from(0.0).with_w(anti_mystery_dipole_inversion[e321]),
         ));
     }
 }
@@ -7594,10 +7591,7 @@ impl TryFrom<CircleAtInfinity> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(circle_at_infinity[e321]),
-        ));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(circle_at_infinity[e321])));
     }
 }
 
@@ -7921,7 +7915,7 @@ impl TryFrom<CircleRotorAtInfinity> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(circle_rotor_at_infinity[e321]),
+            Simd32x3::from(0.0).with_w(circle_rotor_at_infinity[e321]),
         ));
     }
 }
@@ -8222,7 +8216,7 @@ impl TryFrom<MysteryCircle> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(mystery_circle[e321])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(mystery_circle[e321])));
     }
 }
 
@@ -8268,7 +8262,7 @@ impl TryFrom<MysteryCircleRotor> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(mystery_circle_rotor[e321]),
+            Simd32x3::from(0.0).with_w(mystery_circle_rotor[e321]),
         ));
     }
 }
@@ -8334,10 +8328,7 @@ impl TryFrom<MysteryVersorEven> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(mystery_versor_even[e321]),
-        ));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(mystery_versor_even[e321])));
     }
 }
 
@@ -8646,7 +8637,7 @@ impl TryFrom<VersorEvenAtInfinity> for AntiDipoleOnOrigin {
         }
         return Ok(AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(versor_even_at_infinity[e321]),
+            Simd32x3::from(0.0).with_w(versor_even_at_infinity[e321]),
         ));
     }
 }

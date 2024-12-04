@@ -30,13 +30,13 @@ impl std::ops::Add<AntiCircleRotor> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(other[scalar] + self[scalar]),
+            other.group0().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -62,9 +62,9 @@ impl std::ops::Add<AntiDipoleInversion> for AntiDualNum {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -103,13 +103,13 @@ impl std::ops::Add<AntiFlatPoint> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -133,13 +133,13 @@ impl std::ops::Add<AntiFlector> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -151,9 +151,9 @@ impl std::ops::Add<AntiLine> for AntiDualNum {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            other.group0().extend_to_4(self[scalar]),
+            other.group0().with_w(self[scalar]),
             // e15, e25, e35, e3215
-            other.group1().extend_to_4(self[e3215]),
+            other.group1().with_w(self[e3215]),
         );
     }
 }
@@ -166,9 +166,9 @@ impl std::ops::Add<AntiMotor> for AntiDualNum {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            other.group0().truncate_to_3().extend_to_4(self[scalar] + other[scalar]),
+            other.group0().xyz().with_w(self[scalar] + other[scalar]),
             // e15, e25, e35, e3215
-            other.group1().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group1().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -196,7 +196,7 @@ impl std::ops::Add<AntiPlane> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -226,7 +226,7 @@ impl std::ops::Add<AntiScalar> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -256,7 +256,7 @@ impl std::ops::Add<Circle> for AntiDualNum {
             // e235, e315, e125
             other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -284,9 +284,9 @@ impl std::ops::Add<CircleRotor> for AntiDualNum {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -298,13 +298,13 @@ impl std::ops::Add<Dipole> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(self[scalar]),
+            other.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
-            other.group2().extend_to_4(0.0),
+            other.group2().with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -317,13 +317,13 @@ impl std::ops::Add<DipoleInversion> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(self[scalar]),
+            other.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
-            other.group3().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group3().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -351,7 +351,7 @@ impl std::ops::Add<DualNum> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -363,13 +363,13 @@ impl std::ops::Add<FlatPoint> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -382,13 +382,13 @@ impl std::ops::Add<Flector> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45]),
+            Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            other.group1().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group1().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -410,13 +410,13 @@ impl std::ops::Add<Line> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
             other.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -444,9 +444,9 @@ impl std::ops::Add<Motor> for AntiDualNum {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -483,7 +483,7 @@ impl std::ops::Add<MultiVector> for AntiDualNum {
             // e235, e315, e125
             other.group8(),
             // e4235, e4315, e4125, e3215
-            other.group9().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group9().xyz().with_w(self[e3215] + other[e3215]),
             // e1234
             other[e1234],
         );
@@ -498,13 +498,13 @@ impl std::ops::Add<Plane> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group0().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group0().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -532,7 +532,7 @@ impl std::ops::Add<RoundPoint> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -564,13 +564,13 @@ impl std::ops::Add<Sphere> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
-            other.group0().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group0().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -594,11 +594,11 @@ impl std::ops::Add<VersorEven> for AntiDualNum {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -613,13 +613,13 @@ impl std::ops::Add<VersorOdd> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().truncate_to_3().extend_to_4(self[scalar] + other[scalar]),
+            other.group0().xyz().with_w(self[scalar] + other[scalar]),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
-            other.group3().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            other.group3().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -1267,13 +1267,13 @@ impl std::ops::Sub<AntiCircleRotor> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group2().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -1293,7 +1293,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiDualNum {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
+            other.group3().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e5
             other[e5] * -1.0,
             // e15, e25, e35, e45
@@ -1307,9 +1307,9 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiDualNum {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1355,13 +1355,13 @@ impl std::ops::Sub<AntiFlatPoint> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1382,7 +1382,7 @@ impl std::ops::Sub<AntiFlector> for AntiDualNum {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e15, e25, e35, e45
@@ -1392,13 +1392,13 @@ impl std::ops::Sub<AntiFlector> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1414,9 +1414,9 @@ impl std::ops::Sub<AntiLine> for AntiDualNum {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            other.group0().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e3215
-            other.group1().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1433,9 +1433,9 @@ impl std::ops::Sub<AntiMotor> for AntiDualNum {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            other.group0().truncate_to_3().extend_to_4(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e3215
-            other.group1().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1454,7 +1454,7 @@ impl std::ops::Sub<AntiPlane> for AntiDualNum {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e15, e25, e35, e45
@@ -1470,7 +1470,7 @@ impl std::ops::Sub<AntiPlane> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1504,7 +1504,7 @@ impl std::ops::Sub<AntiScalar> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1541,7 +1541,7 @@ impl std::ops::Sub<Circle> for AntiDualNum {
             // e235, e315, e125
             other.group2() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1577,9 +1577,9 @@ impl std::ops::Sub<CircleRotor> for AntiDualNum {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1598,13 +1598,13 @@ impl std::ops::Sub<Dipole> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (other.group2() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group2() * Simd32x3::from(-1.0)).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -1621,13 +1621,13 @@ impl std::ops::Sub<DipoleInversion> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            other.group3().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group3().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1662,7 +1662,7 @@ impl std::ops::Sub<DualNum> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1681,13 +1681,13 @@ impl std::ops::Sub<FlatPoint> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
         );
     }
 }
@@ -1705,13 +1705,13 @@ impl std::ops::Sub<Flector> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            other.group1().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1737,13 +1737,13 @@ impl std::ops::Sub<Line> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1775,13 +1775,13 @@ impl std::ops::Sub<Motor> for AntiDualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1820,7 +1820,7 @@ impl std::ops::Sub<MultiVector> for AntiDualNum {
             // e235, e315, e125
             other.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            other.group9().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group9().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1234
             other[e1234] * -1.0,
         );
@@ -1839,13 +1839,13 @@ impl std::ops::Sub<Plane> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group0().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1880,7 +1880,7 @@ impl std::ops::Sub<RoundPoint> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1919,13 +1919,13 @@ impl std::ops::Sub<Sphere> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(self[scalar]),
+            Simd32x3::from(0.0).with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            other.group0().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1958,11 +1958,11 @@ impl std::ops::Sub<VersorEven> for AntiDualNum {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(self[e3215]),
+            Simd32x3::from(0.0).with_w(self[e3215]),
             // e1234
             0.0,
         );
@@ -1981,13 +1981,13 @@ impl std::ops::Sub<VersorOdd> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0().truncate_to_3().extend_to_4(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[scalar] - other[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            other.group3().truncate_to_3().extend_to_4(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group3().xyz().with_w(self[e3215] - other[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }

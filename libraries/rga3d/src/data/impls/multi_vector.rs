@@ -152,7 +152,7 @@ impl std::ops::Add<Horizon> for MultiVector {
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            self.group4() + Simd32x3::from(0.0).extend_to_4(other[e321]),
+            self.group4() + Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -169,7 +169,7 @@ impl std::ops::AddAssign<Horizon> for MultiVector {
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            self.group4() + Simd32x3::from(0.0).extend_to_4(other[e321]),
+            self.group4() + Simd32x3::from(0.0).with_w(other[e321]),
         );
     }
 }
@@ -227,9 +227,9 @@ impl std::ops::Add<Motor> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            self.group2() + other.group0().truncate_to_3(),
+            self.group2() + other.group0().xyz(),
             // e23, e31, e12
-            self.group3() + other.group1().truncate_to_3(),
+            self.group3() + other.group1().xyz(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -244,9 +244,9 @@ impl std::ops::AddAssign<Motor> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            self.group2() + other.group0().truncate_to_3(),
+            self.group2() + other.group0().xyz(),
             // e23, e31, e12
-            self.group3() + other.group1().truncate_to_3(),
+            self.group3() + other.group1().xyz(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -305,7 +305,7 @@ impl std::ops::Add<Origin> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e4]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
@@ -322,7 +322,7 @@ impl std::ops::AddAssign<Origin> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e4]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e4]),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
@@ -709,7 +709,7 @@ impl From<Horizon> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(from_horizon[e321]),
+            Simd32x3::from(0.0).with_w(from_horizon[e321]),
         );
     }
 }
@@ -740,9 +740,9 @@ impl From<Motor> for MultiVector {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            from_motor.group0().truncate_to_3(),
+            from_motor.group0().xyz(),
             // e23, e31, e12
-            from_motor.group1().truncate_to_3(),
+            from_motor.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -756,7 +756,7 @@ impl From<Origin> for MultiVector {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(from_origin[e4]),
+            Simd32x3::from(0.0).with_w(from_origin[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1209,7 +1209,7 @@ impl std::ops::Sub<Horizon> for MultiVector {
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            self.group4() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group4() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -1226,7 +1226,7 @@ impl std::ops::SubAssign<Horizon> for MultiVector {
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            self.group4() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            self.group4() + Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -1285,9 +1285,9 @@ impl std::ops::Sub<Motor> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            self.group2() - other.group0().truncate_to_3(),
+            self.group2() - other.group0().xyz(),
             // e23, e31, e12
-            self.group3() - other.group1().truncate_to_3(),
+            self.group3() - other.group1().xyz(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -1302,9 +1302,9 @@ impl std::ops::SubAssign<Motor> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            self.group2() - other.group0().truncate_to_3(),
+            self.group2() - other.group0().xyz(),
             // e23, e31, e12
-            self.group3() - other.group1().truncate_to_3(),
+            self.group3() - other.group1().xyz(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -1366,7 +1366,7 @@ impl std::ops::Sub<Origin> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
@@ -1383,7 +1383,7 @@ impl std::ops::SubAssign<Origin> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12

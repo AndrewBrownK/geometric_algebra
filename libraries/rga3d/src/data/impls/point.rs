@@ -70,7 +70,7 @@ impl std::ops::Add<Horizon> for Point {
     type Output = Flector;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(other[e321]));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(other[e321]));
     }
 }
 impl std::ops::Add<Line> for Point {
@@ -100,9 +100,9 @@ impl std::ops::Add<Motor> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -137,13 +137,13 @@ impl std::ops::Add<Origin> for Point {
     // no simd        4        0        0
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e4]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).with_w(other[e4]));
     }
 }
 impl std::ops::AddAssign<Origin> for Point {
     fn add_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        *self = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e4]));
+        *self = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).with_w(other[e4]));
     }
 }
 impl std::ops::Add<Plane> for Point {
@@ -311,7 +311,7 @@ impl std::ops::BitXorAssign<Scalar> for Point {
 impl From<Origin> for Point {
     fn from(from_origin: Origin) -> Self {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).extend_to_4(from_origin[e4]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(from_origin[e4]));
     }
 }
 impl std::ops::Mul<AntiScalar> for Point {
@@ -538,7 +538,7 @@ impl std::ops::Sub<Horizon> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
         );
     }
 }
@@ -580,9 +580,9 @@ impl std::ops::Sub<Motor> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -624,13 +624,13 @@ impl std::ops::Sub<Origin> for Point {
     //  no simd        4        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).with_w(other[e4] * -1.0));
     }
 }
 impl std::ops::SubAssign<Origin> for Point {
     fn sub_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        *self = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0));
+        *self = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() + Simd32x3::from(0.0).with_w(other[e4] * -1.0));
     }
 }
 impl std::ops::Sub<Plane> for Point {

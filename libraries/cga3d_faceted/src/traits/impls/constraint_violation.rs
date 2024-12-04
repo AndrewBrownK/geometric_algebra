@@ -81,7 +81,7 @@ impl ConstraintViolation for AntiCircleRotor {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e45] * self[e45]) + (reverse[scalar] * self[scalar])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -96,7 +96,7 @@ impl ConstraintViolation for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
                     - (reverse[e43] * self[e12])
@@ -110,8 +110,8 @@ impl ConstraintViolation for AntiCircleRotor {
                 (reverse[e43] * self[e15]) + (reverse[e31] * self[e45]) + (reverse[e45] * self[e31]) + (reverse[e15] * self[e43]),
                 (reverse[e41] * self[e25]) + (reverse[e12] * self[e45]) + (reverse[e45] * self[e12]) + (reverse[e25] * self[e41]),
                 -(reverse[e12] * self[e35]) - (reverse[e15] * self[e23]) - (reverse[e25] * self[e31]) - (reverse[e35] * self[e12]),
-            ]) - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (self.group0().zxy() * reverse.group2().yzx()).extend_to_4(reverse[e31] * self[e25]),
+            ]) - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (self.group0().zxy() * reverse.group2().yzx()).with_w(reverse[e31] * self[e25]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -125,7 +125,7 @@ impl ConstraintViolation for AntiCircleRotor {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -163,7 +163,7 @@ impl ConstraintViolation for AntiCircleRotorAligningOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[scalar] * self[scalar])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -178,7 +178,7 @@ impl ConstraintViolation for AntiCircleRotorAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
                     - (reverse[e43] * self[e12])
@@ -192,8 +192,8 @@ impl ConstraintViolation for AntiCircleRotorAligningOrigin {
                 (reverse[e43] * self[e15]) + (reverse[e15] * self[e43]),
                 (reverse[e41] * self[e25]) + (reverse[e25] * self[e41]),
                 -(reverse[e12] * self[e35]) - (reverse[e15] * self[e23]) - (reverse[e25] * self[e31]) - (reverse[e35] * self[e12]),
-            ]) - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (self.group0().zxy() * reverse.group2().yzx()).extend_to_4(reverse[e31] * self[e25]),
+            ]) - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (self.group0().zxy() * reverse.group2().yzx()).with_w(reverse[e31] * self[e25]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -207,7 +207,7 @@ impl ConstraintViolation for AntiCircleRotorAligningOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -243,9 +243,9 @@ impl ConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
+            Simd32x3::from(0.0).with_w((reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e23] * self[e15])
                     - (reverse[e31] * self[e25])
                     - (reverse[e12] * self[e35])
@@ -260,7 +260,7 @@ impl ConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -395,7 +395,7 @@ impl ConstraintViolation for AntiDipoleInversion {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -415,7 +415,7 @@ impl ConstraintViolation for AntiDipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e423] * self[e1])
                     + (reverse[e431] * self[e425])
@@ -437,18 +437,18 @@ impl ConstraintViolation for AntiDipoleInversion {
                 -(reverse[e4] * self[e315]) - (reverse[e1] * self[e435]),
                 -(reverse[e4] * self[e125]) - (reverse[e2] * self[e415]),
                 (reverse[e3] * self[e125]) + (reverse[e5] * self[e321]),
-            ]) + (Simd32x4::from([reverse[e315], reverse[e5], reverse[e5], self[e125]]) * self.group0().zyz().extend_to_4(reverse[e435]))
-                + (Simd32x4::from([reverse[e5], reverse[e125], reverse[e235], self[e315]]) * self.group0().xxy().extend_to_4(reverse[e425]))
-                + (reverse.group3().yzxy() * self.group1().zxy().extend_to_4(self[e315]))
-                + (self.group1().xyzz() * reverse.group1().www().extend_to_4(reverse[e125]))
-                + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group2().wwwx() * reverse.group2().truncate_to_3().extend_to_4(reverse[e1]))
-                + (self.group1().ww().extend_to_4(self[e2], self[e415]) * reverse.group1().xyx().extend_to_4(reverse[e235]))
-                + (self.group3().zx().extend_to_4(self[e321], self[e425]) * reverse.group1().yzz().extend_to_4(reverse[e315]))
-                - (self.group3().yzxz() * reverse.group1().zxy().extend_to_4(reverse[e125]))
-                - (self.group2().zx().extend_to_4(self[e5], self[e1]) * reverse.group0().yzz().extend_to_4(reverse[e235]))
-                - (self.group3().ww().extend_to_4(self[e315], self[e5]) * reverse.group0().xyx().extend_to_4(reverse[e321]))
-                - (self.group0().yzx() * reverse.group2().zxy()).extend_to_4(reverse[e315] * self[e2]),
+            ]) + (Simd32x4::from([reverse[e315], reverse[e5], reverse[e5], self[e125]]) * self.group0().zyz().with_w(reverse[e435]))
+                + (Simd32x4::from([reverse[e5], reverse[e125], reverse[e235], self[e315]]) * self.group0().xxy().with_w(reverse[e425]))
+                + (reverse.group3().yzxy() * self.group1().zxy().with_w(self[e315]))
+                + (self.group1().xyzz() * reverse.group1().www().with_w(reverse[e125]))
+                + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group2().wwwx() * reverse.group2().xyz().with_w(reverse[e1]))
+                + (self.group1().ww().with_zw(self[e2], self[e415]) * reverse.group1().xyx().with_w(reverse[e235]))
+                + (self.group3().zx().with_zw(self[e321], self[e425]) * reverse.group1().yzz().with_w(reverse[e315]))
+                - (self.group3().yzxz() * reverse.group1().zxy().with_w(reverse[e125]))
+                - (self.group2().zx().with_zw(self[e5], self[e1]) * reverse.group0().yzz().with_w(reverse[e235]))
+                - (self.group3().ww().with_zw(self[e315], self[e5]) * reverse.group0().xyx().with_w(reverse[e321]))
+                - (self.group0().yzx() * reverse.group2().zxy()).with_w(reverse[e315] * self[e2]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -466,7 +466,7 @@ impl ConstraintViolation for AntiDipoleInversion {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -519,10 +519,10 @@ impl ConstraintViolation for AntiDipoleInversionAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            (self.group0().xyzz() * reverse.group0().www().extend_to_4(reverse[e125]))
-                + (self.group0().ww().extend_to_4(self[e2], self[e415]) * reverse.group0().xyx().extend_to_4(reverse[e235]))
-                + (self.group2().zx().extend_to_4(self[e321], self[e425]) * reverse.group0().yzz().extend_to_4(reverse[e315]))
-                + Simd32x3::from(0.0).extend_to_4(
+            (self.group0().xyzz() * reverse.group0().www().with_w(reverse[e125]))
+                + (self.group0().ww().with_zw(self[e2], self[e415]) * reverse.group0().xyx().with_w(reverse[e235]))
+                + (self.group2().zx().with_zw(self[e321], self[e425]) * reverse.group0().yzz().with_w(reverse[e315]))
+                + Simd32x3::from(0.0).with_w(
                     (reverse[e425] * self[e315])
                         + (reverse[e435] * self[e125])
                         + (reverse[e1] * self[e235])
@@ -532,9 +532,9 @@ impl ConstraintViolation for AntiDipoleInversionAtInfinity {
                         - (reverse[e321] * self[e5])
                         - (reverse[e125] * self[e3]),
                 )
-                + (reverse.group2().yzx() * self.group0().zxy()).extend_to_4(reverse[e415] * self[e235])
-                - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e235]))
-                - (reverse.group2().zxy() * self.group0().yzx()).extend_to_4(reverse[e315] * self[e2]),
+                + (reverse.group2().yzx() * self.group0().zxy()).with_w(reverse[e415] * self[e235])
+                - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e235]))
+                - (reverse.group2().zxy() * self.group0().yzx()).with_w(reverse[e315] * self[e2]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -610,7 +610,7 @@ impl ConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -626,7 +626,7 @@ impl ConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -640,10 +640,10 @@ impl ConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
                 -(reverse[e431] * self[e5]) - (reverse[e412] * self[e235]) - (reverse[e235] * self[e412]) - (reverse[e4] * self[e315]),
                 -(reverse[e423] * self[e315]) - (reverse[e412] * self[e5]) - (reverse[e315] * self[e423]) - (reverse[e4] * self[e125]),
                 (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]),
-            ]) + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group0().zx().extend_to_4(self[e4], reverse[e235]) * reverse.group2().yzz().extend_to_4(self[e415]))
-                + (self.group2().ww().extend_to_4(self[e431], self[e125]) * reverse.group2().xyx().extend_to_4(reverse[e435]))
-                + (reverse.group0().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e425] * self[e315]),
+            ]) + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group0().zx().with_zw(self[e4], reverse[e235]) * reverse.group2().yzz().with_w(self[e415]))
+                + (self.group2().ww().with_zw(self[e431], self[e125]) * reverse.group2().xyx().with_w(reverse[e435]))
+                + (reverse.group0().www() * self.group0().xyz()).with_w(reverse[e425] * self[e315]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -657,7 +657,7 @@ impl ConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -776,9 +776,9 @@ impl ConstraintViolation for AntiFlector {
         let reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[e1] * self[e1]) + (reverse[e2] * self[e2]) + (reverse[e3] * self[e3]) - (reverse[e321] * self[e321])),
+            Simd32x3::from(0.0).with_w((reverse[e1] * self[e1]) + (reverse[e2] * self[e2]) + (reverse[e3] * self[e3]) - (reverse[e321] * self[e321])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e1] * self[e235]) + (reverse[e2] * self[e315]) + (reverse[e3] * self[e125]) + (reverse[e5] * self[e321])
                     - (reverse[e235] * self[e1])
                     - (reverse[e315] * self[e2])
@@ -789,7 +789,7 @@ impl ConstraintViolation for AntiFlector {
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -847,9 +847,9 @@ impl ConstraintViolation for AntiLine {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4(-(reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
+            Simd32x3::from(0.0).with_w(-(reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e23] * self[e15])
                     - (reverse[e31] * self[e25])
                     - (reverse[e12] * self[e35])
@@ -861,7 +861,7 @@ impl ConstraintViolation for AntiLine {
         let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2));
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -920,9 +920,9 @@ impl ConstraintViolation for AntiMotor {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
+            Simd32x3::from(0.0).with_w((reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[scalar] * self[e3215]) + (reverse[e3215] * self[scalar])
                     - (reverse[e23] * self[e15])
                     - (reverse[e31] * self[e25])
@@ -938,7 +938,7 @@ impl ConstraintViolation for AntiMotor {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -1039,11 +1039,11 @@ impl ConstraintViolation for AntiMysteryDipoleInversion {
                 reverse[e435] * self[e2] * -1.0,
                 reverse[e415] * self[e3] * -1.0,
                 reverse[e425] * self[e1] * -1.0,
-            ]) + (Simd32x4::from([reverse[e2], reverse[e425], reverse[e435], reverse[e415]]) * self.group1().yzx().extend_to_4(self[e2]))
-                + (Simd32x4::from([self[e1], self[e435], self[e415], self[e425]]) * reverse.group1().extend_to_4(reverse[e1]))
+            ]) + (Simd32x4::from([reverse[e2], reverse[e425], reverse[e435], reverse[e415]]) * self.group1().yzx().with_w(self[e2]))
+                + (Simd32x4::from([self[e1], self[e435], self[e415], self[e425]]) * reverse.group1().with_w(reverse[e1]))
                 + (reverse.group0().xxyz() * self.group0().xwww())
                 + (reverse.group0().ywww() * self.group0().yxyz())
-                - (Simd32x4::from([reverse[e321], reverse[e3], self[e435], self[e415]]) * self.group0().wy().extend_to_4(reverse[e1], reverse[e2])),
+                - (Simd32x4::from([reverse[e321], reverse[e3], self[e435], self[e415]]) * self.group0().wy().with_zw(reverse[e1], reverse[e2])),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -1177,7 +1177,7 @@ impl ConstraintViolation for Circle {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -1192,7 +1192,7 @@ impl ConstraintViolation for Circle {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -1206,10 +1206,10 @@ impl ConstraintViolation for Circle {
                 -(reverse[e412] * self[e235]) - (reverse[e235] * self[e412]),
                 -(reverse[e423] * self[e315]) - (reverse[e315] * self[e423]),
                 (reverse[e425] * self[e315]) + (reverse[e435] * self[e125]),
-            ]) + (self.group1().wwwz() * reverse.group1().truncate_to_3().extend_to_4(reverse[e125]))
-                + (reverse.group0().zxy() * self.group2().yzx()).extend_to_4(reverse[e235] * self[e415])
-                + (reverse.group2().yzx() * self.group0().zxy()).extend_to_4(reverse[e315] * self[e425])
-                + (reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(reverse[e415] * self[e235]),
+            ]) + (self.group1().wwwz() * reverse.group1().xyz().with_w(reverse[e125]))
+                + (reverse.group0().zxy() * self.group2().yzx()).with_w(reverse[e235] * self[e415])
+                + (reverse.group2().yzx() * self.group0().zxy()).with_w(reverse[e315] * self[e425])
+                + (reverse.group1().www() * self.group1().xyz()).with_w(reverse[e415] * self[e235]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1223,7 +1223,7 @@ impl ConstraintViolation for Circle {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1261,7 +1261,7 @@ impl ConstraintViolation for CircleAligningOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -1275,7 +1275,7 @@ impl ConstraintViolation for CircleAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -1289,8 +1289,8 @@ impl ConstraintViolation for CircleAligningOrigin {
                 -(reverse[e412] * self[e235]) - (reverse[e235] * self[e412]),
                 -(reverse[e423] * self[e315]) - (reverse[e315] * self[e423]),
                 (reverse[e435] * self[e125]) + (reverse[e235] * self[e415]) + (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]),
-            ]) + (reverse.group0().zxy() * self.group2().yzx()).extend_to_4(reverse[e415] * self[e235])
-                + (reverse.group2().yzx() * self.group0().zxy()).extend_to_4(reverse[e425] * self[e315]),
+            ]) + (reverse.group0().zxy() * self.group2().yzx()).with_w(reverse[e415] * self[e235])
+                + (reverse.group2().yzx() * self.group0().zxy()).with_w(reverse[e425] * self[e315]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1303,7 +1303,7 @@ impl ConstraintViolation for CircleAligningOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1348,9 +1348,9 @@ impl ConstraintViolation for CircleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            (self.group0().xyzy() * reverse.group0().www().extend_to_4(reverse[e315]))
-                + (self.group0().wwwx() * reverse.group0().truncate_to_3().extend_to_4(reverse[e235]))
-                + Simd32x3::from(0.0).extend_to_4((reverse[e415] * self[e235]) + (reverse[e425] * self[e315]) + (reverse[e435] * self[e125]) + (reverse[e125] * self[e435])),
+            (self.group0().xyzy() * reverse.group0().www().with_w(reverse[e315]))
+                + (self.group0().wwwx() * reverse.group0().xyz().with_w(reverse[e235]))
+                + Simd32x3::from(0.0).with_w((reverse[e415] * self[e235]) + (reverse[e425] * self[e315]) + (reverse[e435] * self[e125]) + (reverse[e125] * self[e435])),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1397,8 +1397,8 @@ impl ConstraintViolation for CircleAtOrigin {
                 -(reverse[e431] * self[e125]) - (reverse[e125] * self[e431]),
                 -(reverse[e412] * self[e235]) - (reverse[e235] * self[e412]),
                 -(reverse[e423] * self[e315]) - (reverse[e315] * self[e423]),
-            ]) + (reverse.group1() * self.group0().xzx()).extend_to_4(reverse[e235] * self[e431])
-                + (self.group1() * reverse.group0().xzx()).extend_to_4(reverse[e431] * self[e235]),
+            ]) + (reverse.group1() * self.group0().xzx()).with_w(reverse[e235] * self[e431])
+                + (self.group1() * reverse.group0().xzx()).with_w(reverse[e431] * self[e235]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -1477,9 +1477,9 @@ impl ConstraintViolation for CircleOrthogonalOrigin {
                 reverse[e431] * self[e125] * -1.0,
                 reverse[e412] * self[e235] * -1.0,
                 reverse[e423] * self[e315] * -1.0,
-            ]) + (reverse.group0().xzxy() * self.group1().extend_to_4(self[e235]))
-                + (self.group0().xzxy() * reverse.group1().extend_to_4(reverse[e235]))
-                - (Simd32x4::from([reverse[e321], reverse[e125], self[e412], self[e423]]) * self.group0().wy().extend_to_4(reverse[e235], reverse[e315])),
+            ]) + (reverse.group0().xzxy() * self.group1().with_w(self[e235]))
+                + (self.group0().xzxy() * reverse.group1().with_w(reverse[e235]))
+                - (Simd32x4::from([reverse[e321], reverse[e125], self[e412], self[e423]]) * self.group0().wy().with_zw(reverse[e235], reverse[e315])),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -1523,7 +1523,7 @@ impl ConstraintViolation for CircleRotor {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -1539,7 +1539,7 @@ impl ConstraintViolation for CircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -1553,10 +1553,10 @@ impl ConstraintViolation for CircleRotor {
                 -(reverse[e412] * self[e235]) - (reverse[e235] * self[e412]),
                 -(reverse[e423] * self[e315]) - (reverse[e315] * self[e423]),
                 (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]),
-            ]) + (reverse.group1().xyzz() * self.group1().www().extend_to_4(self[e125]))
-                + (self.group1().xyzx() * reverse.group1().www().extend_to_4(reverse[e235]))
-                + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group0().zxy() * reverse.group2().yzx()).extend_to_4(reverse[e425] * self[e315]),
+            ]) + (reverse.group1().xyzz() * self.group1().www().with_w(self[e125]))
+                + (self.group1().xyzx() * reverse.group1().www().with_w(reverse[e235]))
+                + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group0().zxy() * reverse.group2().yzx()).with_w(reverse[e425] * self[e315]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1571,7 +1571,7 @@ impl ConstraintViolation for CircleRotor {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1609,7 +1609,7 @@ impl ConstraintViolation for CircleRotorAligningOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -1624,7 +1624,7 @@ impl ConstraintViolation for CircleRotorAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -1638,8 +1638,8 @@ impl ConstraintViolation for CircleRotorAligningOrigin {
                 -(reverse[e412] * self[e235]) - (reverse[e235] * self[e412]),
                 -(reverse[e423] * self[e315]) - (reverse[e315] * self[e423]),
                 (reverse[e435] * self[e125]) + (reverse[e235] * self[e415]) + (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]),
-            ]) + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group0().zxy() * reverse.group2().yzx()).extend_to_4(reverse[e425] * self[e315]),
+            ]) + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group0().zxy() * reverse.group2().yzx()).with_w(reverse[e425] * self[e315]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1653,7 +1653,7 @@ impl ConstraintViolation for CircleRotorAligningOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1689,9 +1689,9 @@ impl ConstraintViolation for CircleRotorAligningOriginAtInfinity {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345])),
+            Simd32x3::from(0.0).with_w((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e415] * self[e235])
                     + (reverse[e425] * self[e315])
                     + (reverse[e435] * self[e125])
@@ -1706,7 +1706,7 @@ impl ConstraintViolation for CircleRotorAligningOriginAtInfinity {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -1746,9 +1746,9 @@ impl ConstraintViolation for CircleRotorAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            (reverse.group0().xyzx() * self.group0().www().extend_to_4(self[e235]))
-                + (reverse.group0().wwwy() * self.group0().truncate_to_3().extend_to_4(self[e315]))
-                + Simd32x3::from(0.0).extend_to_4((reverse[e435] * self[e125]) + (reverse[e235] * self[e415]) + (reverse[e315] * self[e425]) + (reverse[e125] * self[e435])),
+            (reverse.group0().xyzx() * self.group0().www().with_w(self[e235]))
+                + (reverse.group0().wwwy() * self.group0().xyz().with_w(self[e315]))
+                + Simd32x3::from(0.0).with_w((reverse[e435] * self[e125]) + (reverse[e235] * self[e415]) + (reverse[e315] * self[e425]) + (reverse[e125] * self[e435])),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1833,7 +1833,7 @@ impl ConstraintViolation for Dipole {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e45] * self[e45])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -1848,7 +1848,7 @@ impl ConstraintViolation for Dipole {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
                     - (reverse[e43] * self[e12])
@@ -1862,8 +1862,8 @@ impl ConstraintViolation for Dipole {
                 (reverse[e43] * self[e15]) + (reverse[e31] * self[e45]) + (reverse[e45] * self[e31]) + (reverse[e15] * self[e43]),
                 (reverse[e41] * self[e25]) + (reverse[e12] * self[e45]) + (reverse[e45] * self[e12]) + (reverse[e25] * self[e41]),
                 -(reverse[e23] * self[e15]) - (reverse[e31] * self[e25]) - (reverse[e12] * self[e35]) - (reverse[e35] * self[e12]),
-            ]) - (reverse.group0().zxy() * self.group2().yzx()).extend_to_4(reverse[e15] * self[e23])
-                - (reverse.group2().yzx() * self.group0().zxy()).extend_to_4(reverse[e25] * self[e31]),
+            ]) - (reverse.group0().zxy() * self.group2().yzx()).with_w(reverse[e15] * self[e23])
+                - (reverse.group2().yzx() * self.group0().zxy()).with_w(reverse[e25] * self[e31]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -1877,7 +1877,7 @@ impl ConstraintViolation for Dipole {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1918,9 +1918,9 @@ impl ConstraintViolation for DipoleAligningOrigin {
                 reverse[e42] * self[e35],
                 reverse[e43] * self[e15],
                 reverse[e41] * self[e25],
-            ]) + (Simd32x4::from([reverse[e45], reverse[e35], self[e43], self[e41]]) * self.group0().wy().extend_to_4(reverse[e15], reverse[e25]))
-                - (reverse.group0().xzxy() * self.group1().extend_to_4(self[e15]))
-                - (self.group0().xzxy() * reverse.group1().extend_to_4(reverse[e15])),
+            ]) + (Simd32x4::from([reverse[e45], reverse[e35], self[e43], self[e41]]) * self.group0().wy().with_zw(reverse[e15], reverse[e25]))
+                - (reverse.group0().xzxy() * self.group1().with_w(self[e15]))
+                - (self.group0().xzxy() * reverse.group1().with_w(reverse[e15])),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -2025,8 +2025,8 @@ impl ConstraintViolation for DipoleAtOrigin {
                 (reverse[e42] * self[e35]) + (reverse[e35] * self[e42]),
                 (reverse[e43] * self[e15]) + (reverse[e15] * self[e43]),
                 (reverse[e41] * self[e25]) + (reverse[e25] * self[e41]),
-            ]) - (reverse.group1() * self.group0().xzx()).extend_to_4(reverse[e15] * self[e42])
-                - (self.group1() * reverse.group0().xzx()).extend_to_4(reverse[e42] * self[e15]),
+            ]) - (reverse.group1() * self.group0().xzx()).with_w(reverse[e15] * self[e42])
+                - (self.group1() * reverse.group0().xzx()).with_w(reverse[e42] * self[e15]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -2069,7 +2069,7 @@ impl ConstraintViolation for DipoleInversion {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e45] * self[e45]) + (reverse[e1234] * self[e3215]) + (reverse[e3215] * self[e1234])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -2087,7 +2087,7 @@ impl ConstraintViolation for DipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e41] * self[e4235]) + (reverse[e42] * self[e4315]) + (reverse[e43] * self[e4125]) + (reverse[e45] * self[e1234])
                     - (reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
@@ -2106,16 +2106,16 @@ impl ConstraintViolation for DipoleInversion {
                 (reverse[e12] * self[e4235]) + (reverse[e45] * self[e31]) + (reverse[e1234] * self[e25]) + (reverse[e4125] * self[e23]),
                 (reverse[e12] * self[e45]) + (reverse[e45] * self[e12]) + (reverse[e1234] * self[e35]) + (reverse[e4235] * self[e31]),
                 -(reverse[e25] * self[e31]) - (reverse[e25] * self[e4315]) - (reverse[e35] * self[e12]) - (reverse[e35] * self[e4125]),
-            ]) + (self.group1().ww().extend_to_4(self[e4315], self[e45]) * reverse.group1().xyx().extend_to_4(reverse[e3215]))
-                + (self.group2().zx().extend_to_4(self[e3215], self[e25]) * reverse.group0().yzz().extend_to_4(reverse[e4315]))
-                + (self.group3().ww().extend_to_4(self[e25], self[e15]) * reverse.group0().xyx().extend_to_4(reverse[e4235]))
-                + (self.group0().yzx() * reverse.group2().zxy()).extend_to_4(reverse[e4125] * self[e35])
-                - (Simd32x4::from([reverse[e25], reverse[e3215], reverse[e3215], self[e35]]) * self.group0().zyz().extend_to_4(reverse[e12]))
-                - (Simd32x4::from([reverse[e3215], reverse[e35], reverse[e15], self[e25]]) * self.group0().xxy().extend_to_4(reverse[e31]))
+            ]) + (self.group1().ww().with_zw(self[e4315], self[e45]) * reverse.group1().xyx().with_w(reverse[e3215]))
+                + (self.group2().zx().with_zw(self[e3215], self[e25]) * reverse.group0().yzz().with_w(reverse[e4315]))
+                + (self.group3().ww().with_zw(self[e25], self[e15]) * reverse.group0().xyx().with_w(reverse[e4235]))
+                + (self.group0().yzx() * reverse.group2().zxy()).with_w(reverse[e4125] * self[e35])
+                - (Simd32x4::from([reverse[e25], reverse[e3215], reverse[e3215], self[e35]]) * self.group0().zyz().with_w(reverse[e12]))
+                - (Simd32x4::from([reverse[e3215], reverse[e35], reverse[e15], self[e25]]) * self.group0().xxy().with_w(reverse[e31]))
                 - (reverse.group1().zxyw() * self.group3().yzxw())
-                - (reverse.group2().xyzx() * self.group2().www().extend_to_4(self[e23]))
-                - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (reverse.group3().zxy() * self.group1().yzx()).extend_to_4(reverse[e15] * self[e4235]),
+                - (reverse.group2().xyzx() * self.group2().www().with_w(self[e23]))
+                - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (reverse.group3().zxy() * self.group1().yzx()).with_w(reverse[e15] * self[e4235]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2132,7 +2132,7 @@ impl ConstraintViolation for DipoleInversion {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -2170,7 +2170,7 @@ impl ConstraintViolation for DipoleInversionAligningOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e45] * self[e45]) + (reverse[e1234] * self[e3215]) + (reverse[e3215] * self[e1234])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -2185,7 +2185,7 @@ impl ConstraintViolation for DipoleInversionAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e41] * self[e4235]) + (reverse[e42] * self[e4315]) + (reverse[e43] * self[e4125]) + (reverse[e45] * self[e1234])
                     - (reverse[e1234] * self[e45])
                     - (reverse[e4235] * self[e41])
@@ -2193,14 +2193,14 @@ impl ConstraintViolation for DipoleInversionAligningOrigin {
                     - (reverse[e4125] * self[e43]),
             ),
             // e4235, e4315, e4125, e3215
-            (self.group1().zx().extend_to_4(self[e3215], self[e25]) * reverse.group0().yzz().extend_to_4(reverse[e4315]))
-                + (self.group2().ww().extend_to_4(self[e25], self[e15]) * reverse.group0().xyx().extend_to_4(reverse[e4235]))
-                + (reverse.group1().zxy() * self.group0().yzx()).extend_to_4(reverse[e4125] * self[e35])
-                + (reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(reverse[e3215] * self[e45])
-                - (reverse.group0().zxyw() * self.group1().yzx().extend_to_4(self[e3215]))
-                - (reverse.group1().xyxx() * self.group1().ww().extend_to_4(self[e42], self[e4235]))
-                - (reverse.group1().yzzy() * self.group0().zx().extend_to_4(self[e1234], self[e4315]))
-                - (reverse.group2().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e35] * self[e4125]),
+            (self.group1().zx().with_zw(self[e3215], self[e25]) * reverse.group0().yzz().with_w(reverse[e4315]))
+                + (self.group2().ww().with_zw(self[e25], self[e15]) * reverse.group0().xyx().with_w(reverse[e4235]))
+                + (reverse.group1().zxy() * self.group0().yzx()).with_w(reverse[e4125] * self[e35])
+                + (reverse.group1().www() * self.group1().xyz()).with_w(reverse[e3215] * self[e45])
+                - (reverse.group0().zxyw() * self.group1().yzx().with_w(self[e3215]))
+                - (reverse.group1().xyxx() * self.group1().ww().with_zw(self[e42], self[e4235]))
+                - (reverse.group1().yzzy() * self.group0().zx().with_zw(self[e1234], self[e4315]))
+                - (reverse.group2().www() * self.group0().xyz()).with_w(reverse[e35] * self[e4125]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2214,7 +2214,7 @@ impl ConstraintViolation for DipoleInversionAligningOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -2268,9 +2268,9 @@ impl ConstraintViolation for DipoleInversionAtInfinity {
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
             (reverse.group2().yzxw() * self.group0().zxyw())
-                + (self.group0().ww().extend_to_4(self[e4315], reverse[e4235]) * reverse.group0().xyx().extend_to_4(self[e15]))
-                + (self.group2().zx().extend_to_4(self[e45], reverse[e4315]) * reverse.group0().yzz().extend_to_4(self[e25]))
-                + Simd32x3::from(0.0).extend_to_4(
+                + (self.group0().ww().with_zw(self[e4315], reverse[e4235]) * reverse.group0().xyx().with_w(self[e15]))
+                + (self.group2().zx().with_zw(self[e45], reverse[e4315]) * reverse.group0().yzz().with_w(self[e25]))
+                + Simd32x3::from(0.0).with_w(
                     -(reverse[e23] * self[e15])
                         - (reverse[e31] * self[e25])
                         - (reverse[e12] * self[e35])
@@ -2280,9 +2280,9 @@ impl ConstraintViolation for DipoleInversionAtInfinity {
                         - (reverse[e35] * self[e12])
                         - (reverse[e35] * self[e4125]),
                 )
-                + (reverse.group0().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e4125] * self[e35])
-                - (reverse.group0().zxy() * self.group2().yzx()).extend_to_4(reverse[e15] * self[e23])
-                - (reverse.group2().zxy() * self.group0().yzx()).extend_to_4(reverse[e15] * self[e4235]),
+                + (reverse.group0().www() * self.group0().xyz()).with_w(reverse[e4125] * self[e35])
+                - (reverse.group0().zxy() * self.group2().yzx()).with_w(reverse[e15] * self[e23])
+                - (reverse.group2().zxy() * self.group0().yzx()).with_w(reverse[e15] * self[e4235]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2336,11 +2336,11 @@ impl ConstraintViolation for DipoleInversionAtOrigin {
                 (reverse[e15] * self[e43]) + (reverse[e1234] * self[e25]),
                 (reverse[e25] * self[e41]) + (reverse[e1234] * self[e35]),
             ]) + (Simd32x4::from([self[e1234], self[e3215], self[e3215], self[e25]]) * reverse.group0().wxyx())
-                + (reverse.group1().wz() * self.group0().wy()).extend_to_4(reverse[e43] * self[e15], reverse[e43] * self[e3215])
-                - (Simd32x4::from([reverse[e43], reverse[e15], self[e1234], self[e42]]) * self.group1().zw().extend_to_4(reverse[e25], reverse[e15]))
+                + (reverse.group1().wz() * self.group0().wy()).with_zw(reverse[e43] * self[e15], reverse[e43] * self[e3215])
+                - (Simd32x4::from([reverse[e43], reverse[e15], self[e1234], self[e42]]) * self.group1().zw().with_zw(reverse[e25], reverse[e15]))
                 - (Simd32x4::from([self[e25], self[e41], self[e42], self[e43]]) * reverse.group0().ywww())
                 - (reverse.group0().xzxy() * self.group1().xyzx())
-                - (reverse.group1().xyzz() * self.group0().xzx().extend_to_4(self[e1234])),
+                - (reverse.group1().xyzz() * self.group0().xzx().with_w(self[e1234])),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -2383,7 +2383,7 @@ impl ConstraintViolation for DipoleInversionOnOrigin {
             ]) + (Simd32x2::from([self[e4235], self[e45]]) * reverse.group0().xw())
                 - (Simd32x2::from([self[e41], self[e4315]]) * reverse.group1().yz())
                 - (Simd32x2::from([self[e42], self[e4125]]) * reverse.group1().zw())
-                - (Simd32x2::from([self[e45], self[e4235]]) * reverse.group1().truncate_to_2()),
+                - (Simd32x2::from([self[e45], self[e4235]]) * reverse.group1().xy()),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2420,7 +2420,7 @@ impl ConstraintViolation for DipoleInversionOrthogonalOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e3215] * self[e1234]) + (reverse[e1234] * self[e3215])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -2435,7 +2435,7 @@ impl ConstraintViolation for DipoleInversionOrthogonalOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
                     - (reverse[e43] * self[e12])
@@ -2449,10 +2449,10 @@ impl ConstraintViolation for DipoleInversionOrthogonalOrigin {
                 (reverse[e42] * self[e3215]) + (reverse[e43] * self[e15]) + (reverse[e15] * self[e43]) + (reverse[e1234] * self[e25]),
                 (reverse[e41] * self[e25]) + (reverse[e43] * self[e3215]) + (reverse[e25] * self[e41]) + (reverse[e1234] * self[e35]),
                 -(reverse[e25] * self[e31]) - (reverse[e35] * self[e12]),
-            ]) - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (self.group0().zx().extend_to_4(self[e1234], reverse[e15]) * reverse.group2().yzz().extend_to_4(self[e23]))
-                - (self.group2().ww().extend_to_4(self[e42], self[e35]) * reverse.group2().xyx().extend_to_4(reverse[e12]))
-                - (reverse.group0().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e31] * self[e25]),
+            ]) - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (self.group0().zx().with_zw(self[e1234], reverse[e15]) * reverse.group2().yzz().with_w(self[e23]))
+                - (self.group2().ww().with_zw(self[e42], self[e35]) * reverse.group2().xyx().with_w(reverse[e12]))
+                - (reverse.group0().www() * self.group0().xyz()).with_w(reverse[e31] * self[e25]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2466,7 +2466,7 @@ impl ConstraintViolation for DipoleInversionOrthogonalOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -2527,7 +2527,7 @@ impl ConstraintViolation for DipoleOrthogonalOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
                     - (reverse[e43] * self[e35])
@@ -2541,7 +2541,7 @@ impl ConstraintViolation for DipoleOrthogonalOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 -(reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
                     - (reverse[e43] * self[e12])
@@ -2555,8 +2555,8 @@ impl ConstraintViolation for DipoleOrthogonalOrigin {
                 (reverse[e43] * self[e15]) + (reverse[e15] * self[e43]),
                 (reverse[e41] * self[e25]) + (reverse[e25] * self[e41]),
                 -(reverse[e12] * self[e35]) - (reverse[e15] * self[e23]) - (reverse[e25] * self[e31]) - (reverse[e35] * self[e12]),
-            ]) - (reverse.group0().zxy() * self.group2().yzx()).extend_to_4(reverse[e23] * self[e15])
-                - (reverse.group2().yzx() * self.group0().zxy()).extend_to_4(reverse[e31] * self[e25]),
+            ]) - (reverse.group0().zxy() * self.group2().yzx()).with_w(reverse[e23] * self[e15])
+                - (reverse.group2().yzx() * self.group0().zxy()).with_w(reverse[e31] * self[e25]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -2569,7 +2569,7 @@ impl ConstraintViolation for DipoleOrthogonalOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -2665,9 +2665,9 @@ impl ConstraintViolation for Flector {
         let reverse = Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[e45] * self[e45]) - (reverse[e4235] * self[e4235]) - (reverse[e4315] * self[e4315]) - (reverse[e4125] * self[e4125])),
+            Simd32x3::from(0.0).with_w((reverse[e45] * self[e45]) - (reverse[e4235] * self[e4235]) - (reverse[e4315] * self[e4315]) - (reverse[e4125] * self[e4125])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e4235] * self[e15]) + (reverse[e4315] * self[e25]) + (reverse[e4125] * self[e35]) + (reverse[e3215] * self[e45])
                     - (reverse[e15] * self[e4235])
                     - (reverse[e25] * self[e4315])
@@ -2681,7 +2681,7 @@ impl ConstraintViolation for Flector {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -2742,9 +2742,9 @@ impl ConstraintViolation for Line {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435])),
+            Simd32x3::from(0.0).with_w((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e415] * self[e235])
                     + (reverse[e425] * self[e315])
                     + (reverse[e435] * self[e125])
@@ -2756,7 +2756,7 @@ impl ConstraintViolation for Line {
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e415], 2) + f32::powi(self[e425], 2) + f32::powi(self[e435], 2));
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -2810,9 +2810,9 @@ impl ConstraintViolation for Motor {
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x3::from(0.0).extend_to_4((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345])),
+            Simd32x3::from(0.0).with_w((reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345])),
             // e15, e25, e35, e3215
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e415] * self[e235])
                     + (reverse[e425] * self[e315])
                     + (reverse[e435] * self[e125])
@@ -2829,7 +2829,7 @@ impl ConstraintViolation for Motor {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e15, e25, e35, e3215
             geometric_product.group1(),
         );
@@ -2970,33 +2970,33 @@ impl ConstraintViolation for MultiVector {
                 (reverse[e5] * self[e43]) + (reverse[e42] * self[e235]) + (reverse[e425] * self[e4235]) + (reverse[e4315] * self[e415]),
                 -(reverse[e415] * self[e41]) - (reverse[e425] * self[e42]) - (reverse[e435] * self[e43]) - (reverse[e321] * self[e1234]),
             ]) + (Simd32x4::from(reverse[scalar]) * self.group1())
-                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], self[e4]]) * self.group5().zyz().extend_to_4(reverse[e45]))
-                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], self[e43]]) * self.group5().xxy().extend_to_4(reverse[e3]))
-                + (Simd32x4::from([reverse[e3215], reverse[e3215], reverse[e3215], self[e321]]) * self.group7().extend_to_4(reverse[e1234]))
-                + (self.group0().xx().extend_to_4(self[scalar], reverse[e12345]) * reverse.group1().truncate_to_3().extend_to_4(self[e1234]))
-                + (self.group7().zx().extend_to_4(self[e4], reverse[e1234]) * reverse.group4().yzz().extend_to_4(self[e12345]))
-                + (self.group1().zx().extend_to_4(self[e321], self[e4315]) * reverse.group5().yzz().extend_to_4(reverse[e431]))
-                + (self.group1().ww().extend_to_4(self[e431], reverse[e4]) * reverse.group4().xyx().extend_to_4(self[scalar]))
-                + (self.group3().zx().extend_to_4(self[e1234], self[e42]) * reverse.group8().yzz().extend_to_4(reverse[e2]))
-                + (self.group6().ww().extend_to_4(self[e2], self[e4235]) * reverse.group5().xyx().extend_to_4(reverse[e423]))
-                + (self.group9().xx().extend_to_4(self[e42], self[e41]) * reverse.group8().xyx().extend_to_4(reverse[e1]))
-                + (reverse.group7().zxy() * self.group4().yzx()).extend_to_4(reverse[e412] * self[e4125])
-                - (Simd32x4::from([reverse[e42], reverse[e1234], reverse[e1234], self[e1]]) * self.group8().zyz().extend_to_4(reverse[e41]))
-                - (Simd32x4::from([reverse[e1234], reverse[e43], reverse[e41], self[e45]]) * self.group8().xxy().extend_to_4(reverse[e4]))
+                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], self[e4]]) * self.group5().zyz().with_w(reverse[e45]))
+                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], self[e43]]) * self.group5().xxy().with_w(reverse[e3]))
+                + (Simd32x4::from([reverse[e3215], reverse[e3215], reverse[e3215], self[e321]]) * self.group7().with_w(reverse[e1234]))
+                + (self.group0().xx().with_zw(self[scalar], reverse[e12345]) * reverse.group1().xyz().with_w(self[e1234]))
+                + (self.group7().zx().with_zw(self[e4], reverse[e1234]) * reverse.group4().yzz().with_w(self[e12345]))
+                + (self.group1().zx().with_zw(self[e321], self[e4315]) * reverse.group5().yzz().with_w(reverse[e431]))
+                + (self.group1().ww().with_zw(self[e431], reverse[e4]) * reverse.group4().xyx().with_w(self[scalar]))
+                + (self.group3().zx().with_zw(self[e1234], self[e42]) * reverse.group8().yzz().with_w(reverse[e2]))
+                + (self.group6().ww().with_zw(self[e2], self[e4235]) * reverse.group5().xyx().with_w(reverse[e423]))
+                + (self.group9().xx().with_zw(self[e42], self[e41]) * reverse.group8().xyx().with_w(reverse[e1]))
+                + (reverse.group7().zxy() * self.group4().yzx()).with_w(reverse[e412] * self[e4125])
+                - (Simd32x4::from([reverse[e42], reverse[e1234], reverse[e1234], self[e1]]) * self.group8().zyz().with_w(reverse[e41]))
+                - (Simd32x4::from([reverse[e1234], reverse[e43], reverse[e41], self[e45]]) * self.group8().xxy().with_w(reverse[e4]))
                 - (Simd32x4::from([self[e5], self[e5], self[e5], self[e415]]) * reverse.group3().xyzx())
-                - (Simd32x4::from([self[e3215], self[e3215], self[e25], self[e31]]) * reverse.group7().xyx().extend_to_4(reverse[e431]))
-                - (reverse.group3().wwwy() * self.group6().truncate_to_3().extend_to_4(self[e2]))
-                - (self.group6().zxyz() * reverse.group9().zwy().extend_to_4(reverse[e43]))
-                - (reverse.group0().yy().extend_to_4(reverse[e12345], reverse[e23]) * self.group9().yzw().extend_to_4(self[e423]))
-                - (self.group0().yy().extend_to_4(self[e12345], reverse[e31]) * reverse.group9().yzw().extend_to_4(self[e431]))
-                - (self.group4().zx().extend_to_4(self[e3215], self[e12]) * reverse.group7().yzz().extend_to_4(reverse[e412]))
-                - (self.group3().ww().extend_to_4(self[e4315], self[e425]) * reverse.group6().xyx().extend_to_4(reverse[e42]))
-                - (self.group9().wy().extend_to_4(self[e45], self[e3]) * reverse.group6().yzz().extend_to_4(reverse[e43]))
-                - (self.group4() * reverse.group1().www()).extend_to_4(reverse[e4315] * self[e431])
-                - (reverse.group4().zxy() * self.group7().yzx()).extend_to_4(reverse[e12] * self[e412])
-                - (reverse.group5().zxy() * self.group1().yzx()).extend_to_4(reverse[e423] * self[e23])
-                - (reverse.group8().zxy() * self.group3().yzx()).extend_to_4(reverse[e4235] * self[e423])
-                - (self.group5().yzx() * reverse.group1().zxy()).extend_to_4(reverse[e4125] * self[e412]),
+                - (Simd32x4::from([self[e3215], self[e3215], self[e25], self[e31]]) * reverse.group7().xyx().with_w(reverse[e431]))
+                - (reverse.group3().wwwy() * self.group6().xyz().with_w(self[e2]))
+                - (self.group6().zxyz() * reverse.group9().zwy().with_w(reverse[e43]))
+                - (reverse.group0().yy().with_zw(reverse[e12345], reverse[e23]) * self.group9().yzw().with_w(self[e423]))
+                - (self.group0().yy().with_zw(self[e12345], reverse[e31]) * reverse.group9().yzw().with_w(self[e431]))
+                - (self.group4().zx().with_zw(self[e3215], self[e12]) * reverse.group7().yzz().with_w(reverse[e412]))
+                - (self.group3().ww().with_zw(self[e4315], self[e425]) * reverse.group6().xyx().with_w(reverse[e42]))
+                - (self.group9().wy().with_zw(self[e45], self[e3]) * reverse.group6().yzz().with_w(reverse[e43]))
+                - (self.group4() * reverse.group1().www()).with_w(reverse[e4315] * self[e431])
+                - (reverse.group4().zxy() * self.group7().yzx()).with_w(reverse[e12] * self[e412])
+                - (reverse.group5().zxy() * self.group1().yzx()).with_w(reverse[e423] * self[e23])
+                - (reverse.group8().zxy() * self.group3().yzx()).with_w(reverse[e4235] * self[e423])
+                - (self.group5().yzx() * reverse.group1().zxy()).with_w(reverse[e4125] * self[e412]),
             // e5
             (reverse[scalar] * self[e5])
                 + (reverse[e12345] * self[e3215])
@@ -3065,29 +3065,29 @@ impl ConstraintViolation for MultiVector {
                     - (reverse[e425] * self[e1])
                     - (reverse[e3215] * self[e43]),
             ]) + (Simd32x4::from(reverse[scalar]) * self.group9())
-                + (Simd32x4::from([reverse[e41], reverse[e31], reverse[e1234], reverse[e1234]]) * self.group9().yw().extend_to_4(self[e25], self[e35]))
-                + (Simd32x4::from([reverse[e415], reverse[e315], self[e4], self[e431]]) * self.group7().xz().extend_to_4(reverse[e315], reverse[e235]))
-                + (Simd32x4::from([reverse[e425], reverse[e5], self[e423], self[e4]]) * self.group7().yx().extend_to_4(reverse[e125], reverse[e125]))
-                + (Simd32x4::from([reverse[e423], reverse[e12345], reverse[e4315], reverse[e4125]]) * self.group1().xx().extend_to_4(self[scalar], self[scalar]))
-                + (Simd32x4::from([reverse[e431], reverse[e2], self[e45], self[e4315]]) * self.group6().yz().extend_to_4(reverse[e31], reverse[e23]))
-                + (Simd32x4::from([reverse[e431], reverse[e235], self[e43], self[e41]]) * self.group1().yw().extend_to_4(reverse[e15], reverse[e25]))
-                + (Simd32x4::from([reverse[e412], reverse[e415], self[e125], self[e235]]) * self.group6().zw().extend_to_4(reverse[e423], reverse[e431]))
-                + (Simd32x4::from([reverse[e412], reverse[e425], self[e4235], self[e45]]) * self.group1().zz().extend_to_4(reverse[e12], reverse[e12]))
-                + (Simd32x4::from([self[e415], self[e315], reverse[e2], reverse[e3]]) * reverse.group7().xz().extend_to_4(self[e12345], self[e12345]))
-                + (Simd32x4::from([self[e412], self[e415], reverse[e43], reverse[e41]]) * reverse.group6().zw().extend_to_4(self[e15], self[e25]))
-                + (Simd32x4::from([self[e1234], self[e3215], reverse[e5], reverse[e5]]) * reverse.group3().wx().extend_to_4(self[e431], self[e412]))
-                + (Simd32x4::from([self[e4315], self[e35], reverse[e4125], reverse[e4235]]) * reverse.group3().yy().extend_to_4(self[e23], self[e31]))
-                + (Simd32x4::from([self[e4125], self[e23], reverse[e45], reverse[e45]]) * reverse.group3().zw().extend_to_4(self[e31], self[e12]))
-                + (self.group0().xx() * reverse.group9().truncate_to_2()).extend_to_4(reverse[e12345] * self[e2], reverse[e12345] * self[e3])
-                - (Simd32x4::from([reverse[e12345], reverse[e435], self[e1234], self[e42]]) * self.group1().wy().extend_to_4(reverse[e25], reverse[e15]))
-                - (Simd32x4::from([reverse[e1], reverse[e125], reverse[e4235], reverse[e4315]]) * self.group7().truncate_to_2().extend_to_4(self[e12], self[e23]))
-                - (Simd32x4::from([reverse[e42], reverse[e4125], reverse[e41], reverse[e42]]) * self.group5().yy().extend_to_4(self[e35], self[e15]))
-                - (Simd32x4::from([reverse[e23], reverse[e25], self[e4125], self[e4235]]) * self.group3().xz().extend_to_4(reverse[e23], reverse[e31]))
-                - (Simd32x4::from([reverse[e12], reverse[e3215], self[e235], self[e5]]) * self.group3().zx().extend_to_4(reverse[e412], reverse[e412]))
-                - (Simd32x4::from([self[e12345], self[e235], self[e41], self[e1234]]) * reverse.group1().ww().extend_to_4(reverse[e35], reverse[e35]))
-                - (Simd32x4::from([self[e42], self[e4315], self[e5], self[e315]]) * reverse.group5().yz().extend_to_4(reverse[e431], reverse[e423]))
-                - (Simd32x4::from([self[e23], self[e25], self[e412], self[e423]]) * reverse.group3().xz().extend_to_4(reverse[e235], reverse[e315]))
-                - (Simd32x4::from([self[e431], self[e425], reverse[e4], reverse[e4]]) * reverse.group1().yz().extend_to_4(self[e315], self[e125])),
+                + (Simd32x4::from([reverse[e41], reverse[e31], reverse[e1234], reverse[e1234]]) * self.group9().yw().with_zw(self[e25], self[e35]))
+                + (Simd32x4::from([reverse[e415], reverse[e315], self[e4], self[e431]]) * self.group7().xz().with_zw(reverse[e315], reverse[e235]))
+                + (Simd32x4::from([reverse[e425], reverse[e5], self[e423], self[e4]]) * self.group7().yx().with_zw(reverse[e125], reverse[e125]))
+                + (Simd32x4::from([reverse[e423], reverse[e12345], reverse[e4315], reverse[e4125]]) * self.group1().xx().with_zw(self[scalar], self[scalar]))
+                + (Simd32x4::from([reverse[e431], reverse[e2], self[e45], self[e4315]]) * self.group6().yz().with_zw(reverse[e31], reverse[e23]))
+                + (Simd32x4::from([reverse[e431], reverse[e235], self[e43], self[e41]]) * self.group1().yw().with_zw(reverse[e15], reverse[e25]))
+                + (Simd32x4::from([reverse[e412], reverse[e415], self[e125], self[e235]]) * self.group6().zw().with_zw(reverse[e423], reverse[e431]))
+                + (Simd32x4::from([reverse[e412], reverse[e425], self[e4235], self[e45]]) * self.group1().zz().with_zw(reverse[e12], reverse[e12]))
+                + (Simd32x4::from([self[e415], self[e315], reverse[e2], reverse[e3]]) * reverse.group7().xz().with_zw(self[e12345], self[e12345]))
+                + (Simd32x4::from([self[e412], self[e415], reverse[e43], reverse[e41]]) * reverse.group6().zw().with_zw(self[e15], self[e25]))
+                + (Simd32x4::from([self[e1234], self[e3215], reverse[e5], reverse[e5]]) * reverse.group3().wx().with_zw(self[e431], self[e412]))
+                + (Simd32x4::from([self[e4315], self[e35], reverse[e4125], reverse[e4235]]) * reverse.group3().yy().with_zw(self[e23], self[e31]))
+                + (Simd32x4::from([self[e4125], self[e23], reverse[e45], reverse[e45]]) * reverse.group3().zw().with_zw(self[e31], self[e12]))
+                + (self.group0().xx() * reverse.group9().xy()).with_zw(reverse[e12345] * self[e2], reverse[e12345] * self[e3])
+                - (Simd32x4::from([reverse[e12345], reverse[e435], self[e1234], self[e42]]) * self.group1().wy().with_zw(reverse[e25], reverse[e15]))
+                - (Simd32x4::from([reverse[e1], reverse[e125], reverse[e4235], reverse[e4315]]) * self.group7().xy().with_zw(self[e12], self[e23]))
+                - (Simd32x4::from([reverse[e42], reverse[e4125], reverse[e41], reverse[e42]]) * self.group5().yy().with_zw(self[e35], self[e15]))
+                - (Simd32x4::from([reverse[e23], reverse[e25], self[e4125], self[e4235]]) * self.group3().xz().with_zw(reverse[e23], reverse[e31]))
+                - (Simd32x4::from([reverse[e12], reverse[e3215], self[e235], self[e5]]) * self.group3().zx().with_zw(reverse[e412], reverse[e412]))
+                - (Simd32x4::from([self[e12345], self[e235], self[e41], self[e1234]]) * reverse.group1().ww().with_zw(reverse[e35], reverse[e35]))
+                - (Simd32x4::from([self[e42], self[e4315], self[e5], self[e315]]) * reverse.group5().yz().with_zw(reverse[e431], reverse[e423]))
+                - (Simd32x4::from([self[e23], self[e25], self[e412], self[e423]]) * reverse.group3().xz().with_zw(reverse[e235], reverse[e315]))
+                - (Simd32x4::from([self[e431], self[e425], reverse[e4], reverse[e4]]) * reverse.group1().yz().with_zw(self[e315], self[e125])),
             // e3215
             (reverse[scalar] * self[e3215])
                 + (reverse[e1] * self[e235])
@@ -3314,9 +3314,9 @@ impl ConstraintViolation for MysteryDipoleInversion {
                 (reverse[e23] * self[e45]) + (reverse[e31] * self[e4125]) + (reverse[e45] * self[e23]),
                 (reverse[e31] * self[e45]) + (reverse[e12] * self[e4235]) + (reverse[e45] * self[e31]),
                 (reverse[e23] * self[e4315]) + (reverse[e12] * self[e45]) + (reverse[e45] * self[e12]),
-            ]) + (Simd32x4::from([reverse[e45], reverse[e4315], self[e23], self[e31]]) * self.group0().wz().extend_to_4(reverse[e4125], reverse[e4235]))
-                - (Simd32x4::from([reverse[e4315], reverse[e12], reverse[e23], reverse[e31]]) * self.group1().yyz().extend_to_4(self[e4235]))
-                - (Simd32x4::from([self[e4235], self[e31], self[e12], self[e23]]) * reverse.group1().xzx().extend_to_4(reverse[e4315])),
+            ]) + (Simd32x4::from([reverse[e45], reverse[e4315], self[e23], self[e31]]) * self.group0().wz().with_zw(reverse[e4125], reverse[e4235]))
+                - (Simd32x4::from([reverse[e4315], reverse[e12], reverse[e23], reverse[e31]]) * self.group1().yyz().with_w(self[e4235]))
+                - (Simd32x4::from([self[e4235], self[e31], self[e12], self[e23]]) * reverse.group1().xzx().with_w(reverse[e4315])),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -3361,8 +3361,8 @@ impl ConstraintViolation for MysteryVersorEven {
             (Simd32x4::from([self[e3], self[e435], self[e415], self[e12345]]) * reverse.group0().wzww())
                 + (Simd32x4::from([self[e425], self[e3], self[e1], self[e321]]) * reverse.group1().yyzz())
                 + (reverse.group0().yxxx() * self.group0().yyzw())
-                + (reverse.group0().zyzy() * self.group0().zxx().extend_to_4(self[e425]))
-                + (reverse.group1().xxyx() * self.group1().xww().extend_to_4(self[e2]))
+                + (reverse.group0().zyzy() * self.group0().zxx().with_w(self[e425]))
+                + (reverse.group1().xxyx() * self.group1().xww().with_w(self[e2]))
                 + (reverse.group1().zwww() * self.group1().zxyz())
                 - (Simd32x4::from([self[e12345], self[e425], self[e435], self[e415]]) * reverse.group0().xwyz())
                 - (Simd32x4::from([self[e321], self[e2], self[e3], self[e1]]) * reverse.group1().wzxy()),
@@ -3414,8 +3414,8 @@ impl ConstraintViolation for MysteryVersorOdd {
                 (reverse[e4125] * self[e23]) + (reverse[e31] * self[e45]) + (reverse[e12] * self[e4235]) + (reverse[e45] * self[e31]),
                 (reverse[e4125] * self[scalar]) + (reverse[e23] * self[e4315]) + (reverse[e12] * self[e45]) + (reverse[e45] * self[e12]),
             ]) + (Simd32x4::from(reverse[scalar]) * self.group0())
-                + (Simd32x4::from([reverse[e45], reverse[e4315], self[scalar], self[e31]]) * self.group1().wz().extend_to_4(reverse[e4315], reverse[e4235]))
-                - (Simd32x4::from([reverse[e4315], reverse[e12], self[e4125], self[e4235]]) * self.group0().zz().extend_to_4(reverse[e23], reverse[e31]))
+                + (Simd32x4::from([reverse[e45], reverse[e4315], self[scalar], self[e31]]) * self.group1().wz().with_zw(reverse[e4315], reverse[e4235]))
+                - (Simd32x4::from([reverse[e4315], reverse[e12], self[e4125], self[e4235]]) * self.group0().zz().with_zw(reverse[e23], reverse[e31]))
                 - (Simd32x4::from([self[e4235], self[e31], self[e12], self[e23]]) * reverse.group0().ywyz()),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -3569,7 +3569,7 @@ impl ConstraintViolation for VersorEven {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -3590,7 +3590,7 @@ impl ConstraintViolation for VersorEven {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e423] * self[e1])
                     + (reverse[e431] * self[e425])
@@ -3609,22 +3609,22 @@ impl ConstraintViolation for VersorEven {
                     - (reverse[e4] * self[e321]),
             ),
             // e4235, e4315, e4125, e3215
-            (reverse.group1().xyxz() * self.group1().ww().extend_to_4(self[e2], self[e125]))
-                + (reverse.group2().xyxz() * self.group3().ww().extend_to_4(self[e431], self[e435]))
-                + (reverse.group2().yzzw() * self.group0().zx().extend_to_4(self[e4], self[e321]))
-                + (reverse.group3().xyxy() * self.group0().ww().extend_to_4(self[e425], self[e315]))
-                + (reverse.group3().yzzz() * self.group1().zx().extend_to_4(self[e12345], self[e125]))
-                + (self.group1().xyzy() * reverse.group1().www().extend_to_4(reverse[e315]))
-                + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group3().zx().extend_to_4(self[e321], self[e415]) * reverse.group1().yzz().extend_to_4(reverse[e235]))
-                + (reverse.group0().www() * self.group3().truncate_to_3()).extend_to_4(reverse[e425] * self[e315])
-                + (reverse.group2().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e1] * self[e235])
+            (reverse.group1().xyxz() * self.group1().ww().with_zw(self[e2], self[e125]))
+                + (reverse.group2().xyxz() * self.group3().ww().with_zw(self[e431], self[e435]))
+                + (reverse.group2().yzzw() * self.group0().zx().with_zw(self[e4], self[e321]))
+                + (reverse.group3().xyxy() * self.group0().ww().with_zw(self[e425], self[e315]))
+                + (reverse.group3().yzzz() * self.group1().zx().with_zw(self[e12345], self[e125]))
+                + (self.group1().xyzy() * reverse.group1().www().with_w(reverse[e315]))
+                + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group3().zx().with_zw(self[e321], self[e415]) * reverse.group1().yzz().with_w(reverse[e235]))
+                + (reverse.group0().www() * self.group3().xyz()).with_w(reverse[e425] * self[e315])
+                + (reverse.group2().www() * self.group0().xyz()).with_w(reverse[e1] * self[e235])
                 - (reverse.group0().xyxw() * self.group2().wwyw())
-                - (reverse.group2().zxyy() * self.group0().yzx().extend_to_4(self[e2]))
-                - (self.group2().zxww() * reverse.group0().yzz().extend_to_4(reverse[e321]))
-                - (self.group3().yzxx() * reverse.group1().zxy().extend_to_4(reverse[e235]))
-                - (reverse.group3().zxy() * self.group1().yzx()).extend_to_4(reverse[e125] * self[e3])
-                - (reverse.group3().www() * self.group2().truncate_to_3()).extend_to_4(reverse[e5] * self[e12345]),
+                - (reverse.group2().zxyy() * self.group0().yzx().with_w(self[e2]))
+                - (self.group2().zxww() * reverse.group0().yzz().with_w(reverse[e321]))
+                - (self.group3().yzxx() * reverse.group1().zxy().with_w(reverse[e235]))
+                - (reverse.group3().zxy() * self.group1().yzx()).with_w(reverse[e125] * self[e3])
+                - (reverse.group3().www() * self.group2().xyz()).with_w(reverse[e5] * self[e12345]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -3643,7 +3643,7 @@ impl ConstraintViolation for VersorEven {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -3681,7 +3681,7 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -3698,7 +3698,7 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e415])
                     + (reverse[e431] * self[e425])
                     + (reverse[e412] * self[e435])
@@ -3714,12 +3714,12 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
                 -(reverse[e4] * self[e315]) - (reverse[e235] * self[e412]),
                 -(reverse[e4] * self[e125]) - (reverse[e315] * self[e423]),
                 (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]),
-            ]) + (reverse.group2().wwwx() * self.group0().truncate_to_3().extend_to_4(self[e415]))
-                + (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e415]))
-                + (self.group0().zx().extend_to_4(self[e4], self[e125]) * reverse.group2().yzz().extend_to_4(reverse[e435]))
-                + (self.group1().ww().extend_to_4(self[e431], self[e315]) * reverse.group2().xyx().extend_to_4(reverse[e425]))
+            ]) + (reverse.group2().wwwx() * self.group0().xyz().with_w(self[e415]))
+                + (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e415]))
+                + (self.group0().zx().with_zw(self[e4], self[e125]) * reverse.group2().yzz().with_w(reverse[e435]))
+                + (self.group1().ww().with_zw(self[e431], self[e315]) * reverse.group2().xyx().with_w(reverse[e425]))
                 - (reverse.group0().xyxw() * self.group2().wwyw())
-                - (reverse.group0().yzz() * self.group2().zxw()).extend_to_4(reverse[e5] * self[e12345]),
+                - (reverse.group0().yzz() * self.group2().zxw()).with_w(reverse[e5] * self[e12345]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -3734,7 +3734,7 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -3787,21 +3787,21 @@ impl ConstraintViolation for VersorEvenAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            (reverse.group0().xxxy() * self.group0().yzw().extend_to_4(self[e235]))
-                + (reverse.group0().yzyz() * self.group0().xx().extend_to_4(self[e425], self[e315]))
-                + (reverse.group0().zwww() * self.group1().zx().extend_to_4(self[e12345], self[e125]))
-                + (reverse.group1().xyxx() * self.group1().ww().extend_to_4(self[e2], self[e235]))
-                + (reverse.group1().yzzy() * self.group0().wy().extend_to_4(self[e321], self[e315]))
-                + (reverse.group1().wwwz() * self.group1().truncate_to_3().extend_to_4(self[e125]))
-                + Simd32x3::from(0.0).extend_to_4(
+            (reverse.group0().xxxy() * self.group0().yzw().with_w(self[e235]))
+                + (reverse.group0().yzyz() * self.group0().xx().with_zw(self[e425], self[e315]))
+                + (reverse.group0().zwww() * self.group1().zx().with_zw(self[e12345], self[e125]))
+                + (reverse.group1().xyxx() * self.group1().ww().with_zw(self[e2], self[e235]))
+                + (reverse.group1().yzzy() * self.group0().wy().with_zw(self[e321], self[e315]))
+                + (reverse.group1().wwwz() * self.group1().xyz().with_w(self[e125]))
+                + Simd32x3::from(0.0).with_w(
                     (reverse[e235] * self[e415]) + (reverse[e315] * self[e425]) + (reverse[e125] * self[e435]) + (reverse[e5] * self[e321])
                         - (reverse[e235] * self[e1])
                         - (reverse[e315] * self[e2])
                         - (reverse[e125] * self[e3])
                         - (reverse[e5] * self[e12345]),
                 )
-                - (reverse.group0().wyzx() * self.group1().yzx().extend_to_4(self[e5]))
-                - (reverse.group1().zxyw() * self.group0().zwy().extend_to_4(self[e5])),
+                - (reverse.group0().wyzx() * self.group1().yzx().with_w(self[e5]))
+                - (reverse.group1().zxyw() * self.group0().zwy().with_w(self[e5])),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -3855,7 +3855,7 @@ impl ConstraintViolation for VersorEvenAtOrigin {
                 + (reverse.group1().yyzz() * self.group0().yzxw())
                 + (reverse.group1().zwww() * self.group0().zxyz())
                 - (reverse.group0().wxyx() * self.group1().wwwy())
-                - (reverse.group1().wz() * self.group0().wy()).extend_to_4(reverse[e412] * self[e235], reverse[e412] * self[e5]),
+                - (reverse.group1().wz() * self.group0().wy()).with_zw(reverse[e412] * self[e235], reverse[e412] * self[e5]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
@@ -3940,7 +3940,7 @@ impl ConstraintViolation for VersorEvenOrthogonalOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e235])
                     + (reverse[e431] * self[e315])
                     + (reverse[e412] * self[e125])
@@ -3957,7 +3957,7 @@ impl ConstraintViolation for VersorEvenOrthogonalOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e423] * self[e1]) + (reverse[e431] * self[e2]) + (reverse[e412] * self[e3]) + (reverse[e321] * self[e4])
                     - (reverse[e1] * self[e423])
                     - (reverse[e2] * self[e431])
@@ -3965,14 +3965,14 @@ impl ConstraintViolation for VersorEvenOrthogonalOrigin {
                     - (reverse[e4] * self[e321]),
             ),
             // e4235, e4315, e4125, e3215
-            (self.group0().zx().extend_to_4(self[e4], self[e315]) * reverse.group1().yzz().extend_to_4(reverse[e2]))
-                + (self.group2().ww().extend_to_4(self[e431], self[e235]) * reverse.group1().xyx().extend_to_4(reverse[e1]))
-                + (reverse.group0().zxy() * self.group1().yzx()).extend_to_4(reverse[e5] * self[e321])
-                + (reverse.group1().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e3] * self[e125])
+            (self.group0().zx().with_zw(self[e4], self[e315]) * reverse.group1().yzz().with_w(reverse[e2]))
+                + (self.group2().ww().with_zw(self[e431], self[e235]) * reverse.group1().xyx().with_w(reverse[e1]))
+                + (reverse.group0().zxy() * self.group1().yzx()).with_w(reverse[e5] * self[e321])
+                + (reverse.group1().www() * self.group0().xyz()).with_w(reverse[e3] * self[e125])
                 - (reverse.group0().xyxw() * self.group1().wwyw())
-                - (reverse.group1().zxyy() * self.group0().yzx().extend_to_4(self[e2]))
-                - (reverse.group0().yzz() * self.group1().zxw()).extend_to_4(reverse[e235] * self[e1])
-                - (reverse.group2().www() * self.group1().truncate_to_3()).extend_to_4(reverse[e125] * self[e3]),
+                - (reverse.group1().zxyy() * self.group0().yzx().with_w(self[e2]))
+                - (reverse.group0().yzz() * self.group1().zxw()).with_w(reverse[e235] * self[e1])
+                - (reverse.group2().www() * self.group1().xyz()).with_w(reverse[e125] * self[e3]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -3987,7 +3987,7 @@ impl ConstraintViolation for VersorEvenOrthogonalOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -4032,7 +4032,7 @@ impl ConstraintViolation for VersorOdd {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[scalar] * self[scalar]) + (reverse[e45] * self[e45]) + (reverse[e1234] * self[e3215]) + (reverse[e3215] * self[e1234])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -4050,7 +4050,7 @@ impl ConstraintViolation for VersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[e41] * self[e4235])
                     + (reverse[e42] * self[e4315])
                     + (reverse[e43] * self[e4125])
@@ -4074,18 +4074,18 @@ impl ConstraintViolation for VersorOdd {
                 (reverse[e15] * self[e43]) + (reverse[e1234] * self[e25]) + (reverse[e4315] * self[scalar]) + (reverse[e4125] * self[e23]),
                 (reverse[e25] * self[e41]) + (reverse[e1234] * self[e35]) + (reverse[e4235] * self[e31]) + (reverse[e4125] * self[scalar]),
                 -(reverse[e25] * self[e31]) - (reverse[e25] * self[e4315]) - (reverse[e35] * self[e12]) - (reverse[e35] * self[e4125]),
-            ]) + (self.group1() * reverse.group1().www().extend_to_4(reverse[e3215]))
-                + (reverse.group0().xyxw() * self.group3().ww().extend_to_4(self[e25], self[e3215]))
-                + (self.group1().ww().extend_to_4(self[e4315], self[e35]) * reverse.group1().xyx().extend_to_4(reverse[e4125]))
-                + (self.group2().zx().extend_to_4(self[e3215], self[e15]) * reverse.group0().yzz().extend_to_4(reverse[e4235]))
-                + (self.group3().zx().extend_to_4(self[e45], self[scalar]) * reverse.group1().yzz().extend_to_4(reverse[e3215]))
-                + (reverse.group0().www() * self.group3().truncate_to_3()).extend_to_4(reverse[e4315] * self[e25])
-                - (reverse.group1().zxyy() * self.group3().yzx().extend_to_4(self[e25]))
-                - (self.group1().yzxx() * reverse.group3().zxy().extend_to_4(reverse[e15]))
-                - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (self.group0().zx().extend_to_4(self[e1234], self[e3215]) * reverse.group2().yzz().extend_to_4(reverse[e45]))
-                - (self.group2().ww().extend_to_4(self[e42], self[e35]) * reverse.group2().xyx().extend_to_4(reverse[e12]))
-                - (reverse.group3().www() * self.group0().truncate_to_3()).extend_to_4(reverse[e15] * self[e4235]),
+            ]) + (self.group1() * reverse.group1().www().with_w(reverse[e3215]))
+                + (reverse.group0().xyxw() * self.group3().ww().with_zw(self[e25], self[e3215]))
+                + (self.group1().ww().with_zw(self[e4315], self[e35]) * reverse.group1().xyx().with_w(reverse[e4125]))
+                + (self.group2().zx().with_zw(self[e3215], self[e15]) * reverse.group0().yzz().with_w(reverse[e4235]))
+                + (self.group3().zx().with_zw(self[e45], self[scalar]) * reverse.group1().yzz().with_w(reverse[e3215]))
+                + (reverse.group0().www() * self.group3().xyz()).with_w(reverse[e4315] * self[e25])
+                - (reverse.group1().zxyy() * self.group3().yzx().with_w(self[e25]))
+                - (self.group1().yzxx() * reverse.group3().zxy().with_w(reverse[e15]))
+                - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (self.group0().zx().with_zw(self[e1234], self[e3215]) * reverse.group2().yzz().with_w(reverse[e45]))
+                - (self.group2().ww().with_zw(self[e42], self[e35]) * reverse.group2().xyx().with_w(reverse[e12]))
+                - (reverse.group3().www() * self.group0().xyz()).with_w(reverse[e15] * self[e4235]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -4102,7 +4102,7 @@ impl ConstraintViolation for VersorOdd {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -4161,11 +4161,11 @@ impl ConstraintViolation for VersorOddAtInfinity {
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(reverse[scalar]) * self.group2())
-                + (reverse.group2().xyxw() * self.group0().xx().extend_to_4(self[e31], self[scalar]))
-                + (reverse.group2().yzzw() * self.group1().zx().extend_to_4(self[scalar], self[e45]))
-                + (self.group1().ww().extend_to_4(self[e4315], self[e15]) * reverse.group1().xyx().extend_to_4(reverse[e4235]))
-                + (self.group2().zx().extend_to_4(self[e45], self[e25]) * reverse.group1().yzz().extend_to_4(reverse[e4315]))
-                + Simd32x3::from(0.0).extend_to_4(
+                + (reverse.group2().xyxw() * self.group0().xx().with_zw(self[e31], self[scalar]))
+                + (reverse.group2().yzzw() * self.group1().zx().with_zw(self[scalar], self[e45]))
+                + (self.group1().ww().with_zw(self[e4315], self[e15]) * reverse.group1().xyx().with_w(reverse[e4235]))
+                + (self.group2().zx().with_zw(self[e45], self[e25]) * reverse.group1().yzz().with_w(reverse[e4315]))
+                + Simd32x3::from(0.0).with_w(
                     -(reverse[e25] * self[e31])
                         - (reverse[e25] * self[e4315])
                         - (reverse[e35] * self[e12])
@@ -4175,9 +4175,9 @@ impl ConstraintViolation for VersorOddAtInfinity {
                         - (reverse[e12] * self[e35])
                         - (reverse[e45] * self[e3215]),
                 )
-                + (reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(reverse[e4125] * self[e35])
-                - (reverse.group1().zxy() * self.group2().yzx()).extend_to_4(reverse[e15] * self[e23])
-                - (reverse.group2().zxy() * self.group1().yzx()).extend_to_4(reverse[e15] * self[e4235]),
+                + (reverse.group1().www() * self.group1().xyz()).with_w(reverse[e4125] * self[e35])
+                - (reverse.group1().zxy() * self.group2().yzx()).with_w(reverse[e15] * self[e23])
+                - (reverse.group2().zxy() * self.group1().yzx()).with_w(reverse[e15] * self[e4235]),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -4226,7 +4226,7 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[scalar] * self[scalar]) + (reverse[e3215] * self[e1234]) + (reverse[e1234] * self[e3215])
                     - (reverse[e41] * self[e15])
                     - (reverse[e42] * self[e25])
@@ -4241,7 +4241,7 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(
+            Simd32x3::from(0.0).with_w(
                 (reverse[scalar] * self[e1234]) + (reverse[e1234] * self[scalar])
                     - (reverse[e41] * self[e23])
                     - (reverse[e42] * self[e31])
@@ -4256,12 +4256,12 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
                 (reverse[e15] * self[e43]) + (reverse[e1234] * self[e25]),
                 (reverse[e25] * self[e41]) + (reverse[e1234] * self[e35]),
                 -(reverse[e25] * self[e31]) - (reverse[e35] * self[e12]),
-            ]) + (reverse.group0().xyxw() * self.group1().ww().extend_to_4(self[e25], self[e3215]))
-                + (self.group2().zx().extend_to_4(self[e3215], self[scalar]) * reverse.group0().yzz().extend_to_4(reverse[e3215]))
-                - (reverse.group1().wwwy() * self.group0().truncate_to_3().extend_to_4(self[e25]))
-                - (reverse.group2().yzzx() * self.group0().zx().extend_to_4(self[e1234], self[e23]))
-                - (self.group2().yzxx() * reverse.group0().zxy().extend_to_4(reverse[e23]))
-                - (self.group2().ww().extend_to_4(self[e42], self[e35]) * reverse.group2().xyx().extend_to_4(reverse[e12])),
+            ]) + (reverse.group0().xyxw() * self.group1().ww().with_zw(self[e25], self[e3215]))
+                + (self.group2().zx().with_zw(self[e3215], self[scalar]) * reverse.group0().yzz().with_w(reverse[e3215]))
+                - (reverse.group1().wwwy() * self.group0().xyz().with_w(self[e25]))
+                - (reverse.group2().yzzx() * self.group0().zx().with_zw(self[e1234], self[e23]))
+                - (self.group2().yzxx() * reverse.group0().zxy().with_w(reverse[e23]))
+                - (self.group2().ww().with_zw(self[e42], self[e35]) * reverse.group2().xyx().with_w(reverse[e12])),
         );
         let dot_product = Scalar::from_groups(
             // scalar
@@ -4275,7 +4275,7 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            geometric_product.group0() + Simd32x3::from(0.0).extend_to_4(dot_product[scalar] * -1.0),
+            geometric_product.group0() + Simd32x3::from(0.0).with_w(dot_product[scalar] * -1.0),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234

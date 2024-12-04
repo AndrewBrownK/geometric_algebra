@@ -31,9 +31,9 @@ impl std::ops::Add<AntiCircleOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]),
+            other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -51,11 +51,11 @@ impl std::ops::Add<AntiCircleRotor> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(other[scalar]),
             // e23, e31, e12, e45
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().truncate_to_3().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().xyz().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -71,11 +71,11 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for DipoleInversionAligningOri
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(other[scalar]),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]),
+            other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().truncate_to_3().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().xyz().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -93,9 +93,9 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for DipoleInversionA
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]),
+            other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -113,9 +113,9 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for DipoleInversionAligningOrigin 
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -133,7 +133,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]),
+            other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -155,7 +155,7 @@ impl std::ops::Add<AntiDipoleInversion> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -163,7 +163,7 @@ impl std::ops::Add<AntiDipoleInversion> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -185,7 +185,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for DipoleInversionAligningOri
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -215,13 +215,13 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for DipoleInversionAligningOrigi
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -239,21 +239,21 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for DipoleInversionAlign
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -275,13 +275,13 @@ impl std::ops::Add<AntiDipoleOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -302,9 +302,9 @@ impl std::ops::Add<AntiDualNum> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(self[e45]),
+            Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            self.group1().truncate_to_3().extend_to_4(other[e1234] + self[e1234]),
+            self.group1().xyz().with_w(other[e1234] + self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -324,11 +324,11 @@ impl std::ops::Add<AntiFlatOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -354,15 +354,15 @@ impl std::ops::Add<AntiFlatPoint> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -384,15 +384,15 @@ impl std::ops::Add<AntiFlector> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -414,11 +414,11 @@ impl std::ops::Add<AntiFlectorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -440,11 +440,11 @@ impl std::ops::Add<AntiLine> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]),
+            other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -456,9 +456,9 @@ impl std::ops::Add<AntiLineOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]),
+            other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -483,9 +483,9 @@ impl std::ops::Add<AntiMotor> for DipoleInversionAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
-            self.group2().truncate_to_3().extend_to_4(other[e3215] + self[e3215]),
+            self.group2().xyz().with_w(other[e3215] + self[e3215]),
         );
     }
 }
@@ -517,7 +517,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -533,13 +533,13 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for DipoleInversionAligningOrigin
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -569,7 +569,7 @@ impl std::ops::Add<AntiPlane> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -593,13 +593,13 @@ impl std::ops::Add<AntiPlaneOnOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -629,7 +629,7 @@ impl std::ops::Add<AntiScalar> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -659,7 +659,7 @@ impl std::ops::Add<AntiSphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -692,7 +692,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for DipoleInversionAligningOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]),
             // e15, e25, e35, e1234
-            self.group1().truncate_to_3().extend_to_4(other[e1234] + self[e1234]),
+            self.group1().xyz().with_w(other[e1234] + self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -712,7 +712,7 @@ impl std::ops::Add<Circle> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -742,11 +742,11 @@ impl std::ops::Add<CircleAligningOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -772,7 +772,7 @@ impl std::ops::Add<CircleAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -802,7 +802,7 @@ impl std::ops::Add<CircleAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -832,11 +832,11 @@ impl std::ops::Add<CircleOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -862,13 +862,13 @@ impl std::ops::Add<CircleOrthogonalOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             other.group1(),
             // e1234, e4235, e4315, e4125
@@ -892,7 +892,7 @@ impl std::ops::Add<CircleRotor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -900,7 +900,7 @@ impl std::ops::Add<CircleRotor> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -922,15 +922,15 @@ impl std::ops::Add<CircleRotorAligningOrigin> for DipoleInversionAligningOrigin 
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -952,15 +952,15 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for DipoleInversionAlign
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -982,7 +982,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -990,7 +990,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -1012,13 +1012,13 @@ impl std::ops::Add<CircleRotorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1041,11 +1041,11 @@ impl std::ops::Add<Dipole> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1063,7 +1063,7 @@ impl std::ops::Add<DipoleAligningOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             other.group0() + self.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1076,7 +1076,7 @@ impl std::ops::AddAssign<DipoleAligningOrigin> for DipoleInversionAligningOrigin
             // e41, e42, e43, e45
             other.group0() + self.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1092,11 +1092,11 @@ impl std::ops::Add<DipoleAtInfinity> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group0() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1112,9 +1112,9 @@ impl std::ops::Add<DipoleAtOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1125,9 +1125,9 @@ impl std::ops::AddAssign<DipoleAtOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1146,9 +1146,9 @@ impl std::ops::Add<DipoleInversion> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
             other.group2() + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1198,11 +1198,11 @@ impl std::ops::Add<DipoleInversionAtInfinity> for DipoleInversionAligningOrigin 
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group0().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2() + other.group2(),
         );
@@ -1222,7 +1222,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1() + other.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1235,7 +1235,7 @@ impl std::ops::AddAssign<DipoleInversionAtOrigin> for DipoleInversionAligningOri
             // e15, e25, e35, e1234
             self.group1() + other.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1251,7 +1251,7 @@ impl std::ops::Add<DipoleInversionOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0() + other.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group2(),
         );
@@ -1264,7 +1264,7 @@ impl std::ops::AddAssign<DipoleInversionOnOrigin> for DipoleInversionAligningOri
             // e41, e42, e43, e45
             self.group0() + other.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group2(),
         );
@@ -1283,13 +1283,13 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for DipoleInversionAligningO
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() + other.group0().truncate_to_3(),
+            self.group0().xyz() + other.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]),
+            other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1() + other.group2(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1335,11 +1335,11 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            other.group0() + self.group0().truncate_to_3(),
+            other.group0() + self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]),
+            other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1353,13 +1353,13 @@ impl std::ops::Add<DualNum> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1385,7 +1385,7 @@ impl std::ops::Add<FlatOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1398,7 +1398,7 @@ impl std::ops::AddAssign<FlatOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1416,7 +1416,7 @@ impl std::ops::Add<FlatPoint> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1429,7 +1429,7 @@ impl std::ops::AddAssign<FlatPoint> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1449,7 +1449,7 @@ impl std::ops::Add<FlatPointAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1462,7 +1462,7 @@ impl std::ops::AddAssign<FlatPointAtInfinity> for DipoleInversionAligningOrigin 
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().extend_to_4(self[e1234]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -1478,7 +1478,7 @@ impl std::ops::Add<Flector> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1491,7 +1491,7 @@ impl std::ops::AddAssign<Flector> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1513,7 +1513,7 @@ impl std::ops::Add<FlectorAtInfinity> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1526,7 +1526,7 @@ impl std::ops::AddAssign<FlectorAtInfinity> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1540,7 +1540,7 @@ impl std::ops::Add<FlectorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1553,7 +1553,7 @@ impl std::ops::AddAssign<FlectorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1575,7 +1575,7 @@ impl std::ops::Add<Horizon> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1588,7 +1588,7 @@ impl std::ops::AddAssign<Horizon> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1606,7 +1606,7 @@ impl std::ops::Add<Infinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1636,11 +1636,11 @@ impl std::ops::Add<Line> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1666,7 +1666,7 @@ impl std::ops::Add<LineAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1696,11 +1696,11 @@ impl std::ops::Add<LineOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1726,7 +1726,7 @@ impl std::ops::Add<Motor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1734,7 +1734,7 @@ impl std::ops::Add<Motor> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -1756,7 +1756,7 @@ impl std::ops::Add<MotorAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1764,7 +1764,7 @@ impl std::ops::Add<MotorAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -1786,7 +1786,7 @@ impl std::ops::Add<MotorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1824,7 +1824,7 @@ impl std::ops::Add<MultiVector> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0() + other.group3(),
             // e15, e25, e35
-            other.group4() + self.group1().truncate_to_3(),
+            other.group4() + self.group1().xyz(),
             // e23, e31, e12
             other.group5(),
             // e415, e425, e435, e321
@@ -1834,7 +1834,7 @@ impl std::ops::Add<MultiVector> for DipoleInversionAligningOrigin {
             // e235, e315, e125
             other.group8(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([self[e1234], self[e4235], other[e4315], other[e4125]]) + other.group9().truncate_to_2().extend_to_4(self[e4315], self[e4125]),
+            Simd32x4::from([self[e1234], self[e4235], other[e4315], other[e4125]]) + other.group9().xy().with_zw(self[e4315], self[e4125]),
             // e3215
             self[e3215] + other[e3215],
         );
@@ -1854,7 +1854,7 @@ impl std::ops::Add<MysteryCircle> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1884,7 +1884,7 @@ impl std::ops::Add<MysteryCircleRotor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1909,9 +1909,9 @@ impl std::ops::Add<MysteryDipole> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group0().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -1932,13 +1932,13 @@ impl std::ops::Add<MysteryDipoleInversion> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group0().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group1().extend_to_4(self[e3215]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group1().with_w(self[e3215]),
         );
     }
 }
@@ -1956,7 +1956,7 @@ impl std::ops::Add<MysteryVersorEven> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1987,7 +1987,7 @@ impl std::ops::Add<MysteryVersorOdd> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group1().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -2009,7 +2009,7 @@ impl std::ops::Add<NullCircleAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -2035,7 +2035,7 @@ impl std::ops::Add<NullDipoleAtOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -2048,7 +2048,7 @@ impl std::ops::AddAssign<NullDipoleAtOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -2068,7 +2068,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for DipoleInversionAligningOrigi
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2081,7 +2081,7 @@ impl std::ops::AddAssign<NullDipoleInversionAtOrigin> for DipoleInversionAlignin
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2099,7 +2099,7 @@ impl std::ops::Add<NullSphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2112,7 +2112,7 @@ impl std::ops::AddAssign<NullSphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2126,19 +2126,19 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2156,13 +2156,13 @@ impl std::ops::Add<Origin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -2221,7 +2221,7 @@ impl std::ops::Add<PlaneOnOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group0().extend_to_4(self[e3215]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group0().with_w(self[e3215]),
         );
     }
 }
@@ -2234,7 +2234,7 @@ impl std::ops::AddAssign<PlaneOnOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group0().extend_to_4(self[e3215]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]) + other.group0().with_w(self[e3215]),
         );
     }
 }
@@ -2252,7 +2252,7 @@ impl std::ops::Add<RoundPoint> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -2276,13 +2276,13 @@ impl std::ops::Add<RoundPointAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -2306,7 +2306,7 @@ impl std::ops::Add<Scalar> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(self[e45]),
+            Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -2326,7 +2326,7 @@ impl std::ops::Add<Sphere> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2() + other.group0(),
         );
@@ -2339,7 +2339,7 @@ impl std::ops::AddAssign<Sphere> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             self.group2() + other.group0(),
         );
@@ -2356,9 +2356,9 @@ impl std::ops::Add<SphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1().truncate_to_3().extend_to_4(self[e1234] + other[e1234]),
+            self.group1().xyz().with_w(self[e1234] + other[e1234]),
             // e4235, e4315, e4125, e3215
-            self.group2().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            self.group2().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -2369,9 +2369,9 @@ impl std::ops::AddAssign<SphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1().truncate_to_3().extend_to_4(self[e1234] + other[e1234]),
+            self.group1().xyz().with_w(self[e1234] + other[e1234]),
             // e4235, e4315, e4125, e3215
-            self.group2().truncate_to_3().extend_to_4(self[e3215] + other[e3215]),
+            self.group2().xyz().with_w(self[e3215] + other[e3215]),
         );
     }
 }
@@ -2387,7 +2387,7 @@ impl std::ops::Add<SphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group2(),
         );
@@ -2400,7 +2400,7 @@ impl std::ops::AddAssign<SphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group2(),
         );
@@ -2420,15 +2420,15 @@ impl std::ops::Add<VersorEven> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -2444,21 +2444,21 @@ impl std::ops::Add<VersorEvenAligningOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -2480,7 +2480,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -2488,7 +2488,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -2504,21 +2504,21 @@ impl std::ops::Add<VersorEvenAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -2534,19 +2534,19 @@ impl std::ops::Add<VersorEvenOnOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2570,15 +2570,15 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for DipoleInversionAligningOrigin
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -2599,9 +2599,9 @@ impl std::ops::Add<VersorOdd> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().xyz().with_w(other[scalar]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group1().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             self.group1() + other.group2(),
             // e4235, e4315, e4125, e3215
@@ -2624,7 +2624,7 @@ impl std::ops::Add<VersorOddAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
+            other.group1().xyz().with_w(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -2642,13 +2642,13 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for DipoleInversionAligningOrigin 
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().xyz().with_w(other[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]),
             // e15, e25, e35, e1234
             self.group1() + other.group2(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -3747,7 +3747,7 @@ impl From<DipoleInversionAtOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             from_dipole_inversion_at_origin.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_dipole_inversion_at_origin[e3215]),
+            Simd32x3::from(0.0).with_w(from_dipole_inversion_at_origin[e3215]),
         );
     }
 }
@@ -3759,7 +3759,7 @@ impl From<DipoleInversionOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             from_dipole_inversion_on_origin.group0(),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_dipole_inversion_on_origin[e1234]),
+            Simd32x3::from(0.0).with_w(from_dipole_inversion_on_origin[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 from_dipole_inversion_on_origin[e4235],
@@ -3789,7 +3789,7 @@ impl From<FlatOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(from_flat_origin[e45]),
+            Simd32x3::from(0.0).with_w(from_flat_origin[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -3803,7 +3803,7 @@ impl From<FlatPoint> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(from_flat_point[e45]),
+            Simd32x3::from(0.0).with_w(from_flat_point[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([from_flat_point[e15], from_flat_point[e25], from_flat_point[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -3831,7 +3831,7 @@ impl From<Flector> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(from_flector[e45]),
+            Simd32x3::from(0.0).with_w(from_flector[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([from_flector[e15], from_flector[e25], from_flector[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -3849,7 +3849,7 @@ impl From<FlectorAtInfinity> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([from_flector_at_infinity[e15], from_flector_at_infinity[e25], from_flector_at_infinity[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_flector_at_infinity[e3215]),
+            Simd32x3::from(0.0).with_w(from_flector_at_infinity[e3215]),
         );
     }
 }
@@ -3859,7 +3859,7 @@ impl From<FlectorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(from_flector_on_origin[e45]),
+            Simd32x3::from(0.0).with_w(from_flector_on_origin[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -3877,7 +3877,7 @@ impl From<Horizon> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_horizon[e3215]),
+            Simd32x3::from(0.0).with_w(from_horizon[e3215]),
         );
     }
 }
@@ -3908,7 +3908,7 @@ impl From<NullDipoleInversionAtOrigin> for DipoleInversionAligningOrigin {
                 0.0,
             ]),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_null_dipole_inversion_at_origin[e1234]),
+            Simd32x3::from(0.0).with_w(from_null_dipole_inversion_at_origin[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -3922,7 +3922,7 @@ impl From<NullSphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_null_sphere_at_origin[e1234]),
+            Simd32x3::from(0.0).with_w(from_null_sphere_at_origin[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -3963,7 +3963,7 @@ impl From<Sphere> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_sphere[e1234]),
+            Simd32x3::from(0.0).with_w(from_sphere[e1234]),
             // e4235, e4315, e4125, e3215
             from_sphere.group0(),
         );
@@ -3977,9 +3977,9 @@ impl From<SphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_sphere_at_origin[e1234]),
+            Simd32x3::from(0.0).with_w(from_sphere_at_origin[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(from_sphere_at_origin[e3215]),
+            Simd32x3::from(0.0).with_w(from_sphere_at_origin[e3215]),
         );
     }
 }
@@ -3991,7 +3991,7 @@ impl From<SphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(from_sphere_on_origin[e1234]),
+            Simd32x3::from(0.0).with_w(from_sphere_on_origin[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([from_sphere_on_origin[e4235], from_sphere_on_origin[e4315], from_sphere_on_origin[e4125], 0.0]),
         );
@@ -5343,9 +5343,9 @@ impl std::ops::Sub<AntiCircleOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5367,9 +5367,9 @@ impl std::ops::Sub<AntiCircleRotor> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5391,9 +5391,9 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for DipoleInversionAligningOri
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5414,9 +5414,9 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for DipoleInversionA
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5437,9 +5437,9 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for DipoleInversionAligningOrigin 
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5460,9 +5460,9 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5486,13 +5486,13 @@ impl std::ops::Sub<AntiDipoleInversion> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
+            other.group3().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5500,7 +5500,7 @@ impl std::ops::Sub<AntiDipoleInversion> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -5524,13 +5524,13 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for DipoleInversionAligningOri
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group2().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5568,13 +5568,13 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for DipoleInversionAligningOrigi
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5599,21 +5599,21 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for DipoleInversionAlign
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -5642,13 +5642,13 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5671,11 +5671,11 @@ impl std::ops::Sub<AntiDualNum> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(self[e45]),
+            Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -5698,11 +5698,11 @@ impl std::ops::Sub<AntiFlatOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5735,15 +5735,15 @@ impl std::ops::Sub<AntiFlatPoint> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -5766,21 +5766,21 @@ impl std::ops::Sub<AntiFlector> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -5803,17 +5803,17 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5838,9 +5838,9 @@ impl std::ops::Sub<AntiLine> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5858,9 +5858,9 @@ impl std::ops::Sub<AntiLineOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5881,13 +5881,13 @@ impl std::ops::Sub<AntiMotor> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -5901,9 +5901,9 @@ impl std::ops::Sub<AntiMotorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5924,9 +5924,9 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -5949,13 +5949,13 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for DipoleInversionAligningOrigin
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5986,13 +5986,13 @@ impl std::ops::Sub<AntiPlane> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6020,13 +6020,13 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6060,7 +6060,7 @@ impl std::ops::Sub<AntiScalar> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6094,7 +6094,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6124,11 +6124,11 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -6155,7 +6155,7 @@ impl std::ops::Sub<Circle> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6189,11 +6189,11 @@ impl std::ops::Sub<CircleAligningOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6226,7 +6226,7 @@ impl std::ops::Sub<CircleAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6260,7 +6260,7 @@ impl std::ops::Sub<CircleAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6294,11 +6294,11 @@ impl std::ops::Sub<CircleOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6331,13 +6331,13 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -6369,7 +6369,7 @@ impl std::ops::Sub<CircleRotor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6377,7 +6377,7 @@ impl std::ops::Sub<CircleRotor> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -6406,15 +6406,15 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for DipoleInversionAligningOrigin 
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -6443,15 +6443,15 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for DipoleInversionAlign
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -6481,7 +6481,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6489,7 +6489,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -6518,13 +6518,13 @@ impl std::ops::Sub<CircleRotorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6548,9 +6548,9 @@ impl std::ops::Sub<Dipole> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6605,9 +6605,9 @@ impl std::ops::Sub<DipoleAtInfinity> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6663,9 +6663,9 @@ impl std::ops::Sub<DipoleInversion> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1() - other.group2(),
             // e4235, e4315, e4125, e3215
@@ -6715,9 +6715,9 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for DipoleInversionAligningOrigin 
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6742,7 +6742,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1() - other.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -6755,7 +6755,7 @@ impl std::ops::SubAssign<DipoleInversionAtOrigin> for DipoleInversionAligningOri
             // e15, e25, e35, e1234
             self.group1() - other.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -6774,7 +6774,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0() - other.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, 0.0]) + self.group2(),
         );
@@ -6787,7 +6787,7 @@ impl std::ops::SubAssign<DipoleInversionOnOrigin> for DipoleInversionAligningOri
             // e41, e42, e43, e45
             self.group0() - other.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, 0.0]) + self.group2(),
         );
@@ -6807,13 +6807,13 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for DipoleInversionAligningO
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group0().truncate_to_3(),
+            self.group0().xyz() - other.group0().xyz(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1() - other.group2(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -6860,9 +6860,9 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3() - other.group0(),
+            self.group0().xyz() - other.group0(),
             // e23, e31, e12, e45
-            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6885,13 +6885,13 @@ impl std::ops::Sub<DualNum> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6920,7 +6920,7 @@ impl std::ops::Sub<FlatOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6933,7 +6933,7 @@ impl std::ops::SubAssign<FlatOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6954,7 +6954,7 @@ impl std::ops::Sub<FlatPoint> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -6967,7 +6967,7 @@ impl std::ops::SubAssign<FlatPoint> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7022,7 +7022,7 @@ impl std::ops::Sub<Flector> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7035,7 +7035,7 @@ impl std::ops::SubAssign<Flector> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7060,7 +7060,7 @@ impl std::ops::Sub<FlectorAtInfinity> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7073,7 +7073,7 @@ impl std::ops::SubAssign<FlectorAtInfinity> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7090,7 +7090,7 @@ impl std::ops::Sub<FlectorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7103,7 +7103,7 @@ impl std::ops::SubAssign<FlectorOnOrigin> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         *self = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group0() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7128,7 +7128,7 @@ impl std::ops::Sub<Horizon> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7141,7 +7141,7 @@ impl std::ops::SubAssign<Horizon> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7162,7 +7162,7 @@ impl std::ops::Sub<Infinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7196,11 +7196,11 @@ impl std::ops::Sub<Line> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7230,7 +7230,7 @@ impl std::ops::Sub<LineAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7264,11 +7264,11 @@ impl std::ops::Sub<LineOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7302,15 +7302,15 @@ impl std::ops::Sub<Motor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -7339,7 +7339,7 @@ impl std::ops::Sub<MotorAtInfinity> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7347,7 +7347,7 @@ impl std::ops::Sub<MotorAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -7376,11 +7376,11 @@ impl std::ops::Sub<MotorOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7415,7 +7415,7 @@ impl std::ops::Sub<MultiVector> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0() - other.group3(),
             // e15, e25, e35
-            self.group1().truncate_to_3() - other.group4(),
+            self.group1().xyz() - other.group4(),
             // e23, e31, e12
             other.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -7449,7 +7449,7 @@ impl std::ops::Sub<MysteryCircle> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7486,7 +7486,7 @@ impl std::ops::Sub<MysteryCircleRotor> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7515,9 +7515,9 @@ impl std::ops::Sub<MysteryDipole> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7538,9 +7538,9 @@ impl std::ops::Sub<MysteryDipoleInversion> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            self.group0().truncate_to_3(),
+            self.group0().xyz(),
             // e23, e31, e12, e45
-            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7564,13 +7564,13 @@ impl std::ops::Sub<MysteryVersorEven> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7599,9 +7599,9 @@ impl std::ops::Sub<MysteryVersorOdd> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7627,7 +7627,7 @@ impl std::ops::Sub<NullCircleAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7692,7 +7692,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for DipoleInversionAligningOrigi
             // e41, e42, e43, e45
             Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -7705,7 +7705,7 @@ impl std::ops::SubAssign<NullDipoleInversionAtOrigin> for DipoleInversionAlignin
             // e41, e42, e43, e45
             Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -7726,7 +7726,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -7739,7 +7739,7 @@ impl std::ops::SubAssign<NullSphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -7760,19 +7760,19 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -7793,13 +7793,13 @@ impl std::ops::Sub<Origin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7899,7 +7899,7 @@ impl std::ops::Sub<RoundPoint> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7926,13 +7926,13 @@ impl std::ops::Sub<RoundPointAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -7958,9 +7958,9 @@ impl std::ops::Sub<Scalar> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(self[e45]),
+            Simd32x3::from(0.0).with_w(self[e45]),
             // e15, e25, e35, e1234
             self.group1(),
             // e4235, e4315, e4125, e3215
@@ -7983,7 +7983,7 @@ impl std::ops::Sub<Sphere> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2() - other.group0(),
         );
@@ -7996,7 +7996,7 @@ impl std::ops::SubAssign<Sphere> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             self.group2() - other.group0(),
         );
@@ -8017,9 +8017,9 @@ impl std::ops::Sub<SphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -8030,9 +8030,9 @@ impl std::ops::SubAssign<SphereAtOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -8051,7 +8051,7 @@ impl std::ops::Sub<SphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, 0.0]) + self.group2(),
         );
@@ -8064,7 +8064,7 @@ impl std::ops::SubAssign<SphereOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, 0.0]) + self.group2(),
         );
@@ -8093,15 +8093,15 @@ impl std::ops::Sub<VersorEven> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -8125,21 +8125,21 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -8164,13 +8164,13 @@ impl std::ops::Sub<VersorEvenAtInfinity> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -8178,7 +8178,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for DipoleInversionAligningOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -8201,21 +8201,21 @@ impl std::ops::Sub<VersorEvenAtOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -8239,19 +8239,19 @@ impl std::ops::Sub<VersorEvenOnOrigin> for DipoleInversionAligningOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8283,15 +8283,15 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for DipoleInversionAligningOrigin
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]),
             // e3215
@@ -8313,9 +8313,9 @@ impl std::ops::Sub<VersorOdd> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1() - other.group2(),
             // e4235, e4315, e4125, e3215
@@ -8336,9 +8336,9 @@ impl std::ops::Sub<VersorOddAtInfinity> for DipoleInversionAligningOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group1(),
             // e4235, e4315, e4125, e3215
@@ -8360,13 +8360,13 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for DipoleInversionAligningOrigin 
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().xyz() - other.group0().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            other.group1().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             self.group1() - other.group2(),
             // e4235, e4315, e4125, e3215
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -8625,7 +8625,7 @@ impl TryFrom<AntiCircleRotorAtInfinity> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(anti_circle_rotor_at_infinity[e45]),
+            Simd32x3::from(0.0).with_w(anti_circle_rotor_at_infinity[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([anti_circle_rotor_at_infinity[e15], anti_circle_rotor_at_infinity[e25], anti_circle_rotor_at_infinity[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -8708,7 +8708,7 @@ impl TryFrom<AntiDualNum> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(anti_dual_num[e1234]),
+            Simd32x3::from(0.0).with_w(anti_dual_num[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         ));
@@ -8805,7 +8805,7 @@ impl TryFrom<AntiMotor> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([anti_motor[e15], anti_motor[e25], anti_motor[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(anti_motor[e3215]),
+            Simd32x3::from(0.0).with_w(anti_motor[e3215]),
         ));
     }
 }
@@ -8852,7 +8852,7 @@ impl TryFrom<AntiMysteryCircleRotor> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(anti_mystery_circle_rotor[e45]),
+            Simd32x3::from(0.0).with_w(anti_mystery_circle_rotor[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -8905,7 +8905,7 @@ impl TryFrom<AntiVersorEvenOnOrigin> for DipoleInversionAligningOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([anti_versor_even_on_origin[e41], anti_versor_even_on_origin[e42], anti_versor_even_on_origin[e43], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x3::from(0.0).extend_to_4(anti_versor_even_on_origin[e1234]),
+            Simd32x3::from(0.0).with_w(anti_versor_even_on_origin[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         ));
@@ -8991,7 +8991,7 @@ impl TryFrom<DipoleAtInfinity> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(dipole_at_infinity[e45]),
+            Simd32x3::from(0.0).with_w(dipole_at_infinity[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -9079,7 +9079,7 @@ impl TryFrom<DipoleInversionAtInfinity> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(dipole_inversion_at_infinity[e45]),
+            Simd32x3::from(0.0).with_w(dipole_inversion_at_infinity[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([dipole_inversion_at_infinity[e15], dipole_inversion_at_infinity[e25], dipole_inversion_at_infinity[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -9132,7 +9132,7 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for DipoleInversionAligningOrigin 
             // e15, e25, e35, e1234
             dipole_inversion_orthogonal_origin.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(dipole_inversion_orthogonal_origin[e3215]),
+            Simd32x3::from(0.0).with_w(dipole_inversion_orthogonal_origin[e3215]),
         ));
     }
 }
@@ -9379,7 +9379,7 @@ impl TryFrom<MysteryDipole> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(mystery_dipole[e45]),
+            Simd32x3::from(0.0).with_w(mystery_dipole[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -9423,7 +9423,7 @@ impl TryFrom<MysteryDipoleInversion> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(mystery_dipole_inversion[e45]),
+            Simd32x3::from(0.0).with_w(mystery_dipole_inversion[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -9474,7 +9474,7 @@ impl TryFrom<MysteryVersorOdd> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(mystery_versor_odd[e45]),
+            Simd32x3::from(0.0).with_w(mystery_versor_odd[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -9576,7 +9576,7 @@ impl TryFrom<VersorOddAtInfinity> for DipoleInversionAligningOrigin {
         }
         return Ok(DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x3::from(0.0).extend_to_4(versor_odd_at_infinity[e45]),
+            Simd32x3::from(0.0).with_w(versor_odd_at_infinity[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -9631,7 +9631,7 @@ impl TryFrom<VersorOddOrthogonalOrigin> for DipoleInversionAligningOrigin {
             // e15, e25, e35, e1234
             versor_odd_orthogonal_origin.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(versor_odd_orthogonal_origin[e3215]),
+            Simd32x3::from(0.0).with_w(versor_odd_orthogonal_origin[e3215]),
         ));
     }
 }

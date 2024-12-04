@@ -35,7 +35,7 @@ impl std::ops::Add<AntiScalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -53,7 +53,7 @@ impl std::ops::Add<DualNum> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -69,7 +69,7 @@ impl std::ops::Add<Flector> for Horizon {
             // e1, e2, e3, e4
             other.group0(),
             // e423, e431, e412, e321
-            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e321]),
+            other.group1() + Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -103,7 +103,7 @@ impl std::ops::Add<Line> for Horizon {
             // e23, e31, e12
             other.group1(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -117,11 +117,11 @@ impl std::ops::Add<Motor> for Horizon {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -143,7 +143,7 @@ impl std::ops::Add<MultiVector> for Horizon {
             // e23, e31, e12
             other.group3(),
             // e423, e431, e412, e321
-            other.group4() + Simd32x3::from(0.0).extend_to_4(self[e321]),
+            other.group4() + Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -153,9 +153,9 @@ impl std::ops::Add<Origin> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -167,14 +167,14 @@ impl std::ops::Add<Plane> for Horizon {
     // no simd        4        0        0
     fn add(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */ other.group0() + Simd32x3::from(0.0).extend_to_4(self[e321]));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ other.group0() + Simd32x3::from(0.0).with_w(self[e321]));
     }
 }
 impl std::ops::Add<Point> for Horizon {
     type Output = Flector;
     fn add(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(self[e321]));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).with_w(self[e321]));
     }
 }
 impl std::ops::Add<Scalar> for Horizon {
@@ -191,7 +191,7 @@ impl std::ops::Add<Scalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -434,7 +434,7 @@ impl std::ops::Sub<AntiScalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -456,7 +456,7 @@ impl std::ops::Sub<DualNum> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -475,7 +475,7 @@ impl std::ops::Sub<Flector> for Horizon {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            other.group1().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -513,7 +513,7 @@ impl std::ops::Sub<Line> for Horizon {
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -534,11 +534,11 @@ impl std::ops::Sub<Motor> for Horizon {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -565,7 +565,7 @@ impl std::ops::Sub<MultiVector> for Horizon {
             // e23, e31, e12
             other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            other.group4().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group4().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -578,9 +578,9 @@ impl std::ops::Sub<Origin> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -597,7 +597,7 @@ impl std::ops::Sub<Plane> for Horizon {
         use crate::elements::*;
         return Plane::from_groups(
             // e423, e431, e412, e321
-            other.group0().truncate_to_3().extend_to_4(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().xyz().with_w(self[e321] - other[e321]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -613,7 +613,7 @@ impl std::ops::Sub<Point> for Horizon {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }
@@ -635,7 +635,7 @@ impl std::ops::Sub<Scalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x3::from(0.0).extend_to_4(self[e321]),
+            Simd32x3::from(0.0).with_w(self[e321]),
         );
     }
 }

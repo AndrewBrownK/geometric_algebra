@@ -41,7 +41,7 @@ impl std::ops::Add<AntiCircleRotor> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -59,7 +59,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -75,7 +75,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for FlatPointAtInfin
             // e23, e31, e12
             other.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -91,7 +91,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[scalar]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -101,11 +101,11 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar]),
+            self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -131,7 +131,7 @@ impl std::ops::Add<AntiDipoleInversion> for FlatPointAtInfinity {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -187,9 +187,9 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -207,7 +207,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for FlatPointAtInfinity 
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -217,11 +217,11 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for FlatPointAtInfinity 
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -247,9 +247,9 @@ impl std::ops::Add<AntiDipoleOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -265,11 +265,11 @@ impl std::ops::Add<AntiDualNum> for FlatPointAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            Simd32x3::from(0.0).with_w(other[scalar]),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -291,7 +291,7 @@ impl std::ops::Add<AntiFlatOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -321,11 +321,11 @@ impl std::ops::Add<AntiFlatPoint> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -351,11 +351,11 @@ impl std::ops::Add<AntiFlector> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -381,7 +381,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -421,7 +421,7 @@ impl std::ops::Add<AntiMotor> for FlatPointAtInfinity {
             // e23, e31, e12, scalar
             other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e3215]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e3215]),
         );
     }
 }
@@ -431,9 +431,9 @@ impl std::ops::Add<AntiMotorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar]),
+            self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -441,7 +441,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for FlatPointAtInfinity {
     type Output = AntiCircleRotorAtInfinity;
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        return AntiCircleRotorAtInfinity::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e15, e25, e35, scalar */ self.group0().extend_to_4(other[scalar]));
+        return AntiCircleRotorAtInfinity::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e15, e25, e35, scalar */ self.group0().with_w(other[scalar]));
     }
 }
 impl std::ops::Add<AntiMysteryDipoleInversion> for FlatPointAtInfinity {
@@ -451,7 +451,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -510,7 +510,7 @@ impl std::ops::Add<AntiPlaneOnOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -601,7 +601,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12, e3215
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -651,7 +651,7 @@ impl std::ops::Add<CircleAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -738,7 +738,7 @@ impl std::ops::Add<CircleOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -768,9 +768,9 @@ impl std::ops::Add<CircleOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             other.group1(),
             // e1234, e4235, e4315, e4125
@@ -802,7 +802,7 @@ impl std::ops::Add<CircleRotor> for FlatPointAtInfinity {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -828,11 +828,11 @@ impl std::ops::Add<CircleRotorAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -858,11 +858,11 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for FlatPointAtInfinity 
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -892,7 +892,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -918,9 +918,9 @@ impl std::ops::Add<CircleRotorOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -991,7 +991,7 @@ impl std::ops::Add<DipoleInversion> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
@@ -1009,7 +1009,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -1044,7 +1044,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e3215
             other.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -1056,7 +1056,7 @@ impl std::ops::Add<DipoleInversionOnOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]),
         );
@@ -1076,7 +1076,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -1111,7 +1111,7 @@ impl std::ops::Add<DualNum> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1137,7 +1137,7 @@ impl std::ops::Add<FlatOrigin> for FlatPointAtInfinity {
     type Output = FlatPoint;
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0().extend_to_4(other[e45]));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0().with_w(other[e45]));
     }
 }
 impl std::ops::Add<FlatPoint> for FlatPointAtInfinity {
@@ -1150,7 +1150,7 @@ impl std::ops::Add<FlatPoint> for FlatPointAtInfinity {
         use crate::elements::*;
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e45]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e45]),
         );
     }
 }
@@ -1179,7 +1179,7 @@ impl std::ops::Add<Flector> for FlatPointAtInfinity {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e45]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e45]),
             // e4235, e4315, e4125, e3215
             other.group1(),
         );
@@ -1195,7 +1195,7 @@ impl std::ops::Add<FlectorAtInfinity> for FlatPointAtInfinity {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(
             // e15, e25, e35, e3215
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e3215]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e3215]),
         );
     }
 }
@@ -1205,7 +1205,7 @@ impl std::ops::Add<FlectorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            self.group0().extend_to_4(other[e45]),
+            self.group0().with_w(other[e45]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]),
         );
@@ -1215,7 +1215,7 @@ impl std::ops::Add<Horizon> for FlatPointAtInfinity {
     type Output = FlectorAtInfinity;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0().extend_to_4(other[e3215]));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0().with_w(other[e3215]));
     }
 }
 impl std::ops::Add<Infinity> for FlatPointAtInfinity {
@@ -1265,7 +1265,7 @@ impl std::ops::Add<Line> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1323,7 +1323,7 @@ impl std::ops::Add<LineOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1357,7 +1357,7 @@ impl std::ops::Add<Motor> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1387,7 +1387,7 @@ impl std::ops::Add<MotorAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1533,7 +1533,7 @@ impl std::ops::Add<MysteryDipoleInversion> for FlatPointAtInfinity {
             // e15, e25, e35
             self.group0(),
             // e4235, e4315, e4125, e3215
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
         );
     }
 }
@@ -1624,7 +1624,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e3215
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -1632,12 +1632,7 @@ impl std::ops::Add<NullSphereAtOrigin> for FlatPointAtInfinity {
     type Output = DipoleInversionAtOrigin;
     fn add(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return DipoleInversionAtOrigin::from_groups(
-            // e41, e42, e43, e3215
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
-        );
+        return DipoleInversionAtOrigin::from_groups(/* e41, e42, e43, e3215 */ Simd32x4::from(0.0), /* e15, e25, e35, e1234 */ self.group0().with_w(other[e1234]));
     }
 }
 impl std::ops::Add<NullVersorEvenAtOrigin> for FlatPointAtInfinity {
@@ -1648,7 +1643,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1660,7 +1655,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1678,7 +1673,7 @@ impl std::ops::Add<Origin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1703,7 +1698,7 @@ impl std::ops::Add<Origin> for FlatPointAtInfinity {
 impl std::ops::Add<Plane> for FlatPointAtInfinity {
     type Output = Flector;
     fn add(self, other: Plane) -> Self::Output {
-        return Flector::from_groups(/* e15, e25, e35, e45 */ self.group0().extend_to_4(0.0), /* e4235, e4315, e4125, e3215 */ other.group0());
+        return Flector::from_groups(/* e15, e25, e35, e45 */ self.group0().with_w(0.0), /* e4235, e4315, e4125, e3215 */ other.group0());
     }
 }
 impl std::ops::Add<PlaneOnOrigin> for FlatPointAtInfinity {
@@ -1711,9 +1706,9 @@ impl std::ops::Add<PlaneOnOrigin> for FlatPointAtInfinity {
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
-            self.group0().extend_to_4(0.0),
+            self.group0().with_w(0.0),
             // e4235, e4315, e4125, e3215
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
         );
     }
 }
@@ -1755,7 +1750,7 @@ impl std::ops::Add<RoundPointAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -1785,7 +1780,7 @@ impl std::ops::Add<Scalar> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar]),
+            self.group0().with_w(other[scalar]),
         );
     }
 }
@@ -1797,7 +1792,7 @@ impl std::ops::Add<Sphere> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group0(),
         );
@@ -1809,9 +1804,9 @@ impl std::ops::Add<SphereAtOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -1823,7 +1818,7 @@ impl std::ops::Add<SphereOnOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234]),
+            self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]),
         );
@@ -1849,9 +1844,9 @@ impl std::ops::Add<VersorEven> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1867,7 +1862,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -1879,9 +1874,9 @@ impl std::ops::Add<VersorEvenAligningOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1911,7 +1906,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1927,7 +1922,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -1939,9 +1934,9 @@ impl std::ops::Add<VersorEvenAtOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1957,7 +1952,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1969,7 +1964,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1997,11 +1992,11 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2023,7 +2018,7 @@ impl std::ops::Add<VersorOdd> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
@@ -2039,7 +2034,7 @@ impl std::ops::Add<VersorOddAtInfinity> for FlatPointAtInfinity {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([0.0, self[e15], other[e25], other[e35]]) + other.group0().truncate_to_2().extend_to_4(self[e25], self[e35]),
+            Simd32x4::from([0.0, self[e15], other[e25], other[e35]]) + other.group0().xy().with_zw(self[e25], self[e35]),
             // e23, e31, e12, e45
             other.group1(),
             // e4235, e4315, e4125, e3215
@@ -2061,7 +2056,7 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12, e3215
             other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group0().with_w(other[e1234]),
         );
     }
 }
@@ -4071,7 +4066,7 @@ impl std::ops::Sub<AntiCircleRotor> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -4092,7 +4087,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -4111,7 +4106,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for FlatPointAtInfin
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            (self.group0() - other.group1().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group1().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -4130,7 +4125,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            (self.group0() - other.group1().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group1().xyz()).with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -4147,11 +4142,11 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar] * -1.0),
+            self.group0().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -4171,7 +4166,7 @@ impl std::ops::Sub<AntiDipoleInversion> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
+            other.group3().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4185,7 +4180,7 @@ impl std::ops::Sub<AntiDipoleInversion> for FlatPointAtInfinity {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4209,7 +4204,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group2().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4257,9 +4252,9 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4284,7 +4279,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for FlatPointAtInfinity 
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4294,11 +4289,11 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for FlatPointAtInfinity 
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4331,9 +4326,9 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4352,11 +4347,11 @@ impl std::ops::Sub<AntiDualNum> for FlatPointAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
         );
     }
 }
@@ -4381,7 +4376,7 @@ impl std::ops::Sub<AntiFlatOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -4418,11 +4413,11 @@ impl std::ops::Sub<AntiFlatPoint> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4445,7 +4440,7 @@ impl std::ops::Sub<AntiFlector> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4455,11 +4450,11 @@ impl std::ops::Sub<AntiFlector> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4482,7 +4477,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4492,7 +4487,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -4539,7 +4534,7 @@ impl std::ops::Sub<AntiMotor> for FlatPointAtInfinity {
             // e23, e31, e12, scalar
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e3215
-            (self.group0() - other.group1().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group1().xyz()).with_w(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -4556,9 +4551,9 @@ impl std::ops::Sub<AntiMotorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar] * -1.0),
+            self.group0().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -4577,7 +4572,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar] * -1.0),
+            self.group0().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -4595,7 +4590,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4632,7 +4627,7 @@ impl std::ops::Sub<AntiPlane> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4665,7 +4660,7 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4770,9 +4765,9 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, scalar
             other.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, e3215
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
         );
     }
 }
@@ -4833,7 +4828,7 @@ impl std::ops::Sub<CircleAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -4935,7 +4930,7 @@ impl std::ops::Sub<CircleOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -4972,9 +4967,9 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -5014,7 +5009,7 @@ impl std::ops::Sub<CircleRotor> for FlatPointAtInfinity {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5047,11 +5042,11 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5084,11 +5079,11 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for FlatPointAtInfinity 
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5126,7 +5121,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5159,9 +5154,9 @@ impl std::ops::Sub<CircleRotorOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5254,7 +5249,7 @@ impl std::ops::Sub<DipoleInversion> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
         );
@@ -5275,7 +5270,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group1().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group1().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -5316,7 +5311,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e3215
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group1().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group1().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5336,9 +5331,9 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            (other.group1().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -5359,7 +5354,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5405,7 +5400,7 @@ impl std::ops::Sub<DualNum> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5434,7 +5429,7 @@ impl std::ops::Sub<FlatOrigin> for FlatPointAtInfinity {
     // f32        0        1        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0().extend_to_4(other[e45] * -1.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0().with_w(other[e45] * -1.0));
     }
 }
 impl std::ops::Sub<FlatPoint> for FlatPointAtInfinity {
@@ -5450,7 +5445,7 @@ impl std::ops::Sub<FlatPoint> for FlatPointAtInfinity {
         use crate::elements::*;
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            (self.group0() - other.group0().truncate_to_3()).extend_to_4(other[e45]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group0().xyz()).with_w(other[e45]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5482,7 +5477,7 @@ impl std::ops::Sub<Flector> for FlatPointAtInfinity {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            (self.group0() - other.group0().truncate_to_3()).extend_to_4(other[e45]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group0().xyz()).with_w(other[e45]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -5501,7 +5496,7 @@ impl std::ops::Sub<FlectorAtInfinity> for FlatPointAtInfinity {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(
             // e15, e25, e35, e3215
-            (self.group0() - other.group0().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group0().xyz()).with_w(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5518,9 +5513,9 @@ impl std::ops::Sub<FlectorOnOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            self.group0().extend_to_4(other[e45] * -1.0),
+            self.group0().with_w(other[e45] * -1.0),
             // e4235, e4315, e4125, e3215
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -5531,7 +5526,7 @@ impl std::ops::Sub<Horizon> for FlatPointAtInfinity {
     // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0().extend_to_4(other[e3215] * -1.0));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0().with_w(other[e3215] * -1.0));
     }
 }
 impl std::ops::Sub<Infinity> for FlatPointAtInfinity {
@@ -5588,7 +5583,7 @@ impl std::ops::Sub<Line> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5654,7 +5649,7 @@ impl std::ops::Sub<LineOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5692,11 +5687,11 @@ impl std::ops::Sub<Motor> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5733,7 +5728,7 @@ impl std::ops::Sub<MotorAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5766,7 +5761,7 @@ impl std::ops::Sub<MotorOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5913,7 +5908,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for FlatPointAtInfinity {
             // e15, e25, e35
             self.group0(),
             // e4235, e4315, e4125, e3215
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -5933,7 +5928,7 @@ impl std::ops::Sub<MysteryVersorEven> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5972,7 +5967,7 @@ impl std::ops::Sub<MysteryVersorOdd> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -6032,9 +6027,9 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
         );
     }
 }
@@ -6049,7 +6044,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
         );
     }
 }
@@ -6068,7 +6063,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6080,7 +6075,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6101,7 +6096,7 @@ impl std::ops::Sub<Origin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6132,7 +6127,7 @@ impl std::ops::Sub<Plane> for FlatPointAtInfinity {
     fn sub(self, other: Plane) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
-            self.group0().extend_to_4(0.0),
+            self.group0().with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -6147,9 +6142,9 @@ impl std::ops::Sub<PlaneOnOrigin> for FlatPointAtInfinity {
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
-            self.group0().extend_to_4(0.0),
+            self.group0().with_w(0.0),
             // e4235, e4315, e4125, e3215
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -6201,7 +6196,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6234,7 +6229,7 @@ impl std::ops::Sub<Scalar> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            self.group0().extend_to_4(other[scalar] * -1.0),
+            self.group0().with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -6253,7 +6248,7 @@ impl std::ops::Sub<Sphere> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -6268,9 +6263,9 @@ impl std::ops::Sub<SphereAtOrigin> for FlatPointAtInfinity {
         use crate::elements::*;
         return DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
         );
     }
 }
@@ -6289,9 +6284,9 @@ impl std::ops::Sub<SphereOnOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            self.group0().extend_to_4(other[e1234] * -1.0),
+            self.group0().with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -6324,9 +6319,9 @@ impl std::ops::Sub<VersorEven> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6350,7 +6345,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6360,11 +6355,11 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6389,7 +6384,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6403,7 +6398,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for FlatPointAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6426,7 +6421,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6438,9 +6433,9 @@ impl std::ops::Sub<VersorEvenAtOrigin> for FlatPointAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6464,7 +6459,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for FlatPointAtInfinity {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6474,9 +6469,9 @@ impl std::ops::Sub<VersorEvenOnOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6512,11 +6507,11 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6541,7 +6536,7 @@ impl std::ops::Sub<VersorOdd> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
         );
@@ -6585,7 +6580,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12, e3215
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group0() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6657,7 +6652,7 @@ impl TryFrom<AntiCircleRotor> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor.group2().xyz()));
     }
 }
 
@@ -6721,7 +6716,7 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor_aligning_origin.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor_aligning_origin.group2().xyz()));
     }
 }
 
@@ -6764,10 +6759,7 @@ impl TryFrom<AntiCircleRotorAligningOriginAtInfinity> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(
-            // e15, e25, e35
-            anti_circle_rotor_aligning_origin_at_infinity.group1().truncate_to_3(),
-        ));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor_aligning_origin_at_infinity.group1().xyz()));
     }
 }
 
@@ -6817,7 +6809,7 @@ impl TryFrom<AntiCircleRotorAtInfinity> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor_at_infinity.group1().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_circle_rotor_at_infinity.group1().xyz()));
     }
 }
 
@@ -6903,7 +6895,7 @@ impl TryFrom<AntiMotor> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_motor.group1().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ anti_motor.group1().xyz()));
     }
 }
 
@@ -7188,7 +7180,7 @@ impl TryFrom<DipoleInversion> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion.group2().xyz()));
     }
 }
 
@@ -7266,7 +7258,7 @@ impl TryFrom<DipoleInversionAligningOrigin> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_aligning_origin.group1().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_aligning_origin.group1().xyz()));
     }
 }
 
@@ -7387,7 +7379,7 @@ impl TryFrom<DipoleInversionAtOrigin> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_at_origin.group1().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_at_origin.group1().xyz()));
     }
 }
 
@@ -7458,7 +7450,7 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_orthogonal_origin.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ dipole_inversion_orthogonal_origin.group2().xyz()));
     }
 }
 
@@ -7537,7 +7529,7 @@ impl TryFrom<FlatPoint> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flat_point.group0().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flat_point.group0().xyz()));
     }
 }
 
@@ -7587,7 +7579,7 @@ impl TryFrom<Flector> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flector.group0().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flector.group0().xyz()));
     }
 }
 
@@ -7609,7 +7601,7 @@ impl TryFrom<FlectorAtInfinity> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flector_at_infinity.group0().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ flector_at_infinity.group0().xyz()));
     }
 }
 
@@ -7933,7 +7925,7 @@ impl TryFrom<VersorOdd> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ versor_odd.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ versor_odd.group2().xyz()));
     }
 }
 
@@ -8094,6 +8086,6 @@ impl TryFrom<VersorOddOrthogonalOrigin> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ versor_odd_orthogonal_origin.group2().truncate_to_3()));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ versor_odd_orthogonal_origin.group2().xyz()));
     }
 }

@@ -100,10 +100,10 @@ macro_rules! match_architecture {
 #[macro_export]
 macro_rules! swizzle {
     ($self:expr, $x:literal, $y:literal, _, _ $(,)?) => {
-        unsafe { Simd32x2 { v32x4: $crate::swizzle!($self, $x, $y, 2, 3) } }
+        Simd32x2 { v32x4: $crate::swizzle!($self, $x, $y, 2, 3) }
     };
     ($self:expr, $x:literal, $y:literal, $z:literal, _ $(,)?) => {
-        unsafe { Simd32x3 { v32x4: $crate::swizzle!($self, $x, $y, $z, 3) } }
+        Simd32x3 { v32x4: $crate::swizzle!($self, $x, $y, $z, 3) }
     };
     ($self:expr, $x:literal, $y:literal, $z:literal, $w:literal $(,)?) => {
         $crate::match_architecture!(
@@ -129,7 +129,7 @@ macro_rules! swizzle {
         )
     };
     ($self:expr, $x:literal, $y:literal, _ $(,)?) => {
-        unsafe { Simd32x2 { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 2, 3) } }
+        Simd32x2 { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 2, 3) }
     };
     ($self:expr, $x:literal, $y:literal, $z:literal $(,)?) => {
         $crate::match_architecture!(
@@ -156,80 +156,6 @@ macro_rules! swizzle {
             ] },
         )
     };
-}
-
-impl Simd32x2 {
-    pub fn powi(mut self, exponent: i32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powi(self[0], exponent);
-        self[1] = f32::powi(self[1], exponent);
-        self
-    }
-    pub fn powf(mut self, exponent: f32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powf(self[0], exponent);
-        self[1] = f32::powf(self[1], exponent);
-        self
-    }
-    pub fn extend_to_3(self, z: f32) -> Simd32x3 {
-        let mut s = unsafe { self.v32x3 };
-        s[2] = z;
-        return s;
-    }
-    pub fn extend_to_4(self, z: f32, w: f32) -> Simd32x4 {
-        let mut s = unsafe { self.v32x4 };
-        s[2] = z;
-        s[3] = w;
-        return s;
-    }
-}
-impl Simd32x3 {
-    pub fn powi(mut self, exponent: i32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powi(self[0], exponent);
-        self[1] = f32::powi(self[1], exponent);
-        self[2] = f32::powi(self[2], exponent);
-        self
-    }
-    pub fn powf(mut self, exponent: f32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powf(self[0], exponent);
-        self[1] = f32::powf(self[1], exponent);
-        self[2] = f32::powf(self[2], exponent);
-        self
-    }
-    pub fn extend_to_4(self, w: f32) -> Simd32x4 {
-        let mut s = unsafe { self.v32x4 };
-        s[3] = w;
-        return s;
-    }
-    pub fn truncate_to_2(self) -> Simd32x2 {
-        unsafe { Simd32x2 { v32x4: self.v32x4 } }
-    }
-}
-impl Simd32x4 {
-    pub fn powi(mut self, exponent: i32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powi(self[0], exponent);
-        self[1] = f32::powi(self[1], exponent);
-        self[2] = f32::powi(self[2], exponent);
-        self[3] = f32::powi(self[3], exponent);
-        self
-    }
-    pub fn powf(mut self, exponent: f32) -> Self {
-        // TODO simd-ify
-        self[0] = f32::powf(self[0], exponent);
-        self[1] = f32::powf(self[1], exponent);
-        self[2] = f32::powf(self[2], exponent);
-        self[3] = f32::powf(self[3], exponent);
-        self
-    }
-    pub fn truncate_to_3(self) -> Simd32x3 {
-        unsafe { Simd32x3 { v32x4: self } }
-    }
-    pub fn truncate_to_2(self) -> Simd32x2 {
-        unsafe { Simd32x2 { v32x4: self } }
-    }
 }
 
 macro_rules! nicer_swizzle {
@@ -269,35 +195,112 @@ macro_rules! nicer_swizzles {
         )+
     };
 }
+
 impl Simd32x2 {
-    fn x(self) -> f32 {
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self
+    }
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self
+    }
+
+    pub fn x(self) -> f32 {
         self[0]
     }
-    fn y(self) -> f32 {
+    pub fn y(self) -> f32 {
         self[1]
+    }
+    #[inline]
+    pub fn xy(self) -> Self {
+        self
+    }
+    pub fn with_x(mut self, x: f32) -> Self {
+        self[0] = x;
+        self
+    }
+    pub fn with_y(mut self, y: f32) -> Self {
+        self[1] = y;
+        self
+    }
+    pub fn with_z(self, z: f32) -> Simd32x3 {
+        let mut s = unsafe { self.v32x3 };
+        s[2] = z;
+        s
+    }
+    pub fn with_zw(self, z: f32, w: f32) -> Simd32x4 {
+        let mut s = unsafe { self.v32x4 };
+        s[2] = z;
+        s[3] = w;
+        return s;
     }
 
     nicer_swizzles! { Simd32x2;
         xx 0 0;
-        xy 0 1;
+        // xy 0 1;
         yx 1 0;
         yy 1 1;
     }
 }
+
 impl Simd32x3 {
-    fn x(self) -> f32 {
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self[2] = f32::powi(self[2], exponent);
+        self
+    }
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self[2] = f32::powf(self[2], exponent);
+        self
+    }
+
+    pub fn x(self) -> f32 {
         self[0]
     }
-    fn y(self) -> f32 {
+    pub fn y(self) -> f32 {
         self[1]
     }
-    fn z(self) -> f32 {
+    pub fn z(self) -> f32 {
         self[2]
+    }
+    pub fn xy(self) -> Simd32x2 {
+        unsafe { Simd32x2 { v32x4: self.v32x4 } }
+    }
+    #[inline]
+    pub fn xyz(self) -> Self {
+        self
+    }
+    pub fn with_x(mut self, x: f32) -> Self {
+        self[0] = x;
+        self
+    }
+    pub fn with_y(mut self, y: f32) -> Self {
+        self[1] = y;
+        self
+    }
+    pub fn with_z(mut self, z: f32) -> Self {
+        self[2] = z;
+        self
+    }
+    pub fn with_w(self, w: f32) -> Simd32x4 {
+        let mut s = unsafe { self.v32x4 };
+        s[3] = w;
+        return s;
     }
 
     nicer_swizzles! { Simd32x2;
         xx 0 0 _;
-        xy 0 1 _;
+        // xy 0 1 _;
         xz 0 2 _;
         yx 1 0 _;
         yy 1 1 _;
@@ -312,7 +315,7 @@ impl Simd32x3 {
         xxz 0 0 2;
         xyx 0 1 0;
         xyy 0 1 1;
-        xyz 0 1 2;
+        // xyz 0 1 2;
         xzx 0 2 0;
         xzy 0 2 1;
         xzz 0 2 2;
@@ -340,22 +343,66 @@ impl Simd32x3 {
 }
 
 impl Simd32x4 {
-    fn x(self) -> f32 {
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self[2] = f32::powi(self[2], exponent);
+        self[3] = f32::powi(self[3], exponent);
+        self
+    }
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self[2] = f32::powf(self[2], exponent);
+        self[3] = f32::powf(self[3], exponent);
+        self
+    }
+
+    pub fn x(self) -> f32 {
         self[0]
     }
-    fn y(self) -> f32 {
+    pub fn y(self) -> f32 {
         self[1]
     }
-    fn z(self) -> f32 {
+    pub fn z(self) -> f32 {
         self[2]
     }
-    fn w(self) -> f32 {
+    pub fn w(self) -> f32 {
         self[3]
+    }
+    pub fn xy(self) -> Simd32x2 {
+        Simd32x2 { v32x4: self }
+    }
+    pub fn xyz(self) -> Simd32x3 {
+        Simd32x3 { v32x4: self }
+    }
+    #[inline]
+    pub fn xyzw(self) -> Self {
+        self
+    }
+
+    pub fn with_x(mut self, x: f32) -> Self {
+        self[0] = x;
+        self
+    }
+    pub fn with_y(mut self, y: f32) -> Self {
+        self[1] = y;
+        self
+    }
+    pub fn with_z(mut self, z: f32) -> Self {
+        self[2] = z;
+        self
+    }
+    pub fn with_w(mut self, w: f32) -> Simd32x4 {
+        self[3] = w;
+        self
     }
 
     nicer_swizzles! { Simd32x2;
         xx 0 0 _ _;
-        xy 0 1 _ _;
+        // xy 0 1 _ _;
         xz 0 2 _ _;
         xw 0 3 _ _;
         yx 1 0 _ _;
@@ -378,7 +425,7 @@ impl Simd32x4 {
         xxw 0 0 3 _;
         xyx 0 1 0 _;
         xyy 0 1 1 _;
-        xyz 0 1 2 _;
+        // xyz 0 1 2 _;
         xyw 0 1 3 _;
         xzx 0 2 0 _;
         xzy 0 2 1 _;
@@ -468,7 +515,7 @@ impl Simd32x4 {
         xyzx 0 1 2 0;
         xyzy 0 1 2 1;
         xyzz 0 1 2 2;
-        xyzw 0 1 2 3;
+        // xyzw 0 1 2 3;
         xywx 0 1 3 0;
         xywy 0 1 3 1;
         xywz 0 1 3 2;

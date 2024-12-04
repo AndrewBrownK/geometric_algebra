@@ -31,7 +31,7 @@ impl AntiOne for CircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
         );
     }
 }
@@ -43,7 +43,7 @@ impl AntiOne for CircleRotorAligningOrigin {
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
         );
     }
 }
@@ -53,7 +53,7 @@ impl AntiOne for CircleRotorAligningOriginAtInfinity {
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
         );
     }
 }
@@ -63,18 +63,13 @@ impl AntiOne for CircleRotorAtInfinity {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
         );
     }
 }
 impl AntiOne for CircleRotorOnOrigin {
     fn anti_one() -> Self {
-        return CircleRotorOnOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
-            // e415, e425, e435
-            Simd32x3::from(0.0),
-        );
+        return CircleRotorOnOrigin::from_groups(/* e423, e431, e412, e12345 */ Simd32x3::from(0.0).with_w(1.0), /* e415, e425, e435 */ Simd32x3::from(0.0));
     }
 }
 impl AntiOne for DualNum {
@@ -84,17 +79,12 @@ impl AntiOne for DualNum {
 }
 impl AntiOne for Motor {
     fn anti_one() -> Self {
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
-            // e235, e315, e125, e5
-            Simd32x4::from(0.0),
-        );
+        return Motor::from_groups(/* e415, e425, e435, e12345 */ Simd32x3::from(0.0).with_w(1.0), /* e235, e315, e125, e5 */ Simd32x4::from(0.0));
     }
 }
 impl AntiOne for MotorOnOrigin {
     fn anti_one() -> Self {
-        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x3::from(0.0).extend_to_4(1.0));
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x3::from(0.0).with_w(1.0));
     }
 }
 impl AntiOne for MultiVector {
@@ -144,7 +134,7 @@ impl AntiOne for VersorEven {
     fn anti_one() -> Self {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -158,7 +148,7 @@ impl AntiOne for VersorEvenAligningOrigin {
     fn anti_one() -> Self {
         return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
+            Simd32x3::from(0.0).with_w(1.0),
             // e415, e425, e435, e4
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -180,11 +170,6 @@ impl AntiOne for VersorEvenAtInfinity {
 }
 impl AntiOne for VersorEvenOnOrigin {
     fn anti_one() -> Self {
-        return VersorEvenOnOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x3::from(0.0).extend_to_4(1.0),
-            // e415, e425, e435, e4
-            Simd32x4::from(0.0),
-        );
+        return VersorEvenOnOrigin::from_groups(/* e423, e431, e412, e12345 */ Simd32x3::from(0.0).with_w(1.0), /* e415, e425, e435, e4 */ Simd32x4::from(0.0));
     }
 }

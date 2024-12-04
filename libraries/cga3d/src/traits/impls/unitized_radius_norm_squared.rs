@@ -36,7 +36,7 @@ impl UnitizedRadiusNormSquared for AntiCircleRotor {
     //  no simd       12       21        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for AntiDipoleInversion {
@@ -55,7 +55,7 @@ impl UnitizedRadiusNormSquared for AntiDipoleInversion {
     //  no simd       17       28        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for Circle {
@@ -74,7 +74,7 @@ impl UnitizedRadiusNormSquared for Circle {
     //  no simd       11       18        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for CircleRotor {
@@ -93,7 +93,7 @@ impl UnitizedRadiusNormSquared for CircleRotor {
     //  no simd       12       19        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for Dipole {
@@ -112,7 +112,7 @@ impl UnitizedRadiusNormSquared for Dipole {
     //  no simd       11       20        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for DipoleInversion {
@@ -131,7 +131,7 @@ impl UnitizedRadiusNormSquared for DipoleInversion {
     //  no simd       17       36        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for MultiVector {
@@ -151,7 +151,7 @@ impl UnitizedRadiusNormSquared for MultiVector {
     //  no simd       63       91        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for RoundPoint {
@@ -170,7 +170,7 @@ impl UnitizedRadiusNormSquared for RoundPoint {
     //  no simd        4       12        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for Sphere {
@@ -185,7 +185,7 @@ impl UnitizedRadiusNormSquared for Sphere {
     // f32        4        8        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for VersorEven {
@@ -204,7 +204,7 @@ impl UnitizedRadiusNormSquared for VersorEven {
     //  no simd       18       29        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
 impl std::ops::Div<unitized_radius_norm_squared> for VersorOdd {
@@ -223,6 +223,6 @@ impl UnitizedRadiusNormSquared for VersorOdd {
     //  no simd       18       37        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
-        return (self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
+        return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }

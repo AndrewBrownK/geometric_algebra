@@ -36,7 +36,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiCircleRotor {
             // e41, e42, e43
             other.group0() + self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -49,7 +49,7 @@ impl std::ops::AddAssign<AntiCircleOnOrigin> for AntiCircleRotor {
             // e41, e42, e43
             other.group0() + self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -102,7 +102,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0() + other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2() + other.group2(),
         );
@@ -115,7 +115,7 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0() + other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2() + other.group2(),
         );
@@ -133,7 +133,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2() + other.group1(),
         );
@@ -146,7 +146,7 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiCircle
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2() + other.group1(),
         );
@@ -194,11 +194,11 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -207,11 +207,11 @@ impl std::ops::AddAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -227,17 +227,17 @@ impl std::ops::Add<AntiDipoleInversion> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -257,11 +257,11 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
@@ -287,15 +287,15 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -313,21 +313,21 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -347,15 +347,15 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -374,7 +374,7 @@ impl std::ops::Add<AntiDualNum> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] + other[scalar]),
+            self.group0().with_w(self[scalar] + other[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -396,13 +396,13 @@ impl std::ops::Add<AntiFlatOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -426,17 +426,17 @@ impl std::ops::Add<AntiFlatPoint> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -456,17 +456,17 @@ impl std::ops::Add<AntiFlector> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -486,13 +486,13 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -516,9 +516,9 @@ impl std::ops::Add<AntiLine> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -529,9 +529,9 @@ impl std::ops::AddAssign<AntiLine> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -547,7 +547,7 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -560,7 +560,7 @@ impl std::ops::AddAssign<AntiLineOnOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -580,13 +580,13 @@ impl std::ops::Add<AntiMotor> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] + other[scalar]),
+            self.group0().with_w(self[scalar] + other[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() + other.group1().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() + other.group1().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -604,7 +604,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -617,7 +617,7 @@ impl std::ops::AddAssign<AntiMotorOnOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -635,7 +635,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -648,7 +648,7 @@ impl std::ops::AddAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -660,15 +660,15 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
@@ -694,11 +694,11 @@ impl std::ops::Add<AntiPlane> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -720,15 +720,15 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -754,11 +754,11 @@ impl std::ops::Add<AntiScalar> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -784,11 +784,11 @@ impl std::ops::Add<AntiSphereOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -812,7 +812,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0() + self.group0().extend_to_4(self[scalar]),
+            other.group0() + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1(),
             // e15, e25, e35, e1234
@@ -834,11 +834,11 @@ impl std::ops::Add<Circle> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
@@ -864,13 +864,13 @@ impl std::ops::Add<CircleAligningOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -894,11 +894,11 @@ impl std::ops::Add<CircleAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
@@ -924,11 +924,11 @@ impl std::ops::Add<CircleAtOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -954,13 +954,13 @@ impl std::ops::Add<CircleOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -984,15 +984,15 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             other.group1(),
             // e1234, e4235, e4315, e4125
@@ -1014,17 +1014,17 @@ impl std::ops::Add<CircleRotor> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1044,17 +1044,17 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1074,17 +1074,17 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1104,17 +1104,17 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1134,15 +1134,15 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1169,7 +1169,7 @@ impl std::ops::Add<Dipole> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[scalar]),
         );
     }
 }
@@ -1182,7 +1182,7 @@ impl std::ops::AddAssign<Dipole> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[scalar]),
         );
     }
 }
@@ -1199,11 +1199,11 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1212,11 +1212,11 @@ impl std::ops::AddAssign<DipoleAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1234,7 +1234,7 @@ impl std::ops::Add<DipoleAtInfinity> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1247,7 +1247,7 @@ impl std::ops::AddAssign<DipoleAtInfinity> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1268,7 +1268,7 @@ impl std::ops::Add<DipoleAtOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1281,7 +1281,7 @@ impl std::ops::AddAssign<DipoleAtOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[scalar]),
         );
     }
 }
@@ -1298,11 +1298,11 @@ impl std::ops::Add<DipoleInversion> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0() + other.group0()).extend_to_4(self[scalar]),
+            (self.group0() + other.group0()).with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
@@ -1318,11 +1318,11 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -1341,11 +1341,11 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, e1234
-            (other.group1() + self.group2().truncate_to_3()).extend_to_4(0.0),
+            (other.group1() + self.group2().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -1361,13 +1361,13 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1381,9 +1381,9 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], other[e1234]]),
             // e4235, e4315, e4125, e3215
@@ -1401,13 +1401,13 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1424,9 +1424,9 @@ impl std::ops::Add<DipoleOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -1437,9 +1437,9 @@ impl std::ops::AddAssign<DipoleOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() + other.group0().truncate_to_3(),
+            self.group0() + other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -1460,9 +1460,9 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0() + other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[scalar]),
         );
     }
 }
@@ -1473,9 +1473,9 @@ impl std::ops::AddAssign<DipoleOrthogonalOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0() + other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().extend_to_4(self[e45]),
+            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e45]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[scalar]),
         );
     }
 }
@@ -1487,15 +1487,15 @@ impl std::ops::Add<DualNum> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1521,7 +1521,7 @@ impl std::ops::Add<FlatOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -1534,7 +1534,7 @@ impl std::ops::AddAssign<FlatOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -1552,7 +1552,7 @@ impl std::ops::Add<FlatPoint> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2(),
         );
@@ -1565,7 +1565,7 @@ impl std::ops::AddAssign<FlatPoint> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2(),
         );
@@ -1585,7 +1585,7 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[scalar]),
         );
     }
 }
@@ -1598,7 +1598,7 @@ impl std::ops::AddAssign<FlatPointAtInfinity> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[scalar]),
         );
     }
 }
@@ -1615,11 +1615,11 @@ impl std::ops::Add<Flector> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() + other.group0().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() + other.group0().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group1(),
         );
@@ -1635,13 +1635,13 @@ impl std::ops::Add<FlectorAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() + other.group0().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() + other.group0().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1655,9 +1655,9 @@ impl std::ops::Add<FlectorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45]),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -1671,13 +1671,13 @@ impl std::ops::Add<Horizon> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -1693,11 +1693,11 @@ impl std::ops::Add<Infinity> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1723,13 +1723,13 @@ impl std::ops::Add<Line> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1753,11 +1753,11 @@ impl std::ops::Add<LineAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1783,13 +1783,13 @@ impl std::ops::Add<LineOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1813,17 +1813,17 @@ impl std::ops::Add<Motor> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1843,17 +1843,17 @@ impl std::ops::Add<MotorAtInfinity> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1873,11 +1873,11 @@ impl std::ops::Add<MotorOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
@@ -1911,11 +1911,11 @@ impl std::ops::Add<MultiVector> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            other.group3() + self.group0().extend_to_4(self[e45]),
+            other.group3() + self.group0().with_w(self[e45]),
             // e15, e25, e35
-            other.group4() + self.group2().truncate_to_3(),
+            other.group4() + self.group2().xyz(),
             // e23, e31, e12
-            other.group5() + self.group1().truncate_to_3(),
+            other.group5() + self.group1().xyz(),
             // e415, e425, e435, e321
             other.group6(),
             // e423, e431, e412
@@ -1941,11 +1941,11 @@ impl std::ops::Add<MysteryCircle> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
@@ -1971,11 +1971,11 @@ impl std::ops::Add<MysteryCircleRotor> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0(),
             // e423, e431, e412
@@ -2028,13 +2028,13 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group0(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            other.group1().extend_to_4(0.0),
+            other.group1().with_w(0.0),
         );
     }
 }
@@ -2050,11 +2050,11 @@ impl std::ops::Add<MysteryVersorEven> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
@@ -2081,7 +2081,7 @@ impl std::ops::Add<MysteryVersorOdd> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] + other[scalar]),
+            self.group0().with_w(self[scalar] + other[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, e1234
@@ -2103,11 +2103,11 @@ impl std::ops::Add<NullCircleAtOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2160,7 +2160,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2176,7 +2176,7 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2194,19 +2194,19 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2224,15 +2224,15 @@ impl std::ops::Add<Origin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2252,7 +2252,7 @@ impl std::ops::Add<Plane> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2268,13 +2268,13 @@ impl std::ops::Add<PlaneOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            other.group0().extend_to_4(0.0),
+            other.group0().with_w(0.0),
         );
     }
 }
@@ -2290,11 +2290,11 @@ impl std::ops::Add<RoundPoint> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2316,15 +2316,15 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2352,7 +2352,7 @@ impl std::ops::Add<Scalar> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -2365,7 +2365,7 @@ impl std::ops::AddAssign<Scalar> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar]),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar]),
         );
     }
 }
@@ -2375,7 +2375,7 @@ impl std::ops::Add<Sphere> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2391,13 +2391,13 @@ impl std::ops::Add<SphereAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], other[e1234]]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -2407,7 +2407,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2429,17 +2429,17 @@ impl std::ops::Add<VersorEven> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2455,21 +2455,21 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2489,17 +2489,17 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3(),
+            other.group2().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2515,21 +2515,21 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2545,19 +2545,19 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4]),
+            Simd32x3::from(0.0).with_w(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2579,17 +2579,17 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321]),
+            Simd32x3::from(0.0).with_w(other[e321]),
             // e423, e431, e412
-            other.group0().truncate_to_3(),
+            other.group0().xyz(),
             // e235, e315, e125
-            other.group1().truncate_to_3(),
+            other.group1().xyz(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2607,11 +2607,11 @@ impl std::ops::Add<VersorOdd> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0() + self.group0().extend_to_4(self[scalar]),
+            other.group0() + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
@@ -2631,11 +2631,11 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] + other[scalar]),
+            self.group0().with_w(self[scalar] + other[scalar]),
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, e1234
-            (other.group0().yzw() + self.group2().truncate_to_3()).extend_to_4(0.0),
+            (other.group0().yzw() + self.group2().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -2651,13 +2651,13 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            other.group0() + self.group0().extend_to_4(self[scalar]),
+            other.group0() + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e1234]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]) + self.group2().xyz().with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215]),
+            Simd32x3::from(0.0).with_w(other[e3215]),
         );
     }
 }
@@ -3978,11 +3978,11 @@ impl From<AntiCircleRotorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            from_anti_circle_rotor_on_origin.group0().truncate_to_3(),
+            from_anti_circle_rotor_on_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([from_anti_circle_rotor_on_origin[e23], from_anti_circle_rotor_on_origin[e31], from_anti_circle_rotor_on_origin[e12], 0.0]),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(from_anti_circle_rotor_on_origin[scalar]),
+            Simd32x3::from(0.0).with_w(from_anti_circle_rotor_on_origin[scalar]),
         );
     }
 }
@@ -4024,7 +4024,7 @@ impl From<AntiMotorOnOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from([from_anti_motor_on_origin[e23], from_anti_motor_on_origin[e31], from_anti_motor_on_origin[e12], 0.0]),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(from_anti_motor_on_origin[scalar]),
+            Simd32x3::from(0.0).with_w(from_anti_motor_on_origin[scalar]),
         );
     }
 }
@@ -4038,7 +4038,7 @@ impl From<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e23, e31, e12, e45
             from_anti_mystery_circle_rotor.group0(),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(from_anti_mystery_circle_rotor[scalar]),
+            Simd32x3::from(0.0).with_w(from_anti_mystery_circle_rotor[scalar]),
         );
     }
 }
@@ -4062,9 +4062,9 @@ impl From<DipoleAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            from_dipole_aligning_origin.group0().truncate_to_3(),
+            from_dipole_aligning_origin.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(from_dipole_aligning_origin[e45]),
+            Simd32x3::from(0.0).with_w(from_dipole_aligning_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([from_dipole_aligning_origin[e15], from_dipole_aligning_origin[e25], from_dipole_aligning_origin[e35], 0.0]),
         );
@@ -4104,9 +4104,9 @@ impl From<DipoleOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            from_dipole_on_origin.group0().truncate_to_3(),
+            from_dipole_on_origin.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(from_dipole_on_origin[e45]),
+            Simd32x3::from(0.0).with_w(from_dipole_on_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from(0.0),
         );
@@ -4134,7 +4134,7 @@ impl From<FlatOrigin> for AntiCircleRotor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(from_flat_origin[e45]),
+            Simd32x3::from(0.0).with_w(from_flat_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from(0.0),
         );
@@ -4148,7 +4148,7 @@ impl From<FlatPoint> for AntiCircleRotor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(from_flat_point[e45]),
+            Simd32x3::from(0.0).with_w(from_flat_point[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([from_flat_point[e15], from_flat_point[e25], from_flat_point[e35], 0.0]),
         );
@@ -4204,7 +4204,7 @@ impl From<Scalar> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(from_scalar[scalar]),
+            Simd32x3::from(0.0).with_w(from_scalar[scalar]),
         );
     }
 }
@@ -5745,11 +5745,11 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -5758,11 +5758,11 @@ impl std::ops::SubAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -5782,21 +5782,21 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
+            other.group3().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5820,15 +5820,15 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group2().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -5862,15 +5862,15 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5895,21 +5895,21 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5936,15 +5936,15 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5967,11 +5967,11 @@ impl std::ops::Sub<AntiDualNum> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] - other[scalar]),
+            self.group0().with_w(self[scalar] - other[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -5992,13 +5992,13 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -6029,17 +6029,17 @@ impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6062,21 +6062,21 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6099,17 +6099,17 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -6203,13 +6203,13 @@ impl std::ops::Sub<AntiMotor> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] - other[scalar]),
+            self.group0().with_w(self[scalar] - other[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group1().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() - other.group1().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -6230,7 +6230,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -6243,7 +6243,7 @@ impl std::ops::SubAssign<AntiMotorOnOrigin> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -6264,7 +6264,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() - other.group0(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -6277,7 +6277,7 @@ impl std::ops::SubAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1() - other.group0(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -6296,15 +6296,15 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -6333,15 +6333,15 @@ impl std::ops::Sub<AntiPlane> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -6367,15 +6367,15 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -6405,11 +6405,11 @@ impl std::ops::Sub<AntiScalar> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -6439,11 +6439,11 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -6470,11 +6470,11 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]) - other.group0(),
+            self.group0().with_w(self[scalar]) - other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -6499,11 +6499,11 @@ impl std::ops::Sub<Circle> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -6533,13 +6533,13 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6570,11 +6570,11 @@ impl std::ops::Sub<CircleAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -6604,11 +6604,11 @@ impl std::ops::Sub<CircleAtOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -6638,13 +6638,13 @@ impl std::ops::Sub<CircleOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6675,15 +6675,15 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -6713,17 +6713,17 @@ impl std::ops::Sub<CircleRotor> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6750,17 +6750,17 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6787,17 +6787,17 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6825,17 +6825,17 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6862,15 +6862,15 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6929,9 +6929,9 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group2(),
         );
@@ -6942,9 +6942,9 @@ impl std::ops::SubAssign<DipoleAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group2(),
         );
@@ -7033,11 +7033,11 @@ impl std::ops::Sub<DipoleInversion> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() - other.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
         );
@@ -7057,11 +7057,11 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group1().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group1().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -7080,11 +7080,11 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() - other.group0(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group1()).extend_to_4(0.0),
+            (self.group2().xyz() - other.group1()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -7104,13 +7104,13 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group1().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group1().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7128,13 +7128,13 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            (other.group1().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -7152,13 +7152,13 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7176,9 +7176,9 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -7189,9 +7189,9 @@ impl std::ops::SubAssign<DipoleOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            self.group0() - other.group0().truncate_to_3(),
+            self.group0() - other.group0().xyz(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -7247,15 +7247,15 @@ impl std::ops::Sub<DualNum> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -7284,7 +7284,7 @@ impl std::ops::Sub<FlatOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -7297,7 +7297,7 @@ impl std::ops::SubAssign<FlatOrigin> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group2(),
         );
@@ -7318,7 +7318,7 @@ impl std::ops::Sub<FlatPoint> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group2(),
         );
@@ -7331,7 +7331,7 @@ impl std::ops::SubAssign<FlatPoint> for AntiCircleRotor {
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]) + self.group2(),
         );
@@ -7385,11 +7385,11 @@ impl std::ops::Sub<Flector> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() - other.group0().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -7408,13 +7408,13 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(0.0),
+            (self.group2().xyz() - other.group0().xyz()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7432,13 +7432,13 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
-            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
+            self.group1() + Simd32x3::from(0.0).with_w(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -7451,13 +7451,13 @@ impl std::ops::Sub<Horizon> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -7476,11 +7476,11 @@ impl std::ops::Sub<Infinity> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -7510,13 +7510,13 @@ impl std::ops::Sub<Line> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7544,11 +7544,11 @@ impl std::ops::Sub<LineAtInfinity> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -7578,13 +7578,13 @@ impl std::ops::Sub<LineOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7616,17 +7616,17 @@ impl std::ops::Sub<Motor> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -7653,17 +7653,17 @@ impl std::ops::Sub<MotorAtInfinity> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -7690,13 +7690,13 @@ impl std::ops::Sub<MotorOnOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -7729,11 +7729,11 @@ impl std::ops::Sub<MultiVector> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]) - other.group3(),
+            self.group0().with_w(self[e45]) - other.group3(),
             // e15, e25, e35
-            self.group2().truncate_to_3() - other.group4(),
+            self.group2().xyz() - other.group4(),
             // e23, e31, e12
-            self.group1().truncate_to_3() - other.group5(),
+            self.group1().xyz() - other.group5(),
             // e415, e425, e435, e321
             other.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -7763,11 +7763,11 @@ impl std::ops::Sub<MysteryCircle> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -7800,11 +7800,11 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -7860,13 +7860,13 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1() - other.group0(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -7886,15 +7886,15 @@ impl std::ops::Sub<MysteryVersorEven> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
@@ -7922,13 +7922,13 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] - other[scalar]),
+            self.group0().with_w(self[scalar] - other[scalar]),
             // e23, e31, e12, e45
             self.group1() - other.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -7948,11 +7948,11 @@ impl std::ops::Sub<NullCircleAtOrigin> for AntiCircleRotor {
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8008,11 +8008,11 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().extend_to_4(self[scalar]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -8028,11 +8028,11 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -8053,19 +8053,19 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8086,15 +8086,15 @@ impl std::ops::Sub<Origin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8118,7 +8118,7 @@ impl std::ops::Sub<Plane> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -8138,13 +8138,13 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -8167,11 +8167,11 @@ impl std::ops::Sub<RoundPoint> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8196,15 +8196,15 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8235,7 +8235,7 @@ impl std::ops::Sub<Scalar> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -8248,7 +8248,7 @@ impl std::ops::SubAssign<Scalar> for AntiCircleRotor {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, scalar
-            self.group2() + Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
+            self.group2() + Simd32x3::from(0.0).with_w(other[scalar] * -1.0),
         );
     }
 }
@@ -8262,11 +8262,11 @@ impl std::ops::Sub<Sphere> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -8285,13 +8285,13 @@ impl std::ops::Sub<SphereAtOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -8308,13 +8308,13 @@ impl std::ops::Sub<SphereOnOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]),
+            self.group0().with_w(self[scalar]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            self.group2().truncate_to_3().extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().xyz().with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -8339,17 +8339,17 @@ impl std::ops::Sub<VersorEven> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8373,21 +8373,21 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8412,21 +8412,21 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).with_w(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group2().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8449,21 +8449,21 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8487,19 +8487,19 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiCircleRotor {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8529,17 +8529,17 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            self.group0().extend_to_4(self[e45]),
+            self.group0().with_w(self[e45]),
             // e15, e25, e35
-            self.group2().truncate_to_3(),
+            self.group2().xyz(),
             // e23, e31, e12
-            self.group1().truncate_to_3(),
+            self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412
-            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group0().xyz() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
+            other.group1().xyz() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8560,11 +8560,11 @@ impl std::ops::Sub<VersorOdd> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]) - other.group0(),
+            self.group0().with_w(self[scalar]) - other.group0(),
             // e23, e31, e12, e45
             self.group1() - other.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
         );
@@ -8584,11 +8584,11 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar] - other[scalar]),
+            self.group0().with_w(self[scalar] - other[scalar]),
             // e23, e31, e12, e45
             self.group1() - other.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group0().yzw()).extend_to_4(0.0),
+            (self.group2().xyz() - other.group0().yzw()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -8608,13 +8608,13 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiCircleRotor {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            self.group0().extend_to_4(self[scalar]) - other.group0(),
+            self.group0().with_w(self[scalar]) - other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0, 0.0]) + self.group1(),
             // e15, e25, e35, e1234
-            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().xyz() - other.group2().xyz()).with_w(other[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
+            Simd32x3::from(0.0).with_w(other[e3215] * -1.0),
         );
     }
 }
@@ -8644,7 +8644,7 @@ impl TryFrom<AntiDualNum> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(anti_dual_num[scalar]),
+            Simd32x3::from(0.0).with_w(anti_dual_num[scalar]),
         ));
     }
 }
@@ -8700,11 +8700,11 @@ impl TryFrom<AntiVersorEvenOnOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            anti_versor_even_on_origin.group0().truncate_to_3(),
+            anti_versor_even_on_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([anti_versor_even_on_origin[e23], anti_versor_even_on_origin[e31], anti_versor_even_on_origin[e12], 0.0]),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(anti_versor_even_on_origin[scalar]),
+            Simd32x3::from(0.0).with_w(anti_versor_even_on_origin[scalar]),
         ));
     }
 }
@@ -8816,9 +8816,9 @@ impl TryFrom<DipoleInversionAligningOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            dipole_inversion_aligning_origin.group0().truncate_to_3(),
+            dipole_inversion_aligning_origin.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(dipole_inversion_aligning_origin[e45]),
+            Simd32x3::from(0.0).with_w(dipole_inversion_aligning_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([dipole_inversion_aligning_origin[e15], dipole_inversion_aligning_origin[e25], dipole_inversion_aligning_origin[e35], 0.0]),
         ));
@@ -8904,7 +8904,7 @@ impl TryFrom<DipoleInversionAtOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            dipole_inversion_at_origin.group0().truncate_to_3(),
+            dipole_inversion_at_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, scalar
@@ -8955,9 +8955,9 @@ impl TryFrom<DipoleInversionOnOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            dipole_inversion_on_origin.group0().truncate_to_3(),
+            dipole_inversion_on_origin.group0().xyz(),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(dipole_inversion_on_origin[e45]),
+            Simd32x3::from(0.0).with_w(dipole_inversion_on_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from(0.0),
         ));
@@ -8992,7 +8992,7 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            dipole_inversion_orthogonal_origin.group0().truncate_to_3(),
+            dipole_inversion_orthogonal_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([
                 dipole_inversion_orthogonal_origin[e23],
@@ -9055,7 +9055,7 @@ impl TryFrom<Flector> for AntiCircleRotor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(flector[e45]),
+            Simd32x3::from(0.0).with_w(flector[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([flector[e15], flector[e25], flector[e35], 0.0]),
         ));
@@ -9129,7 +9129,7 @@ impl TryFrom<FlectorOnOrigin> for AntiCircleRotor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x3::from(0.0).extend_to_4(flector_on_origin[e45]),
+            Simd32x3::from(0.0).with_w(flector_on_origin[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from(0.0),
         ));
@@ -9297,7 +9297,7 @@ impl TryFrom<MultiVector> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            multi_vector.group3().truncate_to_3(),
+            multi_vector.group3().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e45]]),
             // e15, e25, e35, scalar
@@ -9388,7 +9388,7 @@ impl TryFrom<MysteryVersorOdd> for AntiCircleRotor {
             // e23, e31, e12, e45
             mystery_versor_odd.group1(),
             // e15, e25, e35, scalar
-            Simd32x3::from(0.0).extend_to_4(mystery_versor_odd[scalar]),
+            Simd32x3::from(0.0).with_w(mystery_versor_odd[scalar]),
         ));
     }
 }
@@ -9413,7 +9413,7 @@ impl TryFrom<NullDipoleInversionAtOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            null_dipole_inversion_at_origin.group0().truncate_to_3(),
+            null_dipole_inversion_at_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, scalar
@@ -9471,7 +9471,7 @@ impl TryFrom<VersorOdd> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            versor_odd.group0().truncate_to_3(),
+            versor_odd.group0().xyz(),
             // e23, e31, e12, e45
             versor_odd.group1(),
             // e15, e25, e35, scalar
@@ -9558,7 +9558,7 @@ impl TryFrom<VersorOddOrthogonalOrigin> for AntiCircleRotor {
         }
         return Ok(AntiCircleRotor::from_groups(
             // e41, e42, e43
-            versor_odd_orthogonal_origin.group0().truncate_to_3(),
+            versor_odd_orthogonal_origin.group0().xyz(),
             // e23, e31, e12, e45
             Simd32x4::from([versor_odd_orthogonal_origin[e23], versor_odd_orthogonal_origin[e31], versor_odd_orthogonal_origin[e12], 0.0]),
             // e15, e25, e35, scalar

@@ -51,7 +51,7 @@ impl RightAntiDual for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(self[e321] * -1.0),
             // e423, e431, e412, e321
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -146,7 +146,7 @@ impl RightAntiDual for MultiVector {
             // scalar, e1234
             Simd32x2::from([0.0, self[scalar]]),
             // e1, e2, e3, e4
-            Simd32x3::from(0.0).extend_to_4(self[e321] * -1.0),
+            Simd32x3::from(0.0).with_w(self[e321] * -1.0),
             // e41, e42, e43
             self.group3() * Simd32x3::from(-1.0),
             // e23, e31, e12
