@@ -152,60 +152,6 @@ fn anti_product_argument() {
         let rar_w_rbr = Wedge.deep_inline(&builder, r_wd_a_wd_r.clone(), r_wd_b_wd_r.clone()).await?;
         println!("(R ⟑ A ⟑ ~R) ∧ (R ⟑ B ⟑ ~R) = {rar_w_rbr}");
 
-        /*
-        TODO visually inspect the two outputs below and determine if they are equal, and also
-         if there are more simplifications or stuff we should so
-
-        TODO needed simplifications... it is tempting to think "lets not always distribute
-         products into sums every time, because maybe it is less efficient to calculate that"
-         however the end user can manage that with variable boundaries, but deep inlining
-         absolutely needs those distributions to take place in order to reach maximum
-         simplification. So I should indeed do those product into sum distributions, and if
-         they wanted to not do that, they could/should have defined variables.
-
-        TODO actually no.... I can't believe I'm saying this, but I can't get it out of my head now.
-         I always thought I wouldn't resort to this, but I'm too tempted now. We can traverse
-         the AST and try to find redundant expressions.... and then pull them out into variables.
-         Then doing a deep inline and redundancy elimination will be the ultimate always optimal
-         AST simplification. Then we can do this for every single trait implementation. It could
-         be done with a similar tool as TrackOperations, where only non-trivial branches of the
-         AST are collected (e.g. yes to arithmetic, no to variable invocations). We track both the
-         TrackedOperations of the AST branch, and also how many duplicates we've found. We don't
-         need to create a variable out of something unless it is used at least twice. If we do this,
-         then it is always(?) a safe bet to compress nested sums and products into sum-of-products
-         form. .....or is it? grr... I mean if all terms of a sum share a factor, obviously it makes
-         sense to pull the factor out..... Well... maybe we need to go fully compacted
-         sum-of-products anyway, just for term elimination, and all it means now is I need to
-         figure out factorization too... If I'm going to extract redundant branches into variables,
-         then pulling out common factors can't be so bad either... Except then you'd have different
-         terms to try to eliminate.... ugh... Is it just the case that neither strategy is optimal
-         in all cases, and there is always some imaginable case that is better to be factorized vs
-         better to be variable extracted without factorizing? Well...
-         1. deep inline
-         2. flatten to sum of products for term elimination
-         3. collect possible variable extractions, and the operative weights before and after
-         4. collect possible factorizations, and the operative weights before and after
-         5. Take a greedy approach of saving the most operations possible, whether variables or factorizing
-
-        R ⟑ (A ∧ B) ⟑ ~R = BiVector(
-            e01((2*(a1 * b3) - 2*(a3 * b1) + 2*(a1 * b2) - 2*(a2 * b1) - (a0 * b1) + (a1 * b0))),
-            e02((2*(a2 * b3) - 2*(a3 * b2) - (a0 * b2) + (a2 * b0))),
-            TODO lower three are good, above two not confirmed yet
-            e03((2*(a2 * b3) - 2*(a3 * b2) + (a0 * b3) - (a3 * b0))),
-            e23((-(a2 * b3) + (a3 * b2))), e31(((a1 * b3) - (a3 * b1))),
-            e12(((a1 * b2) - (a2 * b1)))
-        )
-        (R ⟑ A ⟑ ~R) ∧ (R ⟑ B ⟑ ~R) = BiVector(
-            e01((-((2*a3 + 2*a2 + a0) * b1) + ((2*b3 + 2*b2 + b0) * a1))),
-            e02((-((2*a3 + 2*a2 + a0) * b2) + ((2*b3 + 2*b2 + b0) * a2))),
-            TODO lower three are good, above two not confirmed yet
-            e03((((2*a3 + 2*a2 + a0) * b3) - (a3 * (2*b3 + 2*b2 + b0)))),
-            e23((-(b3 * a2) + (a3 * b2))), e31(((b3 * a1) - (a3 * b1))),
-            e12(((a1 * b2) - (a2 * b1)))
-        )
-
-         */
-
         Some(())
     });
     result.expect("Entire script must complete")

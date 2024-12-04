@@ -116,10 +116,6 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMulti
         #docs("This variant of {type} is centered on the Origin.")
         {type}AtOrigin => (origin ^ infinity)       where is_not_flat => intersects_null_cone;
 
-        // TODO I think we want to rename this to AtInfinity
-        //  Notably, both the carrier and cocarrier are completely in the horizon
-        //  ACTUALLY.... Don't mix it up! MysteryDipole has e45! This makes the CoCarrier at infinity,
-        //  but this element itself is actually the FlatOrigin!
         #docs("TODO this is currently a mystery I'm investigating")
         Mystery{type} => (!(origin ^ infinity))     where is_not_flat => intersects_null_cone;
 
@@ -129,9 +125,6 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMulti
         #docs("This variant of {type} has a CoCarrier that intersects the Origin.")
         {type}OrthogonalOrigin => (!flat_origin)    where is_not_flat => intersects_null_cone;
 
-        // TODO and this.... should change the name slightly.
-        //  The carrier is at infinity, but the cocarrier is not
-        //  and could there be yet another with finite carrier but infinite cocarrier?
         #docs("This variant of {type} exists at the Horizon.")
         {type}AtInfinity => (!origin | flat_origin) where is_not_flat => intersects_null_cone;
     }

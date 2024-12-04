@@ -95,8 +95,6 @@ macro_rules! match_architecture {
     }};
 }
 
-// TODO truncated swizzling, vector extension, then more AST simplifications
-
 #[macro_export]
 macro_rules! swizzle {
     ($self:expr, $x:literal, $y:literal, _, _ $(,)?) => {

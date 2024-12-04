@@ -432,7 +432,7 @@ impl Wgsl {
                 if needs_group_var {
                     write!(w, "    let self_groups = ")?;
                     self.write_type(w, *owner_ty, false, false)?;
-                    write!(w, "_grouped(self_);")?;
+                    writeln!(w, "_grouped(self_);")?;
                 }
             },
             (TraitArity::Two, Some(other_ty)) => {

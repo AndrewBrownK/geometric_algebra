@@ -11,8 +11,37 @@ use crate::ast::Variable;
 use crate::build_scripts::common_traits::{Addition, AntiDotProduct, AntiSquareRoot, RightAntiDual, DotProduct, SquareRoot, SubType, Wedge};
 use crate::trait_impl_1_type_1_arg;
 
-#[allow(non_snake_case)]
-pub const fn RoundBulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkImpl> {
+pub const fn conformal_conjugate(infinity: BasisElement) -> Elaborated<ConformalConjugateImpl> {
+    ConformalConjugateImpl { infinity }
+        .new_trait_named("ConformalConjugate")
+        .blurb("TODO")
+}
+#[derive(Clone, Copy)]
+pub struct ConformalConjugateImpl {
+    infinity: BasisElement,
+}
+#[async_trait]
+impl TraitImpl_11 for ConformalConjugateImpl {
+    type Output = MultiVector;
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        let infinity_sig = self.infinity.signature();
+        let mut result = DynamicMultiVector::zero();
+        for (mut fe, el) in slf.elements_by_groups() {
+            if el.signature().contains(infinity_sig) {
+                fe = fe * -1.0;
+            }
+            result += (fe, el);
+        }
+        let result = result.construct(&builder)?;
+        builder.return_expr(result)
+    }
+}
+
+pub const fn round_bulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkImpl> {
     RoundBulkImpl { origin, infinity }
         .new_trait_named("RoundBulk")
         .blurb("TODO")
@@ -39,8 +68,7 @@ impl TraitImpl_11 for RoundBulkImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundWeight(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightImpl> {
+pub const fn round_weight(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightImpl> {
     RoundWeightImpl { origin, infinity }
         .new_trait_named("RoundWeight")
         .blurb("TODO")
@@ -67,8 +95,7 @@ impl TraitImpl_11 for RoundWeightImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatBulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkImpl> {
+pub const fn flat_bulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkImpl> {
     FlatBulkImpl { origin, infinity }
         .new_trait_named("FlatBulk")
         .blurb("TODO")
@@ -95,8 +122,7 @@ impl TraitImpl_11 for FlatBulkImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatWeight(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightImpl> {
+pub const fn flat_weight(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightImpl> {
     FlatWeightImpl { origin, infinity }
         .new_trait_named("FlatWeight")
         .blurb("TODO")
@@ -123,8 +149,7 @@ impl TraitImpl_11 for FlatWeightImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn CenterNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormImpl> {
+pub const fn center_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormImpl> {
     CenterNormImpl { origin, infinity }
         .new_trait_named("CenterNorm")
         .blurb("TODO")
@@ -139,14 +164,13 @@ impl TraitImpl_11 for CenterNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let cns = CenterNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let cns = center_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = SquareRoot.invoke(&mut builder, cns).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn CenterNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormSquaredImpl> {
+pub const fn center_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormSquaredImpl> {
     CenterNormSquaredImpl { origin, infinity }
         .new_trait_named("CenterNormSquared")
         .blurb("TODO")
@@ -161,16 +185,15 @@ impl TraitImpl_11 for CenterNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rbns = RoundBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let fwns = FlatWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rbns = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let fwns = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let ad = RightAntiDual.invoke(&mut builder, fwns).await?;
         let result = Addition.inline(&builder, rbns, ad).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatBulkNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormImpl> {
+pub const fn flat_bulk_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormImpl> {
     FlatBulkNormImpl { origin, infinity }
         .new_trait_named("FlatBulkNorm")
         .blurb("TODO")
@@ -185,14 +208,13 @@ impl TraitImpl_11 for FlatBulkNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let fbns = FlatBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let fbns = flat_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = SquareRoot.invoke(&mut builder, fbns).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatBulkNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormSquaredImpl> {
+pub const fn flat_bulk_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormSquaredImpl> {
     FlatBulkNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatBulkNormSquared")
         .blurb("TODO")
@@ -211,7 +233,7 @@ impl TraitImpl_11 for FlatBulkNormSquaredImpl {
         dyn_origin += (FloatExpr::Literal(1.0), self.origin);
         let origin = dyn_origin.construct(&builder)?;
 
-        let flat_bulk = FlatBulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let flat_bulk = flat_bulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let wedge = Wedge.invoke(&mut builder, flat_bulk, origin).await?;
         let fbt = builder.variable("flat_bulk_thing", wedge);
         let dot = DotProduct.invoke(&mut builder, fbt.clone(), fbt).await?;
@@ -219,8 +241,7 @@ impl TraitImpl_11 for FlatBulkNormSquaredImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormImpl> {
+pub const fn flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormImpl> {
     FlatNormImpl { origin, infinity }
         .new_trait_named("FlatNorm")
         .blurb("TODO")
@@ -235,15 +256,14 @@ impl TraitImpl_11 for FlatNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let fbn = FlatBulkNorm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let fwn = FlatWeightNorm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let fbn = flat_bulk_norm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let fwn = flat_weight_norm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = Addition.inline(&builder, fbn, fwn).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormSquaredImpl> {
+pub const fn flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormSquaredImpl> {
     FlatNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatNormSquared")
         .blurb("TODO")
@@ -258,15 +278,14 @@ impl TraitImpl_11 for FlatNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let fbn = FlatBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let fwn = FlatWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let fbn = flat_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let fwn = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = Addition.inline(&builder, fbn, fwn).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatWeightNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormImpl> {
+pub const fn flat_weight_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormImpl> {
     FlatWeightNormImpl { origin, infinity }
         .new_trait_named("FlatWeightNorm")
         .blurb("TODO")
@@ -281,14 +300,13 @@ impl TraitImpl_11 for FlatWeightNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let fwns = FlatWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let fwns = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = AntiSquareRoot.invoke(&mut builder, fwns).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn FlatWeightNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormSquaredImpl> {
+pub const fn flat_weight_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormSquaredImpl> {
     FlatWeightNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatWeightNormSquared")
         .blurb("TODO")
@@ -303,12 +321,13 @@ impl TraitImpl_11 for FlatWeightNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let fw = FlatWeight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let fw = flat_weight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let fw = builder.variable("flat_weight", fw);
         let anti_dot = AntiDotProduct.invoke(&mut builder, fw.clone(), fw).await?;
         builder.return_expr(anti_dot)
     }
 }
+
 pub static RadiusNorm: Elaborated<RadiusNormImpl> = RadiusNormImpl
     .new_trait_named("RadiusNorm")
     .blurb("TODO");
@@ -317,6 +336,7 @@ trait_impl_1_type_1_arg!(RadiusNormImpl(builder, slf) -> MultiVector {
     let result = SquareRoot.invoke(&mut builder, rns).await?;
     builder.return_expr(result)
 });
+
 pub static RadiusNormSquared: Elaborated<RadiusNormSquaredImpl> = RadiusNormSquaredImpl
     .new_trait_named("RadiusNormSquared")
     .blurb("TODO");
@@ -326,8 +346,7 @@ trait_impl_1_type_1_arg!(RadiusNormSquaredImpl(builder, slf) -> MultiVector {
     builder.return_expr(result)
 });
 
-#[allow(non_snake_case)]
-pub const fn RoundBulkNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormImpl> {
+pub const fn round_bulk_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormImpl> {
     RoundBulkNormImpl { origin, infinity }
         .new_trait_named("RoundBulkNorm")
         .blurb("TODO")
@@ -342,14 +361,13 @@ impl TraitImpl_11 for RoundBulkNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rbns = RoundBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rbns = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = SquareRoot.invoke(&mut builder, rbns).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundBulkNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormSquaredImpl> {
+pub const fn round_bulk_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormSquaredImpl> {
     RoundBulkNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundBulkNormSquared")
         .blurb("TODO")
@@ -364,15 +382,14 @@ impl TraitImpl_11 for RoundBulkNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rb = RoundBulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rb = round_bulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let rb = builder.variable("round_bulk", rb);
         let dot = DotProduct.invoke(&mut builder, rb.clone(), rb).await?;
         builder.return_expr(dot)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormImpl> {
+pub const fn round_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormImpl> {
     RoundNormImpl { origin, infinity }
         .new_trait_named("RoundNorm")
         .blurb("TODO")
@@ -387,15 +404,14 @@ impl TraitImpl_11 for RoundNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rbn = RoundBulkNorm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let rwn = RoundWeightNorm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rbn = round_bulk_norm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let rwn = round_weight_norm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = Addition.inline(&builder, rbn, rwn).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormSquaredImpl> {
+pub const fn round_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormSquaredImpl> {
     RoundNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundNormSquared")
         .blurb("TODO")
@@ -409,15 +425,14 @@ impl TraitImpl_11 for RoundNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rbn = RoundBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let rwn = RoundWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rbn = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let rwn = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = Addition.inline(&builder, rbn, rwn).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundWeightNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormImpl> {
+pub const fn round_weight_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormImpl> {
     RoundWeightNormImpl { origin, infinity }
         .new_trait_named("RoundWeightNorm")
         .blurb("TODO")
@@ -432,14 +447,13 @@ impl TraitImpl_11 for RoundWeightNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let rwns = RoundWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rwns = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let result = AntiSquareRoot.invoke(&mut builder, rwns).await?;
         builder.return_expr(result)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn RoundWeightNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormSquaredImpl> {
+pub const fn round_weight_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormSquaredImpl> {
     RoundWeightNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundWeightNormSquared")
         .blurb("TODO")
@@ -458,7 +472,7 @@ impl TraitImpl_11 for RoundWeightNormSquaredImpl {
         dyn_infinity += (FloatExpr::Literal(1.0), self.infinity);
         let infinity = dyn_infinity.construct(&builder)?;
 
-        let rw = RoundWeight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let rw = round_weight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let wedge = Wedge.invoke(&mut builder, rw, infinity).await?;
         let v = builder.variable("round_weight_carrier", wedge);
         let anti_dot = AntiDotProduct.invoke(&mut builder, v.clone(), v).await?;
@@ -466,8 +480,7 @@ impl TraitImpl_11 for RoundWeightNormSquaredImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedCenterNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormImpl> {
+pub const fn unitized_center_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormImpl> {
     UnitizedCenterNormImpl { origin, infinity }
         .new_trait_named("UnitizedCenterNorm")
         .blurb("TODO")
@@ -482,14 +495,13 @@ impl TraitImpl_11 for UnitizedCenterNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let ucns = UnitizedCenterNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let ucns = unitized_center_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let sqrt = FloatExpr::Product(vec![(ucns, 0.5)], 1.0);
         builder.return_expr(sqrt)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedCenterNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormSquaredImpl> {
+pub const fn unitized_center_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormSquaredImpl> {
     UnitizedCenterNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedCenterNormSquared")
         .blurb("TODO")
@@ -504,8 +516,8 @@ impl TraitImpl_11 for UnitizedCenterNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let numerator = CenterNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let denominator = RoundWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let numerator = center_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let denominator = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
         let numerator = FloatExpr::AccessMultiVecFlat(numerator, 0);
         let denominator = FloatExpr::AccessMultiVecFlat(denominator, 0);
         let divide = FloatExpr::Product(vec![(numerator, 1.0), (denominator, -1.0)], 1.0);
@@ -513,8 +525,7 @@ impl TraitImpl_11 for UnitizedCenterNormSquaredImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedFlatNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormImpl> {
+pub const fn unitized_flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormImpl> {
     UnitizedFlatNormImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNorm")
         .blurb("TODO")
@@ -529,14 +540,13 @@ impl TraitImpl_11 for UnitizedFlatNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let ufns = UnitizedFlatNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let ufns = unitized_flat_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let sqrt = FloatExpr::Product(vec![(ufns, 0.5)], 1.0);
         builder.return_expr(sqrt)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedFlatNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormSquaredImpl> {
+pub const fn unitized_flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormSquaredImpl> {
     UnitizedFlatNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNormSquared")
         .blurb("TODO")
@@ -551,8 +561,8 @@ impl TraitImpl_11 for UnitizedFlatNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let numerator = FlatBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let denominator = FlatWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let numerator = flat_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let denominator = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
         let numerator = FloatExpr::AccessMultiVecFlat(numerator, 0);
         let denominator = FloatExpr::AccessMultiVecFlat(denominator, 0);
         let divide = FloatExpr::Product(vec![(numerator, 1.0), (denominator, -1.0)], 1.0);
@@ -560,8 +570,7 @@ impl TraitImpl_11 for UnitizedFlatNormSquaredImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedRadiusNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormImpl> {
+pub const fn unitized_radius_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormImpl> {
     UnitizedRadiusNormImpl { origin, infinity }
         .new_trait_named("UnitizedRadiusNorm")
         .blurb("TODO")
@@ -576,14 +585,13 @@ impl TraitImpl_11 for UnitizedRadiusNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let urns = UnitizedRadiusNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let urns = unitized_radius_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let sqrt = FloatExpr::Product(vec![(urns, 0.5)], 1.0);
         builder.return_expr(sqrt)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedRadiusNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormSquaredImpl> {
+pub const fn unitized_radius_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormSquaredImpl> {
     UnitizedRadiusNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedRadiusNormSquared")
         .blurb("TODO")
@@ -599,7 +607,7 @@ impl TraitImpl_11 for UnitizedRadiusNormSquaredImpl {
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let numerator = RadiusNormSquared.invoke(&mut builder, slf.clone()).await?;
-        let denominator = RoundWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let denominator = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
         let numerator = FloatExpr::AccessMultiVecFlat(numerator, 0);
         let denominator = FloatExpr::AccessMultiVecFlat(denominator, 0);
         let divide = FloatExpr::Product(vec![(numerator, 1.0), (denominator, -1.0)], 1.0);
@@ -607,8 +615,7 @@ impl TraitImpl_11 for UnitizedRadiusNormSquaredImpl {
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedRoundNorm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormImpl> {
+pub const fn unitized_round_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormImpl> {
     UnitizedRoundNormImpl { origin, infinity }
         .new_trait_named("UnitizedRoundNorm")
         .blurb("TODO")
@@ -623,14 +630,13 @@ impl TraitImpl_11 for UnitizedRoundNormImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let urns = UnitizedRoundNormSquared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+        let urns = unitized_round_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let sqrt = FloatExpr::Product(vec![(urns, 0.5)], 1.0);
         builder.return_expr(sqrt)
     }
 }
 
-#[allow(non_snake_case)]
-pub const fn UnitizedRoundNormSquared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormSquaredImpl> {
+pub const fn unitized_round_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormSquaredImpl> {
     UnitizedRoundNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedRoundNormSquared")
         .blurb("TODO")
@@ -645,8 +651,8 @@ impl TraitImpl_11 for UnitizedRoundNormSquaredImpl {
         mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-        let numerator = RoundBulkNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-        let denominator = RoundWeightNormSquared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let numerator = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
+        let denominator = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
         let numerator = FloatExpr::AccessMultiVecFlat(numerator, 0);
         let denominator = FloatExpr::AccessMultiVecFlat(denominator, 0);
         let divide = FloatExpr::Product(vec![(numerator, 1.0), (denominator, -1.0)], 1.0);

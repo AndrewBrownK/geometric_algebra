@@ -67,7 +67,6 @@ fn main() {
         RightDual RightAntiDual Reverse AntiReverse
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
-        // TODO do CGA expansion/contraction, not naive flat ones
         // BulkExpansion BulkContraction WeightExpansion WeightContraction
         Carrier CoCarrier
         ConformalConjugate
@@ -206,6 +205,7 @@ pub mod specialized_traits {
 
     use crate::Plane;
 
+    // TODO I might not need this, with how advanced simplification has gotten
     pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector> = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| {
         Box::pin(async move {
             // TODO actually implement

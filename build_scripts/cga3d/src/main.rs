@@ -77,16 +77,14 @@ fn main() {
         Inverse AntiInverse
         GeometricQuotient GeometricAntiQuotient
 
-        // TODO do CGA expansion/contraction, not naive flat ones
-        // BulkExpansion BulkContraction WeightExpansion WeightContraction
+        BulkExpansion BulkContraction WeightExpansion WeightContraction
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
         AutoMorphism AntiAutoMorphism
         Conjugation ConformalConjugate
 
-        // TODO rename complements according to this being an odd dimensional algebra
-        RightComplement DoubleComplement
+        Complement DoubleComplement
 
         // TODO the way dependencies are handled, the following traits SHOULDN'T need to be
         //  broken into so many serial steps. It should all be able to work in parallel. The
@@ -102,38 +100,38 @@ fn main() {
         //  in succession. Rearranging so all 'squared' traits MUST complete before their
         //  non-squared dependents can start unclogged it.
         |
-        ROUND_BULK
-        ROUND_WEIGHT
-        FLAT_BULK
-        FLAT_WEIGHT
+        RoundBulk
+        RoundWeight
+        FlatBulk
+        FlatWeight
         |
-        ROUND_NORM_SQUARED
-            ROUND_BULK_NORM_SQUARED
-            ROUND_WEIGHT_NORM_SQUARED
-            UNITIZED_ROUND_NORM_SQUARED
-        FLAT_NORM_SQUARED
-            FLAT_BULK_NORM_SQUARED
-            FLAT_WEIGHT_NORM_SQUARED
-            UNITIZED_FLAT_NORM_SQUARED
+        RoundNormSquared
+            RoundBulkNormSquared
+            RoundWeightNormSquared
+            UnitizedRoundNormSquared
+        FlatNormSquared
+            FlatBulkNormSquared
+            FlatWeightNormSquared
+            UnitizedFlatNormSquared
         |
-        ROUND_NORM
-            ROUND_BULK_NORM
-            ROUND_WEIGHT_NORM
-            UNITIZED_ROUND_NORM
-        FLAT_NORM
-            FLAT_BULK_NORM
-            FLAT_WEIGHT_NORM
-            UNITIZED_FLAT_NORM
+        RoundNorm
+            RoundBulkNorm
+            RoundWeightNorm
+            UnitizedRoundNorm
+        FlatNorm
+            FlatBulkNorm
+            FlatWeightNorm
+            UnitizedFlatNorm
         |
         RadiusNormSquared
-        UNITIZED_RADIUS_NORM_SQUARED
-        CENTER_NORM_SQUARED
-        UNITIZED_CENTER_NORM_SQUARED
+        UnitizedRadiusNormSquared
+        CenterNormSquared
+        UnitizedCenterNormSquared
         |
         RadiusNorm
-        UNITIZED_RADIUS_NORM
-        CENTER_NORM
-        UNITIZED_CENTER_NORM
+        UnitizedRadiusNorm
+        CenterNorm
+        UnitizedCenterNorm
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -198,63 +196,42 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 
 // noinspection DuplicatedCode
 pub mod custom_traits {
-    use async_trait::async_trait;
+    #![allow(non_upper_case_globals)]
 
     use codegen::algebra::basis::BasisElement;
-    use codegen::algebra::multivector::DynamicMultiVector;
-    use codegen::ast::datatype::MultiVector;
     use codegen::ast::impls::Elaborated;
-    use codegen::ast::traits::NameTrait;
-    use codegen::build_scripts::common_traits::conformal::{CenterNorm, CenterNormImpl, CenterNormSquared, CenterNormSquaredImpl, FlatBulk, FlatBulkImpl, FlatBulkNorm, FlatBulkNormImpl, FlatBulkNormSquared, FlatBulkNormSquaredImpl, FlatNorm, FlatNormImpl, FlatNormSquared, FlatNormSquaredImpl, FlatWeight, FlatWeightImpl, FlatWeightNorm, FlatWeightNormImpl, FlatWeightNormSquared, FlatWeightNormSquaredImpl, RoundBulk, RoundBulkImpl, RoundBulkNorm, RoundBulkNormImpl, RoundBulkNormSquared, RoundBulkNormSquaredImpl, RoundNorm, RoundNormImpl, RoundNormSquared, RoundNormSquaredImpl, RoundWeight, RoundWeightImpl, RoundWeightNorm, RoundWeightNormImpl, RoundWeightNormSquared, RoundWeightNormSquaredImpl, UnitizedCenterNorm, UnitizedCenterNormImpl, UnitizedCenterNormSquared, UnitizedCenterNormSquaredImpl, UnitizedFlatNorm, UnitizedFlatNormImpl, UnitizedFlatNormSquared, UnitizedFlatNormSquaredImpl, UnitizedRadiusNorm, UnitizedRadiusNormImpl, UnitizedRadiusNormSquared, UnitizedRadiusNormSquaredImpl, UnitizedRoundNorm, UnitizedRoundNormImpl, UnitizedRoundNormSquared, UnitizedRoundNormSquaredImpl};
-    use codegen::trait_impl_1_type_1_arg;
+    use codegen::build_scripts::common_traits::conformal::{center_norm, center_norm_squared, CenterNormImpl, CenterNormSquaredImpl, conformal_conjugate, ConformalConjugateImpl, flat_bulk, flat_bulk_norm, flat_bulk_norm_squared, flat_norm, flat_norm_squared, flat_weight, flat_weight_norm, flat_weight_norm_squared, FlatBulkImpl, FlatBulkNormImpl, FlatBulkNormSquaredImpl, FlatNormImpl, FlatNormSquaredImpl, FlatWeightImpl, FlatWeightNormImpl, FlatWeightNormSquaredImpl, round_bulk, round_bulk_norm, round_bulk_norm_squared, round_norm, round_norm_squared, round_weight, round_weight_norm, round_weight_norm_squared, RoundBulkImpl, RoundBulkNormImpl, RoundBulkNormSquaredImpl, RoundNormImpl, RoundNormSquaredImpl, RoundWeightImpl, RoundWeightNormImpl, RoundWeightNormSquaredImpl, unitized_center_norm, unitized_center_norm_squared, unitized_flat_norm, unitized_flat_norm_squared, unitized_radius_norm, unitized_radius_norm_squared, unitized_round_norm, unitized_round_norm_squared, UnitizedCenterNormImpl, UnitizedCenterNormSquaredImpl, UnitizedFlatNormImpl, UnitizedFlatNormSquaredImpl, UnitizedRadiusNormImpl, UnitizedRadiusNormSquaredImpl, UnitizedRoundNormImpl, UnitizedRoundNormSquaredImpl};
 
     const origin: BasisElement = codegen::elements::e4;
     const infinity: BasisElement = codegen::elements::e5;
 
-    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl.new_trait_named("ConformalConjugate").blurb("TODO");
-
-    trait_impl_1_type_1_arg!(ConformalConjugateImpl(builder, slf) -> MultiVector {
-        let infinity_sig = infinity.signature();
-        let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
-            if el.signature().contains(infinity_sig) {
-                fe = fe * -1.0;
-            }
-            result += (fe, el);
-        }
-        let result = result.construct(&builder)?;
-        builder.return_expr(result)
-    });
-
-    pub static ROUND_BULK: Elaborated<RoundBulkImpl> = RoundBulk(origin, infinity);
-    pub static ROUND_WEIGHT: Elaborated<RoundWeightImpl> = RoundWeight(origin, infinity);
-    pub static FLAT_BULK: Elaborated<FlatBulkImpl> = FlatBulk(origin, infinity);
-    pub static FLAT_WEIGHT: Elaborated<FlatWeightImpl> = FlatWeight(origin, infinity);
-    pub static CENTER_NORM: Elaborated<CenterNormImpl> = CenterNorm(origin, infinity);
-    pub static CENTER_NORM_SQUARED: Elaborated<CenterNormSquaredImpl> = CenterNormSquared(origin, infinity);
-    pub static FLAT_BULK_NORM: Elaborated<FlatBulkNormImpl> = FlatBulkNorm(origin, infinity);
-    pub static FLAT_BULK_NORM_SQUARED: Elaborated<FlatBulkNormSquaredImpl> = FlatBulkNormSquared(origin, infinity);
-    pub static FLAT_NORM: Elaborated<FlatNormImpl> = FlatNorm(origin, infinity);
-    pub static FLAT_NORM_SQUARED: Elaborated<FlatNormSquaredImpl> = FlatNormSquared(origin, infinity);
-    pub static FLAT_WEIGHT_NORM: Elaborated<FlatWeightNormImpl> = FlatWeightNorm(origin, infinity);
-    pub static FLAT_WEIGHT_NORM_SQUARED: Elaborated<FlatWeightNormSquaredImpl> = FlatWeightNormSquared(origin, infinity);
-    pub static ROUND_BULK_NORM: Elaborated<RoundBulkNormImpl> = RoundBulkNorm(origin, infinity);
-    pub static ROUND_BULK_NORM_SQUARED: Elaborated<RoundBulkNormSquaredImpl> = RoundBulkNormSquared(origin, infinity);
-    pub static ROUND_NORM: Elaborated<RoundNormImpl> = RoundNorm(origin, infinity);
-    pub static ROUND_NORM_SQUARED: Elaborated<RoundNormSquaredImpl> = RoundNormSquared(origin, infinity);
-    pub static ROUND_WEIGHT_NORM: Elaborated<RoundWeightNormImpl> = RoundWeightNorm(origin, infinity);
-    pub static ROUND_WEIGHT_NORM_SQUARED: Elaborated<RoundWeightNormSquaredImpl> = RoundWeightNormSquared(origin, infinity);
-    pub static UNITIZED_CENTER_NORM: Elaborated<UnitizedCenterNormImpl> = UnitizedCenterNorm(origin, infinity);
-    pub static UNITIZED_CENTER_NORM_SQUARED: Elaborated<UnitizedCenterNormSquaredImpl> = UnitizedCenterNormSquared(origin, infinity);
-    pub static UNITIZED_FLAT_NORM: Elaborated<UnitizedFlatNormImpl> = UnitizedFlatNorm(origin, infinity);
-    pub static UNITIZED_FLAT_NORM_SQUARED: Elaborated<UnitizedFlatNormSquaredImpl> = UnitizedFlatNormSquared(origin, infinity);
-    pub static UNITIZED_RADIUS_NORM: Elaborated<UnitizedRadiusNormImpl> = UnitizedRadiusNorm(origin, infinity);
-    pub static UNITIZED_RADIUS_NORM_SQUARED: Elaborated<UnitizedRadiusNormSquaredImpl> = UnitizedRadiusNormSquared(origin, infinity);
-    pub static UNITIZED_ROUND_NORM: Elaborated<UnitizedRoundNormImpl> = UnitizedRoundNorm(origin, infinity);
-    pub static UNITIZED_ROUND_NORM_SQUARED: Elaborated<UnitizedRoundNormSquaredImpl> = UnitizedRoundNormSquared(origin, infinity);
-
-
-
+    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = conformal_conjugate(infinity);
+    pub static RoundBulk: Elaborated<RoundBulkImpl> = round_bulk(origin, infinity);
+    pub static RoundWeight: Elaborated<RoundWeightImpl> = round_weight(origin, infinity);
+    pub static FlatBulk: Elaborated<FlatBulkImpl> = flat_bulk(origin, infinity);
+    pub static FlatWeight: Elaborated<FlatWeightImpl> = flat_weight(origin, infinity);
+    pub static CenterNorm: Elaborated<CenterNormImpl> = center_norm(origin, infinity);
+    pub static CenterNormSquared: Elaborated<CenterNormSquaredImpl> = center_norm_squared(origin, infinity);
+    pub static FlatBulkNorm: Elaborated<FlatBulkNormImpl> = flat_bulk_norm(origin, infinity);
+    pub static FlatBulkNormSquared: Elaborated<FlatBulkNormSquaredImpl> = flat_bulk_norm_squared(origin, infinity);
+    pub static FlatNorm: Elaborated<FlatNormImpl> = flat_norm(origin, infinity);
+    pub static FlatNormSquared: Elaborated<FlatNormSquaredImpl> = flat_norm_squared(origin, infinity);
+    pub static FlatWeightNorm: Elaborated<FlatWeightNormImpl> = flat_weight_norm(origin, infinity);
+    pub static FlatWeightNormSquared: Elaborated<FlatWeightNormSquaredImpl> = flat_weight_norm_squared(origin, infinity);
+    pub static RoundBulkNorm: Elaborated<RoundBulkNormImpl> = round_bulk_norm(origin, infinity);
+    pub static RoundBulkNormSquared: Elaborated<RoundBulkNormSquaredImpl> = round_bulk_norm_squared(origin, infinity);
+    pub static RoundNorm: Elaborated<RoundNormImpl> = round_norm(origin, infinity);
+    pub static RoundNormSquared: Elaborated<RoundNormSquaredImpl> = round_norm_squared(origin, infinity);
+    pub static RoundWeightNorm: Elaborated<RoundWeightNormImpl> = round_weight_norm(origin, infinity);
+    pub static RoundWeightNormSquared: Elaborated<RoundWeightNormSquaredImpl> = round_weight_norm_squared(origin, infinity);
+    pub static UnitizedCenterNorm: Elaborated<UnitizedCenterNormImpl> = unitized_center_norm(origin, infinity);
+    pub static UnitizedCenterNormSquared: Elaborated<UnitizedCenterNormSquaredImpl> = unitized_center_norm_squared(origin, infinity);
+    pub static UnitizedFlatNorm: Elaborated<UnitizedFlatNormImpl> = unitized_flat_norm(origin, infinity);
+    pub static UnitizedFlatNormSquared: Elaborated<UnitizedFlatNormSquaredImpl> = unitized_flat_norm_squared(origin, infinity);
+    pub static UnitizedRadiusNorm: Elaborated<UnitizedRadiusNormImpl> = unitized_radius_norm(origin, infinity);
+    pub static UnitizedRadiusNormSquared: Elaborated<UnitizedRadiusNormSquaredImpl> = unitized_radius_norm_squared(origin, infinity);
+    pub static UnitizedRoundNorm: Elaborated<UnitizedRoundNormImpl> = unitized_round_norm(origin, infinity);
+    pub static UnitizedRoundNormSquared: Elaborated<UnitizedRoundNormSquaredImpl> = unitized_round_norm_squared(origin, infinity);
 }
 
 

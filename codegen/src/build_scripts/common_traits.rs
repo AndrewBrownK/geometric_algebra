@@ -70,6 +70,10 @@ pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImp
     .new_trait_named("AntiConjugation")
     .blurb("TODO");
 
+pub static Complement: Elaborated<RightComplementImpl> = RightComplementImpl
+    .new_trait_named("Complement")
+    .blurb("TODO");
+
 pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl
     .new_trait_named("RightComplement")
     .blurb("TODO");
@@ -956,30 +960,26 @@ mod impls {
     });
 
     trait_impl_2_types_2_args!(BulkExpansionImpl(builder, slf, other) -> MultiVector {
-        // TODO inline again after getting Rust emission import fixed
-        let dual = RightDual.invoke(&mut builder, other).await?;
-        let wedge = Wedge.invoke(&mut builder, slf, dual).await?;
+        let dual = RightDual.inline(&builder, other).await?;
+        let wedge = Wedge.inline(&builder, slf, dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(WeightExpansionImpl(builder, slf, other) -> MultiVector {
-        // TODO inline again after getting Rust emission import fixed
-        let anti_dual = RightAntiDual.invoke(&mut builder, other).await?;
-        let wedge = Wedge.invoke(&mut builder, slf, anti_dual).await?;
+        let anti_dual = RightAntiDual.inline(&builder, other).await?;
+        let wedge = Wedge.inline(&builder, slf, anti_dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(BulkContractionImpl(builder, slf, other) -> MultiVector {
-        // TODO inline again after getting Rust emission import fixed
-        let dual = RightDual.invoke(&mut builder, other).await?;
-        let anti_wedge = AntiWedge.invoke(&mut builder, slf, dual).await?;
+        let dual = RightDual.inline(&builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&builder, slf, dual).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(WeightContractionImpl(builder, slf, other) -> MultiVector {
-        // TODO inline again after getting Rust emission import fixed
-        let anti_dual = RightAntiDual.invoke(&mut builder, other).await?;
-        let anti_wedge = AntiWedge.invoke(&mut builder, slf, anti_dual).await?;
+        let anti_dual = RightAntiDual.inline(&builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&builder, slf, anti_dual).await?;
         builder.return_expr(anti_wedge)
     });
 
