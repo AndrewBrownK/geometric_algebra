@@ -2125,7 +2125,6 @@ impl TryFrom<AntiDualNum> for Flector {
 impl TryFrom<AntiLine> for Flector {
     type Error = String;
     fn try_from(anti_line: AntiLine) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_line[0];
@@ -2157,7 +2156,7 @@ impl TryFrom<AntiLine> for Flector {
         }
         return Ok(Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
+            anti_line.group1().with_w(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         ));
@@ -2269,7 +2268,7 @@ impl TryFrom<Dipole> for Flector {
         }
         return Ok(Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], dipole[e45]]),
+            dipole.group2().with_w(dipole[e45]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         ));

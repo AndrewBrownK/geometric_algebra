@@ -981,12 +981,11 @@ impl From<DualNum> for Motor {
 
 impl From<Line> for Motor {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_line[e235], from_line[e315], from_line[e125], 0.0]),
+            from_line.group1().with_w(0.0),
         );
     }
 }
@@ -2384,7 +2383,7 @@ impl TryFrom<Circle> for Motor {
             // e415, e425, e435, e12345
             Simd32x4::from([circle[e415], circle[e425], circle[e435], 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], 0.0]),
+            circle.group2().with_w(0.0),
         ));
     }
 }
@@ -2622,7 +2621,7 @@ impl TryFrom<MultiVector> for Motor {
             // e415, e425, e435, e12345
             Simd32x4::from([multi_vector[e415], multi_vector[e425], multi_vector[e435], multi_vector[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e5]]),
+            multi_vector.group8().with_w(multi_vector[e5]),
         ));
     }
 }

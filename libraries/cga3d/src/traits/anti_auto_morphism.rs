@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiAutoMorphism
-/// TODO
+/// Negate every BasisElement with an odd AntiGrade.
 pub trait AntiAutoMorphism {
     fn anti_auto_morphism(self) -> Self;
 }

@@ -231,7 +231,7 @@ pub mod custom_traits {
     trait_impl_1_type_1_arg!(ConformalConjugateImpl(builder, slf) -> MultiVector {
         let infinity_sig = e5.signature();
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if el.signature().contains(infinity_sig) {
                 fe = fe * -1.0;
             }
@@ -245,7 +245,7 @@ pub mod custom_traits {
 
     trait_impl_1_type_1_arg!(CarrierImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             let (f, el) = builder.ga.wedge(el, e5);
             result += (fe * f, el);
         }
@@ -258,7 +258,7 @@ pub mod custom_traits {
     trait_impl_1_type_1_arg!(CoCarrierImpl(builder, slf) -> MultiVector {
         let slf = RightAntiDual.invoke(&mut builder, slf).await?;
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             let (f, el) = builder.ga.wedge(el, e5);
             result += (fe * f, el);
         }

@@ -3672,38 +3672,35 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiDipoleInversionOrthogon
 
 impl From<CircleAligningOrigin> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_circle_aligning_origin: CircleAligningOrigin) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([from_circle_aligning_origin[e423], from_circle_aligning_origin[e431], from_circle_aligning_origin[e412], 0.0]),
+            from_circle_aligning_origin.group0().with_w(0.0),
             // e415, e425, e435
             from_circle_aligning_origin.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from([from_circle_aligning_origin[e235], from_circle_aligning_origin[e315], from_circle_aligning_origin[e125], 0.0]),
+            from_circle_aligning_origin.group2().with_w(0.0),
         );
     }
 }
 
 impl From<CircleAtOrigin> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_circle_at_origin: CircleAtOrigin) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([from_circle_at_origin[e423], from_circle_at_origin[e431], from_circle_at_origin[e412], 0.0]),
+            from_circle_at_origin.group0().with_w(0.0),
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([from_circle_at_origin[e235], from_circle_at_origin[e315], from_circle_at_origin[e125], 0.0]),
+            from_circle_at_origin.group1().with_w(0.0),
         );
     }
 }
 
 impl From<CircleOnOrigin> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_circle_on_origin: CircleOnOrigin) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([from_circle_on_origin[e423], from_circle_on_origin[e431], from_circle_on_origin[e412], 0.0]),
+            from_circle_on_origin.group0().with_w(0.0),
             // e415, e425, e435
             from_circle_on_origin.group1(),
             // e235, e315, e125, e4
@@ -3728,28 +3725,26 @@ impl From<Infinity> for AntiDipoleInversionOrthogonalOrigin {
 
 impl From<Line> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
             Simd32x4::from(0.0),
             // e415, e425, e435
             from_line.group0(),
             // e235, e315, e125, e4
-            Simd32x4::from([from_line[e235], from_line[e315], from_line[e125], 0.0]),
+            from_line.group1().with_w(0.0),
         );
     }
 }
 
 impl From<LineAtInfinity> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_line_at_infinity: LineAtInfinity) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
             Simd32x4::from(0.0),
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([from_line_at_infinity[e235], from_line_at_infinity[e315], from_line_at_infinity[e125], 0.0]),
+            from_line_at_infinity.group0().with_w(0.0),
         );
     }
 }
@@ -3783,10 +3778,9 @@ impl From<MotorAtInfinity> for AntiDipoleInversionOrthogonalOrigin {
 
 impl From<NullCircleAtOrigin> for AntiDipoleInversionOrthogonalOrigin {
     fn from(from_null_circle_at_origin: NullCircleAtOrigin) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([from_null_circle_at_origin[e423], from_null_circle_at_origin[e431], from_null_circle_at_origin[e412], 0.0]),
+            from_null_circle_at_origin.group0().with_w(0.0),
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e4
@@ -8196,7 +8190,7 @@ impl TryFrom<AntiDipoleInversion> for AntiDipoleInversionOrthogonalOrigin {
         }
         return Ok(AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([anti_dipole_inversion[e423], anti_dipole_inversion[e431], anti_dipole_inversion[e412], anti_dipole_inversion[e5]]),
+            anti_dipole_inversion.group0().with_w(anti_dipole_inversion[e5]),
             // e415, e425, e435
             anti_dipole_inversion.group1().xyz(),
             // e235, e315, e125, e4
@@ -8251,12 +8245,7 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for AntiDipoleInversionOrthogonalOri
             // e415, e425, e435
             anti_dipole_inversion_at_infinity.group0().xyz(),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                anti_dipole_inversion_at_infinity[e235],
-                anti_dipole_inversion_at_infinity[e315],
-                anti_dipole_inversion_at_infinity[e125],
-                0.0,
-            ]),
+            anti_dipole_inversion_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -8564,7 +8553,6 @@ impl TryFrom<AntiSphereOnOrigin> for AntiDipoleInversionOrthogonalOrigin {
 impl TryFrom<Circle> for AntiDipoleInversionOrthogonalOrigin {
     type Error = String;
     fn try_from(circle: Circle) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle[6];
@@ -8582,11 +8570,11 @@ impl TryFrom<Circle> for AntiDipoleInversionOrthogonalOrigin {
         }
         return Ok(AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([circle[e423], circle[e431], circle[e412], 0.0]),
+            circle.group0().with_w(0.0),
             // e415, e425, e435
             circle.group1().xyz(),
             // e235, e315, e125, e4
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], 0.0]),
+            circle.group2().with_w(0.0),
         ));
     }
 }
@@ -8594,7 +8582,6 @@ impl TryFrom<Circle> for AntiDipoleInversionOrthogonalOrigin {
 impl TryFrom<CircleAtInfinity> for AntiDipoleInversionOrthogonalOrigin {
     type Error = String;
     fn try_from(circle_at_infinity: CircleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_infinity[3];
@@ -8616,7 +8603,7 @@ impl TryFrom<CircleAtInfinity> for AntiDipoleInversionOrthogonalOrigin {
             // e415, e425, e435
             circle_at_infinity.group0().xyz(),
             // e235, e315, e125, e4
-            Simd32x4::from([circle_at_infinity[e235], circle_at_infinity[e315], circle_at_infinity[e125], 0.0]),
+            circle_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -8646,7 +8633,7 @@ impl TryFrom<CircleOrthogonalOrigin> for AntiDipoleInversionOrthogonalOrigin {
             // e415, e425, e435
             Simd32x3::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([circle_orthogonal_origin[e235], circle_orthogonal_origin[e315], circle_orthogonal_origin[e125], 0.0]),
+            circle_orthogonal_origin.group1().with_w(0.0),
         ));
     }
 }
@@ -8679,7 +8666,7 @@ impl TryFrom<CircleRotor> for AntiDipoleInversionOrthogonalOrigin {
         }
         return Ok(AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([circle_rotor[e423], circle_rotor[e431], circle_rotor[e412], 0.0]),
+            circle_rotor.group0().with_w(0.0),
             // e415, e425, e435
             circle_rotor.group1().xyz(),
             // e235, e315, e125, e4
@@ -8709,7 +8696,7 @@ impl TryFrom<CircleRotorAligningOrigin> for AntiDipoleInversionOrthogonalOrigin 
         }
         return Ok(AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([circle_rotor_aligning_origin[e423], circle_rotor_aligning_origin[e431], circle_rotor_aligning_origin[e412], 0.0]),
+            circle_rotor_aligning_origin.group0().with_w(0.0),
             // e415, e425, e435
             circle_rotor_aligning_origin.group1(),
             // e235, e315, e125, e4
@@ -9070,11 +9057,11 @@ impl TryFrom<MultiVector> for AntiDipoleInversionOrthogonalOrigin {
         }
         return Ok(AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e5]]),
+            multi_vector.group7().with_w(multi_vector[e5]),
             // e415, e425, e435
             multi_vector.group6().xyz(),
             // e235, e315, e125, e4
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e4]]),
+            multi_vector.group8().with_w(multi_vector[e4]),
         ));
     }
 }

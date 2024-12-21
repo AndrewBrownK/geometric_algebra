@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiDotProduct
-/// TODO
+/// This is the dual to the dot product, and always returns an AntiScalar.
 pub trait AntiDotProduct<T> {
     fn anti_dot_product(self, other: T) -> AntiScalar;
 }

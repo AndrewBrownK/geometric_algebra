@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// UnitizedFlatNorm
-/// TODO
+/// Unitized FlatNorm.
 pub trait UnitizedFlatNorm {
     fn unitized_flat_norm(self) -> f32;
 }

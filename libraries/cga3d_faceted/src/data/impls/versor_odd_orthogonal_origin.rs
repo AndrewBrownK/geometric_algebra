@@ -3946,12 +3946,11 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for VersorOddOrthogonalOrigin {
 
 impl From<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_anti_circle_on_origin: AntiCircleOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_anti_circle_on_origin[e41], from_anti_circle_on_origin[e42], from_anti_circle_on_origin[e43], 0.0]),
+            from_anti_circle_on_origin.group0().with_w(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_circle_on_origin[e23], from_anti_circle_on_origin[e31], from_anti_circle_on_origin[e12], 0.0]),
+            from_anti_circle_on_origin.group1().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
@@ -3963,19 +3962,9 @@ impl From<AntiCircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin[e41],
-                from_anti_circle_rotor_aligning_origin[e42],
-                from_anti_circle_rotor_aligning_origin[e43],
-                from_anti_circle_rotor_aligning_origin[scalar],
-            ]),
+            from_anti_circle_rotor_aligning_origin.group0().with_w(from_anti_circle_rotor_aligning_origin[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin[e23],
-                from_anti_circle_rotor_aligning_origin[e31],
-                from_anti_circle_rotor_aligning_origin[e12],
-                0.0,
-            ]),
+            from_anti_circle_rotor_aligning_origin.group1().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 from_anti_circle_rotor_aligning_origin[e15],
@@ -3994,12 +3983,7 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalOrigin
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(from_anti_circle_rotor_aligning_origin_at_infinity[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin_at_infinity[e23],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e31],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e12],
-                0.0,
-            ]),
+            from_anti_circle_rotor_aligning_origin_at_infinity.group0().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 from_anti_circle_rotor_aligning_origin_at_infinity[e15],
@@ -4013,12 +3997,11 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalOrigin
 
 impl From<AntiCircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_anti_circle_rotor_on_origin: AntiCircleRotorOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             from_anti_circle_rotor_on_origin.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_circle_rotor_on_origin[e23], from_anti_circle_rotor_on_origin[e31], from_anti_circle_rotor_on_origin[e12], 0.0]),
+            from_anti_circle_rotor_on_origin.group1().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
@@ -4041,26 +4024,24 @@ impl From<AntiDualNum> for VersorOddOrthogonalOrigin {
 
 impl From<AntiLine> for VersorOddOrthogonalOrigin {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
         );
     }
 }
 
 impl From<AntiLineOnOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_anti_line_on_origin: AntiLineOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_line_on_origin[e23], from_anti_line_on_origin[e31], from_anti_line_on_origin[e12], 0.0]),
+            from_anti_line_on_origin.group0().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
@@ -4111,14 +4092,13 @@ impl From<AntiVersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
 
 impl From<DipoleAtOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_dipole_at_origin: DipoleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_dipole_at_origin[e41], from_dipole_at_origin[e42], from_dipole_at_origin[e43], 0.0]),
+            from_dipole_at_origin.group0().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_dipole_at_origin[e15], from_dipole_at_origin[e25], from_dipole_at_origin[e35], 0.0]),
+            from_dipole_at_origin.group1().with_w(0.0),
         );
     }
 }
@@ -4149,12 +4129,7 @@ impl From<DipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
                 0.0,
             ]),
             // e23, e31, e12, e3215
-            Simd32x4::from([
-                from_dipole_inversion_orthogonal_origin[e23],
-                from_dipole_inversion_orthogonal_origin[e31],
-                from_dipole_inversion_orthogonal_origin[e12],
-                from_dipole_inversion_orthogonal_origin[e3215],
-            ]),
+            from_dipole_inversion_orthogonal_origin.group1().with_w(from_dipole_inversion_orthogonal_origin[e3215]),
             // e15, e25, e35, e1234
             from_dipole_inversion_orthogonal_origin.group2(),
         );
@@ -4163,28 +4138,26 @@ impl From<DipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
 
 impl From<DipoleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_dipole_orthogonal_origin[e41], from_dipole_orthogonal_origin[e42], from_dipole_orthogonal_origin[e43], 0.0]),
+            from_dipole_orthogonal_origin.group0().with_w(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_dipole_orthogonal_origin[e23], from_dipole_orthogonal_origin[e31], from_dipole_orthogonal_origin[e12], 0.0]),
+            from_dipole_orthogonal_origin.group1().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_dipole_orthogonal_origin[e15], from_dipole_orthogonal_origin[e25], from_dipole_orthogonal_origin[e35], 0.0]),
+            from_dipole_orthogonal_origin.group2().with_w(0.0),
         );
     }
 }
 
 impl From<FlatPointAtInfinity> for VersorOddOrthogonalOrigin {
     fn from(from_flat_point_at_infinity: FlatPointAtInfinity) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_flat_point_at_infinity[e15], from_flat_point_at_infinity[e25], from_flat_point_at_infinity[e35], 0.0]),
+            from_flat_point_at_infinity.group0().with_w(0.0),
         );
     }
 }
@@ -4219,10 +4192,9 @@ impl From<Horizon> for VersorOddOrthogonalOrigin {
 
 impl From<NullDipoleAtOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_null_dipole_at_origin: NullDipoleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_null_dipole_at_origin[e41], from_null_dipole_at_origin[e42], from_null_dipole_at_origin[e43], 0.0]),
+            from_null_dipole_at_origin.group0().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -8718,7 +8690,7 @@ impl TryFrom<AntiCircleRotor> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([anti_circle_rotor[e41], anti_circle_rotor[e42], anti_circle_rotor[e43], anti_circle_rotor[scalar]]),
+            anti_circle_rotor.group0().with_w(anti_circle_rotor[scalar]),
             // e23, e31, e12, e3215
             Simd32x4::from([anti_circle_rotor[e23], anti_circle_rotor[e31], anti_circle_rotor[e12], 0.0]),
             // e15, e25, e35, e1234
@@ -8808,11 +8780,11 @@ impl TryFrom<Dipole> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole[e41], dipole[e42], dipole[e43], 0.0]),
+            dipole.group0().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from([dipole[e23], dipole[e31], dipole[e12], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
+            dipole.group2().with_w(0.0),
         ));
     }
 }
@@ -8842,7 +8814,7 @@ impl TryFrom<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole_aligning_origin[e15], dipole_aligning_origin[e25], dipole_aligning_origin[e35], 0.0]),
+            dipole_aligning_origin.group1().with_w(0.0),
         ));
     }
 }
@@ -8872,7 +8844,7 @@ impl TryFrom<DipoleAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x4::from([dipole_at_infinity[e23], dipole_at_infinity[e31], dipole_at_infinity[e12], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35], 0.0]),
+            dipole_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -8919,7 +8891,7 @@ impl TryFrom<DipoleInversion> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_inversion[e41], dipole_inversion[e42], dipole_inversion[e43], 0.0]),
+            dipole_inversion.group0().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from([dipole_inversion[e23], dipole_inversion[e31], dipole_inversion[e12], dipole_inversion[e3215]]),
             // e15, e25, e35, e1234
@@ -9030,7 +9002,7 @@ impl TryFrom<DipoleInversionAtInfinity> for VersorOddOrthogonalOrigin {
                 dipole_inversion_at_infinity[e3215],
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole_inversion_at_infinity[e15], dipole_inversion_at_infinity[e25], dipole_inversion_at_infinity[e35], 0.0]),
+            dipole_inversion_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -9353,9 +9325,9 @@ impl TryFrom<MultiVector> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([multi_vector[e41], multi_vector[e42], multi_vector[e43], multi_vector[scalar]]),
             // e23, e31, e12, e3215
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e3215]]),
+            multi_vector.group5().with_w(multi_vector[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e1234]]),
+            multi_vector.group4().with_w(multi_vector[e1234]),
         ));
     }
 }

@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatWeightNorm
-/// TODO
+/// Weight Norm for flat aspect.
 pub trait FlatWeightNorm {
     fn flat_weight_norm(self) -> AntiScalar;
 }

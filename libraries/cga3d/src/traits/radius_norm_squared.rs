@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RadiusNormSquared
-/// TODO
+/// Intermediate result to RadiusNorm.
 pub trait RadiusNormSquared {
     fn radius_norm_squared(self) -> Scalar;
 }

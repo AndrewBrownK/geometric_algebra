@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RadiusNorm
-/// TODO
+/// Distance radius of a round object (not yet unitized, still requires division by round weight).
 pub trait RadiusNorm {
     fn radius_norm(self) -> Scalar;
 }

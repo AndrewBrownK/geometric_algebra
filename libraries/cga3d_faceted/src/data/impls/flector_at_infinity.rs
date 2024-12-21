@@ -2995,13 +2995,7 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for FlectorAtInfinity {
 
 impl From<FlatPointAtInfinity> for FlectorAtInfinity {
     fn from(from_flat_point_at_infinity: FlatPointAtInfinity) -> Self {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            from_flat_point_at_infinity[e15],
-            from_flat_point_at_infinity[e25],
-            from_flat_point_at_infinity[e35],
-            0.0,
-        ]));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ from_flat_point_at_infinity.group0().with_w(0.0));
     }
 }
 
@@ -7142,7 +7136,6 @@ impl TryFrom<AntiCircleRotorAtInfinity> for FlectorAtInfinity {
 impl TryFrom<AntiLine> for FlectorAtInfinity {
     type Error = String;
     fn try_from(anti_line: AntiLine) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_line[0];
@@ -7172,10 +7165,7 @@ impl TryFrom<AntiLine> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35, e3215
-            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
-        ));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ anti_line.group1().with_w(0.0)));
     }
 }
 
@@ -7225,7 +7215,6 @@ impl TryFrom<AntiMotor> for FlectorAtInfinity {
 impl TryFrom<Dipole> for FlectorAtInfinity {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole[0];
@@ -7283,17 +7272,13 @@ impl TryFrom<Dipole> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35, e3215
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
-        ));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ dipole.group2().with_w(0.0)));
     }
 }
 
 impl TryFrom<DipoleAligningOrigin> for FlectorAtInfinity {
     type Error = String;
     fn try_from(dipole_aligning_origin: DipoleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_aligning_origin[0];
@@ -7330,19 +7315,13 @@ impl TryFrom<DipoleAligningOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            dipole_aligning_origin[e15],
-            dipole_aligning_origin[e25],
-            dipole_aligning_origin[e35],
-            0.0,
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ dipole_aligning_origin.group1().with_w(0.0)));
     }
 }
 
 impl TryFrom<DipoleAtInfinity> for FlectorAtInfinity {
     type Error = String;
     fn try_from(dipole_at_infinity: DipoleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_at_infinity[0];
@@ -7379,19 +7358,13 @@ impl TryFrom<DipoleAtInfinity> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            dipole_at_infinity[e15],
-            dipole_at_infinity[e25],
-            dipole_at_infinity[e35],
-            0.0,
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ dipole_at_infinity.group1().with_w(0.0)));
     }
 }
 
 impl TryFrom<DipoleAtOrigin> for FlectorAtInfinity {
     type Error = String;
     fn try_from(dipole_at_origin: DipoleAtOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_at_origin[0];
@@ -7421,12 +7394,7 @@ impl TryFrom<DipoleAtOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            dipole_at_origin[e15],
-            dipole_at_origin[e25],
-            dipole_at_origin[e35],
-            0.0,
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ dipole_at_origin.group1().with_w(0.0)));
     }
 }
 
@@ -7666,12 +7634,10 @@ impl TryFrom<DipoleInversionAtInfinity> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            dipole_inversion_at_infinity[e15],
-            dipole_inversion_at_infinity[e25],
-            dipole_inversion_at_infinity[e35],
-            dipole_inversion_at_infinity[e3215],
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(
+            // e15, e25, e35, e3215
+            dipole_inversion_at_infinity.group1().with_w(dipole_inversion_at_infinity[e3215]),
+        ));
     }
 }
 
@@ -7797,7 +7763,6 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for FlectorAtInfinity {
 impl TryFrom<DipoleOrthogonalOrigin> for FlectorAtInfinity {
     type Error = String;
     fn try_from(dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_orthogonal_origin[0];
@@ -7848,12 +7813,7 @@ impl TryFrom<DipoleOrthogonalOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            dipole_orthogonal_origin[e15],
-            dipole_orthogonal_origin[e25],
-            dipole_orthogonal_origin[e35],
-            0.0,
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ dipole_orthogonal_origin.group2().with_w(0.0)));
     }
 }
 
@@ -8138,9 +8098,7 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e3215],
-        ])));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ multi_vector.group4().with_w(multi_vector[e3215])));
     }
 }
 

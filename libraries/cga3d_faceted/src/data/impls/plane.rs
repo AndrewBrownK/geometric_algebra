@@ -2609,11 +2609,7 @@ impl From<Horizon> for Plane {
 
 impl From<PlaneOnOrigin> for Plane {
     fn from(from_plane_on_origin: PlaneOnOrigin) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([from_plane_on_origin[e4235], from_plane_on_origin[e4315], from_plane_on_origin[e4125], 0.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ from_plane_on_origin.group0().with_w(0.0));
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for Plane {
@@ -7389,7 +7385,6 @@ impl TryFrom<MultiVector> for Plane {
 impl TryFrom<MysteryDipoleInversion> for Plane {
     type Error = String;
     fn try_from(mystery_dipole_inversion: MysteryDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_dipole_inversion[0];
@@ -7426,12 +7421,7 @@ impl TryFrom<MysteryDipoleInversion> for Plane {
             error.push('}');
             return Err(error);
         }
-        return Ok(Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([
-            mystery_dipole_inversion[e4235],
-            mystery_dipole_inversion[e4315],
-            mystery_dipole_inversion[e4125],
-            0.0,
-        ])));
+        return Ok(Plane::from_groups(/* e4235, e4315, e4125, e3215 */ mystery_dipole_inversion.group1().with_w(0.0)));
     }
 }
 

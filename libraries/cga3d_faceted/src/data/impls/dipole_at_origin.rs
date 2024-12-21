@@ -8515,7 +8515,6 @@ impl TryFrom<VersorOdd> for DipoleAtOrigin {
 impl TryFrom<VersorOddAtInfinity> for DipoleAtOrigin {
     type Error = String;
     fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_odd_at_infinity[0];
@@ -8591,7 +8590,7 @@ impl TryFrom<VersorOddAtInfinity> for DipoleAtOrigin {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+            versor_odd_at_infinity.group0().yzw(),
         ));
     }
 }

@@ -925,12 +925,11 @@ impl From<AntiFlatPoint> for Circle {
 
 impl From<Line> for Circle {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e235, e315, e125
             from_line.group1(),
         );

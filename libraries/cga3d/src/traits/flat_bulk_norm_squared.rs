@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatBulkNormSquared
-/// TODO
+/// Intermediate result for FlatBulkNorm.
 pub trait FlatBulkNormSquared {
     fn flat_bulk_norm_squared(self) -> Scalar;
 }

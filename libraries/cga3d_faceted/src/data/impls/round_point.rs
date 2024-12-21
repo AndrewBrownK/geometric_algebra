@@ -3509,13 +3509,7 @@ impl From<AntiPlane> for RoundPoint {
 
 impl From<AntiPlaneOnOrigin> for RoundPoint {
     fn from(from_anti_plane_on_origin: AntiPlaneOnOrigin) -> Self {
-        use crate::elements::*;
-        return RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([from_anti_plane_on_origin[e1], from_anti_plane_on_origin[e2], from_anti_plane_on_origin[e3], 0.0]),
-            // e5
-            0.0,
-        );
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ from_anti_plane_on_origin.group0().with_w(0.0), /* e5 */ 0.0);
     }
 }
 
@@ -8033,7 +8027,6 @@ impl TryFrom<AntiFlectorOnOrigin> for RoundPoint {
 impl TryFrom<AntiMysteryDipoleInversion> for RoundPoint {
     type Error = String;
     fn try_from(anti_mystery_dipole_inversion: AntiMysteryDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_mystery_dipole_inversion[0];
@@ -8070,12 +8063,7 @@ impl TryFrom<AntiMysteryDipoleInversion> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([anti_mystery_dipole_inversion[e1], anti_mystery_dipole_inversion[e2], anti_mystery_dipole_inversion[e3], 0.0]),
-            // e5
-            0.0,
-        ));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ anti_mystery_dipole_inversion.group1().with_w(0.0), /* e5 */ 0.0));
     }
 }
 

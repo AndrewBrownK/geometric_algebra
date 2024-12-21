@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatNormSquared
-/// TODO
+/// Intermediate result to FlatNorm.
 pub trait FlatNormSquared {
     fn flat_norm_squared(self) -> MultiVector;
 }

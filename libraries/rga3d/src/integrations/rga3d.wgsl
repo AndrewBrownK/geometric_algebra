@@ -1323,7 +1323,8 @@ fn dualNum_antiAutoMorphism(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_antiAutoMorphism(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -1338,7 +1339,8 @@ fn motor_antiAutoMorphism(self_: Motor) -> Motor {
     return self_;
 }
 fn multiVector_antiAutoMorphism(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_, 
@@ -1350,12 +1352,14 @@ fn origin_antiAutoMorphism(self_: Origin) -> Origin {
     return Origin(self_.e4_ * -1.0);
 }
 fn plane_antiAutoMorphism(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
 fn point_antiAutoMorphism(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -1378,7 +1382,8 @@ fn dualNum_antiConstraintViolation(self_: DualNum) -> Scalar {
     return Scalar(geometric_anti_product.scalar);
 }
 fn flector_antiConstraintViolation(self_: Flector) -> DualNum {
-    let self_groups = flector_grouped(self_);    let anti_reverse_groups: FlectorGroups = FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    let anti_reverse_groups: FlectorGroups = FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_
     );
@@ -1392,7 +1397,8 @@ fn flector_antiConstraintViolation(self_: Flector) -> DualNum {
     ));
 }
 fn line_antiConstraintViolation(self_: Line) -> DualNum {
-    let self_groups = line_grouped(self_);    let anti_reverse: Line = line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    let anti_reverse: Line = line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
@@ -1405,7 +1411,8 @@ fn line_antiConstraintViolation(self_: Line) -> DualNum {
     ));
 }
 fn motor_antiConstraintViolation(self_: Motor) -> DualNum {
-    let self_groups = motor_grouped(self_);    let anti_reverse: Motor = motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    let anti_reverse: Motor = motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
@@ -1418,7 +1425,8 @@ fn motor_antiConstraintViolation(self_: Motor) -> DualNum {
     ));
 }
 fn multiVector_antiConstraintViolation(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    let anti_reverse_groups: MultiVectorGroups = MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    let anti_reverse_groups: MultiVectorGroups = MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -1452,7 +1460,8 @@ fn plane_antiConstraintViolation(self_: Plane) -> Scalar {
     return Scalar(0.0);
 }
 fn point_antiConstraintViolation(self_: Point) -> AntiScalar {
-    let self_groups = point_grouped(self_);    let anti_reverse: Point = point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    let anti_reverse: Point = point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
     let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
@@ -1598,7 +1607,8 @@ fn origin_antiFix(self_: Origin) -> Origin {
     return Origin(anti_inverse.e1234_ * self_.e4_);
 }
 fn plane_antiFix(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    let geometric_anti_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2));
+    let self_groups = plane_grouped(self_);
+    let geometric_anti_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2));
     let anti_square_root: AntiScalar = AntiScalar(pow(geometric_anti_product.e1234_, 0.5));
     let anti_dot_product: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, 2));
     let anti_inverse: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
@@ -1607,7 +1617,8 @@ fn plane_antiFix(self_: Plane) -> Plane {
     ));
 }
 fn point_antiFix(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    let anti_reverse: Point = point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    let anti_reverse: Point = point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
     let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
@@ -1705,7 +1716,8 @@ fn dualNum_antiReverse(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_antiReverse(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_
     ));
@@ -1714,19 +1726,22 @@ fn horizon_antiReverse(self_: Horizon) -> Horizon {
     return self_;
 }
 fn line_antiReverse(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_antiReverse(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
 }
 fn multiVector_antiReverse(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -1741,7 +1756,8 @@ fn plane_antiReverse(self_: Plane) -> Plane {
     return self_;
 }
 fn point_antiReverse(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -2384,7 +2400,8 @@ fn dualNum_autoMorphism(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_autoMorphism(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -2399,7 +2416,8 @@ fn motor_autoMorphism(self_: Motor) -> Motor {
     return self_;
 }
 fn multiVector_autoMorphism(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_, 
@@ -2411,12 +2429,14 @@ fn origin_autoMorphism(self_: Origin) -> Origin {
     return Origin(self_.e4_ * -1.0);
 }
 fn plane_autoMorphism(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
 fn point_autoMorphism(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -2430,7 +2450,8 @@ fn dualNum_conjugation(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_conjugation(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_
     ));
@@ -2439,19 +2460,22 @@ fn horizon_conjugation(self_: Horizon) -> Horizon {
     return self_;
 }
 fn line_conjugation(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_conjugation(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
 }
 fn multiVector_conjugation(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -2466,7 +2490,8 @@ fn plane_conjugation(self_: Plane) -> Plane {
     return self_;
 }
 fn point_conjugation(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -2486,7 +2511,8 @@ fn dualNum_constraintViolation(self_: DualNum) -> AntiScalar {
     return AntiScalar(geometric_product.e1234_);
 }
 fn flector_constraintViolation(self_: Flector) -> DualNum {
-    let self_groups = flector_grouped(self_);    let reverse: Flector = flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    let reverse: Flector = flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -2505,7 +2531,8 @@ fn horizon_constraintViolation(self_: Horizon) -> Scalar {
     return Scalar(geometric_product.scalar - dot_product.scalar);
 }
 fn line_constraintViolation(self_: Line) -> DualNum {
-    let self_groups = line_grouped(self_);    let reverse: Line = line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    let reverse: Line = line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
@@ -2518,7 +2545,8 @@ fn line_constraintViolation(self_: Line) -> DualNum {
     ));
 }
 fn motor_constraintViolation(self_: Motor) -> DualNum {
-    let self_groups = motor_grouped(self_);    let reverse: Motor = motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    let reverse: Motor = motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
@@ -2531,7 +2559,8 @@ fn motor_constraintViolation(self_: Motor) -> DualNum {
     ));
 }
 fn multiVector_constraintViolation(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    let reverse_groups: MultiVectorGroups = MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    let reverse_groups: MultiVectorGroups = MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_, 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -2556,7 +2585,8 @@ fn multiVector_constraintViolation(self_: MultiVector) -> MultiVector {
     ));
 }
 fn plane_constraintViolation(self_: Plane) -> Scalar {
-    let self_groups = plane_grouped(self_);    let reverse: Plane = plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    let reverse: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
     let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
@@ -2699,7 +2729,8 @@ fn dualNum_doubleComplement(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_doubleComplement(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -2714,7 +2745,8 @@ fn motor_doubleComplement(self_: Motor) -> Motor {
     return self_;
 }
 fn multiVector_doubleComplement(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_, 
@@ -2726,12 +2758,14 @@ fn origin_doubleComplement(self_: Origin) -> Origin {
     return Origin(self_.e4_ * -1.0);
 }
 fn plane_doubleComplement(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
 fn point_doubleComplement(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -2747,7 +2781,8 @@ fn horizon_fix(self_: Horizon) -> Horizon {
     return Horizon(self_.e321_ * inverse.scalar);
 }
 fn plane_fix(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    let reverse: Plane = plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    let reverse: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
     let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
@@ -2759,7 +2794,8 @@ fn plane_fix(self_: Plane) -> Plane {
     ));
 }
 fn point_fix(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    let geometric_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2));
+    let self_groups = point_grouped(self_);
+    let geometric_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2));
     let square_root: Scalar = Scalar(pow(geometric_product.scalar, 0.5));
     let dot_product: Scalar = Scalar(pow(square_root.scalar, 2));
     let inverse: Scalar = Scalar(1.0/(dot_product.scalar));
@@ -5976,7 +6012,8 @@ fn dualNum_into_motor(self_: DualNum) -> Motor {
     ));
 }
 fn dualNum_into_multiVector(self_: DualNum) -> MultiVector {
-    let self_groups = dualNum_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = dualNum_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
@@ -5985,7 +6022,8 @@ fn dualNum_into_multiVector(self_: DualNum) -> MultiVector {
     ));
 }
 fn flector_into_multiVector(self_: Flector) -> MultiVector {
-    let self_groups = flector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = flector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0), 
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
@@ -6014,13 +6052,15 @@ fn horizon_into_plane(self_: Horizon) -> Plane {
     ));
 }
 fn line_into_motor(self_: Line) -> Motor {
+    let self_groups = line_grouped(self_);
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(self_.e41_, self_.e42_, self_.e43_, 0.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(self_.e23_, self_.e31_, self_.e12_, 0.0)
+        /* e41, e42, e43, e1234 */ vec4<f32>(self_groups.group0_.xyz, 0.0), 
+        /* e23, e31, e12, scalar */ vec4<f32>(self_groups.group1_.xyz, 0.0)
     ));
 }
 fn line_into_multiVector(self_: Line) -> MultiVector {
-    let self_groups = line_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = line_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e41, e42, e43 */ self_groups.group0_, 
@@ -6029,7 +6069,8 @@ fn line_into_multiVector(self_: Line) -> MultiVector {
     ));
 }
 fn motor_into_multiVector(self_: Motor) -> MultiVector {
-    let self_groups = motor_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = motor_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(self_.scalar, self_.e1234_, 0.0, 0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e41, e42, e43 */ self_groups.group0_.xyz, 
@@ -6058,13 +6099,15 @@ fn origin_into_point(self_: Origin) -> Point {
     ));
 }
 fn plane_into_flector(self_: Plane) -> Flector {
-    let self_groups = plane_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = plane_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e423, e431, e412, e321 */ self_groups.group0_
     ));
 }
 fn plane_into_multiVector(self_: Plane) -> MultiVector {
-    let self_groups = plane_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = plane_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
@@ -6073,13 +6116,15 @@ fn plane_into_multiVector(self_: Plane) -> MultiVector {
     ));
 }
 fn point_into_flector(self_: Point) -> Flector {
-    let self_groups = point_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = point_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(0.0)
     ));
 }
 fn point_into_multiVector(self_: Point) -> MultiVector {
-    let self_groups = point_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = point_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0), 
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
@@ -6147,12 +6192,14 @@ fn antiScalar_leftComplement(self_: AntiScalar) -> Scalar {
     return Scalar(self_.e1234_);
 }
 fn dualNum_leftComplement(self_: DualNum) -> DualNum {
-    let self_groups = dualNum_grouped(self_);    return dualNum_degroup(DualNumGroups(
+    let self_groups = dualNum_grouped(self_);
+    return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ self_groups.group0_.yx
     ));
 }
 fn flector_leftComplement(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group1_, 
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
@@ -6161,19 +6208,22 @@ fn horizon_leftComplement(self_: Horizon) -> Origin {
     return Origin(self_.e321_);
 }
 fn line_leftComplement(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group1_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group0_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_leftComplement(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
 }
 fn multiVector_leftComplement(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_.yx, 
         /* e1, e2, e3, e4 */ self_groups.group4_, 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
@@ -6185,12 +6235,14 @@ fn origin_leftComplement(self_: Origin) -> Horizon {
     return Horizon(self_.e4_ * -1.0);
 }
 fn plane_leftComplement(self_: Plane) -> Point {
-    let self_groups = plane_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = plane_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_
     ));
 }
 fn point_leftComplement(self_: Point) -> Plane {
-    let self_groups = point_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = point_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -6688,12 +6740,14 @@ fn antiScalar_neg(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(self_.e1234_ * -1.0);
 }
 fn dualNum_neg(self_: DualNum) -> DualNum {
-    let self_groups = dualNum_grouped(self_);    return dualNum_degroup(DualNumGroups(
+    let self_groups = dualNum_grouped(self_);
+    return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ self_groups.group0_ * vec2<f32>(-1.0)
     ));
 }
 fn flector_neg(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -6702,19 +6756,22 @@ fn horizon_neg(self_: Horizon) -> Horizon {
     return Horizon(self_.e321_ * -1.0);
 }
 fn line_neg(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_neg(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
 }
 fn multiVector_neg(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_ * vec2<f32>(-1.0), 
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -6726,12 +6783,14 @@ fn origin_neg(self_: Origin) -> Origin {
     return Origin(self_.e4_ * -1.0);
 }
 fn plane_neg(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
 fn point_neg(self_: Point) -> Point {
-    let self_groups = point_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = point_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -6768,7 +6827,8 @@ fn dualNum_reverse(self_: DualNum) -> DualNum {
     return self_;
 }
 fn flector_reverse(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
@@ -6777,19 +6837,22 @@ fn horizon_reverse(self_: Horizon) -> Horizon {
     return Horizon(self_.e321_ * -1.0);
 }
 fn line_reverse(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group0_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_reverse(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
 }
 fn multiVector_reverse(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_, 
         /* e1, e2, e3, e4 */ self_groups.group1_, 
         /* e41, e42, e43 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -6801,7 +6864,8 @@ fn origin_reverse(self_: Origin) -> Origin {
     return self_;
 }
 fn plane_reverse(self_: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = plane_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
@@ -6824,19 +6888,22 @@ fn horizon_rightAntiDual(self_: Horizon) -> Origin {
     return Origin(self_.e321_ * -1.0);
 }
 fn line_rightAntiDual(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group1_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn motor_rightAntiDual(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
 fn multiVector_rightAntiDual(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
@@ -6859,12 +6926,14 @@ fn antiScalar_rightComplement(self_: AntiScalar) -> Scalar {
     return Scalar(self_.e1234_);
 }
 fn dualNum_rightComplement(self_: DualNum) -> DualNum {
-    let self_groups = dualNum_grouped(self_);    return dualNum_degroup(DualNumGroups(
+    let self_groups = dualNum_grouped(self_);
+    return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ self_groups.group0_.yx
     ));
 }
 fn flector_rightComplement(self_: Flector) -> Flector {
-    let self_groups = flector_grouped(self_);    return flector_degroup(FlectorGroups(
+    let self_groups = flector_grouped(self_);
+    return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group1_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group0_
     ));
@@ -6873,19 +6942,22 @@ fn horizon_rightComplement(self_: Horizon) -> Origin {
     return Origin(self_.e321_ * -1.0);
 }
 fn line_rightComplement(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group1_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group0_ * vec3<f32>(-1.0)
     ));
 }
 fn motor_rightComplement(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
 }
 fn multiVector_rightComplement(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ self_groups.group0_.yx, 
         /* e1, e2, e3, e4 */ self_groups.group4_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
@@ -6897,12 +6969,14 @@ fn origin_rightComplement(self_: Origin) -> Horizon {
     return Horizon(self_.e4_);
 }
 fn plane_rightComplement(self_: Plane) -> Point {
-    let self_groups = plane_grouped(self_);    return point_degroup(PointGroups(
+    let self_groups = plane_grouped(self_);
+    return point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
 }
 fn point_rightComplement(self_: Point) -> Plane {
-    let self_groups = point_grouped(self_);    return plane_degroup(PlaneGroups(
+    let self_groups = point_grouped(self_);
+    return plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_
     ));
 }
@@ -6922,19 +6996,22 @@ fn horizon_rightDual(self_: Horizon) -> Origin {
     return Origin(self_.e321_ * -1.0);
 }
 fn line_rightDual(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_degroup(LineGroups(
+    let self_groups = line_grouped(self_);
+    return line_degroup(LineGroups(
         /* e41, e42, e43 */ self_groups.group1_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn motor_rightDual(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_degroup(MotorGroups(
+    let self_groups = motor_grouped(self_);
+    return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
 fn multiVector_rightDual(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
@@ -11086,13 +11163,16 @@ fn horizon_not(self_: Horizon) -> Origin {
     return horizon_rightDual(self_);
 }
 fn line_not(self_: Line) -> Line {
-    let self_groups = line_grouped(self_);    return line_rightDual(self_);
+    let self_groups = line_grouped(self_);
+    return line_rightDual(self_);
 }
 fn motor_not(self_: Motor) -> Motor {
-    let self_groups = motor_grouped(self_);    return motor_rightDual(self_);
+    let self_groups = motor_grouped(self_);
+    return motor_rightDual(self_);
 }
 fn multiVector_not(self_: MultiVector) -> MultiVector {
-    let self_groups = multiVector_grouped(self_);    return multiVector_rightDual(self_);
+    let self_groups = multiVector_grouped(self_);
+    return multiVector_rightDual(self_);
 }
 fn plane_not(self_: Plane) -> Origin {
     return plane_rightDual(self_);

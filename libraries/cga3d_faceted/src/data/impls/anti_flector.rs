@@ -3645,12 +3645,11 @@ impl From<AntiPlane> for AntiFlector {
 
 impl From<AntiPlaneOnOrigin> for AntiFlector {
     fn from(from_anti_plane_on_origin: AntiPlaneOnOrigin) -> Self {
-        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from(0.0),
             // e1, e2, e3, e5
-            Simd32x4::from([from_anti_plane_on_origin[e1], from_anti_plane_on_origin[e2], from_anti_plane_on_origin[e3], 0.0]),
+            from_anti_plane_on_origin.group0().with_w(0.0),
         );
     }
 }
@@ -3669,10 +3668,9 @@ impl From<Infinity> for AntiFlector {
 
 impl From<LineAtInfinity> for AntiFlector {
     fn from(from_line_at_infinity: LineAtInfinity) -> Self {
-        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([from_line_at_infinity[e235], from_line_at_infinity[e315], from_line_at_infinity[e125], 0.0]),
+            from_line_at_infinity.group0().with_w(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         );
@@ -7900,12 +7898,7 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                anti_dipole_inversion_at_infinity[e235],
-                anti_dipole_inversion_at_infinity[e315],
-                anti_dipole_inversion_at_infinity[e125],
-                anti_dipole_inversion_at_infinity[e321],
-            ]),
+            anti_dipole_inversion_at_infinity.group1().with_w(anti_dipole_inversion_at_infinity[e321]),
             // e1, e2, e3, e5
             anti_dipole_inversion_at_infinity.group2(),
         ));
@@ -8115,7 +8108,7 @@ impl TryFrom<AntiMysteryDipoleInversion> for AntiFlector {
             // e235, e315, e125, e321
             Simd32x3::from(0.0).with_w(anti_mystery_dipole_inversion[e321]),
             // e1, e2, e3, e5
-            Simd32x4::from([anti_mystery_dipole_inversion[e1], anti_mystery_dipole_inversion[e2], anti_mystery_dipole_inversion[e3], 0.0]),
+            anti_mystery_dipole_inversion.group1().with_w(0.0),
         ));
     }
 }
@@ -8204,7 +8197,7 @@ impl TryFrom<Circle> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], circle[e321]]),
+            circle.group2().with_w(circle[e321]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8214,7 +8207,6 @@ impl TryFrom<Circle> for AntiFlector {
 impl TryFrom<CircleAligningOrigin> for AntiFlector {
     type Error = String;
     fn try_from(circle_aligning_origin: CircleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_aligning_origin[0];
@@ -8267,7 +8259,7 @@ impl TryFrom<CircleAligningOrigin> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([circle_aligning_origin[e235], circle_aligning_origin[e315], circle_aligning_origin[e125], 0.0]),
+            circle_aligning_origin.group2().with_w(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8309,7 +8301,7 @@ impl TryFrom<CircleAtInfinity> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([circle_at_infinity[e235], circle_at_infinity[e315], circle_at_infinity[e125], circle_at_infinity[e321]]),
+            circle_at_infinity.group1().with_w(circle_at_infinity[e321]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8319,7 +8311,6 @@ impl TryFrom<CircleAtInfinity> for AntiFlector {
 impl TryFrom<CircleAtOrigin> for AntiFlector {
     type Error = String;
     fn try_from(circle_at_origin: CircleAtOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_origin[0];
@@ -8351,7 +8342,7 @@ impl TryFrom<CircleAtOrigin> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([circle_at_origin[e235], circle_at_origin[e315], circle_at_origin[e125], 0.0]),
+            circle_at_origin.group1().with_w(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8393,12 +8384,7 @@ impl TryFrom<CircleOrthogonalOrigin> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                circle_orthogonal_origin[e235],
-                circle_orthogonal_origin[e315],
-                circle_orthogonal_origin[e125],
-                circle_orthogonal_origin[e321],
-            ]),
+            circle_orthogonal_origin.group1().with_w(circle_orthogonal_origin[e321]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8656,7 +8642,6 @@ impl TryFrom<CircleRotorAtInfinity> for AntiFlector {
 impl TryFrom<Line> for AntiFlector {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[0];
@@ -8688,7 +8673,7 @@ impl TryFrom<Line> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([line[e235], line[e315], line[e125], 0.0]),
+            line.group1().with_w(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -8926,7 +8911,7 @@ impl TryFrom<MultiVector> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e321]]),
+            multi_vector.group8().with_w(multi_vector[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([multi_vector[e1], multi_vector[e2], multi_vector[e3], multi_vector[e5]]),
         ));

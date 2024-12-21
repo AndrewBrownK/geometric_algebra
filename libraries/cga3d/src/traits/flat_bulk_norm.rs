@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatBulkNorm
-/// TODO
+/// BulkNorm for flat aspect.
 pub trait FlatBulkNorm {
     fn flat_bulk_norm(self) -> Scalar;
 }

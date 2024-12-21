@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Conjugation
-/// TODO
+/// This composes the reverse and grade involution (automorphism).
 pub trait Conjugation {
     fn conjugation(self) -> Self;
 }

@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// ConformalConjugate
-/// TODO
+/// The conformal conjugate negates the flat elements of an object, and is useful in calculating the center norm of the object.
 pub trait ConformalConjugate {
     fn conformal_conjugate(self) -> Self;
 }

@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiInverse
-/// TODO
+/// The inverse with respect to the geometric anti-product.
 pub trait AntiInverse {
     fn anti_inverse(self) -> AntiScalar;
 }

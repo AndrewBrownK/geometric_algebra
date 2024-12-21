@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundBulk
-/// TODO
+/// This is the aspect of a round object that characterizes the carrier's relationship with the origin.
 pub trait RoundBulk {
     type Output;
     fn round_bulk(self) -> Self::Output;

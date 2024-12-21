@@ -3121,11 +3121,7 @@ impl From<Infinity> for MotorAtInfinity {
 
 impl From<LineAtInfinity> for MotorAtInfinity {
     fn from(from_line_at_infinity: LineAtInfinity) -> Self {
-        use crate::elements::*;
-        return MotorAtInfinity::from_groups(
-            // e235, e315, e125, e5
-            Simd32x4::from([from_line_at_infinity[e235], from_line_at_infinity[e315], from_line_at_infinity[e125], 0.0]),
-        );
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ from_line_at_infinity.group0().with_w(0.0));
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for MotorAtInfinity {
@@ -7128,12 +7124,10 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            anti_dipole_inversion_at_infinity[e235],
-            anti_dipole_inversion_at_infinity[e315],
-            anti_dipole_inversion_at_infinity[e125],
-            anti_dipole_inversion_at_infinity[e5],
-        ])));
+        return Ok(MotorAtInfinity::from_groups(
+            // e235, e315, e125, e5
+            anti_dipole_inversion_at_infinity.group1().with_w(anti_dipole_inversion_at_infinity[e5]),
+        ));
     }
 }
 
@@ -7319,7 +7313,6 @@ impl TryFrom<AntiPlane> for MotorAtInfinity {
 impl TryFrom<Circle> for MotorAtInfinity {
     type Error = String;
     fn try_from(circle: Circle) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle[0];
@@ -7377,17 +7370,13 @@ impl TryFrom<Circle> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(
-            // e235, e315, e125, e5
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], 0.0]),
-        ));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ circle.group2().with_w(0.0)));
     }
 }
 
 impl TryFrom<CircleAligningOrigin> for MotorAtInfinity {
     type Error = String;
     fn try_from(circle_aligning_origin: CircleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_aligning_origin[0];
@@ -7438,19 +7427,13 @@ impl TryFrom<CircleAligningOrigin> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            circle_aligning_origin[e235],
-            circle_aligning_origin[e315],
-            circle_aligning_origin[e125],
-            0.0,
-        ])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ circle_aligning_origin.group2().with_w(0.0)));
     }
 }
 
 impl TryFrom<CircleAtInfinity> for MotorAtInfinity {
     type Error = String;
     fn try_from(circle_at_infinity: CircleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_infinity[0];
@@ -7487,19 +7470,13 @@ impl TryFrom<CircleAtInfinity> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            circle_at_infinity[e235],
-            circle_at_infinity[e315],
-            circle_at_infinity[e125],
-            0.0,
-        ])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ circle_at_infinity.group1().with_w(0.0)));
     }
 }
 
 impl TryFrom<CircleAtOrigin> for MotorAtInfinity {
     type Error = String;
     fn try_from(circle_at_origin: CircleAtOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_origin[0];
@@ -7529,19 +7506,13 @@ impl TryFrom<CircleAtOrigin> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            circle_at_origin[e235],
-            circle_at_origin[e315],
-            circle_at_origin[e125],
-            0.0,
-        ])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ circle_at_origin.group1().with_w(0.0)));
     }
 }
 
 impl TryFrom<CircleOrthogonalOrigin> for MotorAtInfinity {
     type Error = String;
     fn try_from(circle_orthogonal_origin: CircleOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_orthogonal_origin[0];
@@ -7578,12 +7549,7 @@ impl TryFrom<CircleOrthogonalOrigin> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            circle_orthogonal_origin[e235],
-            circle_orthogonal_origin[e315],
-            circle_orthogonal_origin[e125],
-            0.0,
-        ])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ circle_orthogonal_origin.group1().with_w(0.0)));
     }
 }
 
@@ -7840,7 +7806,6 @@ impl TryFrom<CircleRotorAtInfinity> for MotorAtInfinity {
 impl TryFrom<Line> for MotorAtInfinity {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[0];
@@ -7870,7 +7835,7 @@ impl TryFrom<Line> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([line[e235], line[e315], line[e125], 0.0])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ line.group1().with_w(0.0)));
     }
 }
 
@@ -8125,9 +8090,7 @@ impl TryFrom<MultiVector> for MotorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
-            multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e5],
-        ])));
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ multi_vector.group8().with_w(multi_vector[e5])));
     }
 }
 

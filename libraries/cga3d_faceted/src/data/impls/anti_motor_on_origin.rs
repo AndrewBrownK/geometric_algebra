@@ -3400,11 +3400,7 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiMotorOnOrigin {
 
 impl From<AntiLineOnOrigin> for AntiMotorOnOrigin {
     fn from(from_anti_line_on_origin: AntiLineOnOrigin) -> Self {
-        use crate::elements::*;
-        return AntiMotorOnOrigin::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([from_anti_line_on_origin[e23], from_anti_line_on_origin[e31], from_anti_line_on_origin[e12], 0.0]),
-        );
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ from_anti_line_on_origin.group0().with_w(0.0));
     }
 }
 
@@ -7331,7 +7327,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiMotorOnOrigin {
 impl TryFrom<AntiCircleOnOrigin> for AntiMotorOnOrigin {
     type Error = String;
     fn try_from(anti_circle_on_origin: AntiCircleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_on_origin[0];
@@ -7361,12 +7356,7 @@ impl TryFrom<AntiCircleOnOrigin> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            anti_circle_on_origin[e23],
-            anti_circle_on_origin[e31],
-            anti_circle_on_origin[e12],
-            0.0,
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ anti_circle_on_origin.group1().with_w(0.0)));
     }
 }
 
@@ -7494,12 +7484,10 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            anti_circle_rotor_aligning_origin[e23],
-            anti_circle_rotor_aligning_origin[e31],
-            anti_circle_rotor_aligning_origin[e12],
-            anti_circle_rotor_aligning_origin[scalar],
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(
+            // e23, e31, e12, scalar
+            anti_circle_rotor_aligning_origin.group1().with_w(anti_circle_rotor_aligning_origin[scalar]),
+        ));
     }
 }
 
@@ -7536,12 +7524,10 @@ impl TryFrom<AntiCircleRotorAligningOriginAtInfinity> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            anti_circle_rotor_aligning_origin_at_infinity[e23],
-            anti_circle_rotor_aligning_origin_at_infinity[e31],
-            anti_circle_rotor_aligning_origin_at_infinity[e12],
-            anti_circle_rotor_aligning_origin_at_infinity[scalar],
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(
+            // e23, e31, e12, scalar
+            anti_circle_rotor_aligning_origin_at_infinity.group0().with_w(anti_circle_rotor_aligning_origin_at_infinity[scalar]),
+        ));
     }
 }
 
@@ -7627,12 +7613,10 @@ impl TryFrom<AntiCircleRotorOnOrigin> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            anti_circle_rotor_on_origin[e23],
-            anti_circle_rotor_on_origin[e31],
-            anti_circle_rotor_on_origin[e12],
-            anti_circle_rotor_on_origin[scalar],
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(
+            // e23, e31, e12, scalar
+            anti_circle_rotor_on_origin.group1().with_w(anti_circle_rotor_on_origin[scalar]),
+        ));
     }
 }
 
@@ -7662,7 +7646,6 @@ impl TryFrom<AntiDualNum> for AntiMotorOnOrigin {
 impl TryFrom<AntiLine> for AntiMotorOnOrigin {
     type Error = String;
     fn try_from(anti_line: AntiLine) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_line[3];
@@ -7692,10 +7675,7 @@ impl TryFrom<AntiLine> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([anti_line[e23], anti_line[e31], anti_line[e12], 0.0]),
-        ));
+        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ anti_line.group0().with_w(0.0)));
     }
 }
 
@@ -8121,7 +8101,6 @@ impl TryFrom<DipoleInversionAtInfinity> for AntiMotorOnOrigin {
 impl TryFrom<DipoleInversionOrthogonalOrigin> for AntiMotorOnOrigin {
     type Error = String;
     fn try_from(dipole_inversion_orthogonal_origin: DipoleInversionOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_inversion_orthogonal_origin[0];
@@ -8186,19 +8165,13 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            dipole_inversion_orthogonal_origin[e23],
-            dipole_inversion_orthogonal_origin[e31],
-            dipole_inversion_orthogonal_origin[e12],
-            0.0,
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ dipole_inversion_orthogonal_origin.group1().with_w(0.0)));
     }
 }
 
 impl TryFrom<DipoleOrthogonalOrigin> for AntiMotorOnOrigin {
     type Error = String;
     fn try_from(dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_orthogonal_origin[0];
@@ -8249,12 +8222,7 @@ impl TryFrom<DipoleOrthogonalOrigin> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            dipole_orthogonal_origin[e23],
-            dipole_orthogonal_origin[e31],
-            dipole_orthogonal_origin[e12],
-            0.0,
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ dipole_orthogonal_origin.group1().with_w(0.0)));
     }
 }
 
@@ -8466,9 +8434,7 @@ impl TryFrom<MultiVector> for AntiMotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([
-            multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[scalar],
-        ])));
+        return Ok(AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ multi_vector.group5().with_w(multi_vector[scalar])));
     }
 }
 

@@ -2920,13 +2920,7 @@ impl From<AntiFlatOrigin> for AntiDipoleOnOrigin {
 
 impl From<NullCircleAtOrigin> for AntiDipoleOnOrigin {
     fn from(from_null_circle_at_origin: NullCircleAtOrigin) -> Self {
-        use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            from_null_circle_at_origin[e423],
-            from_null_circle_at_origin[e431],
-            from_null_circle_at_origin[e412],
-            0.0,
-        ]));
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ from_null_circle_at_origin.group0().with_w(0.0));
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for AntiDipoleOnOrigin {
@@ -6992,12 +6986,10 @@ impl TryFrom<AntiDipoleInversion> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            anti_dipole_inversion[e423],
-            anti_dipole_inversion[e431],
-            anti_dipole_inversion[e412],
-            anti_dipole_inversion[e321],
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(
+            // e423, e431, e412, e321
+            anti_dipole_inversion.group0().with_w(anti_dipole_inversion[e321]),
+        ));
     }
 }
 
@@ -7467,17 +7459,13 @@ impl TryFrom<Circle> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([circle[e423], circle[e431], circle[e412], circle[e321]]),
-        ));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle.group0().with_w(circle[e321])));
     }
 }
 
 impl TryFrom<CircleAligningOrigin> for AntiDipoleOnOrigin {
     type Error = String;
     fn try_from(circle_aligning_origin: CircleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_aligning_origin[3];
@@ -7528,12 +7516,7 @@ impl TryFrom<CircleAligningOrigin> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            circle_aligning_origin[e423],
-            circle_aligning_origin[e431],
-            circle_aligning_origin[e412],
-            0.0,
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle_aligning_origin.group0().with_w(0.0)));
     }
 }
 
@@ -7598,7 +7581,6 @@ impl TryFrom<CircleAtInfinity> for AntiDipoleOnOrigin {
 impl TryFrom<CircleAtOrigin> for AntiDipoleOnOrigin {
     type Error = String;
     fn try_from(circle_at_origin: CircleAtOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_origin[3];
@@ -7628,19 +7610,13 @@ impl TryFrom<CircleAtOrigin> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            circle_at_origin[e423],
-            circle_at_origin[e431],
-            circle_at_origin[e412],
-            0.0,
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle_at_origin.group0().with_w(0.0)));
     }
 }
 
 impl TryFrom<CircleOnOrigin> for AntiDipoleOnOrigin {
     type Error = String;
     fn try_from(circle_on_origin: CircleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_on_origin[3];
@@ -7670,12 +7646,7 @@ impl TryFrom<CircleOnOrigin> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            circle_on_origin[e423],
-            circle_on_origin[e431],
-            circle_on_origin[e412],
-            0.0,
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle_on_origin.group0().with_w(0.0)));
     }
 }
 
@@ -7776,16 +7747,13 @@ impl TryFrom<CircleRotor> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            circle_rotor[e423], circle_rotor[e431], circle_rotor[e412], circle_rotor[e321],
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle_rotor.group0().with_w(circle_rotor[e321])));
     }
 }
 
 impl TryFrom<CircleRotorAligningOrigin> for AntiDipoleOnOrigin {
     type Error = String;
     fn try_from(circle_rotor_aligning_origin: CircleRotorAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_rotor_aligning_origin[3];
@@ -7843,12 +7811,7 @@ impl TryFrom<CircleRotorAligningOrigin> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            circle_rotor_aligning_origin[e423],
-            circle_rotor_aligning_origin[e431],
-            circle_rotor_aligning_origin[e412],
-            0.0,
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ circle_rotor_aligning_origin.group0().with_w(0.0)));
     }
 }
 
@@ -8177,9 +8140,7 @@ impl TryFrom<MultiVector> for AntiDipoleOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e321],
-        ])));
+        return Ok(AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ multi_vector.group7().with_w(multi_vector[e321])));
     }
 }
 

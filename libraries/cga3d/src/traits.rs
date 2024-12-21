@@ -16,6 +16,7 @@ pub mod arity_1 {
     pub use crate::traits::auto_morphism::AutoMorphism;
     pub use crate::traits::center_norm::CenterNorm;
     pub use crate::traits::center_norm_squared::CenterNormSquared;
+    pub use crate::traits::complement::Complement;
     pub use crate::traits::conformal_conjugate::ConformalConjugate;
     pub use crate::traits::conjugation::Conjugation;
     pub use crate::traits::constraint_violation::ConstraintViolation;
@@ -34,7 +35,6 @@ pub mod arity_1 {
     pub use crate::traits::radius_norm_squared::RadiusNormSquared;
     pub use crate::traits::reverse::Reverse;
     pub use crate::traits::right_anti_dual::RightAntiDual;
-    pub use crate::traits::right_complement::RightComplement;
     pub use crate::traits::right_dual::RightDual;
     pub use crate::traits::round_bulk::RoundBulk;
     pub use crate::traits::round_bulk_norm::RoundBulkNorm;
@@ -58,6 +58,8 @@ pub mod arity_2 {
     pub use crate::traits::anti_dot_product::AntiDotProduct;
     pub use crate::traits::anti_sandwich::AntiSandwich;
     pub use crate::traits::anti_wedge::AntiWedge;
+    pub use crate::traits::bulk_contraction::BulkContraction;
+    pub use crate::traits::bulk_expansion::BulkExpansion;
     pub use crate::traits::dot_product::DotProduct;
     pub use crate::traits::geometric_anti_product::GeometricAntiProduct;
     pub use crate::traits::geometric_anti_quotient::GeometricAntiQuotient;
@@ -65,6 +67,8 @@ pub mod arity_2 {
     pub use crate::traits::geometric_quotient::GeometricQuotient;
     pub use crate::traits::sandwich::Sandwich;
     pub use crate::traits::wedge::Wedge;
+    pub use crate::traits::weight_contraction::WeightContraction;
+    pub use crate::traits::weight_expansion::WeightExpansion;
 }
 pub mod infix {
     pub use crate::traits::anti_auto_morphism::anti_auto_morphism;
@@ -80,8 +84,13 @@ pub mod infix {
     pub use crate::traits::anti_wedge::anti_wedge;
     pub use crate::traits::anti_wedge::anti_wedge_partial;
     pub use crate::traits::auto_morphism::auto_morphism;
+    pub use crate::traits::bulk_contraction::bulk_contraction;
+    pub use crate::traits::bulk_contraction::bulk_contraction_partial;
+    pub use crate::traits::bulk_expansion::bulk_expansion;
+    pub use crate::traits::bulk_expansion::bulk_expansion_partial;
     pub use crate::traits::center_norm::center_norm;
     pub use crate::traits::center_norm_squared::center_norm_squared;
+    pub use crate::traits::complement::complement;
     pub use crate::traits::conformal_conjugate::conformal_conjugate;
     pub use crate::traits::conjugation::conjugation;
     pub use crate::traits::constraint_violation::constraint_violation;
@@ -110,7 +119,6 @@ pub mod infix {
     pub use crate::traits::radius_norm_squared::radius_norm_squared;
     pub use crate::traits::reverse::reverse;
     pub use crate::traits::right_anti_dual::right_anti_dual;
-    pub use crate::traits::right_complement::right_complement;
     pub use crate::traits::right_dual::right_dual;
     pub use crate::traits::round_bulk::round_bulk;
     pub use crate::traits::round_bulk_norm::round_bulk_norm;
@@ -133,6 +141,10 @@ pub mod infix {
     pub use crate::traits::unitized_round_norm_squared::unitized_round_norm_squared;
     pub use crate::traits::wedge::wedge;
     pub use crate::traits::wedge::wedge_partial;
+    pub use crate::traits::weight_contraction::weight_contraction;
+    pub use crate::traits::weight_contraction::weight_contraction_partial;
+    pub use crate::traits::weight_expansion::weight_expansion;
+    pub use crate::traits::weight_expansion::weight_expansion_partial;
 }
 mod anti_auto_morphism;
 pub use anti_auto_morphism::AntiAutoMorphism;
@@ -158,10 +170,16 @@ mod anti_wedge;
 pub use anti_wedge::AntiWedge;
 mod auto_morphism;
 pub use auto_morphism::AutoMorphism;
+mod bulk_contraction;
+pub use bulk_contraction::BulkContraction;
+mod bulk_expansion;
+pub use bulk_expansion::BulkExpansion;
 mod center_norm;
 pub use center_norm::CenterNorm;
 mod center_norm_squared;
 pub use center_norm_squared::CenterNormSquared;
+mod complement;
+pub use complement::Complement;
 mod conformal_conjugate;
 pub use conformal_conjugate::ConformalConjugate;
 mod conjugation;
@@ -212,8 +230,6 @@ mod reverse;
 pub use reverse::Reverse;
 mod right_anti_dual;
 pub use right_anti_dual::RightAntiDual;
-mod right_complement;
-pub use right_complement::RightComplement;
 mod right_dual;
 pub use right_dual::RightDual;
 mod round_bulk;
@@ -256,5 +272,9 @@ mod unitized_round_norm_squared;
 pub use unitized_round_norm_squared::UnitizedRoundNormSquared;
 mod wedge;
 pub use wedge::Wedge;
+mod weight_contraction;
+pub use weight_contraction::WeightContraction;
+mod weight_expansion;
+pub use weight_expansion::WeightExpansion;
 mod zero;
 pub use zero::Zero;

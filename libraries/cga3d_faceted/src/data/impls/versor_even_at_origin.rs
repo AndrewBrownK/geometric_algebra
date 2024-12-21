@@ -3466,12 +3466,11 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for VersorEvenAtOrigin {
 
 impl From<CircleAtOrigin> for VersorEvenAtOrigin {
     fn from(from_circle_at_origin: CircleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([from_circle_at_origin[e423], from_circle_at_origin[e431], from_circle_at_origin[e412], 0.0]),
+            from_circle_at_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle_at_origin[e235], from_circle_at_origin[e315], from_circle_at_origin[e125], 0.0]),
+            from_circle_at_origin.group1().with_w(0.0),
         );
     }
 }
@@ -3490,12 +3489,11 @@ impl From<Infinity> for VersorEvenAtOrigin {
 
 impl From<LineAtInfinity> for VersorEvenAtOrigin {
     fn from(from_line_at_infinity: LineAtInfinity) -> Self {
-        use crate::elements::*;
         return VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_line_at_infinity[e235], from_line_at_infinity[e315], from_line_at_infinity[e125], 0.0]),
+            from_line_at_infinity.group0().with_w(0.0),
         );
     }
 }
@@ -3508,10 +3506,9 @@ impl From<MotorAtInfinity> for VersorEvenAtOrigin {
 
 impl From<NullCircleAtOrigin> for VersorEvenAtOrigin {
     fn from(from_null_circle_at_origin: NullCircleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([from_null_circle_at_origin[e423], from_null_circle_at_origin[e431], from_null_circle_at_origin[e412], 0.0]),
+            from_null_circle_at_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         );
@@ -7727,7 +7724,7 @@ impl TryFrom<AntiDipoleInversion> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([anti_dipole_inversion[e423], anti_dipole_inversion[e431], anti_dipole_inversion[e412], anti_dipole_inversion[e4]]),
+            anti_dipole_inversion.group0().with_w(anti_dipole_inversion[e4]),
             // e235, e315, e125, e5
             Simd32x4::from([anti_dipole_inversion[e235], anti_dipole_inversion[e315], anti_dipole_inversion[e125], anti_dipole_inversion[e5]]),
         ));
@@ -7799,12 +7796,7 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for VersorEvenAtOrigin {
             // e423, e431, e412, e4
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                anti_dipole_inversion_at_infinity[e235],
-                anti_dipole_inversion_at_infinity[e315],
-                anti_dipole_inversion_at_infinity[e125],
-                anti_dipole_inversion_at_infinity[e5],
-            ]),
+            anti_dipole_inversion_at_infinity.group1().with_w(anti_dipole_inversion_at_infinity[e5]),
         ));
     }
 }
@@ -8107,7 +8099,6 @@ impl TryFrom<AntiSphereOnOrigin> for VersorEvenAtOrigin {
 impl TryFrom<Circle> for VersorEvenAtOrigin {
     type Error = String;
     fn try_from(circle: Circle) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle[3];
@@ -8146,9 +8137,9 @@ impl TryFrom<Circle> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([circle[e423], circle[e431], circle[e412], 0.0]),
+            circle.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], 0.0]),
+            circle.group2().with_w(0.0),
         ));
     }
 }
@@ -8156,7 +8147,6 @@ impl TryFrom<Circle> for VersorEvenAtOrigin {
 impl TryFrom<CircleAligningOrigin> for VersorEvenAtOrigin {
     type Error = String;
     fn try_from(circle_aligning_origin: CircleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_aligning_origin[3];
@@ -8188,9 +8178,9 @@ impl TryFrom<CircleAligningOrigin> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([circle_aligning_origin[e423], circle_aligning_origin[e431], circle_aligning_origin[e412], 0.0]),
+            circle_aligning_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([circle_aligning_origin[e235], circle_aligning_origin[e315], circle_aligning_origin[e125], 0.0]),
+            circle_aligning_origin.group2().with_w(0.0),
         ));
     }
 }
@@ -8198,7 +8188,6 @@ impl TryFrom<CircleAligningOrigin> for VersorEvenAtOrigin {
 impl TryFrom<CircleAtInfinity> for VersorEvenAtOrigin {
     type Error = String;
     fn try_from(circle_at_infinity: CircleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_infinity[0];
@@ -8239,7 +8228,7 @@ impl TryFrom<CircleAtInfinity> for VersorEvenAtOrigin {
             // e423, e431, e412, e4
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([circle_at_infinity[e235], circle_at_infinity[e315], circle_at_infinity[e125], 0.0]),
+            circle_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -8247,7 +8236,6 @@ impl TryFrom<CircleAtInfinity> for VersorEvenAtOrigin {
 impl TryFrom<CircleOnOrigin> for VersorEvenAtOrigin {
     type Error = String;
     fn try_from(circle_on_origin: CircleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_on_origin[3];
@@ -8279,7 +8267,7 @@ impl TryFrom<CircleOnOrigin> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([circle_on_origin[e423], circle_on_origin[e431], circle_on_origin[e412], 0.0]),
+            circle_on_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         ));
@@ -8309,7 +8297,7 @@ impl TryFrom<CircleOrthogonalOrigin> for VersorEvenAtOrigin {
             // e423, e431, e412, e4
             Simd32x4::from([circle_orthogonal_origin[e423], circle_orthogonal_origin[e431], circle_orthogonal_origin[e412], 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([circle_orthogonal_origin[e235], circle_orthogonal_origin[e315], circle_orthogonal_origin[e125], 0.0]),
+            circle_orthogonal_origin.group1().with_w(0.0),
         ));
     }
 }
@@ -8363,7 +8351,7 @@ impl TryFrom<CircleRotor> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([circle_rotor[e423], circle_rotor[e431], circle_rotor[e412], 0.0]),
+            circle_rotor.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([circle_rotor[e235], circle_rotor[e315], circle_rotor[e125], 0.0]),
         ));
@@ -8412,7 +8400,7 @@ impl TryFrom<CircleRotorAligningOrigin> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([circle_rotor_aligning_origin[e423], circle_rotor_aligning_origin[e431], circle_rotor_aligning_origin[e412], 0.0]),
+            circle_rotor_aligning_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([circle_rotor_aligning_origin[e235], circle_rotor_aligning_origin[e315], circle_rotor_aligning_origin[e125], 0.0]),
         ));
@@ -8609,7 +8597,6 @@ impl TryFrom<DualNum> for VersorEvenAtOrigin {
 impl TryFrom<Line> for VersorEvenAtOrigin {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[0];
@@ -8643,7 +8630,7 @@ impl TryFrom<Line> for VersorEvenAtOrigin {
             // e423, e431, e412, e4
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([line[e235], line[e315], line[e125], 0.0]),
+            line.group1().with_w(0.0),
         ));
     }
 }
@@ -8878,9 +8865,9 @@ impl TryFrom<MultiVector> for VersorEvenAtOrigin {
         }
         return Ok(VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e4]]),
+            multi_vector.group7().with_w(multi_vector[e4]),
             // e235, e315, e125, e5
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e5]]),
+            multi_vector.group8().with_w(multi_vector[e5]),
         ));
     }
 }

@@ -1058,12 +1058,11 @@ impl From<AntiDualNum> for AntiMotor {
 
 impl From<AntiLine> for AntiMotor {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35, e3215
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
         );
     }
 }
@@ -2334,7 +2333,7 @@ impl TryFrom<Dipole> for AntiMotor {
             // e23, e31, e12, scalar
             Simd32x4::from([dipole[e23], dipole[e31], dipole[e12], 0.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
+            dipole.group2().with_w(0.0),
         ));
     }
 }
@@ -2675,7 +2674,7 @@ impl TryFrom<MultiVector> for AntiMotor {
         }
         return Ok(AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[scalar]]),
+            multi_vector.group5().with_w(multi_vector[scalar]),
             // e15, e25, e35, e3215
             Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e3215]]),
         ));

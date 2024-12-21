@@ -2089,10 +2089,7 @@ impl TryFrom<Circle> for AntiFlatPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], circle[e321]]),
-        ));
+        return Ok(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ circle.group2().with_w(circle[e321])));
     }
 }
 
@@ -2166,7 +2163,6 @@ impl TryFrom<CircleRotor> for AntiFlatPoint {
 impl TryFrom<Line> for AntiFlatPoint {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[0];
@@ -2196,7 +2192,7 @@ impl TryFrom<Line> for AntiFlatPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([line[e235], line[e315], line[e125], 0.0])));
+        return Ok(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ line.group1().with_w(0.0)));
     }
 }
 
@@ -2462,9 +2458,7 @@ impl TryFrom<MultiVector> for AntiFlatPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([
-            multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e321],
-        ])));
+        return Ok(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ multi_vector.group8().with_w(multi_vector[e321])));
     }
 }
 

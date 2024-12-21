@@ -7932,7 +7932,6 @@ impl TryFrom<VersorOdd> for FlatPointAtInfinity {
 impl TryFrom<VersorOddAtInfinity> for FlatPointAtInfinity {
     type Error = String;
     fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_odd_at_infinity[0];
@@ -8004,11 +8003,7 @@ impl TryFrom<VersorOddAtInfinity> for FlatPointAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from([
-            versor_odd_at_infinity[e15],
-            versor_odd_at_infinity[e25],
-            versor_odd_at_infinity[e35],
-        ])));
+        return Ok(FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ versor_odd_at_infinity.group0().yzw()));
     }
 }
 

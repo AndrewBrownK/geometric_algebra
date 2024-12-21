@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// GeometricQuotient
-/// TODO
+/// Product of A with Inverse of B.
 pub trait GeometricQuotient<T> {
     fn geometric_quotient(self, other: T) -> Self;
 }

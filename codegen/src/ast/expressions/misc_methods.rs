@@ -60,14 +60,14 @@ pub fn extract_integer_expr<Expr: Expression<Integer>>(expr: Expr) -> IntExpr {
 
 
 impl Variable<MultiVector> {
-    pub fn elements_flat(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
-        let mv_expr: MultiVectorExpr = self.clone().into();
-        self.expr_type
-            .elements()
-            .into_iter()
-            .enumerate()
-            .map(move |(i, el)| (FloatExpr::AccessMultiVecFlat(mv_expr.clone(), i as u16), el))
-    }
+    // pub fn elements_flat(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
+    //     let mv_expr: MultiVectorExpr = self.clone().into();
+    //     self.expr_type
+    //         .elements()
+    //         .into_iter()
+    //         .enumerate()
+    //         .map(move |(i, el)| (FloatExpr::AccessMultiVecFlat(mv_expr.clone(), i as u16), el))
+    // }
 
     pub fn groups(&self) -> impl Iterator<Item = (MultiVectorGroupExpr, BasisElementGroup)> + '_ {
         let mv_expr: MultiVectorExpr = self.clone().into();
@@ -82,7 +82,7 @@ impl Variable<MultiVector> {
         })
     }
 
-    pub fn elements_by_groups(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
+    pub fn elements(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
         let mv_expr: MultiVectorExpr = self.clone().into();
         self.expr_type
             .groups()
@@ -121,13 +121,13 @@ impl Variable<MultiVector> {
 }
 
 impl MultiVectorExpr {
-    pub fn elements_flat(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
-        self.mv_class
-            .elements()
-            .into_iter()
-            .enumerate()
-            .map(move |(i, el)| (FloatExpr::AccessMultiVecFlat(self.clone(), i as u16), el))
-    }
+    // pub fn elements_flat(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
+    //     self.mv_class
+    //         .elements()
+    //         .into_iter()
+    //         .enumerate()
+    //         .map(move |(i, el)| (FloatExpr::AccessMultiVecFlat(self.clone(), i as u16), el))
+    // }
 
     pub fn groups(&self) -> impl Iterator<Item = (MultiVectorGroupExpr, BasisElementGroup)> + '_ {
         self.mv_class.groups().into_iter().enumerate().map(move |(g, group)| {
@@ -140,7 +140,7 @@ impl MultiVectorExpr {
             }
         })
     }
-    pub fn elements_by_groups(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
+    pub fn elements(&self) -> impl Iterator<Item = (FloatExpr, BasisElement)> + '_ {
         self.mv_class
             .groups()
             .into_iter()

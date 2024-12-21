@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// GeometricAntiQuotient
-/// TODO
+/// AntiProduct of A with AntiInverse of B.
 pub trait GeometricAntiQuotient<T> {
     fn geometric_anti_quotient(self, other: T) -> Self;
 }

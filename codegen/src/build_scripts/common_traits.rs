@@ -23,7 +23,7 @@ pub static Unit: Elaborated<UnitImpl> = UnitImpl
     .blurb("All elements set to one.");
 pub static Grade: Elaborated<GradeImpl> = GradeImpl
     .new_trait_named("Grade")
-    .blurb("A multivector class may have uniform grade, or mixed grade, depending on \
+    .blurb("A multivector may have uniform grade, or mixed grade, depending on \
     the grades of its elements. This trait only characterizes uniform grade multivectors.");
 pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
     .new_trait_named("AntiGrade")
@@ -32,119 +32,225 @@ pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
 
 pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl
     .new_trait_named("RightDual")
-    .blurb("TODO");
+    .blurb("This dual is the \"Metric Right Dual\". To take this dual of an object, \
+    the object is multiplied by the metric, and then we take the right complement. This will turn \
+    a Scalar into an AntiScalar, a Vector into an AntiVector, so on, and vice versa. The use \
+    of the metric may give distinct results from a simple right complement, typically by changing \
+    the coefficient on some terms (1, -1, or 0)");
 
 pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl
     .new_trait_named("RightAntiDual")
-    .blurb("TODO");
+    .blurb("This dual is the \"AntiMetric Right Dual\". To take this dual of an object, \
+    the object is multiplied by the anti-metric, and then we take the right complement. This will \
+    turn a Scalar into an AntiScalar, a Vector into an AntiVector, so on, and vice versa. The use \
+    of the anti-metric may give distinct results from a simple right complement, typically by \
+    changing the coefficient on some terms (1, -1, or 0)");
 
 pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl
     .new_trait_named("LeftDual")
-    .blurb("TODO");
+    .blurb("This dual is the \"Metric Left Dual\". To take this dual of an object, \
+    the object is multiplied by the metric, and then we take the left complement. This will turn \
+    a Scalar into an AntiScalar, a Vector into an AntiVector, so on, and vice versa. The use \
+    of the metric may give distinct results from a simple left complement, typically by changing \
+    the coefficient on some terms (1, -1, or 0)");
 
 pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl
     .new_trait_named("LeftAntiDual")
-    .blurb("TODO");
+    .blurb("This dual is the \"AntiMetric Left Dual\". To take this dual of an object, \
+    the object is multiplied by the anti-metric, and then we take the left complement. This will \
+    turn a Scalar into an AntiScalar, a Vector into an AntiVector, so on, and vice versa. The use \
+    of the metric may give distinct results from a simple left complement, typically by changing \
+    the coefficient on some terms (1, -1, or 0).");
 
 pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
     .new_trait_named("Reverse")
-    .blurb("TODO");
+    .blurb("Reversal is an operation that will negate some BasisElements. This changes \
+    the \"sign\" or \"direction\" of a BasisElement. Each BasisElement is a wedge of some \
+    generator elements, for example e12 = wedge(e1, e2). The reversal of e12 is reverse(e12) = \
+    e21 = -e12 = wedge(e2, e1). When the number of generator element position swaps is odd, then \
+    the reverse negates thee sign. Otherwise, the sign stays the same. For example, reverse(e1) = \
+    e1, and reverse(e1234) = e1234 = e4321. This is a consequence of the wedge product being \
+    anti-commutative.");
 
 pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl
     .new_trait_named("AntiReverse")
-    .blurb("TODO");
+    .blurb("The AntiReversal is like Reversal, but with respect to the AntiWedge \
+    product instead of the Wedge product. This means we can only find the AntiReverse of an \
+    element if we specify an AntiScalar first. By example, if our AntiScalar is e123 in vanilla \
+    geometric algebra, then e2 = anti_wedge(e12, e32), and anti_reverse(e2) = anti_wedge(e32, e12) \
+    = -e2. Notably, the Reverse of grade 1 vectors does not change sign, but the AntiReverse of \
+    grade 1 vectors may change sign (depending on the AntiScalar). When it comes to the \
+    AntiReverse, it is AntiGrade 1 Vectors (AntiVectors) that will not change sign. ");
+/*
+    As usual with \
+    Anti-Operations and duality, it is useful to think of the space missing from the object. When \
+    an AntiScalar is specified, any geometric object implies not just itself, but its dual. \
+    Therefore in our 3D VGA example, you can imagine that a Vector AntiReverses to its negative \
+    because its dual BiVector would Reverse to its own negative. Like a right-hand-rule axis \
+    (thumb) and spin (fingers) flipping from thumbs up to thumbs down.
+*/
 
 pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl
     .new_trait_named("AutoMorphism")
-    .blurb("TODO");
+    .blurb("Negate every BasisElement with an odd Grade. Also known as grade involution.");
 
 pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl
     .new_trait_named("AntiAutoMorphism")
-    .blurb("TODO");
+    .blurb("Negate every BasisElement with an odd AntiGrade.");
 
 pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl
     .new_trait_named("Conjugation")
-    .blurb("TODO");
+    .blurb("This composes the reverse and grade involution (automorphism).");
 
 pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl
     .new_trait_named("AntiConjugation")
-    .blurb("TODO");
+    .blurb("This composes anti-reverse and anti-grade involution (anti-automorphism)");
 
 pub static Complement: Elaborated<RightComplementImpl> = RightComplementImpl
     .new_trait_named("Complement")
-    .blurb("TODO");
+    .blurb("The Complement of a BasisElement is the missing BasisElement that when \
+    wedged together will create the AntiScalar. In geometric algebras with an odd number of \
+    dimensions, the LeftComplement and RightComplement are the same, so we just call it the \
+    Complement. For example, with an AntiScalar of e123, the complement of e1 can be found \
+    equivalently by solving e123 = wedge(e1, x) or e123 = wedge(x, e1). See also \
+    DoubleComplement.");
 
 pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl
     .new_trait_named("RightComplement")
-    .blurb("TODO");
+    .blurb("The RightComplement of a BasisElement is the missing BasisElement that when \
+    wedged together will create the AntiScalar. For example, with an AntiScalar of e1234, the \
+    right_complement(e1) = e234, because wedge(e1, e234) = e1234. In this example, the \
+    right_complement(e234) = -e1, because wedge(e234, -e1) = e1234. See also LeftComplement and \
+    DoubleComplement. The LeftComplement can be used to undo a RightComplement.");
 
 pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl
     .new_trait_named("LeftComplement")
-    .blurb("TODO");
+    .blurb("The LeftComplement of a BasisElement is the missing BasisElement that when \
+    wedged together will create the AntiScalar. For example, with an AntiScalar of e1234, the \
+    left_complement(e1) = -e234, because wedge(e234, e1) = e1234. In this example, the \
+    left_complement(e234) = e1, because wedge(e1, e234) = e1234. See also RightComplement and \
+    DoubleComplement. The RightComplement can be used to undo a LeftComplement.");
 
 pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl
     .new_trait_named("DoubleComplement")
-    .blurb("TODO");
+    .blurb("Repeatedly taking a Complement will eventually return the original object. \
+    In geometric algebras with an even number of dimensions, double_complement(x) = \
+    right_complement(right_complement(x)) = left_complement(left_complement(x)). In geometric \
+    algebras with an odd number of dimensions, double_complement(x) = complement(complement(x)). \
+    In all cases, x = double_complement(double_complement(x)). ");
 
 pub static Negation: Elaborated<NegationImpl> = NegationImpl
     .new_trait_named("Negation")
-    .blurb("TODO");
+    .blurb("Negates all elements.");
 
 pub static Addition: Elaborated<AdditionImpl> = AdditionImpl
     .new_trait_named("Addition")
-    .blurb("TODO");
+    .blurb("Add two MultiVectors together, possibly resulting in a different type of \
+    MultiVector.");
 
 pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl
     .new_trait_named("Subtraction")
-    .blurb("TODO");
+    .blurb("Subtract two MultiVectors, possibly resulting in a different type of \
+    MultiVector.");
 
 pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
     .new_trait_named("Wedge")
-    .blurb("TODO");
+    .blurb("The Wedge product (also known as \"Exterior Product\" or Grassmann's \
+    \"Progressive Combinatorial Product\") combines BasisElements into higher grade BasisElements. \
+    For example, wedge(e1, e2) = e12, and wedge(e1, e23) = e123. The Wedge product is \
+    anti-commutative, so wedge(a, b) = -wedge(b, a). A non-scalar element wedged with itself is \
+    zero. This behaves something like a union of the subscripts in the BasisElements.");
+
 pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl
     .new_trait_named("AntiWedge")
-    .blurb("TODO");
+    .blurb("The AntiWedge product is the dual operation to the Wedge product, that \
+    depends on a specified AntiScalar. It combines BasisElements by which parts are missing, \
+    instead of which parts are present. For example, with an AntiScalar of e1234, \
+    anti_wedge(e423, e321) = e23. This behaves something like an intersection of the subscripts \
+    in the BasisElements.");
 
 pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl
     .new_trait_named("GeometricProduct")
-    .blurb("TODO");
+    .blurb("The geometric product is what lets us treat geometry like algebra. It is \
+    literally multiplication of geometry. It is derived by the wedge product and the algebra's \
+    metric. Generator elements (grade 1 BasisElements) will square to a particular \
+    value (as specified by the algebra and metric), typically 1, -1, or 0. This is in contrast to \
+    the wedge product which always wedge-squares elements to zero. Multiplying uniform grade \
+    geometry may result in mixed grade products, topping out at the AntiScalar. \
+    See also Sandwich.");
 
 pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
     .new_trait_named("GeometricAntiProduct")
-    .blurb("TODO");
+    .blurb("The GeometricAntiProduct or sometimes called AntiProduct is the dual to \
+    the GeometricProduct. It depends on a specified AntiScalar. Anti-Multiplying uniform grade \
+    geometry may result in mixed grade anti-products, bottoming out at the Scalar. \
+    See also AntiSandwich.");
 
 pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl
     .new_trait_named("Sandwich")
-    .blurb("TODO");
+    .blurb("The so-called \"sandwich product\" squeezes some factor A between another \
+    factor B and the reversal of B. This is frequently used to represent geometric \
+    transformations, for example reflecting across a plane or rotating around a line.");
 
 pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
     .new_trait_named("AntiSandwich")
-    .blurb("TODO");
+    .blurb("The anti-sandwich is the dual to the sandwich, using the AntiProduct instead \
+    of the Product, and the AntiReverse instead of the Reverse. This is also used to represent \
+    geometric transformations, for example reflecting across a plane or rotating around a line. \
+    The Sandwich and AntiSandwich are not identical for the purposes of transforming geometry, \
+    you simply choose which one to use depending on your geometric interpretation and the algebra. \
+    For example, in G(3,0,1) you may interpret grade 1 vectors as points or planes, since they \
+    are dual to one another. The sandwich product gives euclidean transformations in the grade 1 \
+    = planes interpretation, and the AntiSandwich gives euclidean transformations in the grade 1 \
+    = points interpretation.");
 
+// By all means, call anything you want the "dot product" in some application.
+// That is the entire point of this framework, that you can name stuff whatever you want,
+// and change the documentation as you see fit! 😀
+// However, for the pre-built traits provided by this module, and a limited namespace, we find
+// the arguments in this blog post to be compelling. https://terathon.com/blog/poor-foundations-ga.html
 pub static DotProduct: Elaborated<DotProductImpl> = DotProductImpl
     .new_trait_named("DotProduct")
-    .blurb("TODO");
+    .blurb("This dot product is almost exactly what you would expect from regular \
+    vector algebra. It always returns a scalar result. It is determined by the metric of the \
+    algebra, so intermediate terms might come out to zero or negative, depending on the generator \
+    squares. The \"dot product\" is overloaded to several different meanings depending on which \
+    community you discuss with, so if someone or something refers to the \"dot product\" then \
+    use care and double check the definition that is intended.");
 
 pub static AntiDotProduct: Elaborated<AntiDotProductImpl> = AntiDotProductImpl
     .new_trait_named("AntiDotProduct")
-    .blurb("TODO");
+    .blurb("This is the dual to the dot product, and always returns an AntiScalar.");
 
 pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
     .new_trait_named("ScalarNormSquared")
-    .blurb("TODO");
+    .blurb("This is an intermediate step to the ScalarNorm, prior to taking a \
+    square root.");
 
 pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
     .new_trait_named("AntiScalarNormSquared")
-    .blurb("TODO");
+    .blurb("This is an intermediate step to the AntiScalarNorm, prior to taking a \
+    square root (or AntiSquareRoot, to be technical).");
 
 pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
     .new_trait_named("ScalarNorm")
-    .blurb("TODO");
+    .blurb("The ScalarNorm of a geometric object characterizes the object with a Scalar. \
+    The exact meaning of the characterization depends on the algebra and geometric interpretation. \
+    As an example, in G(3,0,1) with grade 1 vectors as points, the ScalarNorm is the \"Bulk Norm\" \
+    of the object, i.e. the ScalarNorm of the Bulk aspect of the object. In this example, the \
+    ScalarNorm characterizes the magnitude of the Bulk (compared to the magnitude of the Weight), \
+    and therefore the proximity to the origin (once the WeightNorm is incorporated, or assuming \
+    unitization).");
 
 pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
     .new_trait_named("AntiScalarNorm")
-    .blurb("TODO");
-
+    .blurb("The AntiScalarNorm is dual to the ScalarNorm. It characterizes a geometric \
+    object with an AntiScalar. The exact meaning of the characterization depends on the algebra \
+    and geometric interpretation. As an example, in G(3,0,1) with grade 1 vectors as points, \
+    the AntiScalarNorm is the \"Weight Norm\" of the object, i.e. the AntiScalarNorm of the Weight \
+    aspect of the object. In this example, the AntiScalarNorm characterizes the magnitude of the \
+    Weight (compared to the magnitude of the Bulk), and therefore the proximity to the horizon \
+    (once the BulkNorm is incorporated).");
 
 
 
@@ -203,53 +309,68 @@ pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
     .new_trait_named("AntiFix")
     .blurb("TODO");
 
+
+
+
 pub static Inverse: Elaborated<InverseImpl> = InverseImpl
     .new_trait_named("Inverse")
-    .blurb("TODO");
+    .blurb("The inverse with respect to geometric product. Inverse(x) = x^-1. ");
 
 pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl
     .new_trait_named("AntiInverse")
-    .blurb("TODO");
+    .blurb("The inverse with respect to the geometric anti-product.");
 
 pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl
     .new_trait_named("GeometricQuotient")
-    .blurb("TODO");
+    .blurb("Product of A with Inverse of B.");
 
 pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl
     .new_trait_named("GeometricAntiQuotient")
-    .blurb("TODO");
+    .blurb("AntiProduct of A with AntiInverse of B.");
 
 pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl
     .new_trait_named("SquareRoot")
-    .blurb("TODO");
+    .blurb("Square root of geometry. Multiple different types of geometry might \
+    square to one type of geometry, so this is only defined for types that are closed with \
+    themselves under the geometric product. ");
 
 pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl
     .new_trait_named("AntiSquareRoot")
-    .blurb("TODO");
+    .blurb("Square root of geometry with respect to the AntiProduct. Multiple different \
+    types of geometry might anti-square to one type of geometry, so this is only defined for \
+    types that are closed with themselves under the geometric anti-product.");
 
 pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
     .new_trait_named("BulkContraction")
-    .blurb("TODO");
+    .blurb("This is an interior product (contrast with inner product and exterior \
+    product). The interior products are derived by Wedging (or AntiWedging) one object with \
+    the Dual (or AntiDual) of another object.");
 
 pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl
     .new_trait_named("WeightContraction")
-    .blurb("TODO");
+    .blurb("This is an interior product (contrast with inner product and exterior \
+    product). The interior products are derived by Wedging (or AntiWedging) one object with \
+    the Dual (or AntiDual) of another object.");
 
 pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl
     .new_trait_named("BulkExpansion")
-    .blurb("TODO");
+    .blurb("This is an interior product (contrast with inner product and exterior \
+    product). The interior products are derived by Wedging (or AntiWedging) one object with \
+    the Dual (or AntiDual) of another object.");
 
 pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl
     .new_trait_named("WeightExpansion")
-    .blurb("TODO");
+    .blurb("This is an interior product (contrast with inner product and exterior \
+    product). The interior products are derived by Wedging (or AntiWedging) one object with \
+    the Dual (or AntiDual) of another object.");
 
 pub static Into: Elaborated<IntoImpl> = IntoImpl
     .new_trait_named("Into")
-    .blurb("TODO");
+    .blurb("Reliably convert one type into another.");
 
 pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
     .new_trait_named("TryInto")
-    .blurb("TODO");
+    .blurb("Fallibly convert one type into another.");
 
 #[allow(non_snake_case)]
 pub fn SubType<F1, F2, F3>(filter_multivecs_in: F1, filter_elements: F2, filter_multivecs_out: F3) -> InlineOnly<SubTypeImpl<F1, F2, F3>> where
@@ -472,7 +593,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(RightDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.right_dual(el);
             result += (fe * f, el);
         }
@@ -482,7 +603,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(RightAntiDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.right_anti_dual(el);
             result += (fe * f, el);
         }
@@ -492,7 +613,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(LeftDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.left_dual(el);
             result += (fe * f, el);
         }
@@ -502,7 +623,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(LeftAntiDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.left_anti_dual(el);
             result += (fe * f, el);
         }
@@ -512,7 +633,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(ReverseImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.reverse(el);
             result += (fe * f, el);
         }
@@ -522,7 +643,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(AntiReverseImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.anti_reverse(el);
             result += (fe * f, el);
         }
@@ -532,7 +653,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(AutoMorphismImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if el.grade() % 2 == 1 {
                 fe = fe * -1.0;
             }
@@ -544,7 +665,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(AntiAutoMorphismImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if el.anti_grade(AntiScalar) % 2 == 1 {
                 fe = fe * -1.0;
             }
@@ -556,7 +677,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(ConjugationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if (el.grade() + 3) % 4 < 2 {
                 fe = fe * -1.0;
             }
@@ -568,7 +689,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(AntiConjugationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if (el.anti_grade(AntiScalar) + 3) % 4 < 2 {
                 fe = fe * -1.0;
             }
@@ -580,7 +701,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(RightComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.fix_name_and_sign(el.right_complement(AntiScalar));
             result += (fe * f, el);
         }
@@ -590,7 +711,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(LeftComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let (f, el) = builder.ga.fix_name_and_sign(el.left_complement(AntiScalar));
             result += (fe * f, el);
         }
@@ -600,7 +721,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(DoubleComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             let el = el.right_complement(AntiScalar).right_complement(AntiScalar);
             let (f, el) = builder.ga.fix_name_and_sign(el);
             result += (fe * f, el);
@@ -611,7 +732,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(NegationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
-        for (fe, el) in slf.elements_by_groups() {
+        for (fe, el) in slf.elements() {
             result += (fe * -1.0, el);
         }
         let result = result.construct(&builder)?;
@@ -620,10 +741,10 @@ mod impls {
 
     trait_impl_2_types_2_args!(AdditionImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
             dyn_mv += (a, a_el);
         }
-        for (b, b_el) in other.elements_by_groups() {
+        for (b, b_el) in other.elements() {
             dyn_mv += (b, b_el);
         }
         let mv = dyn_mv.construct(&builder)?;
@@ -632,10 +753,10 @@ mod impls {
 
     trait_impl_2_types_2_args!(SubtractionImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
             dyn_mv += (a, a_el);
         }
-        for (b, b_el) in other.elements_by_groups() {
+        for (b, b_el) in other.elements() {
             dyn_mv += (b * -1.0, b_el);
         }
         let mv = dyn_mv.construct(&builder)?;
@@ -644,8 +765,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(WedgeImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let a = a.clone();
                 let (f, c) = builder.ga.wedge(a_el, b_el);
                 dyn_mv += (a * b * f, c);
@@ -657,8 +778,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(AntiWedgeImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let a = a.clone();
                 let (f, c) = builder.ga.anti_wedge(a_el, b_el);
                 dyn_mv += (a * b * f, c);
@@ -670,8 +791,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(GeometricProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let sop = builder.ga.product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
@@ -686,8 +807,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(GeometricAntiProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let sop = builder.ga.anti_product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
@@ -718,8 +839,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(DotProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let sop = builder.ga.scalar_product(a_el, b_el);
                 for p in sop.sum {
                     let a = a.clone();
@@ -735,8 +856,8 @@ mod impls {
 
     trait_impl_2_types_2_args!(AntiDotProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_by_groups() {
-            for (b, b_el) in other.elements_by_groups() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in other.elements() {
                 let sop = builder.ga.anti_scalar_product(a_el, b_el);
                 for p in sop.sum {
                     let a = a.clone();
@@ -897,8 +1018,8 @@ mod impls {
         }
 
         let mut dyn_mv = DynamicMultiVector::zero();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in slf.elements_flat() {
+        for (a, a_el) in slf.elements() {
+            for (b, b_el) in slf.elements() {
                 let sop = builder.ga.product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
@@ -992,7 +1113,7 @@ mod impls {
         }
         let other_elements: BTreeSet<_> = other.elements().into_iter().collect();
         let mut these_elements: BTreeMap<_, _> = BTreeMap::new();
-        for (f, el) in slf.elements_flat() {
+        for (f, el) in slf.elements() {
             if !other_elements.contains(&el) {
                 return None;
             }
@@ -1010,7 +1131,7 @@ mod impls {
         let mut overlapping_some = false;
         let other_elements: BTreeSet<_> = other.elements().into_iter().collect();
         let mut these_elements: BTreeMap<_, _> = BTreeMap::new();
-        for (f, el) in slf.elements_flat() {
+        for (f, el) in slf.elements() {
             if other_elements.contains(&el) {
                 overlapping_some = true;
             } else {
@@ -1050,7 +1171,7 @@ mod impls {
                 return None;
             }
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements_by_groups() {
+            for (a, a_el) in slf.elements() {
                 if self.filter_elements.filter_sig(a_el.signature()) {
                     dyn_mv += (a, a_el);
                 }
@@ -1080,7 +1201,7 @@ mod impls {
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements_by_groups() {
+            for (a, a_el) in slf.elements() {
                 if self.0.contains(a_el.grades()) {
                     dyn_mv += (a, a_el);
                 }
@@ -1101,7 +1222,7 @@ mod impls {
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements_by_groups() {
+            for (a, a_el) in slf.elements() {
                 if self.0.contains(a_el.anti_grades(AntiScalar)) {
                     dyn_mv += (a, a_el);
                 }

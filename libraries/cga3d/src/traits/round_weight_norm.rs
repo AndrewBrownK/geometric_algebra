@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundWeightNorm
-/// TODO
+/// Weight Norm for round aspect.
 pub trait RoundWeightNorm {
     fn round_weight_norm(self) -> AntiScalar;
 }

@@ -46,9 +46,9 @@ impl Display for FloatExpr {
             }
             FloatExpr::Literal(l) => write!(f, "{l}")?,
             FloatExpr::FromInt(i) => write!(f, "{i}")?,
-            FloatExpr::AccessVec2(box v, i) => write!(f, "{v}[{i}]")?,
-            FloatExpr::AccessVec3(box v, i) => write!(f, "{v}[{i}]")?,
-            FloatExpr::AccessVec4(box v, i) => write!(f, "{v}[{i}]")?,
+            FloatExpr::AccessVec2(box v, i) => v.display_indexed(f, *i as usize)?,
+            FloatExpr::AccessVec3(box v, i) => v.display_indexed(f, *i as usize)?,
+            FloatExpr::AccessVec4(box v, i) => v.display_indexed(f, *i as usize)?,
             FloatExpr::AccessMultiVecGroup(mv, i) => {
                 let BasisElementGroup::G1(be0) = mv.mv_class.groups()[*i as usize] else {
                     unreachable!(
@@ -96,7 +96,7 @@ impl Display for FloatExpr {
                 }
             }
             FloatExpr::AccessMultiVecFlat(mv, i) => {
-                let gs: Vec<_> = mv.elements_flat().collect();
+                let gs: Vec<_> = mv.elements().collect();
                 let (float, el) = &gs[*i as usize];
                 write!(f, "{el}({float})")?;
             }

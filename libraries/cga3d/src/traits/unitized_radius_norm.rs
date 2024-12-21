@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// UnitizedRadiusNorm
-/// TODO
+/// Unitized radius of an object.
 pub trait UnitizedRadiusNorm {
     fn unitized_radius_norm(self) -> f32;
 }

@@ -1194,7 +1194,7 @@ impl From<AntiDipoleInversion> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_anti_dipole_inversion[e423], from_anti_dipole_inversion[e431], from_anti_dipole_inversion[e412], 0.0]),
+            from_anti_dipole_inversion.group0().with_w(0.0),
             // e415, e425, e435, e321
             from_anti_dipole_inversion.group1(),
             // e235, e315, e125, e5
@@ -1281,14 +1281,13 @@ impl From<AntiScalar> for VersorEven {
 
 impl From<Circle> for VersorEven {
     fn from(from_circle: Circle) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle[e423], from_circle[e431], from_circle[e412], 0.0]),
+            from_circle.group0().with_w(0.0),
             // e415, e425, e435, e321
             from_circle.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle[e235], from_circle[e315], from_circle[e125], 0.0]),
+            from_circle.group2().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -1300,7 +1299,7 @@ impl From<CircleRotor> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle_rotor[e423], from_circle_rotor[e431], from_circle_rotor[e412], from_circle_rotor[e12345]]),
+            from_circle_rotor.group0().with_w(from_circle_rotor[e12345]),
             // e415, e425, e435, e321
             from_circle_rotor.group1(),
             // e235, e315, e125, e5
@@ -1329,14 +1328,13 @@ impl From<DualNum> for VersorEven {
 
 impl From<Line> for VersorEven {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_line[e235], from_line[e315], from_line[e125], 0.0]),
+            from_line.group1().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -2854,11 +2852,11 @@ impl TryFrom<MultiVector> for VersorEven {
         }
         return Ok(VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e12345]]),
+            multi_vector.group7().with_w(multi_vector[e12345]),
             // e415, e425, e435, e321
             multi_vector.group6(),
             // e235, e315, e125, e5
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e5]]),
+            multi_vector.group8().with_w(multi_vector[e5]),
             // e1, e2, e3, e4
             multi_vector.group1(),
         ));

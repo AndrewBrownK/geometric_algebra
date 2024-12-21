@@ -66,8 +66,11 @@
 ./libraries/cga3d/src/traits/anti_square_root.rs
 ./libraries/cga3d/src/traits/anti_wedge.rs
 ./libraries/cga3d/src/traits/auto_morphism.rs
+./libraries/cga3d/src/traits/bulk_contraction.rs
+./libraries/cga3d/src/traits/bulk_expansion.rs
 ./libraries/cga3d/src/traits/center_norm.rs
 ./libraries/cga3d/src/traits/center_norm_squared.rs
+./libraries/cga3d/src/traits/complement.rs
 ./libraries/cga3d/src/traits/conformal_conjugate.rs
 ./libraries/cga3d/src/traits/conjugation.rs
 ./libraries/cga3d/src/traits/constraint_violation.rs
@@ -99,8 +102,11 @@
 ./libraries/cga3d/src/traits/impls/anti_square_root.rs
 ./libraries/cga3d/src/traits/impls/anti_wedge.rs
 ./libraries/cga3d/src/traits/impls/auto_morphism.rs
+./libraries/cga3d/src/traits/impls/bulk_contraction.rs
+./libraries/cga3d/src/traits/impls/bulk_expansion.rs
 ./libraries/cga3d/src/traits/impls/center_norm.rs
 ./libraries/cga3d/src/traits/impls/center_norm_squared.rs
+./libraries/cga3d/src/traits/impls/complement.rs
 ./libraries/cga3d/src/traits/impls/conformal_conjugate.rs
 ./libraries/cga3d/src/traits/impls/conjugation.rs
 ./libraries/cga3d/src/traits/impls/constraint_violation.rs
@@ -126,7 +132,6 @@
 ./libraries/cga3d/src/traits/impls/radius_norm_squared.rs
 ./libraries/cga3d/src/traits/impls/reverse.rs
 ./libraries/cga3d/src/traits/impls/right_anti_dual.rs
-./libraries/cga3d/src/traits/impls/right_complement.rs
 ./libraries/cga3d/src/traits/impls/right_dual.rs
 ./libraries/cga3d/src/traits/impls/round_bulk.rs
 ./libraries/cga3d/src/traits/impls/round_bulk_norm.rs
@@ -148,6 +153,8 @@
 ./libraries/cga3d/src/traits/impls/unitized_round_norm.rs
 ./libraries/cga3d/src/traits/impls/unitized_round_norm_squared.rs
 ./libraries/cga3d/src/traits/impls/wedge.rs
+./libraries/cga3d/src/traits/impls/weight_contraction.rs
+./libraries/cga3d/src/traits/impls/weight_expansion.rs
 ./libraries/cga3d/src/traits/impls/zero.rs
 ./libraries/cga3d/src/traits/inverse.rs
 ./libraries/cga3d/src/traits/one.rs
@@ -155,7 +162,6 @@
 ./libraries/cga3d/src/traits/radius_norm_squared.rs
 ./libraries/cga3d/src/traits/reverse.rs
 ./libraries/cga3d/src/traits/right_anti_dual.rs
-./libraries/cga3d/src/traits/right_complement.rs
 ./libraries/cga3d/src/traits/right_dual.rs
 ./libraries/cga3d/src/traits/round_bulk.rs
 ./libraries/cga3d/src/traits/round_bulk_norm.rs
@@ -177,4 +183,6 @@
 ./libraries/cga3d/src/traits/unitized_round_norm.rs
 ./libraries/cga3d/src/traits/unitized_round_norm_squared.rs
 ./libraries/cga3d/src/traits/wedge.rs
+./libraries/cga3d/src/traits/weight_contraction.rs
+./libraries/cga3d/src/traits/weight_expansion.rs
 ./libraries/cga3d/src/traits/zero.rs

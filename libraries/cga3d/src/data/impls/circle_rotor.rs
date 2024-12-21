@@ -992,28 +992,26 @@ impl From<AntiScalar> for CircleRotor {
 
 impl From<Circle> for CircleRotor {
     fn from(from_circle: Circle) -> Self {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             from_circle.group0(),
             // e415, e425, e435, e321
             from_circle.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([from_circle[e235], from_circle[e315], from_circle[e125], 0.0]),
+            from_circle.group2().with_w(0.0),
         );
     }
 }
 
 impl From<Line> for CircleRotor {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([from_line[e235], from_line[e315], from_line[e125], 0.0]),
+            from_line.group1().with_w(0.0),
         );
     }
 }
@@ -2539,7 +2537,7 @@ impl TryFrom<MultiVector> for CircleRotor {
             // e415, e425, e435, e321
             multi_vector.group6(),
             // e235, e315, e125, e12345
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e12345]]),
+            multi_vector.group8().with_w(multi_vector[e12345]),
         ));
     }
 }

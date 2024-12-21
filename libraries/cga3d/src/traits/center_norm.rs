@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// CenterNorm
-/// TODO
+/// Distance between origin and center (not yet unitized, still requires division by round weight).
 pub trait CenterNorm {
     fn center_norm(self) -> Scalar;
 }

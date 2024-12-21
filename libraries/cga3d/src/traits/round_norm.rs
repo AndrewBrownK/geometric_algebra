@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundNorm
-/// TODO
+/// Norm for Round aspect.
 pub trait RoundNorm {
     fn round_norm(self) -> MultiVector;
 }

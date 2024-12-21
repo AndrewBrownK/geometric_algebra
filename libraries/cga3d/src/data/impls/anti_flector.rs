@@ -2228,7 +2228,7 @@ impl TryFrom<Circle> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([circle[e235], circle[e315], circle[e125], circle[e321]]),
+            circle.group2().with_w(circle[e321]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -2336,7 +2336,6 @@ impl TryFrom<DualNum> for AntiFlector {
 impl TryFrom<Line> for AntiFlector {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[0];
@@ -2368,7 +2367,7 @@ impl TryFrom<Line> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([line[e235], line[e315], line[e125], 0.0]),
+            line.group1().with_w(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         ));
@@ -2606,7 +2605,7 @@ impl TryFrom<MultiVector> for AntiFlector {
         }
         return Ok(AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e321]]),
+            multi_vector.group8().with_w(multi_vector[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([multi_vector[e1], multi_vector[e2], multi_vector[e3], multi_vector[e5]]),
         ));

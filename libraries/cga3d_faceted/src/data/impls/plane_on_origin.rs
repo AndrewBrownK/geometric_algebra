@@ -6613,7 +6613,6 @@ impl TryFrom<DipoleInversionAtInfinity> for PlaneOnOrigin {
 impl TryFrom<DipoleInversionOnOrigin> for PlaneOnOrigin {
     type Error = String;
     fn try_from(dipole_inversion_on_origin: DipoleInversionOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_inversion_on_origin[0];
@@ -6657,11 +6656,7 @@ impl TryFrom<DipoleInversionOnOrigin> for PlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from([
-            dipole_inversion_on_origin[e4235],
-            dipole_inversion_on_origin[e4315],
-            dipole_inversion_on_origin[e4125],
-        ])));
+        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ dipole_inversion_on_origin.group1().yzw()));
     }
 }
 
@@ -6718,7 +6713,6 @@ impl TryFrom<Flector> for PlaneOnOrigin {
 impl TryFrom<FlectorOnOrigin> for PlaneOnOrigin {
     type Error = String;
     fn try_from(flector_on_origin: FlectorOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = flector_on_origin[0];
@@ -6734,18 +6728,13 @@ impl TryFrom<FlectorOnOrigin> for PlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from([
-            flector_on_origin[e4235],
-            flector_on_origin[e4315],
-            flector_on_origin[e4125],
-        ])));
+        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ flector_on_origin.group0().yzw()));
     }
 }
 
 impl TryFrom<MultiVector> for PlaneOnOrigin {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = multi_vector[0];
@@ -6957,10 +6946,7 @@ impl TryFrom<MultiVector> for PlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(PlaneOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([multi_vector[e4235], multi_vector[e4315], multi_vector[e4125]]),
-        ));
+        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ multi_vector.group9().yzw()));
     }
 }
 
@@ -7010,7 +6996,6 @@ impl TryFrom<MysteryDipoleInversion> for PlaneOnOrigin {
 impl TryFrom<MysteryVersorOdd> for PlaneOnOrigin {
     type Error = String;
     fn try_from(mystery_versor_odd: MysteryVersorOdd) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_versor_odd[0];
@@ -7054,11 +7039,7 @@ impl TryFrom<MysteryVersorOdd> for PlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from([
-            mystery_versor_odd[e4235],
-            mystery_versor_odd[e4315],
-            mystery_versor_odd[e4125],
-        ])));
+        return Ok(PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ mystery_versor_odd.group0().yzw()));
     }
 }
 

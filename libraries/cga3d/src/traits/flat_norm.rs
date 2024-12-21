@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatNorm
-/// TODO
+/// Norm for flat aspect.
 pub trait FlatNorm {
     fn flat_norm(self) -> MultiVector;
 }

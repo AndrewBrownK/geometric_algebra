@@ -9,8 +9,7 @@ use codegen::ast::traits::{
     TraitDef_1_Type_1_Arg,
     TraitDef_1_Type_2_Args_f32,
     TraitDef_1_Type_2_Args_i32,
-    TraitDef_2_Types_2_Args
-    ,
+    TraitDef_2_Types_2_Args,
 };
 use codegen::build_scripts::common_traits::conformal::{RadiusNorm, RadiusNormSquared};
 use codegen::build_scripts::common_traits::GeometricAntiProduct;

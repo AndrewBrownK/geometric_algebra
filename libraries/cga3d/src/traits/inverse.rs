@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Inverse
-/// TODO
+/// The inverse with respect to geometric product. Inverse(x) = x^-1.
 pub trait Inverse {
     fn inverse(self) -> Scalar;
 }

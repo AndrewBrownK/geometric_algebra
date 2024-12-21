@@ -2657,11 +2657,7 @@ impl From<NullSphereAtOrigin> for SphereOnOrigin {
 
 impl From<PlaneOnOrigin> for SphereOnOrigin {
     fn from(from_plane_on_origin: PlaneOnOrigin) -> Self {
-        use crate::elements::*;
-        return SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([from_plane_on_origin[e4235], from_plane_on_origin[e4315], from_plane_on_origin[e4125], 0.0]),
-        );
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ from_plane_on_origin.group0().with_w(0.0));
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for SphereOnOrigin {
@@ -7510,7 +7506,6 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
 impl TryFrom<MysteryDipoleInversion> for SphereOnOrigin {
     type Error = String;
     fn try_from(mystery_dipole_inversion: MysteryDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_dipole_inversion[0];
@@ -7547,12 +7542,7 @@ impl TryFrom<MysteryDipoleInversion> for SphereOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
-            mystery_dipole_inversion[e4235],
-            mystery_dipole_inversion[e4315],
-            mystery_dipole_inversion[e4125],
-            0.0,
-        ])));
+        return Ok(SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ mystery_dipole_inversion.group1().with_w(0.0)));
     }
 }
 

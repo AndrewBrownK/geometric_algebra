@@ -8656,7 +8656,6 @@ impl TryFrom<VersorOdd> for AntiLine {
 impl TryFrom<VersorOddAtInfinity> for AntiLine {
     type Error = String;
     fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_odd_at_infinity[0];
@@ -8711,7 +8710,7 @@ impl TryFrom<VersorOddAtInfinity> for AntiLine {
             // e23, e31, e12
             versor_odd_at_infinity.group1().xyz(),
             // e15, e25, e35
-            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+            versor_odd_at_infinity.group0().yzw(),
         ));
     }
 }

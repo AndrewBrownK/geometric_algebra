@@ -3578,10 +3578,9 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiCircleRotorOnOrigin {
 
 impl From<AntiCircleOnOrigin> for AntiCircleRotorOnOrigin {
     fn from(from_anti_circle_on_origin: AntiCircleOnOrigin) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_anti_circle_on_origin[e41], from_anti_circle_on_origin[e42], from_anti_circle_on_origin[e43], 0.0]),
+            from_anti_circle_on_origin.group0().with_w(0.0),
             // e23, e31, e12
             from_anti_circle_on_origin.group1(),
         );
@@ -3608,10 +3607,9 @@ impl From<AntiMotorOnOrigin> for AntiCircleRotorOnOrigin {
 
 impl From<NullDipoleAtOrigin> for AntiCircleRotorOnOrigin {
     fn from(from_null_dipole_at_origin: NullDipoleAtOrigin) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_null_dipole_at_origin[e41], from_null_dipole_at_origin[e42], from_null_dipole_at_origin[e43], 0.0]),
+            from_null_dipole_at_origin.group0().with_w(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
         );
@@ -7777,7 +7775,7 @@ impl TryFrom<AntiCircleRotor> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([anti_circle_rotor[e41], anti_circle_rotor[e42], anti_circle_rotor[e43], anti_circle_rotor[scalar]]),
+            anti_circle_rotor.group0().with_w(anti_circle_rotor[scalar]),
             // e23, e31, e12
             anti_circle_rotor.group1().xyz(),
         ));
@@ -7819,12 +7817,7 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([
-                anti_circle_rotor_aligning_origin[e41],
-                anti_circle_rotor_aligning_origin[e42],
-                anti_circle_rotor_aligning_origin[e43],
-                anti_circle_rotor_aligning_origin[scalar],
-            ]),
+            anti_circle_rotor_aligning_origin.group0().with_w(anti_circle_rotor_aligning_origin[scalar]),
             // e23, e31, e12
             anti_circle_rotor_aligning_origin.group1(),
         ));
@@ -8098,7 +8091,6 @@ impl TryFrom<AntiVersorEvenOnOrigin> for AntiCircleRotorOnOrigin {
 impl TryFrom<Dipole> for AntiCircleRotorOnOrigin {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole[6];
@@ -8137,7 +8129,7 @@ impl TryFrom<Dipole> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole[e41], dipole[e42], dipole[e43], 0.0]),
+            dipole.group0().with_w(0.0),
             // e23, e31, e12
             dipole.group1().xyz(),
         ));
@@ -8244,7 +8236,6 @@ impl TryFrom<DipoleAtInfinity> for AntiCircleRotorOnOrigin {
 impl TryFrom<DipoleAtOrigin> for AntiCircleRotorOnOrigin {
     type Error = String;
     fn try_from(dipole_at_origin: DipoleAtOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_at_origin[3];
@@ -8276,7 +8267,7 @@ impl TryFrom<DipoleAtOrigin> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_at_origin[e41], dipole_at_origin[e42], dipole_at_origin[e43], 0.0]),
+            dipole_at_origin.group0().with_w(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
         ));
@@ -8286,7 +8277,6 @@ impl TryFrom<DipoleAtOrigin> for AntiCircleRotorOnOrigin {
 impl TryFrom<DipoleInversion> for AntiCircleRotorOnOrigin {
     type Error = String;
     fn try_from(dipole_inversion: DipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_inversion[6];
@@ -8360,7 +8350,7 @@ impl TryFrom<DipoleInversion> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_inversion[e41], dipole_inversion[e42], dipole_inversion[e43], 0.0]),
+            dipole_inversion.group0().with_w(0.0),
             // e23, e31, e12
             dipole_inversion.group1().xyz(),
         ));
@@ -8731,7 +8721,6 @@ impl TryFrom<DipoleOnOrigin> for AntiCircleRotorOnOrigin {
 impl TryFrom<DipoleOrthogonalOrigin> for AntiCircleRotorOnOrigin {
     type Error = String;
     fn try_from(dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_orthogonal_origin[6];
@@ -8763,7 +8752,7 @@ impl TryFrom<DipoleOrthogonalOrigin> for AntiCircleRotorOnOrigin {
         }
         return Ok(AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_orthogonal_origin[e41], dipole_orthogonal_origin[e42], dipole_orthogonal_origin[e43], 0.0]),
+            dipole_orthogonal_origin.group0().with_w(0.0),
             // e23, e31, e12
             dipole_orthogonal_origin.group1(),
         ));

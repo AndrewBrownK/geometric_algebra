@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundBulkNorm
-/// TODO
+/// Bulk Norm for round aspect.
 pub trait RoundBulkNorm {
     fn round_bulk_norm(self) -> Scalar;
 }

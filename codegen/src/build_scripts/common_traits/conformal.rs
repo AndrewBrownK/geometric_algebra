@@ -14,7 +14,8 @@ use crate::trait_impl_1_type_1_arg;
 pub const fn conformal_conjugate(infinity: BasisElement) -> Elaborated<ConformalConjugateImpl> {
     ConformalConjugateImpl { infinity }
         .new_trait_named("ConformalConjugate")
-        .blurb("TODO")
+        .blurb("The conformal conjugate negates the flat elements of an object, and is \
+        useful in calculating the center norm of the object.")
 }
 #[derive(Clone, Copy)]
 pub struct ConformalConjugateImpl {
@@ -30,7 +31,7 @@ impl TraitImpl_11 for ConformalConjugateImpl {
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let infinity_sig = self.infinity.signature();
         let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements_by_groups() {
+        for (mut fe, el) in slf.elements() {
             if el.signature().contains(infinity_sig) {
                 fe = fe * -1.0;
             }
@@ -44,7 +45,8 @@ impl TraitImpl_11 for ConformalConjugateImpl {
 pub const fn round_bulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkImpl> {
     RoundBulkImpl { origin, infinity }
         .new_trait_named("RoundBulk")
-        .blurb("TODO")
+        .blurb("This is the aspect of a round object that characterizes the carrier's \
+        relationship with the origin.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundBulkImpl {
@@ -71,7 +73,8 @@ impl TraitImpl_11 for RoundBulkImpl {
 pub const fn round_weight(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightImpl> {
     RoundWeightImpl { origin, infinity }
         .new_trait_named("RoundWeight")
-        .blurb("TODO")
+        .blurb("This is the aspect of a round object that characterizes the carrier's \
+        relationship with the horizon.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundWeightImpl {
@@ -98,7 +101,7 @@ impl TraitImpl_11 for RoundWeightImpl {
 pub const fn flat_bulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkImpl> {
     FlatBulkImpl { origin, infinity }
         .new_trait_named("FlatBulk")
-        .blurb("TODO")
+        .blurb("This characterizes the flat aspect's relationship with the origin.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatBulkImpl {
@@ -125,7 +128,7 @@ impl TraitImpl_11 for FlatBulkImpl {
 pub const fn flat_weight(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightImpl> {
     FlatWeightImpl { origin, infinity }
         .new_trait_named("FlatWeight")
-        .blurb("TODO")
+        .blurb("This characterizes the flat aspect's relationship with the horizon.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatWeightImpl {
@@ -152,7 +155,8 @@ impl TraitImpl_11 for FlatWeightImpl {
 pub const fn center_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormImpl> {
     CenterNormImpl { origin, infinity }
         .new_trait_named("CenterNorm")
-        .blurb("TODO")
+        .blurb("Distance between origin and center (not yet unitized, still \
+        requires division by round weight).")
 }
 #[derive(Clone, Copy)]
 pub struct CenterNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -173,7 +177,7 @@ impl TraitImpl_11 for CenterNormImpl {
 pub const fn center_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<CenterNormSquaredImpl> {
     CenterNormSquaredImpl { origin, infinity }
         .new_trait_named("CenterNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to CenterNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct CenterNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -196,7 +200,7 @@ impl TraitImpl_11 for CenterNormSquaredImpl {
 pub const fn flat_bulk_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormImpl> {
     FlatBulkNormImpl { origin, infinity }
         .new_trait_named("FlatBulkNorm")
-        .blurb("TODO")
+        .blurb("BulkNorm for flat aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatBulkNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -217,7 +221,7 @@ impl TraitImpl_11 for FlatBulkNormImpl {
 pub const fn flat_bulk_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormSquaredImpl> {
     FlatBulkNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatBulkNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result for FlatBulkNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatBulkNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -244,7 +248,7 @@ impl TraitImpl_11 for FlatBulkNormSquaredImpl {
 pub const fn flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormImpl> {
     FlatNormImpl { origin, infinity }
         .new_trait_named("FlatNorm")
-        .blurb("TODO")
+        .blurb("Norm for flat aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -266,7 +270,7 @@ impl TraitImpl_11 for FlatNormImpl {
 pub const fn flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormSquaredImpl> {
     FlatNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to FlatNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -288,7 +292,7 @@ impl TraitImpl_11 for FlatNormSquaredImpl {
 pub const fn flat_weight_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormImpl> {
     FlatWeightNormImpl { origin, infinity }
         .new_trait_named("FlatWeightNorm")
-        .blurb("TODO")
+        .blurb("Weight Norm for flat aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatWeightNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -309,7 +313,7 @@ impl TraitImpl_11 for FlatWeightNormImpl {
 pub const fn flat_weight_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormSquaredImpl> {
     FlatWeightNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatWeightNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to FlatWeightNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct FlatWeightNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -330,7 +334,8 @@ impl TraitImpl_11 for FlatWeightNormSquaredImpl {
 
 pub static RadiusNorm: Elaborated<RadiusNormImpl> = RadiusNormImpl
     .new_trait_named("RadiusNorm")
-    .blurb("TODO");
+    .blurb("Distance radius of a round object (not yet unitized, still \
+        requires division by round weight).");
 trait_impl_1_type_1_arg!(RadiusNormImpl(builder, slf) -> MultiVector {
     let rns = RadiusNormSquared.invoke(&mut builder, slf.clone()).await?;
     let result = SquareRoot.invoke(&mut builder, rns).await?;
@@ -339,7 +344,7 @@ trait_impl_1_type_1_arg!(RadiusNormImpl(builder, slf) -> MultiVector {
 
 pub static RadiusNormSquared: Elaborated<RadiusNormSquaredImpl> = RadiusNormSquaredImpl
     .new_trait_named("RadiusNormSquared")
-    .blurb("TODO");
+    .blurb("Intermediate result to RadiusNorm.");
 trait_impl_1_type_1_arg!(RadiusNormSquaredImpl(builder, slf) -> MultiVector {
     let anti_dot = AntiDotProduct.invoke(&mut builder, slf.clone(), slf.clone()).await?;
     let result = RightAntiDual.invoke(&mut builder, anti_dot).await?;
@@ -349,7 +354,7 @@ trait_impl_1_type_1_arg!(RadiusNormSquaredImpl(builder, slf) -> MultiVector {
 pub const fn round_bulk_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormImpl> {
     RoundBulkNormImpl { origin, infinity }
         .new_trait_named("RoundBulkNorm")
-        .blurb("TODO")
+        .blurb("Bulk Norm for round aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundBulkNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -370,7 +375,7 @@ impl TraitImpl_11 for RoundBulkNormImpl {
 pub const fn round_bulk_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundBulkNormSquaredImpl> {
     RoundBulkNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundBulkNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to RoundBulkNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundBulkNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -392,7 +397,7 @@ impl TraitImpl_11 for RoundBulkNormSquaredImpl {
 pub const fn round_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormImpl> {
     RoundNormImpl { origin, infinity }
         .new_trait_named("RoundNorm")
-        .blurb("TODO")
+        .blurb("Norm for Round aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -414,7 +419,7 @@ impl TraitImpl_11 for RoundNormImpl {
 pub const fn round_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundNormSquaredImpl> {
     RoundNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result for RoundNorm.")
 }#[derive(Clone, Copy)]
 pub struct RoundNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
 #[async_trait]
@@ -435,7 +440,7 @@ impl TraitImpl_11 for RoundNormSquaredImpl {
 pub const fn round_weight_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormImpl> {
     RoundWeightNormImpl { origin, infinity }
         .new_trait_named("RoundWeightNorm")
-        .blurb("TODO")
+        .blurb("Weight Norm for round aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundWeightNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -456,7 +461,7 @@ impl TraitImpl_11 for RoundWeightNormImpl {
 pub const fn round_weight_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<RoundWeightNormSquaredImpl> {
     RoundWeightNormSquaredImpl { origin, infinity }
         .new_trait_named("RoundWeightNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result for RoundWeight.")
 }
 #[derive(Clone, Copy)]
 pub struct RoundWeightNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -483,7 +488,7 @@ impl TraitImpl_11 for RoundWeightNormSquaredImpl {
 pub const fn unitized_center_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormImpl> {
     UnitizedCenterNormImpl { origin, infinity }
         .new_trait_named("UnitizedCenterNorm")
-        .blurb("TODO")
+        .blurb("Unitized distance from origin to center of round object.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedCenterNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -504,7 +509,7 @@ impl TraitImpl_11 for UnitizedCenterNormImpl {
 pub const fn unitized_center_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedCenterNormSquaredImpl> {
     UnitizedCenterNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedCenterNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to UnitizedCenterNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedCenterNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -528,7 +533,7 @@ impl TraitImpl_11 for UnitizedCenterNormSquaredImpl {
 pub const fn unitized_flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormImpl> {
     UnitizedFlatNormImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNorm")
-        .blurb("TODO")
+        .blurb("Unitized FlatNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedFlatNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -549,7 +554,7 @@ impl TraitImpl_11 for UnitizedFlatNormImpl {
 pub const fn unitized_flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormSquaredImpl> {
     UnitizedFlatNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to UnitizedFlatNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedFlatNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -573,7 +578,7 @@ impl TraitImpl_11 for UnitizedFlatNormSquaredImpl {
 pub const fn unitized_radius_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormImpl> {
     UnitizedRadiusNormImpl { origin, infinity }
         .new_trait_named("UnitizedRadiusNorm")
-        .blurb("TODO")
+        .blurb("Unitized radius of an object.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedRadiusNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -594,7 +599,7 @@ impl TraitImpl_11 for UnitizedRadiusNormImpl {
 pub const fn unitized_radius_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRadiusNormSquaredImpl> {
     UnitizedRadiusNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedRadiusNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to UnitizedRadiusNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedRadiusNormSquaredImpl { origin: BasisElement, infinity: BasisElement }
@@ -618,7 +623,7 @@ impl TraitImpl_11 for UnitizedRadiusNormSquaredImpl {
 pub const fn unitized_round_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormImpl> {
     UnitizedRoundNormImpl { origin, infinity }
         .new_trait_named("UnitizedRoundNorm")
-        .blurb("TODO")
+        .blurb("Unitized Norm for round aspect.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedRoundNormImpl { origin: BasisElement, infinity: BasisElement }
@@ -639,7 +644,7 @@ impl TraitImpl_11 for UnitizedRoundNormImpl {
 pub const fn unitized_round_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedRoundNormSquaredImpl> {
     UnitizedRoundNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedRoundNormSquared")
-        .blurb("TODO")
+        .blurb("Intermediate result to UnitizedRoundNorm.")
 }
 #[derive(Clone, Copy)]
 pub struct UnitizedRoundNormSquaredImpl { origin: BasisElement, infinity: BasisElement }

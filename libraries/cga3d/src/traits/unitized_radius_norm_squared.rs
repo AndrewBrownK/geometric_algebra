@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// UnitizedRadiusNormSquared
-/// TODO
+/// Intermediate result to UnitizedRadiusNorm.
 pub trait UnitizedRadiusNormSquared {
     fn unitized_radius_norm_squared(self) -> f32;
 }

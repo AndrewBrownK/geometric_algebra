@@ -1205,7 +1205,7 @@ impl From<AntiCircleRotor> for VersorOdd {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_anti_circle_rotor[e41], from_anti_circle_rotor[e42], from_anti_circle_rotor[e43], from_anti_circle_rotor[scalar]]),
+            from_anti_circle_rotor.group0().with_w(from_anti_circle_rotor[scalar]),
             // e23, e31, e12, e45
             from_anti_circle_rotor.group1(),
             // e15, e25, e35, e1234
@@ -1234,14 +1234,13 @@ impl From<AntiDualNum> for VersorOdd {
 
 impl From<AntiLine> for VersorOdd {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1266,14 +1265,13 @@ impl From<AntiMotor> for VersorOdd {
 
 impl From<Dipole> for VersorOdd {
     fn from(from_dipole: Dipole) -> Self {
-        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_dipole[e41], from_dipole[e42], from_dipole[e43], 0.0]),
+            from_dipole.group0().with_w(0.0),
             // e23, e31, e12, e45
             from_dipole.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_dipole[e15], from_dipole[e25], from_dipole[e35], 0.0]),
+            from_dipole.group2().with_w(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1282,10 +1280,9 @@ impl From<Dipole> for VersorOdd {
 
 impl From<DipoleInversion> for VersorOdd {
     fn from(from_dipole_inversion: DipoleInversion) -> Self {
-        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_dipole_inversion[e41], from_dipole_inversion[e42], from_dipole_inversion[e43], 0.0]),
+            from_dipole_inversion.group0().with_w(0.0),
             // e23, e31, e12, e45
             from_dipole_inversion.group1(),
             // e15, e25, e35, e1234
@@ -2859,9 +2856,9 @@ impl TryFrom<MultiVector> for VersorOdd {
         }
         return Ok(VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([multi_vector[e41], multi_vector[e42], multi_vector[e43], multi_vector[scalar]]),
+            multi_vector.group4().with_w(multi_vector[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e45]]),
+            multi_vector.group5().with_w(multi_vector[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e1234]]),
             // e4235, e4315, e4125, e3215

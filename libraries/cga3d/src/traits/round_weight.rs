@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundWeight
-/// TODO
+/// This is the aspect of a round object that characterizes the carrier's relationship with the horizon.
 pub trait RoundWeight {
     type Output;
     fn round_weight(self) -> Self::Output;

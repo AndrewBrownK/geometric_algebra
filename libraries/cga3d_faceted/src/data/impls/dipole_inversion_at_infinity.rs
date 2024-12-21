@@ -3656,10 +3656,9 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for DipoleInversionAtInfinity {
 
 impl From<AntiLine> for DipoleInversionAtInfinity {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35
             from_anti_line.group1(),
             // e4235, e4315, e4125, e3215
@@ -3670,10 +3669,9 @@ impl From<AntiLine> for DipoleInversionAtInfinity {
 
 impl From<AntiLineOnOrigin> for DipoleInversionAtInfinity {
     fn from(from_anti_line_on_origin: AntiLineOnOrigin) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([from_anti_line_on_origin[e23], from_anti_line_on_origin[e31], from_anti_line_on_origin[e12], 0.0]),
+            from_anti_line_on_origin.group0().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -3807,14 +3805,13 @@ impl From<MysteryDipole> for DipoleInversionAtInfinity {
 
 impl From<MysteryDipoleInversion> for DipoleInversionAtInfinity {
     fn from(from_mystery_dipole_inversion: MysteryDipoleInversion) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
             from_mystery_dipole_inversion.group0(),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([from_mystery_dipole_inversion[e4235], from_mystery_dipole_inversion[e4315], from_mystery_dipole_inversion[e4125], 0.0]),
+            from_mystery_dipole_inversion.group1().with_w(0.0),
         );
     }
 }
@@ -3834,14 +3831,13 @@ impl From<Plane> for DipoleInversionAtInfinity {
 
 impl From<PlaneOnOrigin> for DipoleInversionAtInfinity {
     fn from(from_plane_on_origin: PlaneOnOrigin) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([from_plane_on_origin[e4235], from_plane_on_origin[e4315], from_plane_on_origin[e4125], 0.0]),
+            from_plane_on_origin.group0().with_w(0.0),
         );
     }
 }
@@ -8137,7 +8133,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for DipoleInversionAtInfinity {
 impl TryFrom<AntiCircleOnOrigin> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(anti_circle_on_origin: AntiCircleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_on_origin[0];
@@ -8169,7 +8164,7 @@ impl TryFrom<AntiCircleOnOrigin> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([anti_circle_on_origin[e23], anti_circle_on_origin[e31], anti_circle_on_origin[e12], 0.0]),
+            anti_circle_on_origin.group1().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -8231,7 +8226,6 @@ impl TryFrom<AntiCircleRotor> for DipoleInversionAtInfinity {
 impl TryFrom<AntiCircleRotorAligningOrigin> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(anti_circle_rotor_aligning_origin: AntiCircleRotorAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_rotor_aligning_origin[0];
@@ -8270,12 +8264,7 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([
-                anti_circle_rotor_aligning_origin[e23],
-                anti_circle_rotor_aligning_origin[e31],
-                anti_circle_rotor_aligning_origin[e12],
-                0.0,
-            ]),
+            anti_circle_rotor_aligning_origin.group1().with_w(0.0),
             // e15, e25, e35
             anti_circle_rotor_aligning_origin.group2().xyz(),
             // e4235, e4315, e4125, e3215
@@ -8287,7 +8276,6 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for DipoleInversionAtInfinity {
 impl TryFrom<AntiCircleRotorAligningOriginAtInfinity> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(anti_circle_rotor_aligning_origin_at_infinity: AntiCircleRotorAligningOriginAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_rotor_aligning_origin_at_infinity[6];
@@ -8305,12 +8293,7 @@ impl TryFrom<AntiCircleRotorAligningOriginAtInfinity> for DipoleInversionAtInfin
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([
-                anti_circle_rotor_aligning_origin_at_infinity[e23],
-                anti_circle_rotor_aligning_origin_at_infinity[e31],
-                anti_circle_rotor_aligning_origin_at_infinity[e12],
-                0.0,
-            ]),
+            anti_circle_rotor_aligning_origin_at_infinity.group0().with_w(0.0),
             // e15, e25, e35
             anti_circle_rotor_aligning_origin_at_infinity.group1().xyz(),
             // e4235, e4315, e4125, e3215
@@ -8351,7 +8334,6 @@ impl TryFrom<AntiCircleRotorAtInfinity> for DipoleInversionAtInfinity {
 impl TryFrom<AntiCircleRotorOnOrigin> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(anti_circle_rotor_on_origin: AntiCircleRotorOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_rotor_on_origin[0];
@@ -8390,7 +8372,7 @@ impl TryFrom<AntiCircleRotorOnOrigin> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([anti_circle_rotor_on_origin[e23], anti_circle_rotor_on_origin[e31], anti_circle_rotor_on_origin[e12], 0.0]),
+            anti_circle_rotor_on_origin.group1().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -8921,12 +8903,7 @@ impl TryFrom<DipoleInversionOrthogonalOrigin> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([
-                dipole_inversion_orthogonal_origin[e23],
-                dipole_inversion_orthogonal_origin[e31],
-                dipole_inversion_orthogonal_origin[e12],
-                0.0,
-            ]),
+            dipole_inversion_orthogonal_origin.group1().with_w(0.0),
             // e15, e25, e35
             dipole_inversion_orthogonal_origin.group2().xyz(),
             // e4235, e4315, e4125, e3215
@@ -8982,7 +8959,6 @@ impl TryFrom<DipoleOnOrigin> for DipoleInversionAtInfinity {
 impl TryFrom<DipoleOrthogonalOrigin> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_orthogonal_origin[0];
@@ -9014,7 +8990,7 @@ impl TryFrom<DipoleOrthogonalOrigin> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([dipole_orthogonal_origin[e23], dipole_orthogonal_origin[e31], dipole_orthogonal_origin[e12], 0.0]),
+            dipole_orthogonal_origin.group1().with_w(0.0),
             // e15, e25, e35
             dipole_orthogonal_origin.group2(),
             // e4235, e4315, e4125, e3215
@@ -9184,7 +9160,7 @@ impl TryFrom<MultiVector> for DipoleInversionAtInfinity {
         }
         return Ok(DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e45]]),
+            multi_vector.group5().with_w(multi_vector[e45]),
             // e15, e25, e35
             multi_vector.group4(),
             // e4235, e4315, e4125, e3215
@@ -9372,7 +9348,6 @@ impl TryFrom<VersorOdd> for DipoleInversionAtInfinity {
 impl TryFrom<VersorOddAtInfinity> for DipoleInversionAtInfinity {
     type Error = String;
     fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_odd_at_infinity[0];
@@ -9392,7 +9367,7 @@ impl TryFrom<VersorOddAtInfinity> for DipoleInversionAtInfinity {
             // e23, e31, e12, e45
             versor_odd_at_infinity.group1(),
             // e15, e25, e35
-            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+            versor_odd_at_infinity.group0().yzw(),
             // e4235, e4315, e4125, e3215
             versor_odd_at_infinity.group2(),
         ));

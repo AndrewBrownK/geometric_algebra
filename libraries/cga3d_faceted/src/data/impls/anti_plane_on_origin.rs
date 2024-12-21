@@ -7239,7 +7239,6 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for AntiPlaneOnOrigin {
 impl TryFrom<AntiDipoleInversionOnOrigin> for AntiPlaneOnOrigin {
     type Error = String;
     fn try_from(anti_dipole_inversion_on_origin: AntiDipoleInversionOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_dipole_inversion_on_origin[0];
@@ -7283,11 +7282,7 @@ impl TryFrom<AntiDipoleInversionOnOrigin> for AntiPlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
-            anti_dipole_inversion_on_origin[e1],
-            anti_dipole_inversion_on_origin[e2],
-            anti_dipole_inversion_on_origin[e3],
-        ])));
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ anti_dipole_inversion_on_origin.group1().yzw()));
     }
 }
 
@@ -7344,7 +7339,6 @@ impl TryFrom<AntiFlector> for AntiPlaneOnOrigin {
 impl TryFrom<AntiFlectorOnOrigin> for AntiPlaneOnOrigin {
     type Error = String;
     fn try_from(anti_flector_on_origin: AntiFlectorOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_flector_on_origin[0];
@@ -7360,11 +7354,7 @@ impl TryFrom<AntiFlectorOnOrigin> for AntiPlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
-            anti_flector_on_origin[e1],
-            anti_flector_on_origin[e2],
-            anti_flector_on_origin[e3],
-        ])));
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ anti_flector_on_origin.group0().yzw()));
     }
 }
 
@@ -7676,7 +7666,6 @@ impl TryFrom<MultiVector> for AntiPlaneOnOrigin {
 impl TryFrom<MysteryVersorEven> for AntiPlaneOnOrigin {
     type Error = String;
     fn try_from(mystery_versor_even: MysteryVersorEven) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_versor_even[0];
@@ -7720,11 +7709,7 @@ impl TryFrom<MysteryVersorEven> for AntiPlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
-            mystery_versor_even[e1],
-            mystery_versor_even[e2],
-            mystery_versor_even[e3],
-        ])));
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ mystery_versor_even.group0().yzw()));
     }
 }
 
@@ -7866,7 +7851,6 @@ impl TryFrom<VersorEven> for AntiPlaneOnOrigin {
 impl TryFrom<VersorEvenAtInfinity> for AntiPlaneOnOrigin {
     type Error = String;
     fn try_from(versor_even_at_infinity: VersorEvenAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_at_infinity[0];
@@ -7938,11 +7922,7 @@ impl TryFrom<VersorEvenAtInfinity> for AntiPlaneOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
-            versor_even_at_infinity[e1],
-            versor_even_at_infinity[e2],
-            versor_even_at_infinity[e3],
-        ])));
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ versor_even_at_infinity.group0().yzw()));
     }
 }
 

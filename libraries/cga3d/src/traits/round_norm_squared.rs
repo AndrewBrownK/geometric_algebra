@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundNormSquared
-/// TODO
+/// Intermediate result for RoundNorm.
 pub trait RoundNormSquared {
     fn round_norm_squared(self) -> MultiVector;
 }

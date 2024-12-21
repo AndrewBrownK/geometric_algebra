@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AutoMorphism
-/// TODO
+/// Negate every BasisElement with an odd Grade. Also known as grade involution.
 pub trait AutoMorphism {
     fn auto_morphism(self) -> Self;
 }

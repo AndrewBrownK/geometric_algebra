@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatWeightNormSquared
-/// TODO
+/// Intermediate result to FlatWeightNorm.
 pub trait FlatWeightNormSquared {
     fn flat_weight_norm_squared(self) -> AntiScalar;
 }

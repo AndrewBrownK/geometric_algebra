@@ -2721,11 +2721,7 @@ impl From<AntiScalar> for MotorOnOrigin {
 
 impl From<LineOnOrigin> for MotorOnOrigin {
     fn from(from_line_on_origin: LineOnOrigin) -> Self {
-        use crate::elements::*;
-        return MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([from_line_on_origin[e415], from_line_on_origin[e425], from_line_on_origin[e435], 0.0]),
-        );
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ from_line_on_origin.group0().with_w(0.0));
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for MotorOnOrigin {
@@ -6809,7 +6805,6 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
 impl TryFrom<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     type Error = String;
     fn try_from(anti_dipole_inversion_orthogonal_origin: AntiDipoleInversionOrthogonalOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_dipole_inversion_orthogonal_origin[0];
@@ -6874,12 +6869,10 @@ impl TryFrom<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            anti_dipole_inversion_orthogonal_origin[e415],
-            anti_dipole_inversion_orthogonal_origin[e425],
-            anti_dipole_inversion_orthogonal_origin[e435],
-            0.0,
-        ])));
+        return Ok(MotorOnOrigin::from_groups(
+            // e415, e425, e435, e12345
+            anti_dipole_inversion_orthogonal_origin.group1().with_w(0.0),
+        ));
     }
 }
 
@@ -7003,7 +6996,6 @@ impl TryFrom<Circle> for MotorOnOrigin {
 impl TryFrom<CircleAligningOrigin> for MotorOnOrigin {
     type Error = String;
     fn try_from(circle_aligning_origin: CircleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_aligning_origin[0];
@@ -7054,12 +7046,7 @@ impl TryFrom<CircleAligningOrigin> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            circle_aligning_origin[e415],
-            circle_aligning_origin[e425],
-            circle_aligning_origin[e435],
-            0.0,
-        ])));
+        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ circle_aligning_origin.group1().with_w(0.0)));
     }
 }
 
@@ -7115,7 +7102,6 @@ impl TryFrom<CircleAtInfinity> for MotorOnOrigin {
 impl TryFrom<CircleOnOrigin> for MotorOnOrigin {
     type Error = String;
     fn try_from(circle_on_origin: CircleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_on_origin[0];
@@ -7145,12 +7131,7 @@ impl TryFrom<CircleOnOrigin> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            circle_on_origin[e415],
-            circle_on_origin[e425],
-            circle_on_origin[e435],
-            0.0,
-        ])));
+        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ circle_on_origin.group1().with_w(0.0)));
     }
 }
 
@@ -7275,12 +7256,10 @@ impl TryFrom<CircleRotorAligningOrigin> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            circle_rotor_aligning_origin[e415],
-            circle_rotor_aligning_origin[e425],
-            circle_rotor_aligning_origin[e435],
-            circle_rotor_aligning_origin[e12345],
-        ])));
+        return Ok(MotorOnOrigin::from_groups(
+            // e415, e425, e435, e12345
+            circle_rotor_aligning_origin.group1().with_w(circle_rotor_aligning_origin[e12345]),
+        ));
     }
 }
 
@@ -7317,12 +7296,10 @@ impl TryFrom<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            circle_rotor_aligning_origin_at_infinity[e415],
-            circle_rotor_aligning_origin_at_infinity[e425],
-            circle_rotor_aligning_origin_at_infinity[e435],
-            circle_rotor_aligning_origin_at_infinity[e12345],
-        ])));
+        return Ok(MotorOnOrigin::from_groups(
+            // e415, e425, e435, e12345
+            circle_rotor_aligning_origin_at_infinity.group0().with_w(circle_rotor_aligning_origin_at_infinity[e12345]),
+        ));
     }
 }
 
@@ -7408,12 +7385,10 @@ impl TryFrom<CircleRotorOnOrigin> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
-            circle_rotor_on_origin[e415],
-            circle_rotor_on_origin[e425],
-            circle_rotor_on_origin[e435],
-            circle_rotor_on_origin[e12345],
-        ])));
+        return Ok(MotorOnOrigin::from_groups(
+            // e415, e425, e435, e12345
+            circle_rotor_on_origin.group1().with_w(circle_rotor_on_origin[e12345]),
+        ));
     }
 }
 
@@ -7443,7 +7418,6 @@ impl TryFrom<DualNum> for MotorOnOrigin {
 impl TryFrom<Line> for MotorOnOrigin {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = line[3];
@@ -7473,10 +7447,7 @@ impl TryFrom<Line> for MotorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([line[e415], line[e425], line[e435], 0.0]),
-        ));
+        return Ok(MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ line.group0().with_w(0.0)));
     }
 }
 

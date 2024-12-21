@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// RoundWeightNormSquared
-/// TODO
+/// Intermediate result for RoundWeight.
 pub trait RoundWeightNormSquared {
     fn round_weight_norm_squared(self) -> AntiScalar;
 }

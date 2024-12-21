@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// UnitizedRoundNorm
-/// TODO
+/// Unitized Norm for round aspect.
 pub trait UnitizedRoundNorm {
     fn unitized_round_norm(self) -> f32;
 }

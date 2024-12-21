@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// UnitizedCenterNorm
-/// TODO
+/// Unitized distance from origin to center of round object.
 pub trait UnitizedCenterNorm {
     fn unitized_center_norm(self) -> f32;
 }

@@ -18,13 +18,13 @@
 //   Median:         0       6       0
 //  Average:         0       6       0
 //  Maximum:         0      20       0
-impl std::ops::Div<right_complement> for AntiCircleRotor {
+impl std::ops::Div<complement> for AntiCircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiCircleRotor {
+impl Complement for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -33,7 +33,7 @@ impl RightComplement for AntiCircleRotor {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       11        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
@@ -45,13 +45,13 @@ impl RightComplement for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiDipoleInversion {
+impl std::ops::Div<complement> for AntiDipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiDipoleInversion {
+impl Complement for AntiDipoleInversion {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -60,7 +60,7 @@ impl RightComplement for AntiDipoleInversion {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       11        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -74,15 +74,15 @@ impl RightComplement for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiDualNum {
+impl std::ops::Div<complement> for AntiDualNum {
     type Output = VersorEven;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiDualNum {
+impl Complement for AntiDualNum {
     type Output = VersorEven;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -96,13 +96,13 @@ impl RightComplement for AntiDualNum {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiFlatPoint {
+impl std::ops::Div<complement> for AntiFlatPoint {
     type Output = Dipole;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiFlatPoint {
+impl Complement for AntiFlatPoint {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -111,7 +111,7 @@ impl RightComplement for AntiFlatPoint {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
@@ -123,13 +123,13 @@ impl RightComplement for AntiFlatPoint {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiFlector {
+impl std::ops::Div<complement> for AntiFlector {
     type Output = DipoleInversion;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiFlector {
+impl Complement for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -138,7 +138,7 @@ impl RightComplement for AntiFlector {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -152,19 +152,19 @@ impl RightComplement for AntiFlector {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiLine {
+impl std::ops::Div<complement> for AntiLine {
     type Output = Circle;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiLine {
+impl Complement for AntiLine {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
     // no simd        0        6        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
             self.group1() * Simd32x3::from(-1.0),
@@ -175,13 +175,13 @@ impl RightComplement for AntiLine {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiMotor {
+impl std::ops::Div<complement> for AntiMotor {
     type Output = VersorEven;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiMotor {
+impl Complement for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -190,7 +190,7 @@ impl RightComplement for AntiMotor {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        7        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -204,39 +204,39 @@ impl RightComplement for AntiMotor {
         );
     }
 }
-impl std::ops::Div<right_complement> for AntiPlane {
+impl std::ops::Div<complement> for AntiPlane {
     type Output = Sphere;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiPlane {
+impl Complement for AntiPlane {
     type Output = Sphere;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]), /* e1234 */ self[e5]);
     }
 }
-impl std::ops::Div<right_complement> for AntiScalar {
+impl std::ops::Div<complement> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for AntiScalar {
+impl Complement for AntiScalar {
     type Output = Scalar;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ self[e12345]);
     }
 }
-impl std::ops::Div<right_complement> for Circle {
+impl std::ops::Div<complement> for Circle {
     type Output = Dipole;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Circle {
+impl Complement for Circle {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -245,7 +245,7 @@ impl RightComplement for Circle {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       10        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         return Dipole::from_groups(
             // e41, e42, e43
             self.group2() * Simd32x3::from(-1.0),
@@ -256,13 +256,13 @@ impl RightComplement for Circle {
         );
     }
 }
-impl std::ops::Div<right_complement> for CircleRotor {
+impl std::ops::Div<complement> for CircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for CircleRotor {
+impl Complement for CircleRotor {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -271,7 +271,7 @@ impl RightComplement for CircleRotor {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       11        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
@@ -283,13 +283,13 @@ impl RightComplement for CircleRotor {
         );
     }
 }
-impl std::ops::Div<right_complement> for Dipole {
+impl std::ops::Div<complement> for Dipole {
     type Output = Circle;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Dipole {
+impl Complement for Dipole {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -298,7 +298,7 @@ impl RightComplement for Dipole {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       10        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
             self.group2() * Simd32x3::from(-1.0),
@@ -309,13 +309,13 @@ impl RightComplement for Dipole {
         );
     }
 }
-impl std::ops::Div<right_complement> for DipoleInversion {
+impl std::ops::Div<complement> for DipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for DipoleInversion {
+impl Complement for DipoleInversion {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -324,7 +324,7 @@ impl RightComplement for DipoleInversion {
     // Totals...
     // yes simd        0        3        0
     //  no simd        0       11        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -338,15 +338,15 @@ impl RightComplement for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_complement> for DualNum {
+impl std::ops::Div<complement> for DualNum {
     type Output = VersorOdd;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for DualNum {
+impl Complement for DualNum {
     type Output = VersorOdd;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -360,13 +360,13 @@ impl RightComplement for DualNum {
         );
     }
 }
-impl std::ops::Div<right_complement> for FlatPoint {
+impl std::ops::Div<complement> for FlatPoint {
     type Output = Circle;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for FlatPoint {
+impl Complement for FlatPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -375,7 +375,7 @@ impl RightComplement for FlatPoint {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
@@ -387,13 +387,13 @@ impl RightComplement for FlatPoint {
         );
     }
 }
-impl std::ops::Div<right_complement> for Flector {
+impl std::ops::Div<complement> for Flector {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Flector {
+impl Complement for Flector {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -402,7 +402,7 @@ impl RightComplement for Flector {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -416,19 +416,19 @@ impl RightComplement for Flector {
         );
     }
 }
-impl std::ops::Div<right_complement> for Line {
+impl std::ops::Div<complement> for Line {
     type Output = Dipole;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Line {
+impl Complement for Line {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
     // no simd        0        6        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         return Dipole::from_groups(
             // e41, e42, e43
             self.group1() * Simd32x3::from(-1.0),
@@ -439,13 +439,13 @@ impl RightComplement for Line {
         );
     }
 }
-impl std::ops::Div<right_complement> for Motor {
+impl std::ops::Div<complement> for Motor {
     type Output = VersorOdd;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Motor {
+impl Complement for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -454,7 +454,7 @@ impl RightComplement for Motor {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        7        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -468,18 +468,18 @@ impl RightComplement for Motor {
         );
     }
 }
-impl std::ops::Div<right_complement> for MultiVector {
+impl std::ops::Div<complement> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+impl std::ops::DivAssign<complement> for MultiVector {
+    fn div_assign(&mut self, _rhs: complement) {
+        *self = self.complement()
     }
 }
-impl RightComplement for MultiVector {
+impl Complement for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -488,7 +488,7 @@ impl RightComplement for MultiVector {
     // Totals...
     // yes simd        0        6        0
     //  no simd        0       20        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
@@ -516,70 +516,70 @@ impl RightComplement for MultiVector {
         );
     }
 }
-impl std::ops::Div<right_complement> for Plane {
+impl std::ops::Div<complement> for Plane {
     type Output = RoundPoint;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Plane {
+impl Complement for Plane {
     type Output = RoundPoint;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ 0.0);
     }
 }
-impl std::ops::Div<right_complement> for RoundPoint {
+impl std::ops::Div<complement> for RoundPoint {
     type Output = Sphere;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for RoundPoint {
+impl Complement for RoundPoint {
     type Output = Sphere;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0(), /* e1234 */ self[e5]);
     }
 }
-impl std::ops::Div<right_complement> for Scalar {
+impl std::ops::Div<complement> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Scalar {
+impl Complement for Scalar {
     type Output = AntiScalar;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return AntiScalar::from_groups(/* e12345 */ self[scalar]);
     }
 }
-impl std::ops::Div<right_complement> for Sphere {
+impl std::ops::Div<complement> for Sphere {
     type Output = RoundPoint;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for Sphere {
+impl Complement for Sphere {
     type Output = RoundPoint;
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ self[e1234]);
     }
 }
-impl std::ops::Div<right_complement> for VersorEven {
+impl std::ops::Div<complement> for VersorEven {
     type Output = VersorOdd;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for VersorEven {
+impl Complement for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        3        0
     // no simd        0       12        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -593,19 +593,19 @@ impl RightComplement for VersorEven {
         );
     }
 }
-impl std::ops::Div<right_complement> for VersorOdd {
+impl std::ops::Div<complement> for VersorOdd {
     type Output = VersorEven;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+    fn div(self, _rhs: complement) -> Self::Output {
+        self.complement()
     }
 }
-impl RightComplement for VersorOdd {
+impl Complement for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        3        0
     // no simd        0       12        0
-    fn right_complement(self) -> Self::Output {
+    fn complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345

@@ -1968,7 +1968,6 @@ impl TryFrom<AntiCircleRotor> for FlatPoint {
 impl TryFrom<AntiLine> for FlatPoint {
     type Error = String;
     fn try_from(anti_line: AntiLine) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_line[0];
@@ -1998,10 +1997,7 @@ impl TryFrom<AntiLine> for FlatPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
-        ));
+        return Ok(FlatPoint::from_groups(/* e15, e25, e35, e45 */ anti_line.group1().with_w(0.0)));
     }
 }
 
@@ -2113,10 +2109,7 @@ impl TryFrom<Dipole> for FlatPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], dipole[e45]]),
-        ));
+        return Ok(FlatPoint::from_groups(/* e15, e25, e35, e45 */ dipole.group2().with_w(dipole[e45])));
     }
 }
 

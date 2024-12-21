@@ -4459,7 +4459,7 @@ impl From<AntiDipoleInversion> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_anti_dipole_inversion[e423], from_anti_dipole_inversion[e431], from_anti_dipole_inversion[e412], 0.0]),
+            from_anti_dipole_inversion.group0().with_w(0.0),
             // e415, e425, e435, e321
             from_anti_dipole_inversion.group1(),
             // e235, e315, e125, e5
@@ -4489,12 +4489,7 @@ impl From<AntiDipoleInversionAtInfinity> for VersorEven {
             // e415, e425, e435, e321
             from_anti_dipole_inversion_at_infinity.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                from_anti_dipole_inversion_at_infinity[e235],
-                from_anti_dipole_inversion_at_infinity[e315],
-                from_anti_dipole_inversion_at_infinity[e125],
-                from_anti_dipole_inversion_at_infinity[e5],
-            ]),
+            from_anti_dipole_inversion_at_infinity.group1().with_w(from_anti_dipole_inversion_at_infinity[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 from_anti_dipole_inversion_at_infinity[e1],
@@ -4539,12 +4534,7 @@ impl From<AntiDipoleInversionOrthogonalOrigin> for VersorEven {
                 0.0,
             ]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                from_anti_dipole_inversion_orthogonal_origin[e415],
-                from_anti_dipole_inversion_orthogonal_origin[e425],
-                from_anti_dipole_inversion_orthogonal_origin[e435],
-                0.0,
-            ]),
+            from_anti_dipole_inversion_orthogonal_origin.group1().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([
                 from_anti_dipole_inversion_orthogonal_origin[e235],
@@ -4640,7 +4630,6 @@ impl From<AntiFlectorOnOrigin> for VersorEven {
 
 impl From<AntiMysteryDipoleInversion> for VersorEven {
     fn from(from_anti_mystery_dipole_inversion: AntiMysteryDipoleInversion) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
@@ -4649,12 +4638,7 @@ impl From<AntiMysteryDipoleInversion> for VersorEven {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                from_anti_mystery_dipole_inversion[e1],
-                from_anti_mystery_dipole_inversion[e2],
-                from_anti_mystery_dipole_inversion[e3],
-                0.0,
-            ]),
+            from_anti_mystery_dipole_inversion.group1().with_w(0.0),
         );
     }
 }
@@ -4677,7 +4661,6 @@ impl From<AntiPlane> for VersorEven {
 
 impl From<AntiPlaneOnOrigin> for VersorEven {
     fn from(from_anti_plane_on_origin: AntiPlaneOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
@@ -4686,7 +4669,7 @@ impl From<AntiPlaneOnOrigin> for VersorEven {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([from_anti_plane_on_origin[e1], from_anti_plane_on_origin[e2], from_anti_plane_on_origin[e3], 0.0]),
+            from_anti_plane_on_origin.group0().with_w(0.0),
         );
     }
 }
@@ -4724,14 +4707,13 @@ impl From<AntiSphereOnOrigin> for VersorEven {
 
 impl From<Circle> for VersorEven {
     fn from(from_circle: Circle) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle[e423], from_circle[e431], from_circle[e412], 0.0]),
+            from_circle.group0().with_w(0.0),
             // e415, e425, e435, e321
             from_circle.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle[e235], from_circle[e315], from_circle[e125], 0.0]),
+            from_circle.group2().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4740,14 +4722,13 @@ impl From<Circle> for VersorEven {
 
 impl From<CircleAligningOrigin> for VersorEven {
     fn from(from_circle_aligning_origin: CircleAligningOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle_aligning_origin[e423], from_circle_aligning_origin[e431], from_circle_aligning_origin[e412], 0.0]),
+            from_circle_aligning_origin.group0().with_w(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_circle_aligning_origin[e415], from_circle_aligning_origin[e425], from_circle_aligning_origin[e435], 0.0]),
+            from_circle_aligning_origin.group1().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle_aligning_origin[e235], from_circle_aligning_origin[e315], from_circle_aligning_origin[e125], 0.0]),
+            from_circle_aligning_origin.group2().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4756,14 +4737,13 @@ impl From<CircleAligningOrigin> for VersorEven {
 
 impl From<CircleAtInfinity> for VersorEven {
     fn from(from_circle_at_infinity: CircleAtInfinity) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
             // e415, e425, e435, e321
             from_circle_at_infinity.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle_at_infinity[e235], from_circle_at_infinity[e315], from_circle_at_infinity[e125], 0.0]),
+            from_circle_at_infinity.group1().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4772,14 +4752,13 @@ impl From<CircleAtInfinity> for VersorEven {
 
 impl From<CircleAtOrigin> for VersorEven {
     fn from(from_circle_at_origin: CircleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle_at_origin[e423], from_circle_at_origin[e431], from_circle_at_origin[e412], 0.0]),
+            from_circle_at_origin.group0().with_w(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle_at_origin[e235], from_circle_at_origin[e315], from_circle_at_origin[e125], 0.0]),
+            from_circle_at_origin.group1().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4788,12 +4767,11 @@ impl From<CircleAtOrigin> for VersorEven {
 
 impl From<CircleOnOrigin> for VersorEven {
     fn from(from_circle_on_origin: CircleOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle_on_origin[e423], from_circle_on_origin[e431], from_circle_on_origin[e412], 0.0]),
+            from_circle_on_origin.group0().with_w(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_circle_on_origin[e415], from_circle_on_origin[e425], from_circle_on_origin[e435], 0.0]),
+            from_circle_on_origin.group1().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
@@ -4811,7 +4789,7 @@ impl From<CircleOrthogonalOrigin> for VersorEven {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(from_circle_orthogonal_origin[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([from_circle_orthogonal_origin[e235], from_circle_orthogonal_origin[e315], from_circle_orthogonal_origin[e125], 0.0]),
+            from_circle_orthogonal_origin.group1().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4823,7 +4801,7 @@ impl From<CircleRotor> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_circle_rotor[e423], from_circle_rotor[e431], from_circle_rotor[e412], from_circle_rotor[e12345]]),
+            from_circle_rotor.group0().with_w(from_circle_rotor[e12345]),
             // e415, e425, e435, e321
             from_circle_rotor.group1(),
             // e235, e315, e125, e5
@@ -4839,19 +4817,9 @@ impl From<CircleRotorAligningOrigin> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                from_circle_rotor_aligning_origin[e423],
-                from_circle_rotor_aligning_origin[e431],
-                from_circle_rotor_aligning_origin[e412],
-                from_circle_rotor_aligning_origin[e12345],
-            ]),
+            from_circle_rotor_aligning_origin.group0().with_w(from_circle_rotor_aligning_origin[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                from_circle_rotor_aligning_origin[e415],
-                from_circle_rotor_aligning_origin[e425],
-                from_circle_rotor_aligning_origin[e435],
-                0.0,
-            ]),
+            from_circle_rotor_aligning_origin.group1().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([
                 from_circle_rotor_aligning_origin[e235],
@@ -4872,12 +4840,7 @@ impl From<CircleRotorAligningOriginAtInfinity> for VersorEven {
             // e423, e431, e412, e12345
             Simd32x3::from(0.0).with_w(from_circle_rotor_aligning_origin_at_infinity[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                from_circle_rotor_aligning_origin_at_infinity[e415],
-                from_circle_rotor_aligning_origin_at_infinity[e425],
-                from_circle_rotor_aligning_origin_at_infinity[e435],
-                0.0,
-            ]),
+            from_circle_rotor_aligning_origin_at_infinity.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([
                 from_circle_rotor_aligning_origin_at_infinity[e235],
@@ -4909,12 +4872,11 @@ impl From<CircleRotorAtInfinity> for VersorEven {
 
 impl From<CircleRotorOnOrigin> for VersorEven {
     fn from(from_circle_rotor_on_origin: CircleRotorOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             from_circle_rotor_on_origin.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([from_circle_rotor_on_origin[e415], from_circle_rotor_on_origin[e425], from_circle_rotor_on_origin[e435], 0.0]),
+            from_circle_rotor_on_origin.group1().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
@@ -4957,14 +4919,13 @@ impl From<Infinity> for VersorEven {
 
 impl From<Line> for VersorEven {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_line[e235], from_line[e315], from_line[e125], 0.0]),
+            from_line.group1().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4973,14 +4934,13 @@ impl From<Line> for VersorEven {
 
 impl From<LineAtInfinity> for VersorEven {
     fn from(from_line_at_infinity: LineAtInfinity) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([from_line_at_infinity[e235], from_line_at_infinity[e315], from_line_at_infinity[e125], 0.0]),
+            from_line_at_infinity.group0().with_w(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -4989,12 +4949,11 @@ impl From<LineAtInfinity> for VersorEven {
 
 impl From<LineOnOrigin> for VersorEven {
     fn from(from_line_on_origin: LineOnOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line_on_origin[e415], from_line_on_origin[e425], from_line_on_origin[e435], 0.0]),
+            from_line_on_origin.group0().with_w(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
@@ -5099,10 +5058,9 @@ impl From<MysteryVersorEven> for VersorEven {
 
 impl From<NullCircleAtOrigin> for VersorEven {
     fn from(from_null_circle_at_origin: NullCircleAtOrigin) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([from_null_circle_at_origin[e423], from_null_circle_at_origin[e431], from_null_circle_at_origin[e412], 0.0]),
+            from_null_circle_at_origin.group0().with_w(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -10447,11 +10405,11 @@ impl TryFrom<MultiVector> for VersorEven {
         }
         return Ok(VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e12345]]),
+            multi_vector.group7().with_w(multi_vector[e12345]),
             // e415, e425, e435, e321
             multi_vector.group6(),
             // e235, e315, e125, e5
-            Simd32x4::from([multi_vector[e235], multi_vector[e315], multi_vector[e125], multi_vector[e5]]),
+            multi_vector.group8().with_w(multi_vector[e5]),
             // e1, e2, e3, e4
             multi_vector.group1(),
         ));

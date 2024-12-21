@@ -3796,14 +3796,13 @@ impl From<AntiCircleRotorOnOrigin> for AntiCircleRotorAligningOrigin {
 
 impl From<AntiLine> for AntiCircleRotorAligningOrigin {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             from_anti_line.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
         );
     }
 }
@@ -3837,42 +3836,39 @@ impl From<AntiMotorOnOrigin> for AntiCircleRotorAligningOrigin {
 
 impl From<DipoleAtOrigin> for AntiCircleRotorAligningOrigin {
     fn from(from_dipole_at_origin: DipoleAtOrigin) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
             from_dipole_at_origin.group0(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_dipole_at_origin[e15], from_dipole_at_origin[e25], from_dipole_at_origin[e35], 0.0]),
+            from_dipole_at_origin.group1().with_w(0.0),
         );
     }
 }
 
 impl From<DipoleOrthogonalOrigin> for AntiCircleRotorAligningOrigin {
     fn from(from_dipole_orthogonal_origin: DipoleOrthogonalOrigin) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
             from_dipole_orthogonal_origin.group0(),
             // e23, e31, e12
             from_dipole_orthogonal_origin.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_dipole_orthogonal_origin[e15], from_dipole_orthogonal_origin[e25], from_dipole_orthogonal_origin[e35], 0.0]),
+            from_dipole_orthogonal_origin.group2().with_w(0.0),
         );
     }
 }
 
 impl From<FlatPointAtInfinity> for AntiCircleRotorAligningOrigin {
     fn from(from_flat_point_at_infinity: FlatPointAtInfinity) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_flat_point_at_infinity[e15], from_flat_point_at_infinity[e25], from_flat_point_at_infinity[e35], 0.0]),
+            from_flat_point_at_infinity.group0().with_w(0.0),
         );
     }
 }
@@ -8327,7 +8323,6 @@ impl TryFrom<AntiVersorEvenOnOrigin> for AntiCircleRotorAligningOrigin {
 impl TryFrom<Dipole> for AntiCircleRotorAligningOrigin {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole[6];
@@ -8349,7 +8344,7 @@ impl TryFrom<Dipole> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             dipole.group1().xyz(),
             // e15, e25, e35, scalar
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
+            dipole.group2().with_w(0.0),
         ));
     }
 }
@@ -8357,7 +8352,6 @@ impl TryFrom<Dipole> for AntiCircleRotorAligningOrigin {
 impl TryFrom<DipoleAligningOrigin> for AntiCircleRotorAligningOrigin {
     type Error = String;
     fn try_from(dipole_aligning_origin: DipoleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_aligning_origin[3];
@@ -8379,7 +8373,7 @@ impl TryFrom<DipoleAligningOrigin> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([dipole_aligning_origin[e15], dipole_aligning_origin[e25], dipole_aligning_origin[e35], 0.0]),
+            dipole_aligning_origin.group1().with_w(0.0),
         ));
     }
 }
@@ -8387,7 +8381,6 @@ impl TryFrom<DipoleAligningOrigin> for AntiCircleRotorAligningOrigin {
 impl TryFrom<DipoleAtInfinity> for AntiCircleRotorAligningOrigin {
     type Error = String;
     fn try_from(dipole_at_infinity: DipoleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_at_infinity[3];
@@ -8409,7 +8402,7 @@ impl TryFrom<DipoleAtInfinity> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             dipole_at_infinity.group0().xyz(),
             // e15, e25, e35, scalar
-            Simd32x4::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35], 0.0]),
+            dipole_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -8547,7 +8540,6 @@ impl TryFrom<DipoleInversionAligningOrigin> for AntiCircleRotorAligningOrigin {
 impl TryFrom<DipoleInversionAtInfinity> for AntiCircleRotorAligningOrigin {
     type Error = String;
     fn try_from(dipole_inversion_at_infinity: DipoleInversionAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_inversion_at_infinity[3];
@@ -8597,7 +8589,7 @@ impl TryFrom<DipoleInversionAtInfinity> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             dipole_inversion_at_infinity.group0().xyz(),
             // e15, e25, e35, scalar
-            Simd32x4::from([dipole_inversion_at_infinity[e15], dipole_inversion_at_infinity[e25], dipole_inversion_at_infinity[e35], 0.0]),
+            dipole_inversion_at_infinity.group1().with_w(0.0),
         ));
     }
 }
@@ -9057,7 +9049,7 @@ impl TryFrom<MultiVector> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             multi_vector.group5(),
             // e15, e25, e35, scalar
-            Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[scalar]]),
+            multi_vector.group4().with_w(multi_vector[scalar]),
         ));
     }
 }

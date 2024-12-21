@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatWeight
-/// TODO
+/// This characterizes the flat aspect's relationship with the horizon.
 pub trait FlatWeight {
     type Output;
     fn flat_weight(self) -> Self::Output;

@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// FlatBulk
-/// TODO
+/// This characterizes the flat aspect's relationship with the origin.
 pub trait FlatBulk {
     type Output;
     fn flat_bulk(self) -> Self::Output;

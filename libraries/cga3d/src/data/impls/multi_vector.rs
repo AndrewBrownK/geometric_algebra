@@ -2293,7 +2293,6 @@ impl From<AntiFlector> for MultiVector {
 
 impl From<AntiLine> for MultiVector {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -2302,7 +2301,7 @@ impl From<AntiLine> for MultiVector {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -2481,7 +2480,7 @@ impl From<Dipole> for MultiVector {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([from_dipole[e15], from_dipole[e25], from_dipole[e35], from_dipole[e45]]),
+            from_dipole.group2().with_w(from_dipole[e45]),
             // e41, e42, e43
             from_dipole.group0(),
             // e23, e31, e12
@@ -2620,7 +2619,6 @@ impl From<Flector> for MultiVector {
 
 impl From<Line> for MultiVector {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -2635,7 +2633,7 @@ impl From<Line> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([from_line[e415], from_line[e425], from_line[e435], 0.0]),
+            from_line.group0().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125

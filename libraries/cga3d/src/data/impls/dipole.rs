@@ -981,12 +981,11 @@ impl std::ops::BitXor<VersorOdd> for Dipole {
 
 impl From<AntiLine> for Dipole {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35
             from_anti_line.group1(),
         );
@@ -2515,7 +2514,7 @@ impl TryFrom<MultiVector> for Dipole {
             // e41, e42, e43
             multi_vector.group4(),
             // e23, e31, e12, e45
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e45]]),
+            multi_vector.group5().with_w(multi_vector[e45]),
             // e15, e25, e35
             multi_vector.group3().xyz(),
         ));

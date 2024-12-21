@@ -1058,28 +1058,26 @@ impl std::ops::BitXor<VersorOdd> for AntiCircleRotor {
 
 impl From<AntiLine> for AntiCircleRotor {
     fn from(from_anti_line: AntiLine) -> Self {
-        use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
+            from_anti_line.group0().with_w(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
+            from_anti_line.group1().with_w(0.0),
         );
     }
 }
 
 impl From<Dipole> for AntiCircleRotor {
     fn from(from_dipole: Dipole) -> Self {
-        use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             from_dipole.group0(),
             // e23, e31, e12, e45
             from_dipole.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([from_dipole[e15], from_dipole[e25], from_dipole[e35], 0.0]),
+            from_dipole.group2().with_w(0.0),
         );
     }
 }
@@ -2636,7 +2634,7 @@ impl TryFrom<MultiVector> for AntiCircleRotor {
             // e41, e42, e43
             multi_vector.group4(),
             // e23, e31, e12, e45
-            Simd32x4::from([multi_vector[e23], multi_vector[e31], multi_vector[e12], multi_vector[e45]]),
+            multi_vector.group5().with_w(multi_vector[e45]),
             // e15, e25, e35, scalar
             Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[scalar]]),
         ));

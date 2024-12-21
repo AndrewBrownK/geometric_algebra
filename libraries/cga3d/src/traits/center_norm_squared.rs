@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// CenterNormSquared
-/// TODO
+/// Intermediate result to CenterNorm.
 pub trait CenterNormSquared {
     fn center_norm_squared(self) -> Scalar;
 }
