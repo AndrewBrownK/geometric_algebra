@@ -14,6 +14,7 @@ pub mod arity_1 {
     pub use crate::traits::anti_inverse::AntiInverse;
     pub use crate::traits::anti_reverse::AntiReverse;
     pub use crate::traits::anti_square_root::AntiSquareRoot;
+    pub use crate::traits::anti_support::AntiSupport;
     pub use crate::traits::auto_morphism::AutoMorphism;
     pub use crate::traits::conjugation::Conjugation;
     pub use crate::traits::constraint_valid::ConstraintValid;
@@ -27,6 +28,7 @@ pub mod arity_1 {
     pub use crate::traits::right_complement::RightComplement;
     pub use crate::traits::right_dual::RightDual;
     pub use crate::traits::square_root::SquareRoot;
+    pub use crate::traits::support::Support;
 }
 pub mod arity_2 {
     pub use crate::traits::anti_dot_product::AntiDotProduct;
@@ -68,6 +70,7 @@ pub mod infix {
     pub use crate::traits::anti_sandwich::anti_sandwich;
     pub use crate::traits::anti_sandwich::anti_sandwich_partial;
     pub use crate::traits::anti_square_root::anti_square_root;
+    pub use crate::traits::anti_support::anti_support;
     pub use crate::traits::anti_wedge::anti_wedge;
     pub use crate::traits::anti_wedge::anti_wedge_partial;
     pub use crate::traits::auto_morphism::auto_morphism;
@@ -103,6 +106,7 @@ pub mod infix {
     pub use crate::traits::sandwich::sandwich;
     pub use crate::traits::sandwich::sandwich_partial;
     pub use crate::traits::square_root::square_root;
+    pub use crate::traits::support::support;
     pub use crate::traits::wedge::wedge;
     pub use crate::traits::wedge::wedge_partial;
 }
@@ -136,6 +140,8 @@ mod anti_sandwich;
 pub use anti_sandwich::AntiSandwich;
 mod anti_square_root;
 pub use anti_square_root::AntiSquareRoot;
+mod anti_support;
+pub use anti_support::AntiSupport;
 mod anti_wedge;
 pub use anti_wedge::AntiWedge;
 mod auto_morphism;
@@ -188,6 +194,8 @@ mod sandwich;
 pub use sandwich::Sandwich;
 mod square_root;
 pub use square_root::SquareRoot;
+mod support;
+pub use support::Support;
 mod unit;
 pub use unit::Unit;
 mod wedge;

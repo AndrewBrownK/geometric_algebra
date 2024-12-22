@@ -5,6 +5,7 @@
 
 use codegen::algebra::multivector::DeclareMultiVecs;
 use codegen::elements::e1234;
+use custom_traits::*;
 
 codegen::multi_vecs! { e1234;
 
@@ -54,6 +55,7 @@ fn main() {
         ProjectViaOriginOnto AntiProjectViaHorizonOnto
         RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
         RejectViaOriginFrom AntiRejectViaHorizonFrom
+        Support AntiSupport
 
         // TODO bulk, weight, "right/left bulk/weight duals"
     };
@@ -119,5 +121,13 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e1234>) -> DeclareMulti
 }
 
 pub mod custom_traits {
+    use codegen::algebra::basis::BasisElement;
+    use codegen::ast::impls::Elaborated;
+    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl};
+    use codegen::build_scripts::common_traits::{anti_support, support};
+
+    const origin: BasisElement = codegen::elements::e4;
     //
+    pub static Support: Elaborated<SupportImpl> = support(origin);
+    pub static AntiSupport: Elaborated<AntiSupportImpl> = anti_support(origin);
 }

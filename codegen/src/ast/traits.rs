@@ -2616,6 +2616,8 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             _ => None,
         };
         if let Some(variable) = maybe_variable {
+            // TODO it looks like single-use variables are not getting inlined perfectly,
+            //  according to impl AntiSupport for Flector
             let decl = &variable.decl;
             if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
                 if let Some(lock) = decl.expr.as_ref() {

@@ -1,10 +1,16 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 #![allow(non_upper_case_globals)]
 
+use async_trait::async_trait;
+use crate::algebra::basis::BasisElement;
 use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra::basis::grades::{AntiGrades, Grades};
+use crate::algebra::multivector::DynamicMultiVector;
+use crate::ast::datatype::MultiVector;
+use crate::ast::expressions::FloatExpr;
 use crate::ast::impls::{Elaborated, InlineOnly};
-use crate::ast::traits::{NameTrait};
+use crate::ast::traits::{HasNotReturned, NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
+use crate::ast::Variable;
 use crate::build_scripts::common_traits::impls::*;
 
 pub mod conformal;
@@ -399,6 +405,20 @@ pub static AntiRejectViaHorizonFrom: Elaborated<AntiRejectViaHorizonFromImpl> = 
 
 
 
+pub const fn support(origin: BasisElement) -> Elaborated<SupportImpl> {
+    SupportImpl { origin }
+        .new_trait_named("Support")
+        .blurb("The support is the point enclosed by the object closest to the origin.")
+}
+
+pub const fn anti_support(origin: BasisElement) -> Elaborated<AntiSupportImpl> {
+    AntiSupportImpl { origin }
+        .new_trait_named("AntiSupport")
+        .blurb("The anti-support is the anti-vector furthest from the origin that encloses the object.")
+}
+
+
+
 pub static Into: Elaborated<IntoImpl> = IntoImpl
     .new_trait_named("Into")
     .blurb("Reliably convert one type into another.");
@@ -444,7 +464,7 @@ pub const fn select_anti_grades(anti_grades: AntiGrades) -> InlineOnly<SelectAnt
     InlineOnly::new("SelectMultipleAntiGrades", SelectAntiGradesImpl(anti_grades))
 }
 
-mod impls {
+pub mod impls {
     use std::collections::{BTreeMap, BTreeSet};
 
     use async_trait::async_trait;
@@ -457,7 +477,7 @@ mod impls {
     use crate::ast::expressions::{Expression, FloatExpr, IntExpr};
     use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
     use crate::ast::Variable;
-    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge};
+    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge, RightComplement};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -1194,6 +1214,49 @@ mod impls {
         let anti_wedge = AntiWedge.inline(&builder, wedge, dual).await?;
         builder.return_expr(anti_wedge)
     });
+
+
+    #[derive(Clone, Copy)]
+    pub struct SupportImpl { pub origin: BasisElement }
+    #[async_trait]
+    impl TraitImpl_11 for SupportImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut dyn_origin = DynamicMultiVector::zero();
+            dyn_origin += (FloatExpr::Literal(1.0), self.origin);
+            let origin = dyn_origin.construct(&builder)?;
+            let anti_dual = RightAntiDual.inline(&builder, slf).await?;
+            let wedge = Wedge.inline(&builder, origin, anti_dual).await?;
+            builder.return_expr(wedge)
+        }
+    }
+    #[derive(Clone, Copy)]
+    pub struct AntiSupportImpl { pub origin: BasisElement }
+    #[async_trait]
+    impl TraitImpl_11 for AntiSupportImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut dyn_origin = DynamicMultiVector::zero();
+            dyn_origin += (FloatExpr::Literal(1.0), self.origin);
+            let origin = dyn_origin.construct(&builder)?;
+            let rc_origin = RightComplement.inline(&builder, origin).await?;
+            let dual = RightDual.inline(&builder, slf).await?;
+            let anti_wedge = AntiWedge.inline(&builder, rc_origin, dual).await?;
+            builder.return_expr(anti_wedge)
+        }
+    }
+
+
+
+
 
     // Into is treated kind of special, because we actually want to implement From,
     // but the TraitImpl_21 pattern assumes the first argument is the owner.

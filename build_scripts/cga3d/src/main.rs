@@ -136,6 +136,7 @@ fn main() {
         ProjectViaOriginOnto AntiProjectViaHorizonOnto
         RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
         RejectViaOriginFrom AntiRejectViaHorizonFrom
+        Support AntiSupport
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -204,7 +205,10 @@ pub mod custom_traits {
 
     use codegen::algebra::basis::BasisElement;
     use codegen::ast::impls::Elaborated;
-    use codegen::build_scripts::common_traits::conformal::{center_norm, center_norm_squared, CenterNormImpl, CenterNormSquaredImpl, conformal_conjugate, ConformalConjugateImpl, flat_bulk, flat_bulk_norm, flat_bulk_norm_squared, flat_norm, flat_norm_squared, flat_weight, flat_weight_norm, flat_weight_norm_squared, FlatBulkImpl, FlatBulkNormImpl, FlatBulkNormSquaredImpl, FlatNormImpl, FlatNormSquaredImpl, FlatWeightImpl, FlatWeightNormImpl, FlatWeightNormSquaredImpl, round_bulk, round_bulk_norm, round_bulk_norm_squared, round_norm, round_norm_squared, round_weight, round_weight_norm, round_weight_norm_squared, RoundBulkImpl, RoundBulkNormImpl, RoundBulkNormSquaredImpl, RoundNormImpl, RoundNormSquaredImpl, RoundWeightImpl, RoundWeightNormImpl, RoundWeightNormSquaredImpl, unitized_center_norm, unitized_center_norm_squared, unitized_flat_norm, unitized_flat_norm_squared, unitized_radius_norm, unitized_radius_norm_squared, unitized_round_norm, unitized_round_norm_squared, UnitizedCenterNormImpl, UnitizedCenterNormSquaredImpl, UnitizedFlatNormImpl, UnitizedFlatNormSquaredImpl, UnitizedRadiusNormImpl, UnitizedRadiusNormSquaredImpl, UnitizedRoundNormImpl, UnitizedRoundNormSquaredImpl};
+    use codegen::build_scripts::common_traits::conformal::*;
+    use codegen::build_scripts::common_traits::conformal::impls::*;
+    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl};
+    use codegen::build_scripts::common_traits::{anti_support, support};
 
     const origin: BasisElement = codegen::elements::e4;
     const infinity: BasisElement = codegen::elements::e5;
@@ -236,6 +240,9 @@ pub mod custom_traits {
     pub static UnitizedRadiusNormSquared: Elaborated<UnitizedRadiusNormSquaredImpl> = unitized_radius_norm_squared(origin, infinity);
     pub static UnitizedRoundNorm: Elaborated<UnitizedRoundNormImpl> = unitized_round_norm(origin, infinity);
     pub static UnitizedRoundNormSquared: Elaborated<UnitizedRoundNormSquaredImpl> = unitized_round_norm_squared(origin, infinity);
+
+    pub static Support: Elaborated<SupportImpl> = support(origin);
+    pub static AntiSupport: Elaborated<AntiSupportImpl> = anti_support(origin);
 }
 
 

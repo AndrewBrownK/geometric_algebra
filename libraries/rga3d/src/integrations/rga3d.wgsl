@@ -6641,6 +6641,100 @@ fn scalar_antiReverse(self_: Scalar) -> Scalar {
 fn antiScalar_antiSquareRoot(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(pow(self_.e1234_, 0.5));
 }
+fn dualNum_antiSupport(self_: DualNum) -> Horizon {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual: AntiScalar = AntiScalar(self_.scalar);
+    return Horizon(right_dual.e1234_ * right_complement.e321_);
+}
+fn flector_antiSupport(self_: Flector) -> Motor {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual_groups: FlectorGroups = FlectorGroups(
+        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
+    );
+    let right_dual: Flector = flector_degroup(right_dual_groups);
+    return motor_degroup(MotorGroups(
+        /* e41, e42, e43, e1234 */ vec4<f32>(0.0), 
+        /* e23, e31, e12, scalar */ vec4<f32>(right_complement.e321_) * vec4<f32>(right_dual_groups.group1_.xyz, right_dual.e4_) * vec4<f32>(-1.0)
+    ));
+}
+fn horizon_antiSupport(self_: Horizon) -> Scalar {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual: Origin = Origin(self_.e321_ * -1.0);
+    return Scalar(right_complement.e321_ * right_dual.e4_ * -1.0);
+}
+fn line_antiSupport(self_: Line) -> Point {
+    let self_groups = line_grouped(self_);
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual_groups: LineGroups = LineGroups(
+        /* e41, e42, e43 */ self_groups.group1_ * vec4<f32>(-1.0), 
+        /* e23, e31, e12 */ vec4<f32>(0.0)
+    );
+    return point_degroup(PointGroups(
+        /* e1, e2, e3, e4 */ vec4<f32>(right_complement.e321_, right_complement.e321_, right_complement.e321_, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+    ));
+}
+fn motor_antiSupport(self_: Motor) -> Flector {
+    let self_groups = motor_grouped(self_);
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual_groups: MotorGroups = MotorGroups(
+        /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
+        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
+    );
+    let right_dual: Motor = motor_degroup(right_dual_groups);
+    return flector_degroup(FlectorGroups(
+        /* e1, e2, e3, e4 */ vec4<f32>(right_complement.e321_, right_complement.e321_, right_complement.e321_, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, right_complement.e321_ * right_dual.e1234_)
+    ));
+}
+fn multiVector_antiSupport(self_: MultiVector) -> MultiVector {
+    let self_groups = multiVector_grouped(self_);
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual_groups: MultiVectorGroups = MultiVectorGroups(
+        /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
+        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
+        /* e41, e42, e43 */ self_groups.group3_ * vec4<f32>(-1.0), 
+        /* e23, e31, e12 */ vec4<f32>(0.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
+    );
+    let right_dual: MultiVector = multiVector_degroup(right_dual_groups);
+    return multiVector_degroup(MultiVectorGroups(
+        /* scalar, e1234 */ vec4<f32>(right_complement.e321_ * right_dual.e4_, 1.0, 0.0, 0.0) * vec4<f32>(-1.0, 0.0), 
+        /* e1, e2, e3, e4 */ vec4<f32>(right_complement.e321_, right_complement.e321_, right_complement.e321_, 0.0) * vec4<f32>(right_dual_groups.group2_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
+        /* e41, e42, e43 */ vec4<f32>(0.0), 
+        /* e23, e31, e12 */ (vec4<f32>(right_complement.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group4_ * vec4<f32>(-1.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, right_complement.e321_ * right_dual.e1234_)
+    ));
+}
+fn plane_antiSupport(self_: Plane) -> Scalar {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual: Origin = Origin(self_.e321_ * -1.0);
+    return Scalar(right_complement.e321_ * right_dual.e4_ * -1.0);
+}
+fn point_antiSupport(self_: Point) -> Line {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual_groups: PlaneGroups = PlaneGroups(
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
+    );
+    return line_degroup(LineGroups(
+        /* e41, e42, e43 */ vec4<f32>(0.0), 
+        /* e23, e31, e12 */ (vec4<f32>(right_complement.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group0_ * vec4<f32>(-1.0)
+    ));
+}
+fn scalar_antiSupport(self_: Scalar) -> Horizon {
+    let self_2: Origin = Origin(1.0);
+    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_dual: AntiScalar = AntiScalar(self_.scalar);
+    return Horizon(right_dual.e1234_ * right_complement.e321_);
+}
 fn antiScalar_antiWedge_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
     return AntiScalar(other.e1234_ * self_.e1234_);
 }
@@ -18256,6 +18350,41 @@ fn scalar_sub_point(self_: Scalar, other: Point) -> MultiVector {
 }
 fn scalar_sub_scalar(self_: Scalar, other: Scalar) -> Scalar {
     return Scalar(self_.scalar - other.scalar);
+}
+fn flector_support(self_: Flector) -> Line {
+    let right_anti_dual_groups: FlectorGroups = FlectorGroups(
+        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
+    );
+    let self_2: Origin = Origin(1.0);
+    return line_degroup(LineGroups(
+        /* e41, e42, e43 */ (vec4<f32>(self_2.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group0_, 
+        /* e23, e31, e12 */ vec4<f32>(0.0)
+    ));
+}
+fn line_support(self_: Line) -> Scalar {
+    return Scalar(0.0);
+}
+fn motor_support(self_: Motor) -> Scalar {
+    return Scalar(0.0);
+}
+fn multiVector_support(self_: MultiVector) -> Line {
+    let self_groups = multiVector_grouped(self_);
+    let right_anti_dual_groups: MultiVectorGroups = MultiVectorGroups(
+        /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
+        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
+        /* e41, e42, e43 */ self_groups.group3_ * vec4<f32>(-1.0), 
+        /* e23, e31, e12 */ vec4<f32>(0.0), 
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
+    );
+    let self_2: Origin = Origin(1.0);
+    return line_degroup(LineGroups(
+        /* e41, e42, e43 */ (vec4<f32>(self_2.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group1_, 
+        /* e23, e31, e12 */ vec4<f32>(0.0)
+    ));
+}
+fn point_support(self_: Point) -> Scalar {
+    return Scalar(0.0);
 }
 fn antiScalar_unit() -> AntiScalar {
     return AntiScalar(1.0);
