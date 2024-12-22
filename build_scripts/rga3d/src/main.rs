@@ -50,6 +50,10 @@ fn main() {
         SquareRoot AntiSquareRoot
         AutoMorphism AntiAutoMorphism
         Conjugation
+        ProjectOrthogonallyOnto AntiProjectOrthogonallyOnto
+        ProjectViaOriginOnto AntiProjectViaHorizonOnto
+        RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
+        RejectViaOriginFrom AntiRejectViaHorizonFrom
 
         // TODO bulk, weight, "right/left bulk/weight duals"
     };

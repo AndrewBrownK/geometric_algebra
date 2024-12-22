@@ -34,6 +34,10 @@
 ./libraries/rga3d/src/traits/anti_grade.rs
 ./libraries/rga3d/src/traits/anti_inverse.rs
 ./libraries/rga3d/src/traits/anti_one.rs
+./libraries/rga3d/src/traits/anti_project_orthogonally_onto.rs
+./libraries/rga3d/src/traits/anti_project_via_horizon_onto.rs
+./libraries/rga3d/src/traits/anti_reject_orthogonally_from.rs
+./libraries/rga3d/src/traits/anti_reject_via_horizon_from.rs
 ./libraries/rga3d/src/traits/anti_reverse.rs
 ./libraries/rga3d/src/traits/anti_sandwich.rs
 ./libraries/rga3d/src/traits/anti_square_root.rs
@@ -58,6 +62,10 @@
 ./libraries/rga3d/src/traits/impls/anti_grade.rs
 ./libraries/rga3d/src/traits/impls/anti_inverse.rs
 ./libraries/rga3d/src/traits/impls/anti_one.rs
+./libraries/rga3d/src/traits/impls/anti_project_orthogonally_onto.rs
+./libraries/rga3d/src/traits/impls/anti_project_via_horizon_onto.rs
+./libraries/rga3d/src/traits/impls/anti_reject_orthogonally_from.rs
+./libraries/rga3d/src/traits/impls/anti_reject_via_horizon_from.rs
 ./libraries/rga3d/src/traits/impls/anti_reverse.rs
 ./libraries/rga3d/src/traits/impls/anti_sandwich.rs
 ./libraries/rga3d/src/traits/impls/anti_square_root.rs
@@ -77,6 +85,10 @@
 ./libraries/rga3d/src/traits/impls/inverse.rs
 ./libraries/rga3d/src/traits/impls/left_complement.rs
 ./libraries/rga3d/src/traits/impls/one.rs
+./libraries/rga3d/src/traits/impls/project_orthogonally_onto.rs
+./libraries/rga3d/src/traits/impls/project_via_origin_onto.rs
+./libraries/rga3d/src/traits/impls/reject_orthogonally_from.rs
+./libraries/rga3d/src/traits/impls/reject_via_origin_from.rs
 ./libraries/rga3d/src/traits/impls/reverse.rs
 ./libraries/rga3d/src/traits/impls/right_anti_dual.rs
 ./libraries/rga3d/src/traits/impls/right_complement.rs
@@ -89,6 +101,10 @@
 ./libraries/rga3d/src/traits/inverse.rs
 ./libraries/rga3d/src/traits/left_complement.rs
 ./libraries/rga3d/src/traits/one.rs
+./libraries/rga3d/src/traits/project_orthogonally_onto.rs
+./libraries/rga3d/src/traits/project_via_origin_onto.rs
+./libraries/rga3d/src/traits/reject_orthogonally_from.rs
+./libraries/rga3d/src/traits/reject_via_origin_from.rs
 ./libraries/rga3d/src/traits/reverse.rs
 ./libraries/rga3d/src/traits/right_anti_dual.rs
 ./libraries/rga3d/src/traits/right_complement.rs

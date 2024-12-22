@@ -364,6 +364,41 @@ pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImp
     product). The interior products are derived by Wedging (or AntiWedging) one object with \
     the Dual (or AntiDual) of another object.");
 
+pub static ProjectOrthogonallyOnto: Elaborated<ProjectOrthogonallyOntoImpl> = ProjectOrthogonallyOntoImpl
+    .new_trait_named("ProjectOrthogonallyOnto")
+    .blurb("Typically involves bringing a lower dimensional object to a higher dimensional object.");
+
+pub static AntiProjectOrthogonallyOnto: Elaborated<AntiProjectOrthogonallyOntoImpl> = AntiProjectOrthogonallyOntoImpl
+    .new_trait_named("AntiProjectOrthogonallyOnto")
+    .blurb("Typically involves bringing a higher dimensional object to a lower dimensional object.");
+
+pub static ProjectViaOriginOnto: Elaborated<ProjectViaOriginOntoImpl> = ProjectViaOriginOntoImpl
+    .new_trait_named("ProjectViaOriginOnto")
+    .blurb("Central (to origin) Projection.");
+
+pub static AntiProjectViaHorizonOnto: Elaborated<AntiProjectViaHorizonOntoImpl> = AntiProjectViaHorizonOntoImpl
+    .new_trait_named("AntiProjectViaHorizonOnto")
+    .blurb("Outward (to horizon) AntiProjection.");
+
+pub static RejectOrthogonallyFrom: Elaborated<RejectOrthogonallyFromImpl> = RejectOrthogonallyFromImpl
+    .new_trait_named("RejectOrthogonallyFrom")
+    .blurb("Counterpart to ProjectOrthogonallyOnto.");
+
+pub static AntiRejectOrthogonallyFrom: Elaborated<AntiRejectOrthogonallyFromImpl> = AntiRejectOrthogonallyFromImpl
+    .new_trait_named("AntiRejectOrthogonallyFrom")
+    .blurb("Counterpart to AntiProjectOrthogonallyOnto.");
+
+pub static RejectViaOriginFrom: Elaborated<RejectViaOriginFromImpl> = RejectViaOriginFromImpl
+    .new_trait_named("RejectViaOriginFrom")
+    .blurb("Counterpart to ProjectViaOriginOnto.");
+
+pub static AntiRejectViaHorizonFrom: Elaborated<AntiRejectViaHorizonFromImpl> = AntiRejectViaHorizonFromImpl
+    .new_trait_named("AntiRejectViaHorizonFrom")
+    .blurb("Counterpart to AntiProjectViaHorizonOnto.");
+
+
+
+
 pub static Into: Elaborated<IntoImpl> = IntoImpl
     .new_trait_named("Into")
     .blurb("Reliably convert one type into another.");
@@ -1101,6 +1136,62 @@ mod impls {
     trait_impl_2_types_2_args!(WeightContractionImpl(builder, slf, other) -> MultiVector {
         let anti_dual = RightAntiDual.inline(&builder, other).await?;
         let anti_wedge = AntiWedge.inline(&builder, slf, anti_dual).await?;
+        builder.return_expr(anti_wedge)
+    });
+
+    trait_impl_2_types_2_args!(ProjectOrthogonallyOntoImpl(builder, slf, other) -> MultiVector {
+        let anti_dual = RightAntiDual.inline(&builder, other.clone()).await?;
+        let wedge = Wedge.inline(&builder, slf, anti_dual).await?;
+        let anti_wedge = AntiWedge.inline(&builder, other, wedge).await?;
+        builder.return_expr(anti_wedge)
+    });
+
+    trait_impl_2_types_2_args!(AntiProjectOrthogonallyOntoImpl(builder, slf, other) -> MultiVector {
+        let anti_dual = RightAntiDual.inline(&builder, other.clone()).await?;
+        let anti_wedge = AntiWedge.inline(&builder, slf, anti_dual).await?;
+        let wedge = Wedge.inline(&builder, other, anti_wedge).await?;
+        builder.return_expr(wedge)
+    });
+
+    trait_impl_2_types_2_args!(ProjectViaOriginOntoImpl(builder, slf, other) -> MultiVector {
+        let dual = RightDual.inline(&builder, other.clone()).await?;
+        let wedge = Wedge.inline(&builder, slf, dual).await?;
+        let anti_wedge = AntiWedge.inline(&builder, other, wedge).await?;
+        builder.return_expr(anti_wedge)
+    });
+
+    trait_impl_2_types_2_args!(AntiProjectViaHorizonOntoImpl(builder, slf, other) -> MultiVector {
+        let dual = RightDual.inline(&builder, other.clone()).await?;
+        let anti_wedge = AntiWedge.inline(&builder, slf, dual).await?;
+        let wedge = Wedge.inline(&builder, other, anti_wedge).await?;
+        builder.return_expr(wedge)
+    });
+
+    trait_impl_2_types_2_args!(RejectOrthogonallyFromImpl(builder, slf, other) -> MultiVector {
+        let anti_wedge = AntiWedge.inline(&builder, slf, other.clone()).await?;
+        let anti_dual = RightAntiDual.inline(&builder, other).await?;
+        let wedge = Wedge.inline(&builder, anti_wedge, anti_dual).await?;
+        builder.return_expr(wedge)
+    });
+
+    trait_impl_2_types_2_args!(AntiRejectOrthogonallyFromImpl(builder, slf, other) -> MultiVector {
+        let wedge = Wedge.inline(&builder, slf, other.clone()).await?;
+        let anti_dual = RightAntiDual.inline(&builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&builder, wedge, anti_dual).await?;
+        builder.return_expr(anti_wedge)
+    });
+
+    trait_impl_2_types_2_args!(RejectViaOriginFromImpl(builder, slf, other) -> MultiVector {
+        let anti_wedge = AntiWedge.inline(&builder, slf, other.clone()).await?;
+        let dual = RightDual.inline(&builder, other).await?;
+        let wedge = Wedge.inline(&builder, anti_wedge, dual).await?;
+        builder.return_expr(wedge)
+    });
+
+    trait_impl_2_types_2_args!(AntiRejectViaHorizonFromImpl(builder, slf, other) -> MultiVector {
+        let wedge = Wedge.inline(&builder, slf, other.clone()).await?;
+        let dual = RightDual.inline(&builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&builder, wedge, dual).await?;
         builder.return_expr(anti_wedge)
     });
 

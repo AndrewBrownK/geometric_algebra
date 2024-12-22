@@ -131,6 +131,11 @@ fn main() {
         UnitizedRadiusNorm
         CenterNorm
         UnitizedCenterNorm
+        |
+        ProjectOrthogonallyOnto AntiProjectOrthogonallyOnto
+        ProjectViaOriginOnto AntiProjectViaHorizonOnto
+        RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
+        RejectViaOriginFrom AntiRejectViaHorizonFrom
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
