@@ -99,3 +99,49 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
     // circle_color = max(vec4<f32>(0.0), destructive_circle_color);
     return background_color + circle_color;
 }
+
+//fn roundPoint_wedge_roundPoint(self_: RoundPoint, other: RoundPoint) -> Dipole {
+//    let self_groups = roundPoint_grouped(self_);
+//    let other_groups = roundPoint_grouped(other);
+//    return dipole_degroup(DipoleGroups(
+//        /* e41, e42, e43 */ ((vec4<f32>(self_.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_.xyz) - ((vec4<f32>(other.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_.xyz),
+//        /* e23, e31, e12, e45 */ vec4<f32>(other_groups.group0_.zxy * self_groups.group0_.yzx.xyz, other.e5_ * self_.e4_) - (other_groups.group0_.yzxw * vec4<f32>(self_groups.group0_.zxy.xyz, self_.e5_)),
+//        /* e15, e25, e35 */ ((vec4<f32>(other.e5_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_.xyz) - ((vec4<f32>(self_.e5_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_.xyz)
+//    ));
+//}
+//
+//
+//fn dipole_wedge_roundPoint(self_: Dipole, other: RoundPoint) -> Circle {
+//    let self_groups = dipole_grouped(self_);
+//    let other_groups = roundPoint_grouped(other);
+//    return circle_degroup(CircleGroups(
+//        /* e423, e431, e412 */ ((vec4<f32>(other.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_.xyz) + (self_groups.group0_.yzx * other_groups.group0_.zxy) - (self_groups.group0_.zxy * other_groups.group0_.yzx),
+//        /* e415, e425, e435, e321 */ vec4<f32>((self_.e41_ * other.e5_) + (self_.e15_ * other.e4_), (self_.e42_ * other.e5_) + (self_.e25_ * other.e4_), (self_.e43_ * other.e5_) + (self_.e35_ * other.e4_), -(self_.e31_ * other.e2_) - (self_.e12_ * other.e3_)) - (self_groups.group1_.wwwx * other_groups.group0_.xyzx),
+//        /* e235, e315, e125 */ ((vec4<f32>(other.e5_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_.xyz) + (self_groups.group2_.zxy * other_groups.group0_.yzx) - (self_groups.group2_.yzx * other_groups.group0_.zxy)
+//    ));
+//}
+//
+//
+//fn flatPoint_wedge_roundPoint(self_: FlatPoint, other: RoundPoint) -> Line {
+//    let self_groups = flatPoint_grouped(self_);
+//    let other_groups = roundPoint_grouped(other);
+//    return line_degroup(LineGroups(
+//        /* e415, e425, e435 */ ((vec4<f32>(other.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_.xyz) - ((vec4<f32>(self_.e45_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_.xyz),
+//        /* e235, e315, e125 */ (self_groups.group0_.zxy * other_groups.group0_.yzx) - (self_groups.group0_.yzx * other_groups.group0_.zxy)
+//    ));
+//}
+//
+//
+//fn circle_antiWedge_line(self_: Circle, other: Line) -> RoundPoint {
+//    let self_groups = circle_grouped(self_);
+//    let other_groups = line_grouped(other);
+//    return roundPoint_degroup(RoundPointGroups(
+//        /* e1, e2, e3, e4 */ vec4<f32>((self_.e412_ * other.e315_) + (self_.e321_ * other.e415_), (self_.e423_ * other.e125_) + (self_.e321_ * other.e425_), (self_.e431_ * other.e235_) + (self_.e321_ * other.e435_), -(self_.e431_ * other.e425_) - (self_.e412_ * other.e435_)) - vec4<f32>(self_groups.group0_.yzx * other_groups.group1_.zxy.xyz, self_.e423_ * other.e415_),
+//        /* e5 */ vec4<f32>(-(self_.e415_ * other.e235_) - (self_.e425_ * other.e315_) - (self_.e435_ * other.e125_) - (self_.e235_ * other.e415_) - (self_.e315_ * other.e425_) - (self_.e125_ * other.e435_), 0.0, 0.0, 0.0)
+//    ));
+//}
+
+//fn roundPoint_unitizedRadiusNormSquared(self_: RoundPoint) -> f32 {
+//    let self_groups = roundPoint_grouped(self_);
+//    return roundPoint_radiusNormSquared(self_).scalar / (roundPoint_roundWeightNormSquared(self_).e12345_);
+//}

@@ -383,22 +383,6 @@ impl Substitutions {
         })
     }
 
-    // TODO unused... delete?
-    // fn substitute_product_to_underlying_sum(&self, p: Product) -> Sum {
-    //     let mut c = p.coefficient;
-    //     let mut a = p.element;
-    //     if c == 0.0 || a.coefficient == 0 {
-    //         return Sum::zero();
-    //     }
-    //     if a.coefficient != 1 {
-    //         c *= a.coefficient as f32;
-    //         a.coefficient = 1;
-    //     }
-    //     let mut s = self.substitute_element_to_underlying_sum(a);
-    //     s *= c;
-    //     s
-    // }
-
     fn underlying_product_to_substitute_sum(&self, p: Product) -> Sum {
         let mut c = p.coefficient;
         let mut a = p.element;
@@ -413,16 +397,6 @@ impl Substitutions {
         s *= c;
         s
     }
-
-    // TODO unused... delete?
-    // fn substitute_sum_to_underlying_sum(&self, s: Sum) -> Sum {
-    //     let mut result = Sum { sum: vec![] };
-    //     for sub_p in s.sum.iter() {
-    //         let und_s = self.substitute_product_to_underlying_sum(*sub_p);
-    //         result += und_s;
-    //     }
-    //     result
-    // }
 
     fn underlying_sum_to_substitute_sum(&self, s: Sum) -> Sum {
         let mut result = Sum { sum: vec![] };

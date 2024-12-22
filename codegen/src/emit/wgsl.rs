@@ -544,8 +544,8 @@ impl Wgsl {
         match data_type {
             ExpressionType::Int(_) => write!(w, "i32")?,
             ExpressionType::Float(_) => write!(w, "f32")?,
-            ExpressionType::Vec2(_) => write!(w, "vec2<f32>")?,
-            ExpressionType::Vec3(_) => write!(w, "vec3<f32>")?,
+            ExpressionType::Vec2(_) => write!(w, "vec4<f32>")?,
+            ExpressionType::Vec3(_) => write!(w, "vec4<f32>")?,
             ExpressionType::Vec4(_) => write!(w, "vec4<f32>")?,
             ExpressionType::Class(mv) => {
                 let n = mv.name();
@@ -678,7 +678,7 @@ impl Wgsl {
                     0 => write!(w, ".x")?,
                     1 => write!(w, ".y")?,
                     2 => write!(w, ".z")?,
-                    _ => bail!("index {i} is outside range of vec2")
+                    _ => bail!("index {i} is outside range of vec3")
                 }
             }
             FloatExpr::AccessVec4(v, i) => {
@@ -688,7 +688,7 @@ impl Wgsl {
                     1 => write!(w, ".y")?,
                     2 => write!(w, ".z")?,
                     3 => write!(w, ".w")?,
-                    _ => bail!("index {i} is outside range of vec2")
+                    _ => bail!("index {i} is outside range of vec4")
                 }
             }
             FloatExpr::AccessMultiVecGroup(mv, i) => {
@@ -951,7 +951,7 @@ impl Wgsl {
 
                         (1.0, false) => self.write_vec2(w, factor, false)?,
                         (-1.0, false) => {
-                            write!(w, "(vec2<f32>(1.0) / ")?;
+                            write!(w, "(vec4<f32>(1.0) / ")?;
                             self.write_vec2(w, factor, false)?;
                             write!(w, ")")?;
                         }
@@ -960,11 +960,11 @@ impl Wgsl {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
                                 self.write_vec2(w, factor, true)?;
-                                write!(w, ", vec2<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, "pow(")?;
                                 self.write_vec2(w, factor, true)?;
-                                write!(w, ", vec2<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
 
@@ -982,11 +982,11 @@ impl Wgsl {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
                                 self.write_vec2(w, factor, true)?;
-                                write!(w, ", vec2<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, " * pow(")?;
                                 self.write_vec2(w, factor, true)?;
-                                write!(w, ", vec2<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
                     }
@@ -998,11 +998,11 @@ impl Wgsl {
                     let a = last_factor[0];
                     let b = last_factor[1];
                     if a == b {
-                        write!(w, "vec2<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ")")?;
                     } else {
-                        write!(w, "vec2<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ", ")?;
                         self.write_f32(w, b)?;
@@ -1032,7 +1032,7 @@ impl Wgsl {
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
                         (f, false) => {
-                            write!(w, "vec2<f32>(")?;
+                            write!(w, "vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
@@ -1040,13 +1040,13 @@ impl Wgsl {
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
                         (f, true) if f > 0.0 => {
-                            write!(w, " + vec2<f32>(")?;
+                            write!(w, " + vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - vec2<f32>(")?;
+                            write!(w, " - vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
@@ -1063,11 +1063,11 @@ impl Wgsl {
                         write!(w, " + ")?;
                     }
                     if a0 == a1 {
-                        write!(w, "vec2<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a0)?;
                         write!(w, ")")?;
                     } else {
-                        write!(w, "vec2<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a0)?;
                         write!(w, ", ")?;
                         self.write_f32(w, a1)?;
@@ -1086,15 +1086,13 @@ impl Wgsl {
                 }
                 let x = swizzle_term(i0)?;
                 let y = swizzle_term(i1)?;
-                write!(w, ".{x}{y}")?;
+                write!(w, ".{x}{y}zw")?;
             }
             Vec2Expr::Truncate3to2(box v3) => {
                 self.write_vec3(w, v3, false)?;
-                write!(w, ".xy")?;
             }
             Vec2Expr::Truncate4to2(box v4) => {
                 self.write_vec4(w, v4, false)?;
-                write!(w, ".xy")?;
             }
         }
         Ok(())
@@ -1145,10 +1143,10 @@ impl Wgsl {
             }
             Vec3Expr::Extend2to3(v2, f1) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_vec2(w, v2, true)?;
+                self.write_vec2(w, v2, false)?;
                 write!(w, ".xy, ")?;
                 self.write_float(w, f1, true, false)?;
-                write!(w, ")")?;
+                write!(w, ", 0.0)")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv, true)?;
@@ -1174,7 +1172,7 @@ impl Wgsl {
 
                         (1.0, false) => self.write_vec3(w, factor, false)?,
                         (-1.0, false) => {
-                            write!(w, "(vec3<f32>(1.0) / ")?;
+                            write!(w, "(vec4<f32>(1.0) / ")?;
                             self.write_vec3(w, factor, false)?;
                             write!(w, ")")?;
                         }
@@ -1183,11 +1181,11 @@ impl Wgsl {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
                                 self.write_vec3(w, factor, true)?;
-                                write!(w, ", vec3<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, "pow(")?;
                                 self.write_vec3(w, factor, true)?;
-                                write!(w, ", vec3<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
 
@@ -1205,11 +1203,11 @@ impl Wgsl {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
                                 self.write_vec3(w, factor, true)?;
-                                write!(w, ", vec3<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, " * pow(")?;
                                 self.write_vec3(w, factor, true)?;
-                                write!(w, ", vec3<f32>({e}))")?;
+                                write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
                     }
@@ -1222,11 +1220,11 @@ impl Wgsl {
                     let b = last_factor[1];
                     let c = last_factor[2];
                     if a == b && b == c {
-                        write!(w, "vec3<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ")")?;
                     } else {
-                        write!(w, "vec3<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ", ")?;
                         self.write_f32(w, b)?;
@@ -1258,7 +1256,7 @@ impl Wgsl {
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
                         (f, false) => {
-                            write!(w, "vec3<f32>(")?;
+                            write!(w, "vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
@@ -1266,13 +1264,13 @@ impl Wgsl {
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
                         (f, true) if f > 0.0 => {
-                            write!(w, " + vec3<f32>(")?;
+                            write!(w, " + vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - vec3<f32>(")?;
+                            write!(w, " - vec4<f32>(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
                         }
@@ -1290,11 +1288,11 @@ impl Wgsl {
                     let b = last_addend[1];
                     let c = last_addend[2];
                     if a == b && b == c {
-                        write!(w, "vec3<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ")")?;
                     } else {
-                        write!(w, "vec3<f32>(")?;
+                        write!(w, "vec4<f32>(")?;
                         self.write_f32(w, a)?;
                         write!(w, ", ")?;
                         self.write_f32(w, b)?;
@@ -1315,11 +1313,10 @@ impl Wgsl {
                 let x = swizzle_term(i0)?;
                 let y = swizzle_term(i1)?;
                 let z = swizzle_term(i2)?;
-                write!(w, ".{x}{y}{z}")?;
+                write!(w, ".{x}{y}{z}w")?;
             }
             Vec3Expr::Truncate4to3(box v4) => {
                 self.write_vec4(w, v4, false)?;
-                write!(w, ".xyz")?;
             }
         }
         Ok(())
@@ -1358,8 +1355,28 @@ impl Wgsl {
                 write!(w, ")")?;
             }
             Vec4Expr::Extend2to4(v2, f1, f2) => {
+
+
+                // TODO problem... that's making me very fed up with naga_oil.
+                // fn roundPoint_roundWeight(self_: RoundPoint) -> RoundPoint {
+                //     return roundPoint_degroup(RoundPointGroups(
+                //         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e4_),
+                //         /* e5 */ vec4<f32>(0.0, 0.0, 0.0, 0.0)
+                //     ));
+                // }
+                // TODO it breaks on vec4<f32>(vec3<f32>(...), w)
+                //  I'm fricken sick of babying naga_oil, and having to use a debugger to figure
+                //  out what is wrong, and the debugging to be horrific torture because they're
+                //  using arenas everywhere. So.... instead of this shit.... I'm going to try
+                //  to side step my frustration and work on slang integration!
+                //  Valid wgsl should be valid wgsl and I'm sick of it not being so.
+                //  The fact we have to naga_oil compose and prune shit to begin with is beyond
+                //  the pale. This is 2024. We deserve an actually competent shading language
+                //  capable of being organized and modular. So here we go with slang.
+
+
                 write!(w, "vec4<f32>(")?;
-                self.write_vec2(w, v2, true)?;
+                self.write_vec2(w, v2, false)?;
                 write!(w, ".xy, ")?;
                 self.write_float(w, f1, true, false)?;
                 write!(w, ", ")?;
@@ -1368,7 +1385,7 @@ impl Wgsl {
             }
             Vec4Expr::Extend3to4(v2, f1) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_vec3(w, v2, true)?;
+                self.write_vec3(w, v2, false)?;
                 write!(w, ".xyz, ")?;
                 self.write_float(w, f1, true, false)?;
                 write!(w, ")")?;
@@ -1612,8 +1629,16 @@ impl Wgsl {
                     write!(w, " */ ")?;
                     match g {
                         MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true, true)?,
-                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
-                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
+                        MultiVectorGroupExpr::Vec2(g) => {
+                            // write!(w, "vec4<f32>(1.0, 1.0, 0.0, 0.0) * (")?;
+                            self.write_vec2(w, g, true)?;
+                            // write!(w, ")")?;
+                        },
+                        MultiVectorGroupExpr::Vec3(g) => {
+                            // write!(w, "vec4<f32>(1.0, 1.0, 1.0, 0.0) * (")?;
+                            self.write_vec3(w, g, true)?;
+                            // write!(w, ")")?;
+                        },
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
