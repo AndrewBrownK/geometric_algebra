@@ -55,6 +55,7 @@
 ./libraries/cga3d/src/simd.rs
 ./libraries/cga3d/src/traits.rs
 ./libraries/cga3d/src/traits/anti_auto_morphism.rs
+./libraries/cga3d/src/traits/anti_constraint_valid.rs
 ./libraries/cga3d/src/traits/anti_constraint_violation.rs
 ./libraries/cga3d/src/traits/anti_dot_product.rs
 ./libraries/cga3d/src/traits/anti_fix.rs
@@ -78,6 +79,7 @@
 ./libraries/cga3d/src/traits/complement.rs
 ./libraries/cga3d/src/traits/conformal_conjugate.rs
 ./libraries/cga3d/src/traits/conjugation.rs
+./libraries/cga3d/src/traits/constraint_valid.rs
 ./libraries/cga3d/src/traits/constraint_violation.rs
 ./libraries/cga3d/src/traits/dot_product.rs
 ./libraries/cga3d/src/traits/double_complement.rs
@@ -96,6 +98,7 @@
 ./libraries/cga3d/src/traits/geometric_quotient.rs
 ./libraries/cga3d/src/traits/grade.rs
 ./libraries/cga3d/src/traits/impls/anti_auto_morphism.rs
+./libraries/cga3d/src/traits/impls/anti_constraint_valid.rs
 ./libraries/cga3d/src/traits/impls/anti_constraint_violation.rs
 ./libraries/cga3d/src/traits/impls/anti_dot_product.rs
 ./libraries/cga3d/src/traits/impls/anti_fix.rs
@@ -119,6 +122,7 @@
 ./libraries/cga3d/src/traits/impls/complement.rs
 ./libraries/cga3d/src/traits/impls/conformal_conjugate.rs
 ./libraries/cga3d/src/traits/impls/conjugation.rs
+./libraries/cga3d/src/traits/impls/constraint_valid.rs
 ./libraries/cga3d/src/traits/impls/constraint_violation.rs
 ./libraries/cga3d/src/traits/impls/dot_product.rs
 ./libraries/cga3d/src/traits/impls/double_complement.rs

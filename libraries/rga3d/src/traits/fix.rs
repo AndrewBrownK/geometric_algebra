@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Fix
-/// TODO
+/// Automatically fix the geometric constraint by adjusting the weight to comply with the bulk, and then bulk normalize the result.
 pub trait Fix {
     fn fix(self) -> Self;
 }

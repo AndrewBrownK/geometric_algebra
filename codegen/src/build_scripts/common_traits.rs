@@ -293,27 +293,43 @@ pub static AntiPowi: Elaborated<AntiPowiImpl> = AntiPowiImpl
 
 pub static ConstraintViolation: Elaborated<ConstraintViolationImpl> = ConstraintViolationImpl
     .new_trait_named("ConstraintViolation")
-    .blurb("TODO");
+    .blurb("Not every combinations of floats is valid geometry. Some types of objects \
+    are required to fulfill a constraint in order to be valid geometry. We call this the geometric \
+    constraint. If a type of object may possibly violate this constraint, then it will implement \
+    this trait. The constraint is violated if a non-zero value is returned. See also \
+    ConstraintValid and Fix.");
 
 pub static AntiConstraintViolation: Elaborated<AntiConstraintViolationImpl> = AntiConstraintViolationImpl
     .new_trait_named("AntiConstraintViolation")
-    .blurb("TODO");
+    .blurb("Not every combinations of floats is valid geometry. Some types of objects \
+    are required to fulfill a constraint in order to be valid geometry. We call this the (anti) \
+    geometric constraint. If a type of object may possibly violate this constraint, then it will \
+    implement this trait. The constraint is violated if a non-zero value is returned. See also \
+    AntiConstraintValid and AntiFix.");
 
 pub static ConstraintValid: Elaborated<ConstraintValidImpl> = ConstraintValidImpl
     .new_trait_named("ConstraintValid")
-    .blurb("TODO");
+    .blurb("Implementors of this trait cannot violate the geometric constraint. They \
+    always represent valid geometry. This trait does not exist to perform any calculation, it \
+    just exists to serve as contrasting information side-by-side with ConstraintViolation. See \
+    also ConstraintViolation and Fix.");
 
 pub static AntiConstraintValid: Elaborated<AntiConstraintValidImpl> = AntiConstraintValidImpl
     .new_trait_named("AntiConstraintValid")
-    .blurb("TODO");
+    .blurb("Implementors of this trait cannot violate the anti geometric constraint. \
+    They always represent valid geometry. This trait does not exist to perform any calculation, it \
+    just exists to serve as contrasting information side-by-side with AntiConstraintViolation. See \
+    also AntiConstraintViolation and AntiFix.");
 
 pub static Fix: Elaborated<FixImpl> = FixImpl
     .new_trait_named("Fix")
-    .blurb("TODO");
+    .blurb("Automatically fix the geometric constraint by adjusting the weight to comply \
+    with the bulk, and then bulk normalize the result.");
 
 pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
     .new_trait_named("AntiFix")
-    .blurb("TODO");
+    .blurb("Automatically fix the anti geometric constraint by adjusting the bulk to \
+    comply with the weight, and then weight normalize the result.");
 
 
 
@@ -483,7 +499,7 @@ pub mod impls {
     use crate::ast::expressions::{Expression, FloatExpr, IntExpr};
     use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
     use crate::ast::Variable;
-    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge, RightComplement};
+    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge, RightComplement, ConstraintViolation, AntiConstraintViolation};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -968,9 +984,6 @@ pub mod impls {
 
 
 
-
-    // TODO these violation traits should only be implemented where the constraint is possible to violate
-    //  then also make a trait where it is always/only implemented where the constraint is impossible to violate
     trait_impl_1_type_1_arg!(ConstraintViolationImpl(builder, slf) -> MultiVector {
         let r = Reverse.inline(&mut builder, slf.clone()).await?;
         let p = GeometricProduct.inline(&mut builder, slf.clone(), r).await?;
@@ -987,27 +1000,13 @@ pub mod impls {
     });
 
     trait_impl_1_type_1_arg!(ConstraintValidImpl(builder, slf) -> MultiVector {
-        let r = Reverse.inline(&mut builder, slf.clone()).await?;
-        let p = GeometricProduct.inline(&mut builder, slf.clone(), r).await;
-        let d = DotProduct.inline(&mut builder, slf.clone(), slf.clone()).await;
-        let (p, d) = match (p, d) {
-            (None, None) => return builder.return_expr(slf),
-            (p, d) => (p?, d?),
-        };
-        match Subtraction.inline(&mut builder, p, d).await {
+        return match ConstraintViolation.invoke(&mut builder, slf.clone()).await {
             None => builder.return_expr(slf),
             Some(_) => None,
         }
     });
     trait_impl_1_type_1_arg!(AntiConstraintValidImpl(builder, slf) -> MultiVector {
-        let r = AntiReverse.inline(&mut builder, slf.clone()).await?;
-        let p = GeometricAntiProduct.inline(&mut builder, slf.clone(), r).await;
-        let d = AntiDotProduct.inline(&mut builder, slf.clone(), slf.clone()).await;
-        let (p, d) = match (p, d) {
-            (None, None) => return builder.return_expr(slf),
-            (p, d) => (p?, d?),
-        };
-        match Subtraction.inline(&mut builder, p, d).await {
+        return match AntiConstraintViolation.invoke(&mut builder, slf.clone()).await {
             None => builder.return_expr(slf),
             Some(_) => None,
         }

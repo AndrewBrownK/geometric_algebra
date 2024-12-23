@@ -8,6 +8,7 @@ pub mod arity_0 {
 }
 pub mod arity_1 {
     pub use crate::traits::anti_auto_morphism::AntiAutoMorphism;
+    pub use crate::traits::anti_constraint_valid::AntiConstraintValid;
     pub use crate::traits::anti_constraint_violation::AntiConstraintViolation;
     pub use crate::traits::anti_fix::AntiFix;
     pub use crate::traits::anti_inverse::AntiInverse;
@@ -20,6 +21,7 @@ pub mod arity_1 {
     pub use crate::traits::complement::Complement;
     pub use crate::traits::conformal_conjugate::ConformalConjugate;
     pub use crate::traits::conjugation::Conjugation;
+    pub use crate::traits::constraint_valid::ConstraintValid;
     pub use crate::traits::constraint_violation::ConstraintViolation;
     pub use crate::traits::double_complement::DoubleComplement;
     pub use crate::traits::fix::Fix;
@@ -83,6 +85,7 @@ pub mod arity_2 {
 }
 pub mod infix {
     pub use crate::traits::anti_auto_morphism::anti_auto_morphism;
+    pub use crate::traits::anti_constraint_valid::anti_constraint_valid;
     pub use crate::traits::anti_constraint_violation::anti_constraint_violation;
     pub use crate::traits::anti_dot_product::anti_dot_product;
     pub use crate::traits::anti_dot_product::anti_dot_product_partial;
@@ -113,6 +116,7 @@ pub mod infix {
     pub use crate::traits::complement::complement;
     pub use crate::traits::conformal_conjugate::conformal_conjugate;
     pub use crate::traits::conjugation::conjugation;
+    pub use crate::traits::constraint_valid::constraint_valid;
     pub use crate::traits::constraint_violation::constraint_violation;
     pub use crate::traits::dot_product::dot_product;
     pub use crate::traits::dot_product::dot_product_partial;
@@ -178,6 +182,8 @@ pub mod infix {
 }
 mod anti_auto_morphism;
 pub use anti_auto_morphism::AntiAutoMorphism;
+mod anti_constraint_valid;
+pub use anti_constraint_valid::AntiConstraintValid;
 mod anti_constraint_violation;
 pub use anti_constraint_violation::AntiConstraintViolation;
 mod anti_dot_product;
@@ -224,6 +230,8 @@ mod conformal_conjugate;
 pub use conformal_conjugate::ConformalConjugate;
 mod conjugation;
 pub use conjugation::Conjugation;
+mod constraint_valid;
+pub use constraint_valid::ConstraintValid;
 mod constraint_violation;
 pub use constraint_violation::ConstraintViolation;
 mod dot_product;

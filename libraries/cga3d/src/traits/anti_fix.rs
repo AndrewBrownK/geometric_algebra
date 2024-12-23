@@ -3,7 +3,7 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiFix
-/// TODO
+/// Automatically fix the anti geometric constraint by adjusting the bulk to comply with the weight, and then weight normalize the result.
 pub trait AntiFix {
     fn anti_fix(self) -> Self;
 }

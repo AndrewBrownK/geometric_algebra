@@ -1366,12 +1366,6 @@ fn point_antiAutoMorphism(self_: Point) -> Point {
 fn scalar_antiAutoMorphism(self_: Scalar) -> Scalar {
     return self_;
 }
-fn horizon_antiConstraintValid(self_: Horizon) -> Horizon {
-    return self_;
-}
-fn scalar_antiConstraintValid(self_: Scalar) -> Scalar {
-    return self_;
-}
 fn dualNum_antiConstraintViolation(self_: DualNum) -> Scalar {
     return Scalar(self_.scalar * self_.e1234_ * 2.0);
 }
@@ -7070,12 +7064,6 @@ fn point_conjugation(self_: Point) -> Point {
     ));
 }
 fn scalar_conjugation(self_: Scalar) -> Scalar {
-    return self_;
-}
-fn antiScalar_constraintValid(self_: AntiScalar) -> AntiScalar {
-    return self_;
-}
-fn origin_constraintValid(self_: Origin) -> Origin {
     return self_;
 }
 fn dualNum_constraintViolation(self_: DualNum) -> AntiScalar {
@@ -19649,6 +19637,24 @@ fn point_zero() -> Point {
 fn scalar_zero() -> Scalar {
     return Scalar(0.0);
 }
+fn antiScalar_antiConstraintValid(self_: AntiScalar) -> AntiScalar {
+    return self_;
+}
+fn horizon_antiConstraintValid(self_: Horizon) -> Horizon {
+    return self_;
+}
+fn origin_antiConstraintValid(self_: Origin) -> Origin {
+    return self_;
+}
+fn plane_antiConstraintValid(self_: Plane) -> Plane {
+    return self_;
+}
+fn point_antiConstraintValid(self_: Point) -> Point {
+    return self_;
+}
+fn scalar_antiConstraintValid(self_: Scalar) -> Scalar {
+    return self_;
+}
 fn antiScalar_antiSandwich_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
     return antiScalar_geometricAntiProduct_antiScalar(AntiScalar(other.e1234_ * self_.e1234_), antiScalar_antiReverse(self_));
 }
@@ -20920,6 +20926,24 @@ fn point_bulkNormSquared(self_: Point) -> Scalar {
     let self_groups = point_grouped(self_);
     let flat_bulk_thing: Line = point_wedge_origin(point_flatBulk(self_), Origin(1.0));
     return line_dotProduct_line(flat_bulk_thing, flat_bulk_thing);
+}
+fn antiScalar_constraintValid(self_: AntiScalar) -> AntiScalar {
+    return self_;
+}
+fn horizon_constraintValid(self_: Horizon) -> Horizon {
+    return self_;
+}
+fn origin_constraintValid(self_: Origin) -> Origin {
+    return self_;
+}
+fn plane_constraintValid(self_: Plane) -> Plane {
+    return self_;
+}
+fn point_constraintValid(self_: Point) -> Point {
+    return self_;
+}
+fn scalar_constraintValid(self_: Scalar) -> Scalar {
+    return self_;
 }
 fn flector_flatBulkNormSquared(self_: Flector) -> Scalar {
     let self_groups = flector_grouped(self_);
