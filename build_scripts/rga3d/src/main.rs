@@ -56,8 +56,22 @@ fn main() {
         RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
         RejectViaOriginFrom AntiRejectViaHorizonFrom
         Support AntiSupport
-
-        // TODO bulk, weight, "right/left bulk/weight duals"
+        |
+        Bulk Weight
+        |
+        WeightNormSquared
+        BulkNormSquared
+        |
+        NormSquared
+        |
+        WeightNorm
+        BulkNorm
+        |
+        Norm
+        |
+        UnitizedNorm
+        |
+        Unitize
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -123,11 +137,27 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e1234>) -> DeclareMulti
 pub mod custom_traits {
     use codegen::algebra::basis::BasisElement;
     use codegen::ast::impls::Elaborated;
-    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl};
-    use codegen::build_scripts::common_traits::{anti_support, support};
+    use codegen::build_scripts::common_traits::{anti_support, support, unitize};
+    use codegen::build_scripts::common_traits::conformal::{flat_bulk, flat_bulk_norm, flat_bulk_norm_squared, flat_norm, flat_norm_squared, flat_weight, flat_weight_norm, flat_weight_norm_squared, unitized_flat_norm, unitized_flat_norm_squared};
+    use codegen::build_scripts::common_traits::conformal::impls::{FlatBulkImpl, FlatBulkNormImpl, FlatBulkNormSquaredImpl, FlatNormImpl, FlatNormSquaredImpl, FlatWeightImpl, FlatWeightNormImpl, FlatWeightNormSquaredImpl, UnitizedFlatNormImpl, UnitizedFlatNormSquaredImpl};
+    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl, UnitizeImpl};
 
     const origin: BasisElement = codegen::elements::e4;
+
     //
     pub static Support: Elaborated<SupportImpl> = support(origin);
     pub static AntiSupport: Elaborated<AntiSupportImpl> = anti_support(origin);
+
+    pub static Bulk: Elaborated<FlatBulkImpl> = flat_bulk(origin, None).rename("Bulk");
+    pub static Weight: Elaborated<FlatWeightImpl> = flat_weight(origin, None).rename("Weight");
+    pub static BulkNorm: Elaborated<FlatBulkNormImpl> = flat_bulk_norm(origin, None).rename("BulkNorm");
+    pub static BulkNormSquared: Elaborated<FlatBulkNormSquaredImpl> = flat_bulk_norm_squared(origin, None).rename("BulkNormSquared");
+    pub static Norm: Elaborated<FlatNormImpl> = flat_norm(origin, None).rename("Norm");
+    pub static NormSquared: Elaborated<FlatNormSquaredImpl> = flat_norm_squared(origin, None).rename("NormSquared");
+    pub static WeightNorm: Elaborated<FlatWeightNormImpl> = flat_weight_norm(origin, None).rename("WeightNorm");
+    pub static WeightNormSquared: Elaborated<FlatWeightNormSquaredImpl> = flat_weight_norm_squared(origin, None).rename("WeightNormSquared");
+    pub static UnitizedNorm: Elaborated<UnitizedFlatNormImpl> = unitized_flat_norm(origin, None).rename("UnitizedNorm");
+    pub static UnitizedNormSquared: Elaborated<UnitizedFlatNormSquaredImpl> = unitized_flat_norm_squared(origin, None).rename("UnitizedNormSquared");
+
+    pub static Unitize: Elaborated<UnitizeImpl<Elaborated<FlatWeightNormImpl>>> = unitize(WeightNorm);
 }

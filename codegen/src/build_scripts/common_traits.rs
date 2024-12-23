@@ -402,9 +402,6 @@ pub static AntiRejectViaHorizonFrom: Elaborated<AntiRejectViaHorizonFromImpl> = 
     .new_trait_named("AntiRejectViaHorizonFrom")
     .blurb("Counterpart to AntiProjectViaHorizonOnto.");
 
-
-
-
 pub const fn support(origin: BasisElement) -> Elaborated<SupportImpl> {
     SupportImpl { origin }
         .new_trait_named("Support")
@@ -416,6 +413,15 @@ pub const fn anti_support(origin: BasisElement) -> Elaborated<AntiSupportImpl> {
         .new_trait_named("AntiSupport")
         .blurb("The anti-support is the anti-vector furthest from the origin that encloses the object.")
 }
+
+pub const fn unitize<WeightNorm>(weight_norm: WeightNorm) -> Elaborated<UnitizeImpl<WeightNorm>>
+    where WeightNorm: TraitDef_1_Type_1_Arg<Output=MultiVector> {
+    UnitizeImpl { weight_norm }
+        .new_trait_named("Unitize")
+        .blurb("Scale the object to have a weight norm of 1.")
+}
+
+
 
 
 
@@ -878,7 +884,7 @@ pub mod impls {
 
     trait_impl_2_types_2_args!(SandwichImpl(builder, slf, other) -> MultiVector {
         // TODO incorrect cycle detection if use all invoke
-        let c = GeometricProduct.inline(&builder, slf.clone(), other).await?;
+        let c = GeometricProduct.inline(&mut builder, slf.clone(), other).await?;
         let r = Reverse.invoke(&mut builder, slf).await?;
         let result = GeometricProduct.invoke(&mut builder, c, r).await?;
         builder.return_expr(result)
@@ -886,7 +892,7 @@ pub mod impls {
 
     trait_impl_2_types_2_args!(AntiSandwichImpl(builder, slf, other) -> MultiVector {
         // TODO incorrect cycle detection if use all invoke
-        let c = GeometricAntiProduct.inline(&builder, slf.clone(), other).await?;
+        let c = GeometricAntiProduct.inline(&mut builder, slf.clone(), other).await?;
         let r = AntiReverse.invoke(&mut builder, slf).await?;
         let result = GeometricAntiProduct.invoke(&mut builder, c, r).await?;
         builder.return_expr(result)
@@ -964,42 +970,42 @@ pub mod impls {
     // TODO these violation traits should only be implemented where the constraint is possible to violate
     //  then also make a trait where it is always/only implemented where the constraint is impossible to violate
     trait_impl_1_type_1_arg!(ConstraintViolationImpl(builder, slf) -> MultiVector {
-        let r = Reverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricProduct.inline(&builder, slf.clone(), r).await?;
-        let d = DotProduct.inline(&builder, slf.clone(), slf.clone()).await?;
-        let result = Subtraction.inline(&builder, p, d).await?;
+        let r = Reverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&mut builder, slf.clone(), r).await?;
+        let d = DotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
+        let result = Subtraction.inline(&mut builder, p, d).await?;
         builder.return_expr(result)
     });
     trait_impl_1_type_1_arg!(AntiConstraintViolationImpl(builder, slf) -> MultiVector {
-        let r = AntiReverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await?;
-        let d = AntiDotProduct.inline(&builder, slf.clone(), slf.clone()).await?;
-        let result = Subtraction.inline(&builder, p, d).await?;
+        let r = AntiReverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&mut builder, slf.clone(), r).await?;
+        let d = AntiDotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
+        let result = Subtraction.inline(&mut builder, p, d).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(ConstraintValidImpl(builder, slf) -> MultiVector {
-        let r = Reverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricProduct.inline(&builder, slf.clone(), r).await;
-        let d = DotProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let r = Reverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&mut builder, slf.clone(), r).await;
+        let d = DotProduct.inline(&mut builder, slf.clone(), slf.clone()).await;
         let (p, d) = match (p, d) {
             (None, None) => return builder.return_expr(slf),
             (p, d) => (p?, d?),
         };
-        match Subtraction.inline(&builder, p, d).await {
+        match Subtraction.inline(&mut builder, p, d).await {
             None => builder.return_expr(slf),
             Some(_) => None,
         }
     });
     trait_impl_1_type_1_arg!(AntiConstraintValidImpl(builder, slf) -> MultiVector {
-        let r = AntiReverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await;
-        let d = AntiDotProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let r = AntiReverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&mut builder, slf.clone(), r).await;
+        let d = AntiDotProduct.inline(&mut builder, slf.clone(), slf.clone()).await;
         let (p, d) = match (p, d) {
             (None, None) => return builder.return_expr(slf),
             (p, d) => (p?, d?),
         };
-        match Subtraction.inline(&builder, p, d).await {
+        match Subtraction.inline(&mut builder, p, d).await {
             None => builder.return_expr(slf),
             Some(_) => None,
         }
@@ -1008,48 +1014,50 @@ pub mod impls {
     // See section 3.4.3 and 3.6.2 of the book
     // TODO we absolutely need advanced inlining and factorization for Fix and AntiFix
     trait_impl_1_type_1_arg!(FixImpl(builder, slf) -> MultiVector {
-        let r = Reverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricProduct.inline(&builder, slf.clone(), r).await?;
-        let sqrt = SquareRoot.inline(&builder, p).await?;
-        let i = Inverse.inline(&builder, sqrt).await?;
-        let result = GeometricProduct.inline(&builder, slf, i).await?;
+        let r = Reverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&mut builder, slf.clone(), r).await?;
+        let sqrt = SquareRoot.inline(&mut builder, p).await?;
+        let i = Inverse.inline(&mut builder, sqrt).await?;
+        let result = GeometricProduct.inline(&mut builder, slf, i).await?;
         builder.return_expr(result)
     });
     trait_impl_1_type_1_arg!(AntiFixImpl(builder, slf) -> MultiVector {
-        let r = AntiReverse.inline(&builder, slf.clone()).await?;
-        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await?;
-        let sqrt = AntiSquareRoot.inline(&builder, p).await?;
-        let i = AntiInverse.inline(&builder, sqrt).await?;
-        let result = GeometricAntiProduct.inline(&builder, slf, i).await?;
+        let r = AntiReverse.inline(&mut builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&mut builder, slf.clone(), r).await?;
+        let sqrt = AntiSquareRoot.inline(&mut builder, p).await?;
+        let i = AntiInverse.inline(&mut builder, sqrt).await?;
+        let result = GeometricAntiProduct.inline(&mut builder, slf, i).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());
-        let dot = DotProduct.inline(&builder, slf.clone(), slf).await?;
+        let dot = DotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
-        let result = scalar_mv.construct_direct([(scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        let inverse_squared = scalar_mv.construct_direct([(scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        let result = GeometricProduct.inline(&mut builder, slf, inverse_squared).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(AntiInverseImpl(builder, slf) -> MultiVector {
         let anti_scalar_mv = MultiVector::from(builder.mvs.anti_scalar());
         let anti_scalar = builder.ga.anti_scalar();
-        let dot = AntiDotProduct.inline(&builder, slf.clone(), slf).await?;
+        let dot = AntiDotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
-        let result = anti_scalar_mv.construct_direct([(anti_scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        let inverse_squared = anti_scalar_mv.construct_direct([(anti_scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        let result = GeometricAntiProduct.inline(&mut builder, slf, inverse_squared).await?;
         builder.return_expr(result)
     });
 
     trait_impl_2_types_2_args!(GeometricQuotientImpl(builder, slf, other) -> MultiVector {
-        let i = Inverse.inline(&builder, other).await?;
-        let result = GeometricProduct.inline(&builder, slf, i).await?;
+        let i = Inverse.inline(&mut builder, other).await?;
+        let result = GeometricProduct.inline(&mut builder, slf, i).await?;
         builder.return_expr(result)
     });
 
     trait_impl_2_types_2_args!(GeometricAntiQuotientImpl(builder, slf, other) -> MultiVector {
-        let i = AntiInverse.inline(&builder, other).await?;
-        let result = GeometricAntiProduct.inline(&builder, slf, i).await?;
+        let i = AntiInverse.inline(&mut builder, other).await?;
+        let result = GeometricAntiProduct.inline(&mut builder, slf, i).await?;
         builder.return_expr(result)
     });
 
@@ -1136,82 +1144,82 @@ pub mod impls {
     });
 
     trait_impl_2_types_2_args!(BulkExpansionImpl(builder, slf, other) -> MultiVector {
-        let dual = RightDual.inline(&builder, other).await?;
-        let wedge = Wedge.inline(&builder, slf, dual).await?;
+        let dual = RightDual.inline(&mut builder, other).await?;
+        let wedge = Wedge.inline(&mut builder, slf, dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(WeightExpansionImpl(builder, slf, other) -> MultiVector {
-        let anti_dual = RightAntiDual.inline(&builder, other).await?;
-        let wedge = Wedge.inline(&builder, slf, anti_dual).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other).await?;
+        let wedge = Wedge.inline(&mut builder, slf, anti_dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(BulkContractionImpl(builder, slf, other) -> MultiVector {
-        let dual = RightDual.inline(&builder, other).await?;
-        let anti_wedge = AntiWedge.inline(&builder, slf, dual).await?;
+        let dual = RightDual.inline(&mut builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, dual).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(WeightContractionImpl(builder, slf, other) -> MultiVector {
-        let anti_dual = RightAntiDual.inline(&builder, other).await?;
-        let anti_wedge = AntiWedge.inline(&builder, slf, anti_dual).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, anti_dual).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(ProjectOrthogonallyOntoImpl(builder, slf, other) -> MultiVector {
-        let anti_dual = RightAntiDual.inline(&builder, other.clone()).await?;
-        let wedge = Wedge.inline(&builder, slf, anti_dual).await?;
-        let anti_wedge = AntiWedge.inline(&builder, other, wedge).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other.clone()).await?;
+        let wedge = Wedge.inline(&mut builder, slf, anti_dual).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, other, wedge).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(AntiProjectOrthogonallyOntoImpl(builder, slf, other) -> MultiVector {
-        let anti_dual = RightAntiDual.inline(&builder, other.clone()).await?;
-        let anti_wedge = AntiWedge.inline(&builder, slf, anti_dual).await?;
-        let wedge = Wedge.inline(&builder, other, anti_wedge).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other.clone()).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, anti_dual).await?;
+        let wedge = Wedge.inline(&mut builder, other, anti_wedge).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(ProjectViaOriginOntoImpl(builder, slf, other) -> MultiVector {
-        let dual = RightDual.inline(&builder, other.clone()).await?;
-        let wedge = Wedge.inline(&builder, slf, dual).await?;
-        let anti_wedge = AntiWedge.inline(&builder, other, wedge).await?;
+        let dual = RightDual.inline(&mut builder, other.clone()).await?;
+        let wedge = Wedge.inline(&mut builder, slf, dual).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, other, wedge).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(AntiProjectViaHorizonOntoImpl(builder, slf, other) -> MultiVector {
-        let dual = RightDual.inline(&builder, other.clone()).await?;
-        let anti_wedge = AntiWedge.inline(&builder, slf, dual).await?;
-        let wedge = Wedge.inline(&builder, other, anti_wedge).await?;
+        let dual = RightDual.inline(&mut builder, other.clone()).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, dual).await?;
+        let wedge = Wedge.inline(&mut builder, other, anti_wedge).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(RejectOrthogonallyFromImpl(builder, slf, other) -> MultiVector {
-        let anti_wedge = AntiWedge.inline(&builder, slf, other.clone()).await?;
-        let anti_dual = RightAntiDual.inline(&builder, other).await?;
-        let wedge = Wedge.inline(&builder, anti_wedge, anti_dual).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, other.clone()).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other).await?;
+        let wedge = Wedge.inline(&mut builder, anti_wedge, anti_dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(AntiRejectOrthogonallyFromImpl(builder, slf, other) -> MultiVector {
-        let wedge = Wedge.inline(&builder, slf, other.clone()).await?;
-        let anti_dual = RightAntiDual.inline(&builder, other).await?;
-        let anti_wedge = AntiWedge.inline(&builder, wedge, anti_dual).await?;
+        let wedge = Wedge.inline(&mut builder, slf, other.clone()).await?;
+        let anti_dual = RightAntiDual.inline(&mut builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, wedge, anti_dual).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(RejectViaOriginFromImpl(builder, slf, other) -> MultiVector {
-        let anti_wedge = AntiWedge.inline(&builder, slf, other.clone()).await?;
-        let dual = RightDual.inline(&builder, other).await?;
-        let wedge = Wedge.inline(&builder, anti_wedge, dual).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, slf, other.clone()).await?;
+        let dual = RightDual.inline(&mut builder, other).await?;
+        let wedge = Wedge.inline(&mut builder, anti_wedge, dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(AntiRejectViaHorizonFromImpl(builder, slf, other) -> MultiVector {
-        let wedge = Wedge.inline(&builder, slf, other.clone()).await?;
-        let dual = RightDual.inline(&builder, other).await?;
-        let anti_wedge = AntiWedge.inline(&builder, wedge, dual).await?;
+        let wedge = Wedge.inline(&mut builder, slf, other.clone()).await?;
+        let dual = RightDual.inline(&mut builder, other).await?;
+        let anti_wedge = AntiWedge.inline(&mut builder, wedge, dual).await?;
         builder.return_expr(anti_wedge)
     });
 
@@ -1229,11 +1237,12 @@ pub mod impls {
             let mut dyn_origin = DynamicMultiVector::zero();
             dyn_origin += (FloatExpr::Literal(1.0), self.origin);
             let origin = dyn_origin.construct(&builder)?;
-            let anti_dual = RightAntiDual.inline(&builder, slf).await?;
-            let wedge = Wedge.inline(&builder, origin, anti_dual).await?;
+            let anti_dual = RightAntiDual.inline(&mut builder, slf).await?;
+            let wedge = Wedge.inline(&mut builder, origin, anti_dual).await?;
             builder.return_expr(wedge)
         }
     }
+
     #[derive(Clone, Copy)]
     pub struct AntiSupportImpl { pub origin: BasisElement }
     #[async_trait]
@@ -1247,14 +1256,31 @@ pub mod impls {
             let mut dyn_origin = DynamicMultiVector::zero();
             dyn_origin += (FloatExpr::Literal(1.0), self.origin);
             let origin = dyn_origin.construct(&builder)?;
-            let rc_origin = RightComplement.inline(&builder, origin).await?;
-            let dual = RightDual.inline(&builder, slf).await?;
-            let anti_wedge = AntiWedge.inline(&builder, rc_origin, dual).await?;
+            let rc_origin = RightComplement.inline(&mut builder, origin).await?;
+            let dual = RightDual.inline(&mut builder, slf).await?;
+            let anti_wedge = AntiWedge.inline(&mut builder, rc_origin, dual).await?;
             builder.return_expr(anti_wedge)
         }
     }
 
 
+    #[derive(Clone, Copy)]
+    pub struct UnitizeImpl<WeightNorm> { pub weight_norm: WeightNorm }
+    #[async_trait]
+    impl<WeightNorm> TraitImpl_11 for UnitizeImpl<WeightNorm>
+        where WeightNorm: TraitDef_1_Type_1_Arg<Output=MultiVector> {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let weight_norm = self.weight_norm.inline(&mut builder, slf.clone()).await?;
+            let inverse = AntiInverse.inline(&mut builder, weight_norm).await?;
+            let product = GeometricAntiProduct.inline(&mut builder, slf, inverse).await?;
+            builder.return_expr(product)
+        }
+    }
 
 
 

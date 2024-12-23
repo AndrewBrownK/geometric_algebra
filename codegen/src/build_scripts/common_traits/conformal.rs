@@ -24,13 +24,13 @@ pub const fn round_weight(origin: BasisElement, infinity: BasisElement) -> Elabo
         relationship with the horizon.")
 }
 
-pub const fn flat_bulk(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkImpl> {
+pub const fn flat_bulk(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatBulkImpl> {
     FlatBulkImpl { origin, infinity }
         .new_trait_named("FlatBulk")
         .blurb("This characterizes the flat aspect's relationship with the origin.")
 }
 
-pub const fn flat_weight(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightImpl> {
+pub const fn flat_weight(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatWeightImpl> {
     FlatWeightImpl { origin, infinity }
         .new_trait_named("FlatWeight")
         .blurb("This characterizes the flat aspect's relationship with the horizon.")
@@ -49,37 +49,37 @@ pub const fn center_norm_squared(origin: BasisElement, infinity: BasisElement) -
         .blurb("Intermediate result to CenterNorm.")
 }
 
-pub const fn flat_bulk_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormImpl> {
+pub const fn flat_bulk_norm(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatBulkNormImpl> {
     FlatBulkNormImpl { origin, infinity }
         .new_trait_named("FlatBulkNorm")
         .blurb("BulkNorm for flat aspect.")
 }
 
-pub const fn flat_bulk_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatBulkNormSquaredImpl> {
+pub const fn flat_bulk_norm_squared(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatBulkNormSquaredImpl> {
     FlatBulkNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatBulkNormSquared")
         .blurb("Intermediate result for FlatBulkNorm.")
 }
 
-pub const fn flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormImpl> {
+pub const fn flat_norm(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatNormImpl> {
     FlatNormImpl { origin, infinity }
         .new_trait_named("FlatNorm")
         .blurb("Norm for flat aspect.")
 }
 
-pub const fn flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatNormSquaredImpl> {
+pub const fn flat_norm_squared(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatNormSquaredImpl> {
     FlatNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatNormSquared")
         .blurb("Intermediate result to FlatNorm.")
 }
 
-pub const fn flat_weight_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormImpl> {
+pub const fn flat_weight_norm(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatWeightNormImpl> {
     FlatWeightNormImpl { origin, infinity }
         .new_trait_named("FlatWeightNorm")
         .blurb("Weight Norm for flat aspect.")
 }
 
-pub const fn flat_weight_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<FlatWeightNormSquaredImpl> {
+pub const fn flat_weight_norm_squared(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<FlatWeightNormSquaredImpl> {
     FlatWeightNormSquaredImpl { origin, infinity }
         .new_trait_named("FlatWeightNormSquared")
         .blurb("Intermediate result to FlatWeightNorm.")
@@ -142,13 +142,13 @@ pub const fn unitized_center_norm_squared(origin: BasisElement, infinity: BasisE
         .blurb("Intermediate result to UnitizedCenterNorm.")
 }
 
-pub const fn unitized_flat_norm(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormImpl> {
+pub const fn unitized_flat_norm(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<UnitizedFlatNormImpl> {
     UnitizedFlatNormImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNorm")
         .blurb("Unitized FlatNorm.")
 }
 
-pub const fn unitized_flat_norm_squared(origin: BasisElement, infinity: BasisElement) -> Elaborated<UnitizedFlatNormSquaredImpl> {
+pub const fn unitized_flat_norm_squared(origin: BasisElement, infinity: Option<BasisElement>) -> Elaborated<UnitizedFlatNormSquaredImpl> {
     UnitizedFlatNormSquaredImpl { origin, infinity }
         .new_trait_named("UnitizedFlatNormSquared")
         .blurb("Intermediate result to UnitizedFlatNorm.")
@@ -227,14 +227,14 @@ pub mod impls {
         type Output = MultiVector;
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let all = allow_all_signatures();
             let not_origin = signatures_not_containing(self.origin);
             let not_infinity = signatures_not_containing(self.infinity);
             let result = SubType(all, not_origin & not_infinity, all)
-                .inline(&builder, slf).await?;
+                .inline(&mut builder, slf).await?;
             builder.return_expr(result)
         }
     }
@@ -249,14 +249,14 @@ pub mod impls {
         type Output = MultiVector;
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let all = allow_all_signatures();
-            let not_origin = signatures_containing(self.origin);
+            let origin = signatures_containing(self.origin);
             let not_infinity = signatures_not_containing(self.infinity);
-            let result = SubType(all, not_origin & not_infinity, all)
-                .inline(&builder, slf).await?;
+            let result = SubType(all, origin & not_infinity, all)
+                .inline(&mut builder, slf).await?;
             builder.return_expr(result)
         }
     }
@@ -264,21 +264,26 @@ pub mod impls {
     #[derive(Clone, Copy)]
     pub struct FlatBulkImpl {
         pub origin: BasisElement,
-        pub infinity: BasisElement,
+        pub infinity: Option<BasisElement>,
     }
     #[async_trait]
     impl TraitImpl_11 for FlatBulkImpl {
         type Output = MultiVector;
+        //noinspection DuplicatedCode
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let all = allow_all_signatures();
             let not_origin = signatures_not_containing(self.origin);
-            let not_infinity = signatures_containing(self.infinity);
-            let result = SubType(all, not_origin & not_infinity, all)
-                .inline(&builder, slf).await?;
+            let result = match self.infinity {
+                None => SubType(all, not_origin, all).inline(&mut builder, slf).await?,
+                Some(i) => {
+                    let infinity = signatures_containing(i);
+                    SubType(all, not_origin & infinity, all).inline(&mut builder, slf).await?
+                }
+            };
             builder.return_expr(result)
         }
     }
@@ -286,21 +291,26 @@ pub mod impls {
     #[derive(Clone, Copy)]
     pub struct FlatWeightImpl {
         pub origin: BasisElement,
-        pub infinity: BasisElement,
+        pub infinity: Option<BasisElement>,
     }
     #[async_trait]
     impl TraitImpl_11 for FlatWeightImpl {
         type Output = MultiVector;
+        //noinspection DuplicatedCode
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let all = allow_all_signatures();
-            let not_origin = signatures_containing(self.origin);
-            let not_infinity = signatures_containing(self.infinity);
-            let result = SubType(all, not_origin & not_infinity, all)
-                .inline(&builder, slf).await?;
+            let origin = signatures_containing(self.origin);
+            let result = match self.infinity {
+                None => SubType(all, origin, all).inline(&mut builder, slf).await?,
+                Some(i) => {
+                    let infinity = signatures_containing(i);
+                    SubType(all, origin & infinity, all).inline(&mut builder, slf).await?
+                }
+            };
             builder.return_expr(result)
         }
     }
@@ -332,15 +342,15 @@ pub mod impls {
             slf: Variable<MultiVector>,
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let rbns = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
-            let fwns = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
+            let fwns = flat_weight_norm_squared(self.origin, Some(self.infinity)).invoke(&mut builder, slf).await?;
             let ad = RightAntiDual.invoke(&mut builder, fwns).await?;
-            let result = Addition.inline(&builder, rbns, ad).await?;
+            let result = Addition.inline(&mut builder, rbns, ad).await?;
             builder.return_expr(result)
         }
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatBulkNormImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatBulkNormImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatBulkNormImpl {
         type Output = MultiVector;
@@ -356,7 +366,7 @@ pub mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatBulkNormSquaredImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatBulkNormSquaredImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatBulkNormSquaredImpl {
         type Output = MultiVector;
@@ -378,7 +388,7 @@ pub mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatNormImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatNormImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatNormImpl {
         type Output = MultiVector;
@@ -389,13 +399,13 @@ pub mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let fbn = flat_bulk_norm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
             let fwn = flat_weight_norm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
-            let result = Addition.inline(&builder, fbn, fwn).await?;
+            let result = Addition.inline(&mut builder, fbn, fwn).await?;
             builder.return_expr(result)
         }
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatNormSquaredImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatNormSquaredImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatNormSquaredImpl {
         type Output = MultiVector;
@@ -406,13 +416,13 @@ pub mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let fbn = flat_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
             let fwn = flat_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
-            let result = Addition.inline(&builder, fbn, fwn).await?;
+            let result = Addition.inline(&mut builder, fbn, fwn).await?;
             builder.return_expr(result)
         }
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatWeightNormImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatWeightNormImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatWeightNormImpl {
         type Output = MultiVector;
@@ -428,7 +438,7 @@ pub mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct FlatWeightNormSquaredImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct FlatWeightNormSquaredImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for FlatWeightNormSquaredImpl {
         type Output = MultiVector;
@@ -500,7 +510,7 @@ pub mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let rbn = round_bulk_norm(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
             let rwn = round_weight_norm(self.origin, self.infinity).invoke(&mut builder, slf).await?;
-            let result = Addition.inline(&builder, rbn, rwn).await?;
+            let result = Addition.inline(&mut builder, rbn, rwn).await?;
             builder.return_expr(result)
         }
     }
@@ -517,7 +527,7 @@ pub mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let rbn = round_bulk_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf.clone()).await?;
             let rwn = round_weight_norm_squared(self.origin, self.infinity).invoke(&mut builder, slf).await?;
-            let result = Addition.inline(&builder, rbn, rwn).await?;
+            let result = Addition.inline(&mut builder, rbn, rwn).await?;
             builder.return_expr(result)
         }
     }
@@ -596,7 +606,7 @@ pub mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct UnitizedFlatNormImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct UnitizedFlatNormImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for UnitizedFlatNormImpl {
         type Output = Float;
@@ -612,7 +622,7 @@ pub mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct UnitizedFlatNormSquaredImpl { pub origin: BasisElement, pub infinity: BasisElement }
+    pub struct UnitizedFlatNormSquaredImpl { pub origin: BasisElement, pub infinity: Option<BasisElement> }
     #[async_trait]
     impl TraitImpl_11 for UnitizedFlatNormSquaredImpl {
         type Output = Float;

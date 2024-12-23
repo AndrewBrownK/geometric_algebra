@@ -137,6 +137,7 @@ fn main() {
         RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
         RejectViaOriginFrom AntiRejectViaHorizonFrom
         Support AntiSupport
+        Unitize
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -207,25 +208,26 @@ pub mod custom_traits {
     use codegen::ast::impls::Elaborated;
     use codegen::build_scripts::common_traits::conformal::*;
     use codegen::build_scripts::common_traits::conformal::impls::*;
-    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl};
-    use codegen::build_scripts::common_traits::{anti_support, support};
+    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl, UnitizeImpl};
+    use codegen::build_scripts::common_traits::{anti_support, support, unitize};
 
     const origin: BasisElement = codegen::elements::e4;
     const infinity: BasisElement = codegen::elements::e5;
+    const option_infinity: Option<BasisElement> = Some(codegen::elements::e5);
 
     pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = conformal_conjugate(infinity);
     pub static RoundBulk: Elaborated<RoundBulkImpl> = round_bulk(origin, infinity);
     pub static RoundWeight: Elaborated<RoundWeightImpl> = round_weight(origin, infinity);
-    pub static FlatBulk: Elaborated<FlatBulkImpl> = flat_bulk(origin, infinity);
-    pub static FlatWeight: Elaborated<FlatWeightImpl> = flat_weight(origin, infinity);
+    pub static FlatBulk: Elaborated<FlatBulkImpl> = flat_bulk(origin, option_infinity);
+    pub static FlatWeight: Elaborated<FlatWeightImpl> = flat_weight(origin, option_infinity);
     pub static CenterNorm: Elaborated<CenterNormImpl> = center_norm(origin, infinity);
     pub static CenterNormSquared: Elaborated<CenterNormSquaredImpl> = center_norm_squared(origin, infinity);
-    pub static FlatBulkNorm: Elaborated<FlatBulkNormImpl> = flat_bulk_norm(origin, infinity);
-    pub static FlatBulkNormSquared: Elaborated<FlatBulkNormSquaredImpl> = flat_bulk_norm_squared(origin, infinity);
-    pub static FlatNorm: Elaborated<FlatNormImpl> = flat_norm(origin, infinity);
-    pub static FlatNormSquared: Elaborated<FlatNormSquaredImpl> = flat_norm_squared(origin, infinity);
-    pub static FlatWeightNorm: Elaborated<FlatWeightNormImpl> = flat_weight_norm(origin, infinity);
-    pub static FlatWeightNormSquared: Elaborated<FlatWeightNormSquaredImpl> = flat_weight_norm_squared(origin, infinity);
+    pub static FlatBulkNorm: Elaborated<FlatBulkNormImpl> = flat_bulk_norm(origin, option_infinity);
+    pub static FlatBulkNormSquared: Elaborated<FlatBulkNormSquaredImpl> = flat_bulk_norm_squared(origin, option_infinity);
+    pub static FlatNorm: Elaborated<FlatNormImpl> = flat_norm(origin, option_infinity);
+    pub static FlatNormSquared: Elaborated<FlatNormSquaredImpl> = flat_norm_squared(origin, option_infinity);
+    pub static FlatWeightNorm: Elaborated<FlatWeightNormImpl> = flat_weight_norm(origin, option_infinity);
+    pub static FlatWeightNormSquared: Elaborated<FlatWeightNormSquaredImpl> = flat_weight_norm_squared(origin, option_infinity);
     pub static RoundBulkNorm: Elaborated<RoundBulkNormImpl> = round_bulk_norm(origin, infinity);
     pub static RoundBulkNormSquared: Elaborated<RoundBulkNormSquaredImpl> = round_bulk_norm_squared(origin, infinity);
     pub static RoundNorm: Elaborated<RoundNormImpl> = round_norm(origin, infinity);
@@ -234,8 +236,8 @@ pub mod custom_traits {
     pub static RoundWeightNormSquared: Elaborated<RoundWeightNormSquaredImpl> = round_weight_norm_squared(origin, infinity);
     pub static UnitizedCenterNorm: Elaborated<UnitizedCenterNormImpl> = unitized_center_norm(origin, infinity);
     pub static UnitizedCenterNormSquared: Elaborated<UnitizedCenterNormSquaredImpl> = unitized_center_norm_squared(origin, infinity);
-    pub static UnitizedFlatNorm: Elaborated<UnitizedFlatNormImpl> = unitized_flat_norm(origin, infinity);
-    pub static UnitizedFlatNormSquared: Elaborated<UnitizedFlatNormSquaredImpl> = unitized_flat_norm_squared(origin, infinity);
+    pub static UnitizedFlatNorm: Elaborated<UnitizedFlatNormImpl> = unitized_flat_norm(origin, option_infinity);
+    pub static UnitizedFlatNormSquared: Elaborated<UnitizedFlatNormSquaredImpl> = unitized_flat_norm_squared(origin, option_infinity);
     pub static UnitizedRadiusNorm: Elaborated<UnitizedRadiusNormImpl> = unitized_radius_norm(origin, infinity);
     pub static UnitizedRadiusNormSquared: Elaborated<UnitizedRadiusNormSquaredImpl> = unitized_radius_norm_squared(origin, infinity);
     pub static UnitizedRoundNorm: Elaborated<UnitizedRoundNormImpl> = unitized_round_norm(origin, infinity);
@@ -243,6 +245,7 @@ pub mod custom_traits {
 
     pub static Support: Elaborated<SupportImpl> = support(origin);
     pub static AntiSupport: Elaborated<AntiSupportImpl> = anti_support(origin);
+    pub static Unitize: Elaborated<UnitizeImpl<Elaborated<RoundWeightNormImpl>>> = unitize(RoundWeightNorm);
 }
 
 

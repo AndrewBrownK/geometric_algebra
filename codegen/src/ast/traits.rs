@@ -188,7 +188,7 @@ pub trait TraitDef_1_Type_0_Args: TraitImpl_10 + ProvideTraitNames {
         Some(invocation_expression)
     }
 
-    async fn inline<const AntiScalar: BasisElement>(&self, builder: &TraitImplBuilder<AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<Variable<Self::Output>> {
+    async fn inline<const AntiScalar: BasisElement>(&self, builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
         let impl_key = (trait_key.clone(), owner.clone());
 
@@ -346,7 +346,7 @@ pub trait TraitDef_1_Type_1_Arg: TraitImpl_11 + ProvideTraitNames {
     }
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -514,7 +514,7 @@ pub trait TraitDef_2_Types_1_Arg: TraitImpl_21 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector,
     ) -> Option<Variable<Self::Output>> {
@@ -692,7 +692,7 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<Variable<Self::Output>> {
@@ -882,7 +882,7 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<Float>>(
         &self,
-        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<Variable<Self::Output>> {
@@ -1054,7 +1054,7 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<Integer>>(
         &self,
-        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<Variable<Self::Output>> {
@@ -2645,6 +2645,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                     if let Some(v) = &vd.expr {
                         let mut expr = v.write();
                         expr.final_simplify();
+                        // TODO should this be async, so we can get infallible trait lookups?
                         statistics += expr.count_operations(&lookup);
                     }
                 }
@@ -3015,7 +3016,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
 }
 
 impl<const AntiScalar: BasisElement, ExprType: TraitResultType> TraitImplBuilder<AntiScalar, ExprType> {
-    fn finish_inline<V: Into<String>>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+    fn finish_inline<V: Into<String>>(self, b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
         let mut outer_lines = b.lines.lock();
         let inner_lines = self.lines.into_inner();
         for line in inner_lines.into_iter() {
@@ -3028,6 +3029,19 @@ impl<const AntiScalar: BasisElement, ExprType: TraitResultType> TraitImplBuilder
         // If there was no return expression provided, assume the implementation "failed"
         // under normal circumstances like some combination of classes that doesn't produce a result
         let var = b.comment_variable_impl(self.return_comment, var_name, self.return_type, self.return_expr?);
+
+
+
+        // Add inner invocations to dependencies (this is a shallow inline, not deep inline, so
+        // the trait that we inlined might have further delegated traits that are invoked and
+        // not inlined themselves)
+        b.traits10_dependencies.extend(self.traits10_dependencies);
+        b.traits11_dependencies.extend(self.traits11_dependencies);
+        b.traits12i_dependencies.extend(self.traits12i_dependencies);
+        b.traits12f_dependencies.extend(self.traits12f_dependencies);
+        b.traits21_dependencies.extend(self.traits21_dependencies);
+        b.traits22_dependencies.extend(self.traits22_dependencies);
+
         Some(var)
     }
 
