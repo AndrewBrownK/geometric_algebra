@@ -135,8 +135,7 @@ impl AntiSupport for AntiDualNum {
     // no simd        0        4        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * self_2.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * Simd32x3::from(0.0).with_w(1.0));
     }
 }
 impl std::ops::Div<anti_support> for AntiFlatPoint {
@@ -504,11 +503,13 @@ impl AntiSupport for DualNum {
     //  no simd        0       14        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
         let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ self.group0() * Simd32x2::from(-1.0));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * self_2.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x3::from(0.0).with_w(1.0).xyz().with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -814,8 +815,7 @@ impl AntiSupport for Scalar {
     // no simd        0        4        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * self_2.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * Simd32x3::from(0.0).with_w(1.0));
     }
 }
 impl std::ops::Div<anti_support> for Sphere {

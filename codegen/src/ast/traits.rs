@@ -724,6 +724,7 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
             builder.cycle_detector.clone(),
         );
         let owner = inner_builder.coerce_variable("self", owner);
+        // TODO this seems to not work right as seen on impl GeometricAntiQuotient<DualNum> for AntiScalar
         let other = inner_builder.coerce_variable("other", other);
         let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
@@ -1884,7 +1885,7 @@ impl<T: TraitDef_2_Types_2_Args> Register22 for T {
                             let declare_self = param_self();
                             variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_self));
                             let declare_other = param_other();
-                            variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_other));
+                            variables.entry(declare_other.name.clone()).or_insert(Arc::downgrade(&declare_other));
                             let b = TraitImplBuilder::new(ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new());
                             let var_self: Variable<MultiVector> = Variable {
                                 expr_type: mv_a.clone(),
@@ -1953,7 +1954,7 @@ impl<T: TraitDef_1_Type_2_Args_f32> Register12f for T {
                         let declare_self = param_self();
                         variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_self));
                         let declare_other = param_other();
-                        variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_other));
+                        variables.entry(declare_other.name.clone()).or_insert(Arc::downgrade(&declare_other));
                         let b = TraitImplBuilder::new(ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new());
                         let var_self: Variable<MultiVector> = Variable {
                             expr_type: mv_a.clone(),
@@ -2021,7 +2022,7 @@ impl<T: TraitDef_1_Type_2_Args_i32> Register12i for T {
                         let declare_self = param_self();
                         variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_self));
                         let declare_other = param_other();
-                        variables.entry(declare_self.name.clone()).or_insert(Arc::downgrade(&declare_other));
+                        variables.entry(declare_other.name.clone()).or_insert(Arc::downgrade(&declare_other));
                         let b = TraitImplBuilder::new(ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new());
                         let var_self: Variable<MultiVector> = Variable {
                             expr_type: mv_a.clone(),
@@ -2144,6 +2145,13 @@ pub enum CommentOrVariableDeclaration {
     Comment(Cow<'static, String>),
     VarDec(Weak<RawVariableDeclaration>),
 }
+impl CommentOrVariableDeclaration {
+    fn needs_more_inlining(&self) -> bool {
+        let CommentOrVariableDeclaration::VarDec(rvd) = self else { return false; };
+        rvd.strong_count() <= 1
+    }
+}
+
 
 pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     pub ga: Arc<GeometricAlgebra<AntiScalar>>,
@@ -2516,28 +2524,43 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2567,9 +2590,10 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         return ti;
     }
 
-    // TODO it looks like single-use variables are not getting inlined perfectly, according to...
+    // TODO some interesting implementations have variables with more than one invocation,
+    //  but the value behind the variable only has its whole destructured once. It would
+    //  be interesting to inline these.
     //  - impl AntiSupport for Flector
-    //  - impl Unitize for Circle
     fn into_trait11(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
         let lookup = TraitOperationsLookup {
             traits10: &self.traits10_dependencies,
@@ -2579,28 +2603,43 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2639,28 +2678,43 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2690,6 +2744,8 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         return ti;
     }
 
+    // TODO impl ProjectOrthogonallyOnto<Line> for Origin
+    //  maybe we should return Option from here so we don't get these null implementations
     fn into_trait22(self, owner: MultiVector, other: MultiVector) -> Arc<RawTraitImplementation> {
         let lookup = TraitOperationsLookup {
             traits10: &self.traits10_dependencies,
@@ -2699,28 +2755,51 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+
+        let instance = {
+            let n = self.trait_def.names.trait_key.final_name;
+            let owner = owner.name();
+            let other = other.name();
+            format!("{n}<{other}> for {owner}")
+        };
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2759,28 +2838,43 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2819,28 +2913,43 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21: &self.traits21_dependencies,
             traits22: &self.traits22_dependencies,
         };
-        let mut statistics = VectoredOperationsTracker::zero();
 
         // This shouldn't be a problem because of type level state and function visibilities
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        return_expr.final_simplify();
-        statistics += return_expr.count_operations(&lookup);
-
-        // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
-        let mut i = lines.len();
-        while i > 0 {
-            i -= 1;
-            let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-            match vd.upgrade() {
-                None => drop(lines.remove(i)),
-                Some(vd) => {
-                    if let Some(v) = &vd.expr {
-                        let mut expr = v.write();
-                        expr.final_simplify();
-                        statistics += expr.count_operations(&lookup);
+
+        loop {
+            // Scan through the lines in reverse, drop unused variables
+            return_expr.final_simplify();
+            let mut i = lines.len();
+            while i > 0 {
+                i -= 1;
+                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
+                match vd.upgrade() {
+                    None => drop(lines.remove(i)),
+                    Some(vd) => {
+                        if let Some(v) = &vd.expr {
+                            let mut expr = v.write();
+                            expr.final_simplify();
+                        }
                     }
                 }
+            }
+
+            if lines.iter().any(|it| it.needs_more_inlining()) {
+                continue
+            } else {
+                break
+            }
+        }
+
+        let mut statistics = VectoredOperationsTracker::zero();
+        statistics += return_expr.count_operations(&lookup);
+        for line in lines.iter() {
+            if let CommentOrVariableDeclaration::VarDec(vd) = line {
+                let Some(vd) = vd.upgrade() else { continue };
+                let Some(v) = &vd.expr else { continue };
+                statistics += v.read().count_operations(&lookup);
             }
         }
 
@@ -2897,6 +3006,9 @@ impl<const AntiScalar: BasisElement, ExprType: TraitResultType> TraitImplBuilder
         b.traits12f_dependencies.extend(self.traits12f_dependencies);
         b.traits21_dependencies.extend(self.traits21_dependencies);
         b.traits22_dependencies.extend(self.traits22_dependencies);
+
+        let inner_dependencies = self.trait_def.dependencies.lock().clone();
+        b.trait_def.dependencies.lock().extend(inner_dependencies);
 
         Some(var)
     }

@@ -89,8 +89,7 @@ impl ProjectOrthogonallyOnto<DualNum> for DualNum {
     //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_anti_dual[e1234] * self[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for DualNum {
@@ -136,11 +135,10 @@ impl ProjectOrthogonallyOnto<Horizon> for DualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Scalar::from_groups(/* scalar */ self[scalar] * other[e321] * right_anti_dual[e4] * -1.0);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Line> for DualNum {
@@ -297,11 +295,10 @@ impl ProjectOrthogonallyOnto<Plane> for DualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Scalar::from_groups(/* scalar */ self[scalar] * right_anti_dual[e4] * other[e321] * -1.0);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Point> for DualNum {
@@ -326,11 +323,10 @@ impl ProjectOrthogonallyOnto<Scalar> for DualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[e1234] * self[scalar] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for Flector {
@@ -646,11 +642,10 @@ impl ProjectOrthogonallyOnto<Horizon> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * self[e321] * right_anti_dual[e4] * -1.0);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[e321], 2) * self[e321]);
     }
 }
 impl ProjectOrthogonallyOnto<Motor> for Horizon {
@@ -756,15 +751,14 @@ impl ProjectOrthogonallyOnto<Plane> for Horizon {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * right_anti_dual[e4] * -1.0) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * other[e321]) * other.group0());
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for Line {
@@ -1046,8 +1040,7 @@ impl ProjectOrthogonallyOnto<DualNum> for Motor {
     //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_anti_dual[e1234] * self[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Motor {
@@ -1361,11 +1354,10 @@ impl ProjectOrthogonallyOnto<Scalar> for Motor {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[e1234] * self[scalar] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for MultiVector {
@@ -1385,8 +1377,7 @@ impl ProjectOrthogonallyOnto<DualNum> for MultiVector {
     //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_anti_dual[e1234] * self[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for MultiVector {
@@ -1831,11 +1822,10 @@ impl ProjectOrthogonallyOnto<Scalar> for MultiVector {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[e1234] * self[scalar] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for Origin {
@@ -2013,8 +2003,7 @@ impl ProjectOrthogonallyOnto<Point> for Origin {
     //  no simd        0        5        0
     fn project_orthogonally_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * right_anti_dual[e321]) * other.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * 0.0) * other.group0());
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for Plane {
@@ -2056,11 +2045,10 @@ impl ProjectOrthogonallyOnto<Horizon> for Plane {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * right_anti_dual[e4] * self[e321] * -1.0);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[e321], 2) * self[e321]);
     }
 }
 impl ProjectOrthogonallyOnto<Motor> for Plane {
@@ -2177,15 +2165,14 @@ impl ProjectOrthogonallyOnto<Plane> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(right_anti_dual[e4] * self[e321] * -1.0) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
 impl std::ops::Div<project_orthogonally_onto> for Point {
@@ -2472,8 +2459,7 @@ impl ProjectOrthogonallyOnto<DualNum> for Scalar {
     //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_anti_dual[e1234] * self[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Scalar {
@@ -2519,11 +2505,10 @@ impl ProjectOrthogonallyOnto<Horizon> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Scalar::from_groups(/* scalar */ other[e321] * right_anti_dual[e4] * self[scalar] * -1.0);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Line> for Scalar {
@@ -2674,11 +2659,10 @@ impl ProjectOrthogonallyOnto<Plane> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[e4] * other[e321] * self[scalar] * -1.0);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Point> for Scalar {
@@ -2703,10 +2687,9 @@ impl ProjectOrthogonallyOnto<Scalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[e1234] * other[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }

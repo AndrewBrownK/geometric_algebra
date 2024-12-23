@@ -247,8 +247,10 @@ impl ConstraintViolation for AntiFlatPoint {
     //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
-        return Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) - (reverse[e321] * self[e321]));
+        return Scalar::from_groups(
+            // scalar
+            f32::powi(self[e321], 2) - (self[e321] * AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0))[e321]),
+        );
     }
 }
 impl std::ops::Div<constraint_violation> for AntiFlector {
@@ -771,8 +773,10 @@ impl ConstraintViolation for FlatPoint {
     //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
-        return Scalar::from_groups(/* scalar */ (reverse[e45] * self[e45]) - f32::powi(self[e45], 2));
+        return Scalar::from_groups(
+            // scalar
+            (self[e45] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0))[e45]) - f32::powi(self[e45], 2),
+        );
     }
 }
 impl std::ops::Div<constraint_violation> for Flector {

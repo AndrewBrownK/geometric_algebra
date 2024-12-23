@@ -10,7 +10,7 @@
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       2       0
-//  Average:         8       9       0
+//  Average:         8       8       0
 //  Maximum:        38      37       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -77,11 +77,10 @@ impl ConstraintViolation for Horizon {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        1        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = Horizon::from_groups(/* e321 */ self[e321] * -1.0);
-        return Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) - (reverse[e321] * self[e321]));
+        return Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) * 2.0);
     }
 }
 impl std::ops::Div<constraint_violation> for Line {
@@ -281,8 +280,10 @@ impl ConstraintViolation for Plane {
     //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
-        return Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) - (reverse[e321] * self[e321]));
+        return Scalar::from_groups(
+            // scalar
+            f32::powi(self[e321], 2) - (self[e321] * Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0))[e321]),
+        );
     }
 }
 impl std::ops::Div<constraint_violation> for Point {

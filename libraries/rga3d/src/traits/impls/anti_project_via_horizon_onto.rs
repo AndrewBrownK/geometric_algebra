@@ -8,13 +8,13 @@
 // Total Implementations: 86
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:         3       9       0
-//  Average:         9      17       0
+//  Average:         9      16       0
 //  Maximum:        76      98       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:         3      16       0
 //  Average:        16      30       0
 //  Maximum:       130     166       0
@@ -28,11 +28,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234] * other[scalar]);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[scalar], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for AntiScalar {
@@ -78,11 +77,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e321] * right_dual[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for AntiScalar {
@@ -237,11 +235,10 @@ impl AntiProjectViaHorizonOnto<Plane> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for AntiScalar {
@@ -266,11 +263,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234] * other[scalar]);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[scalar], 2) * self[e1234]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for DualNum {
@@ -340,11 +336,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e321] * right_dual[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for DualNum {
@@ -500,11 +495,10 @@ impl AntiProjectViaHorizonOnto<Plane> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for DualNum {
@@ -621,11 +615,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for Flector {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ self[e321] * other[e321] * right_dual[e4] * -1.0);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[e321], 2) * self[e321]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Flector {
@@ -800,15 +793,14 @@ impl AntiProjectViaHorizonOnto<Plane> for Flector {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * right_dual[e4] * -1.0) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * other[e321]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Flector {
@@ -881,11 +873,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Horizon::from_groups(/* e321 */ right_dual[e1234] * other[scalar] * self[e321]);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[scalar], 2) * self[e321]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Horizon {
@@ -930,11 +921,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * self[e321] * right_dual[e4] * -1.0);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[e321], 2) * self[e321]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Horizon {
@@ -1086,15 +1076,14 @@ impl AntiProjectViaHorizonOnto<Plane> for Horizon {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * right_dual[e4] * -1.0) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * other[e321]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Horizon {
@@ -1130,11 +1119,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Horizon::from_groups(/* e321 */ right_dual[e1234] * self[e321] * other[scalar]);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[scalar], 2) * self[e321]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Line {
@@ -1510,11 +1498,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ other[e321] * self[e1234] * right_dual[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Motor {
@@ -1707,11 +1694,10 @@ impl AntiProjectViaHorizonOnto<Plane> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(other[e321], 2) * self[e1234]);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Motor {
@@ -2319,11 +2305,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Origin::from_groups(/* e4 */ right_dual[e1234] * other[scalar] * self[e4]);
+        return Origin::from_groups(/* e4 */ f32::powi(other[scalar], 2) * self[e4]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Origin {
@@ -2456,19 +2441,17 @@ impl AntiProjectViaHorizonOnto<Point> for Origin {
     //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * right_dual[e321]) * other.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * 0.0) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Scalar> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Origin::from_groups(/* e4 */ right_dual[e1234] * self[e4] * other[scalar]);
+        return Origin::from_groups(/* e4 */ f32::powi(other[scalar], 2) * self[e4]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Plane {
@@ -2548,11 +2531,10 @@ impl AntiProjectViaHorizonOnto<Horizon> for Plane {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * right_dual[e4] * self[e321] * -1.0);
+        return Horizon::from_groups(/* e321 */ f32::powi(other[e321], 2) * self[e321]);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Plane {
@@ -2721,15 +2703,14 @@ impl AntiProjectViaHorizonOnto<Plane> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(right_dual[e4] * self[e321] * -1.0) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Plane {
@@ -3000,8 +2981,7 @@ impl AntiProjectViaHorizonOnto<DualNum> for Scalar {
     //  no simd        0        3        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_dual[e1234] * self[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Motor> for Scalar {
@@ -3056,10 +3036,9 @@ impl AntiProjectViaHorizonOnto<Scalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_dual[e1234] * other[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }

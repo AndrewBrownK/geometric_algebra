@@ -10,7 +10,7 @@
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       2       0
-//  Average:         8       9       0
+//  Average:         8       8       0
 //  Maximum:        38      37       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -270,11 +270,10 @@ impl AntiConstraintViolation for Origin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        1        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = Origin::from_groups(/* e4 */ self[e4] * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) - (anti_reverse[e4] * self[e4]));
+        return AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) * 2.0);
     }
 }
 impl std::ops::Div<anti_constraint_violation> for Plane {
@@ -306,7 +305,9 @@ impl AntiConstraintViolation for Point {
     //  no simd        1        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
-        return AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) - (anti_reverse[e4] * self[e4]));
+        return AntiScalar::from_groups(
+            // e1234
+            f32::powi(self[e4], 2) - (self[e4] * Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0))[e4]),
+        );
     }
 }

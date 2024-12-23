@@ -46,6 +46,8 @@ impl AnyExpression {
     }
 }
 
+
+
 /// This helps unify Variable<MultiVector> and MultiVectorExpr
 pub fn extract_multivector_expr<Expr: Expression<MultiVector>>(expr: Expr) -> MultiVectorExpr {
     match expr.into_any_expression() {
@@ -207,7 +209,7 @@ impl IntExpr {
             IntExpr::TraitInvoke10ToInt(_, _) => false,
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }

@@ -68,7 +68,6 @@ fn main() {
         Zero One AntiOne Unit
         Grade AntiGrade Into TryInto
         RightDual RightAntiDual Reverse AntiReverse
-        |
         Wedge AntiWedge
         GeometricProduct GeometricAntiProduct
         Sandwich AntiSandwich

@@ -8,15 +8,15 @@
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       1       0
-//   Median:         0       2       0
-//  Average:         0       3       0
+//  Minimum:         0       0       0
+//   Median:         0       1       0
+//  Average:         0       2       0
 //  Maximum:         0       9       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       1       0
-//   Median:         0       6       0
-//  Average:         0       7       0
+//  Minimum:         0       0       0
+//   Median:         0       3       0
+//  Average:         0       6       0
 //  Maximum:         0      22       0
 impl std::ops::Div<anti_support> for DualNum {
     type Output = Horizon;
@@ -26,13 +26,9 @@ impl std::ops::Div<anti_support> for DualNum {
 }
 impl AntiSupport for DualNum {
     type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
-        return Horizon::from_groups(/* e321 */ self[scalar] * self_2[e4]);
+        return Horizon::from_groups(/* e321 */ self[scalar]);
     }
 }
 impl std::ops::Div<anti_support> for Flector {
@@ -46,13 +42,12 @@ impl AntiSupport for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
         let right_dual = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e321] * -1.0),
@@ -63,7 +58,7 @@ impl AntiSupport for Flector {
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
-            Simd32x4::from(self_2[e4]) * right_dual.group1().xyz().with_w(right_dual[e4]) * Simd32x4::from(-1.0),
+            right_dual.group1().xyz().with_w(right_dual[e4]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -75,13 +70,9 @@ impl std::ops::Div<anti_support> for Horizon {
 }
 impl AntiSupport for Horizon {
     type Output = Scalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
-        return Scalar::from_groups(/* scalar */ self[e321] * self_2[e4]);
+        return Scalar::from_groups(/* scalar */ self[e321]);
     }
 }
 impl std::ops::Div<anti_support> for Line {
@@ -203,13 +194,9 @@ impl std::ops::Div<anti_support> for Plane {
 }
 impl AntiSupport for Plane {
     type Output = Scalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
-        return Scalar::from_groups(/* scalar */ self_2[e4] * self[e321]);
+        return Scalar::from_groups(/* scalar */ self[e321]);
     }
 }
 impl std::ops::Div<anti_support> for Point {
@@ -222,16 +209,15 @@ impl AntiSupport for Point {
     type Output = Line;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(self_2[e4]) * Simd32x4::from([self[e1], self[e2], self[e3], 0.0]).xyz() * Simd32x3::from(-1.0),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]).xyz() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -243,12 +229,8 @@ impl std::ops::Div<anti_support> for Scalar {
 }
 impl AntiSupport for Scalar {
     type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = Origin::from_groups(/* e4 */ 1.0);
-        return Horizon::from_groups(/* e321 */ self_2[e4] * self[scalar]);
+        return Horizon::from_groups(/* e321 */ self[scalar]);
     }
 }

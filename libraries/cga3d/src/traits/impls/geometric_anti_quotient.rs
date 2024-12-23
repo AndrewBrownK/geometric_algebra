@@ -8,13 +8,13 @@
 // Total Implementations: 625
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       0       0
 //   Median:        16      29       0
 //  Average:        30      44       0
 //  Maximum:       415     477       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       0       0
 //   Median:        31      56       0
 //  Average:        62      84       0
 //  Maximum:      1015    1072       1
@@ -36,7 +36,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiCircleRotor {
     //  no simd      112      138        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -49,11 +49,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiCircleRotor {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -130,7 +130,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiCircleRotor {
     //  no simd      159      189        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -145,13 +145,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiCircleRotor {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -327,15 +327,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiCircleRotor {
     //  no simd       82       96        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -396,12 +396,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiCircleRotor {
     //  no simd       53       78        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -456,15 +456,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiCircleRotor {
     //  no simd       77      102        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -603,7 +603,7 @@ impl GeometricAntiQuotient<Circle> for AntiCircleRotor {
     //  no simd      100      127        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -615,11 +615,11 @@ impl GeometricAntiQuotient<Circle> for AntiCircleRotor {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -695,7 +695,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiCircleRotor {
     //  no simd      112      139        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -707,11 +707,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiCircleRotor {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -798,7 +798,7 @@ impl GeometricAntiQuotient<Dipole> for AntiCircleRotor {
     //  no simd      100      129        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -810,11 +810,11 @@ impl GeometricAntiQuotient<Dipole> for AntiCircleRotor {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -887,7 +887,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiCircleRotor {
     //  no simd      159      192        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -903,13 +903,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiCircleRotor {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1085,15 +1085,15 @@ impl GeometricAntiQuotient<Flector> for AntiCircleRotor {
     //  no simd       81       97        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1165,12 +1165,12 @@ impl GeometricAntiQuotient<Line> for AntiCircleRotor {
     //  no simd       53       73        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1227,15 +1227,15 @@ impl GeometricAntiQuotient<Motor> for AntiCircleRotor {
     //  no simd       76       97        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1318,7 +1318,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiCircleRotor {
     //  no simd      343      405        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -1347,27 +1347,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiCircleRotor {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -1584,11 +1584,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiCircleRotor {
     //  no simd       46       65        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return DipoleInversion::from_groups(
             // e41, e42, e43
             (Simd32x3::from(geometric_anti_product[e4]) * self.group1().xyz()) + (self.group0().yzx() * geometric_anti_product.group0().zxy())
@@ -1655,15 +1655,15 @@ impl GeometricAntiQuotient<Sphere> for AntiCircleRotor {
     //  no simd       43       65        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -1712,7 +1712,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiCircleRotor {
     //  no simd      171      201        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -1727,13 +1727,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiCircleRotor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1840,7 +1840,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiCircleRotor {
     //  no simd      171      201        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -1857,13 +1857,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiCircleRotor {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1985,7 +1985,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiDipoleInversion {
     //  no simd      156      182        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -1998,11 +1998,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiDipoleInversion {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -2088,7 +2088,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiDipoleInversion {
     //  no simd      219      248        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -2103,13 +2103,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiDipoleInversion {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2339,15 +2339,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiDipoleInversion {
     //  no simd      108      128        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2414,12 +2414,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiDipoleInversion {
     //  no simd       80       97        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -2490,15 +2490,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiDipoleInversion {
     //  no simd      108      128        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -2660,7 +2660,7 @@ impl GeometricAntiQuotient<Circle> for AntiDipoleInversion {
     //  no simd      140      166        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -2672,11 +2672,11 @@ impl GeometricAntiQuotient<Circle> for AntiDipoleInversion {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2771,7 +2771,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiDipoleInversion {
     //  no simd      156      182        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -2783,11 +2783,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiDipoleInversion {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2888,7 +2888,7 @@ impl GeometricAntiQuotient<Dipole> for AntiDipoleInversion {
     //  no simd      140      169        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -2900,11 +2900,11 @@ impl GeometricAntiQuotient<Dipole> for AntiDipoleInversion {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -2999,7 +2999,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiDipoleInversion {
     //  no simd      219      249        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -3015,13 +3015,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiDipoleInversion {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3232,15 +3232,15 @@ impl GeometricAntiQuotient<Flector> for AntiDipoleInversion {
     //  no simd      111      128        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3322,12 +3322,12 @@ impl GeometricAntiQuotient<Line> for AntiDipoleInversion {
     //  no simd       80       97        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3398,15 +3398,15 @@ impl GeometricAntiQuotient<Motor> for AntiDipoleInversion {
     //  no simd      108      128        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3493,7 +3493,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiDipoleInversion {
     //  no simd      471      528        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -3522,27 +3522,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiDipoleInversion {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -3856,11 +3856,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiDipoleInversion {
     //  no simd       62       83        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
@@ -3940,15 +3940,15 @@ impl GeometricAntiQuotient<Sphere> for AntiDipoleInversion {
     //  no simd       63       83        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4012,7 +4012,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiDipoleInversion {
     //  no simd      235      264        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -4027,13 +4027,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiDipoleInversion {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4181,7 +4181,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiDipoleInversion {
     //  no simd      235      264        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -4198,13 +4198,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiDipoleInversion {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4341,7 +4341,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiDualNum {
     //  no simd       14       52        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -4354,11 +4354,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiDualNum {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4385,7 +4385,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiDualNum {
     //  no simd       24       56        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -4400,13 +4400,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiDualNum {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4485,15 +4485,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiDualNum {
     //  no simd        7       26        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -4520,12 +4520,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiDualNum {
     //  no simd        5       18        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Line::from_groups(
             // e415, e425, e435
@@ -4546,15 +4546,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiDualNum {
     //  no simd        7       24        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -4594,15 +4594,14 @@ impl GeometricAntiQuotient<AntiScalar> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        3        0
+    // yes simd        0        1        1
+    //  no simd        0        2        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345] * other[e12345]) * self.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for AntiDualNum {
@@ -4617,7 +4616,7 @@ impl GeometricAntiQuotient<Circle> for AntiDualNum {
     //  no simd       12       41        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -4629,11 +4628,11 @@ impl GeometricAntiQuotient<Circle> for AntiDualNum {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -4660,7 +4659,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiDualNum {
     //  no simd       14       45        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -4672,11 +4671,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiDualNum {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4707,7 +4706,7 @@ impl GeometricAntiQuotient<Dipole> for AntiDualNum {
     //  no simd       12       43        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -4719,11 +4718,11 @@ impl GeometricAntiQuotient<Dipole> for AntiDualNum {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -4750,7 +4749,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiDualNum {
     //  no simd       25       64        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -4766,13 +4765,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiDualNum {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4848,15 +4847,15 @@ impl GeometricAntiQuotient<Flector> for AntiDualNum {
     //  no simd        7       21        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -4882,12 +4881,12 @@ impl GeometricAntiQuotient<Line> for AntiDualNum {
     //  no simd        5       15        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiLine::from_groups(
             // e23, e31, e12
@@ -4908,15 +4907,15 @@ impl GeometricAntiQuotient<Motor> for AntiDualNum {
     //  no simd        7       20        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -4939,7 +4938,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiDualNum {
     //  no simd       55      123        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -4968,27 +4967,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiDualNum {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -5074,11 +5073,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiDualNum {
     //  no simd        3       26        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(self[e3215] * geometric_anti_product[e4]),
@@ -5095,15 +5094,14 @@ impl GeometricAntiQuotient<Scalar> for AntiDualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd2        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        3        1
+    //  no simd        0        5        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * other[scalar]) * self.group0() * Simd32x2::from(-1.0));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(1.0 / other[scalar] * -1.0) * self.group0() * Simd32x2::from(-1.0));
     }
 }
 impl GeometricAntiQuotient<Sphere> for AntiDualNum {
@@ -5117,15 +5115,15 @@ impl GeometricAntiQuotient<Sphere> for AntiDualNum {
     //  no simd        3       27        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5151,7 +5149,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiDualNum {
     //  no simd       27       60        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -5166,13 +5164,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiDualNum {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5214,7 +5212,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiDualNum {
     //  no simd       27       65        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -5231,13 +5229,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiDualNum {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5282,7 +5280,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiFlatPoint {
     //  no simd       43       67        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -5295,11 +5293,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiFlatPoint {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5344,7 +5342,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiFlatPoint {
     //  no simd       57       89        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -5359,13 +5357,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiFlatPoint {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5454,15 +5452,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiFlatPoint {
     //  no simd       15       28        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -5490,12 +5488,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiFlatPoint {
     //  no simd       12       26        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -5522,15 +5520,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiFlatPoint {
     //  no simd       15       34        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -5583,15 +5581,14 @@ impl GeometricAntiQuotient<AntiScalar> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
+    // yes simd        0        1        1
+    //  no simd        0        4        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * other[e12345]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for AntiFlatPoint {
@@ -5606,7 +5603,7 @@ impl GeometricAntiQuotient<Circle> for AntiFlatPoint {
     //  no simd       33       62        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -5618,11 +5615,11 @@ impl GeometricAntiQuotient<Circle> for AntiFlatPoint {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5667,7 +5664,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiFlatPoint {
     //  no simd       41       67        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -5679,11 +5676,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiFlatPoint {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5725,7 +5722,7 @@ impl GeometricAntiQuotient<Dipole> for AntiFlatPoint {
     //  no simd       34       65        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -5737,11 +5734,11 @@ impl GeometricAntiQuotient<Dipole> for AntiFlatPoint {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5788,7 +5785,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiFlatPoint {
     //  no simd       57       89        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -5804,13 +5801,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiFlatPoint {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5900,15 +5897,15 @@ impl GeometricAntiQuotient<Flector> for AntiFlatPoint {
     //  no simd       15       32        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -5936,12 +5933,12 @@ impl GeometricAntiQuotient<Line> for AntiFlatPoint {
     //  no simd       12       22        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -5967,15 +5964,15 @@ impl GeometricAntiQuotient<Motor> for AntiFlatPoint {
     //  no simd       15       29        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -6008,7 +6005,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiFlatPoint {
     //  no simd      123      185        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -6037,27 +6034,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiFlatPoint {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -6162,11 +6159,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiFlatPoint {
     //  no simd       12       29        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
@@ -6190,17 +6187,16 @@ impl GeometricAntiQuotient<Scalar> for AntiFlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        1
+    //  no simd        0        9        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345] * other[scalar]) * self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from(1.0 / other[scalar] * -1.0) * self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6216,15 +6212,15 @@ impl GeometricAntiQuotient<Sphere> for AntiFlatPoint {
     //  no simd       12       33        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -6258,7 +6254,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiFlatPoint {
     //  no simd       59       94        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -6273,13 +6269,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiFlatPoint {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6332,7 +6328,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiFlatPoint {
     //  no simd       62       97        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -6349,13 +6345,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiFlatPoint {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6413,7 +6409,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiFlector {
     //  no simd       83      109        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -6426,11 +6422,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiFlector {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6492,7 +6488,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiFlector {
     //  no simd      118      143        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -6507,13 +6503,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiFlector {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6643,15 +6639,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiFlector {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -6686,12 +6682,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiFlector {
     //  no simd       31       42        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -6729,15 +6725,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiFlector {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -6832,7 +6828,7 @@ impl GeometricAntiQuotient<Circle> for AntiFlector {
     //  no simd       74       97        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -6844,11 +6840,11 @@ impl GeometricAntiQuotient<Circle> for AntiFlector {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6912,7 +6908,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiFlector {
     //  no simd       83      106        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -6924,11 +6920,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiFlector {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -7000,7 +6996,7 @@ impl GeometricAntiQuotient<Dipole> for AntiFlector {
     //  no simd       71       96        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -7012,11 +7008,11 @@ impl GeometricAntiQuotient<Dipole> for AntiFlector {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -7079,7 +7075,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiFlector {
     //  no simd      121      143        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -7095,13 +7091,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiFlector {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -7233,15 +7229,15 @@ impl GeometricAntiQuotient<Flector> for AntiFlector {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -7289,12 +7285,12 @@ impl GeometricAntiQuotient<Line> for AntiFlector {
     //  no simd       30       43        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -7339,15 +7335,15 @@ impl GeometricAntiQuotient<Motor> for AntiFlector {
     //  no simd       43       57        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -7400,7 +7396,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiFlector {
     //  no simd      252      304        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -7429,27 +7425,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiFlector {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -7632,11 +7628,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiFlector {
     //  no simd       27       56        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([geometric_anti_product[e4], geometric_anti_product[e4], geometric_anti_product[e4], 1.0])
@@ -7699,15 +7695,15 @@ impl GeometricAntiQuotient<Sphere> for AntiFlector {
     //  no simd       27       59        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -7754,7 +7750,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiFlector {
     //  no simd      127      152        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -7769,13 +7765,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiFlector {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -7859,7 +7855,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiFlector {
     //  no simd      130      152        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -7876,13 +7872,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiFlector {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -7973,7 +7969,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiLine {
     //  no simd       57       89        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -7986,11 +7982,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiLine {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8055,7 +8051,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiLine {
     //  no simd       88      113        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -8070,13 +8066,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiLine {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8191,15 +8187,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiLine {
     //  no simd       35       44        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -8231,12 +8227,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiLine {
     //  no simd       21       36        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -8272,15 +8268,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiLine {
     //  no simd       31       44        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -8379,7 +8375,7 @@ impl GeometricAntiQuotient<Circle> for AntiLine {
     //  no simd       51       76        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -8391,11 +8387,11 @@ impl GeometricAntiQuotient<Circle> for AntiLine {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8452,7 +8448,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiLine {
     //  no simd       59       83        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -8464,11 +8460,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiLine {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8526,7 +8522,7 @@ impl GeometricAntiQuotient<Dipole> for AntiLine {
     //  no simd       50       82        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -8538,11 +8534,11 @@ impl GeometricAntiQuotient<Dipole> for AntiLine {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8598,7 +8594,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiLine {
     //  no simd       88      113        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -8614,13 +8610,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiLine {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8736,15 +8732,15 @@ impl GeometricAntiQuotient<Flector> for AntiLine {
     //  no simd       32       47        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8782,12 +8778,12 @@ impl GeometricAntiQuotient<Line> for AntiLine {
     //  no simd       21       33        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -8823,15 +8819,15 @@ impl GeometricAntiQuotient<Motor> for AntiLine {
     //  no simd       31       44        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -8877,7 +8873,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiLine {
     //  no simd      187      243        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -8906,27 +8902,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiLine {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -9082,11 +9078,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiLine {
     //  no simd       21       38        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(geometric_anti_product[e4]) * self.group0(),
@@ -9140,15 +9136,15 @@ impl GeometricAntiQuotient<Sphere> for AntiLine {
     //  no simd       21       45        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -9185,7 +9181,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiLine {
     //  no simd       95      120        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -9200,13 +9196,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiLine {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9278,7 +9274,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiLine {
     //  no simd       92      123        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -9295,13 +9291,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiLine {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9385,7 +9381,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiMotor {
     //  no simd       79      108        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -9398,11 +9394,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiMotor {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9482,7 +9478,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiMotor {
     //  no simd      121      143        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -9497,13 +9493,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiMotor {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9631,15 +9627,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiMotor {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -9685,12 +9681,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiMotor {
     //  no simd       30       42        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9735,15 +9731,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiMotor {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9845,7 +9841,7 @@ impl GeometricAntiQuotient<Circle> for AntiMotor {
     //  no simd       72       96        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -9857,11 +9853,11 @@ impl GeometricAntiQuotient<Circle> for AntiMotor {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9930,7 +9926,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiMotor {
     //  no simd       84      105        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -9942,11 +9938,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiMotor {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -10017,7 +10013,7 @@ impl GeometricAntiQuotient<Dipole> for AntiMotor {
     //  no simd       70       96        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -10029,11 +10025,11 @@ impl GeometricAntiQuotient<Dipole> for AntiMotor {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -10108,7 +10104,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiMotor {
     //  no simd      115      146        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -10124,13 +10120,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiMotor {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -10270,15 +10266,15 @@ impl GeometricAntiQuotient<Flector> for AntiMotor {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -10324,12 +10320,12 @@ impl GeometricAntiQuotient<Line> for AntiMotor {
     //  no simd       30       42        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -10374,15 +10370,15 @@ impl GeometricAntiQuotient<Motor> for AntiMotor {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -10431,7 +10427,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiMotor {
     //  no simd      252      304        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -10460,27 +10456,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiMotor {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -10664,11 +10660,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiMotor {
     //  no simd       27       48        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(geometric_anti_product[e4]) * self.group0().xyz().with_w(self[e3215]),
@@ -10725,15 +10721,15 @@ impl GeometricAntiQuotient<Sphere> for AntiMotor {
     //  no simd       27       57        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -10774,7 +10770,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiMotor {
     //  no simd      127      152        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -10789,13 +10785,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiMotor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -10880,7 +10876,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiMotor {
     //  no simd      124      155        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -10897,13 +10893,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiMotor {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -11003,7 +10999,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiPlane {
     //  no simd       39       67        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -11016,11 +11012,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiPlane {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -11060,7 +11056,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiPlane {
     //  no simd       57       87        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -11075,13 +11071,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiPlane {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -11176,15 +11172,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiPlane {
     //  no simd       23       36        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -11217,12 +11213,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiPlane {
     //  no simd       15       30        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -11254,15 +11250,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiPlane {
     //  no simd       27       40        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -11314,15 +11310,14 @@ impl GeometricAntiQuotient<AntiScalar> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
+    // yes simd        0        1        1
+    //  no simd        0        4        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345] * other[e12345]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for AntiPlane {
@@ -11337,7 +11332,7 @@ impl GeometricAntiQuotient<Circle> for AntiPlane {
     //  no simd       31       59        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -11349,11 +11344,11 @@ impl GeometricAntiQuotient<Circle> for AntiPlane {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -11395,7 +11390,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiPlane {
     //  no simd       36       64        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -11407,11 +11402,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiPlane {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -11454,7 +11449,7 @@ impl GeometricAntiQuotient<Dipole> for AntiPlane {
     //  no simd       34       63        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -11466,11 +11461,11 @@ impl GeometricAntiQuotient<Dipole> for AntiPlane {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -11509,7 +11504,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiPlane {
     //  no simd       58       87        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -11525,13 +11520,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiPlane {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -11622,15 +11617,15 @@ impl GeometricAntiQuotient<Flector> for AntiPlane {
     //  no simd       23       36        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -11663,12 +11658,12 @@ impl GeometricAntiQuotient<Line> for AntiPlane {
     //  no simd       15       27        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -11699,15 +11694,15 @@ impl GeometricAntiQuotient<Motor> for AntiPlane {
     //  no simd       23       36        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -11741,7 +11736,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiPlane {
     //  no simd      124      179        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -11770,27 +11765,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiPlane {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -11901,11 +11896,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiPlane {
     //  no simd       15       30        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return CircleRotor::from_groups(
             // e423, e431, e412
             Simd32x3::from(geometric_anti_product[e4]) * self.group0().xyz() * Simd32x3::from(-1.0),
@@ -11923,17 +11918,16 @@ impl GeometricAntiQuotient<Scalar> for AntiPlane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        1
+    //  no simd        0        9        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345] * other[scalar]) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            Simd32x4::from(1.0 / other[scalar] * -1.0) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -11949,15 +11943,15 @@ impl GeometricAntiQuotient<Sphere> for AntiPlane {
     //  no simd       15       31        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
@@ -11983,7 +11977,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiPlane {
     //  no simd       63       92        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -11998,13 +11992,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiPlane {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12052,7 +12046,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiPlane {
     //  no simd       63       91        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12069,13 +12063,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiPlane {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -12130,7 +12124,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiScalar {
     //  no simd        7       28        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12143,11 +12137,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for AntiScalar {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
@@ -12171,7 +12165,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiScalar {
     //  no simd       10       38        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -12186,13 +12180,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for AntiScalar {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -12217,10 +12211,10 @@ impl GeometricAntiQuotient<AntiDualNum> for AntiScalar {
     //  no simd        0        5        0
     fn geometric_anti_quotient(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return AntiDualNum::from_groups(
             // e3215, scalar
-            Simd32x2::from(self[e12345]) * Simd32x2::from([other[e3215] * other[e12345], other[scalar] * other[e12345]]),
+            Simd32x2::from(self[e12345]) * Simd32x2::from([other[e3215] * other_2[e12345], other[scalar] * other_2[e12345]]),
         );
     }
 }
@@ -12235,10 +12229,16 @@ impl GeometricAntiQuotient<AntiFlatPoint> for AntiScalar {
     //  no simd        0        8        0
     fn geometric_anti_quotient(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], -2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], -2));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(self[e12345]) * Simd32x4::from([other[e235] * other[e12345], other[e315] * other[e12345], other[e125] * other[e12345], other[e321] * other[e12345]]),
+            Simd32x4::from(self[e12345])
+                * Simd32x4::from([
+                    other[e235] * other_2[e12345],
+                    other[e315] * other_2[e12345],
+                    other[e125] * other_2[e12345],
+                    other[e321] * other_2[e12345],
+                ]),
         );
     }
 }
@@ -12253,15 +12253,15 @@ impl GeometricAntiQuotient<AntiFlector> for AntiScalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -12282,12 +12282,12 @@ impl GeometricAntiQuotient<AntiLine> for AntiScalar {
     //  no simd        2       12        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiLine::from_groups(
             // e23, e31, e12
@@ -12308,15 +12308,15 @@ impl GeometricAntiQuotient<AntiMotor> for AntiScalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -12337,10 +12337,10 @@ impl GeometricAntiQuotient<AntiPlane> for AntiScalar {
     //  no simd        2        8        0
     fn geometric_anti_quotient(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2));
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
-            Simd32x4::from(self[e12345]) * Simd32x4::from([other[e1] * other[e12345], other[e2] * other[e12345], other[e3] * other[e12345], other[e5] * other[e12345]]),
+            Simd32x4::from(self[e12345]) * Simd32x4::from([other[e1] * other_2[e12345], other[e2] * other_2[e12345], other[e3] * other_2[e12345], other[e5] * other_2[e12345]]),
         );
     }
 }
@@ -12348,11 +12348,10 @@ impl GeometricAntiQuotient<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        0        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * other[e12345] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] / (other[e12345]));
     }
 }
 impl GeometricAntiQuotient<Circle> for AntiScalar {
@@ -12367,7 +12366,7 @@ impl GeometricAntiQuotient<Circle> for AntiScalar {
     //  no simd        6       26        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -12379,11 +12378,11 @@ impl GeometricAntiQuotient<Circle> for AntiScalar {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return Circle::from_groups(
             // e423, e431, e412
@@ -12407,7 +12406,7 @@ impl GeometricAntiQuotient<CircleRotor> for AntiScalar {
     //  no simd        7       28        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -12419,11 +12418,11 @@ impl GeometricAntiQuotient<CircleRotor> for AntiScalar {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return CircleRotor::from_groups(
             // e423, e431, e412
@@ -12447,7 +12446,7 @@ impl GeometricAntiQuotient<Dipole> for AntiScalar {
     //  no simd        6       26        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12459,11 +12458,11 @@ impl GeometricAntiQuotient<Dipole> for AntiScalar {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return Dipole::from_groups(
             // e41, e42, e43
@@ -12487,7 +12486,7 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiScalar {
     //  no simd       10       38        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12503,13 +12502,13 @@ impl GeometricAntiQuotient<DipoleInversion> for AntiScalar {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -12534,10 +12533,10 @@ impl GeometricAntiQuotient<DualNum> for AntiScalar {
     //  no simd        0        4        0
     fn geometric_anti_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
         return DualNum::from_groups(
             // e5, e12345
-            Simd32x2::from(self[e12345]) * Simd32x2::from([other[e12345] * other[e5], other[e12345] * other[e12345]]),
+            Simd32x2::from(self[e12345]) * Simd32x2::from([other_2[e12345] * other[e5], other_2[e12345] * other[e12345]]),
         );
     }
 }
@@ -12552,10 +12551,10 @@ impl GeometricAntiQuotient<FlatPoint> for AntiScalar {
     //  no simd        0        9        0
     fn geometric_anti_quotient(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], -2) * -1.0);
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], -2) * -1.0);
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(self[e12345]) * Simd32x4::from([other[e12345] * other[e15], other[e12345] * other[e25], other[e12345] * other[e35], other[e12345] * other[e45]]),
+            Simd32x4::from(self[e12345]) * Simd32x4::from([other_2[e12345] * other[e15], other_2[e12345] * other[e25], other_2[e12345] * other[e35], other_2[e12345] * other[e45]]),
         );
     }
 }
@@ -12570,15 +12569,15 @@ impl GeometricAntiQuotient<Flector> for AntiScalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -12599,12 +12598,12 @@ impl GeometricAntiQuotient<Line> for AntiScalar {
     //  no simd        2       12        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Line::from_groups(
             // e415, e425, e435
@@ -12625,15 +12624,15 @@ impl GeometricAntiQuotient<Motor> for AntiScalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -12656,7 +12655,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiScalar {
     //  no simd       23       80        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -12685,27 +12684,27 @@ impl GeometricAntiQuotient<MultiVector> for AntiScalar {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -12744,10 +12743,16 @@ impl GeometricAntiQuotient<Plane> for AntiScalar {
     //  no simd        2        8        0
     fn geometric_anti_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2));
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[e12345]) * Simd32x4::from([other[e12345] * other[e4235], other[e12345] * other[e4315], other[e12345] * other[e4125], other[e12345] * other[e3215]]),
+            Simd32x4::from(self[e12345])
+                * Simd32x4::from([
+                    other_2[e12345] * other[e4235],
+                    other_2[e12345] * other[e4315],
+                    other_2[e12345] * other[e4125],
+                    other_2[e12345] * other[e3215],
+                ]),
         );
     }
 }
@@ -12762,11 +12767,11 @@ impl GeometricAntiQuotient<RoundPoint> for AntiScalar {
     //  no simd        3       12        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[e12345]) * geometric_anti_product.group0(),
@@ -12779,11 +12784,10 @@ impl GeometricAntiQuotient<Scalar> for AntiScalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        1        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
-        return Scalar::from_groups(/* scalar */ other[e12345] * self[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ self[e12345] / (other[scalar]) * -1.0);
     }
 }
 impl GeometricAntiQuotient<Sphere> for AntiScalar {
@@ -12797,15 +12801,15 @@ impl GeometricAntiQuotient<Sphere> for AntiScalar {
     //  no simd        3       12        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
@@ -12826,7 +12830,7 @@ impl GeometricAntiQuotient<VersorEven> for AntiScalar {
     //  no simd       11       40        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -12841,13 +12845,13 @@ impl GeometricAntiQuotient<VersorEven> for AntiScalar {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12872,7 +12876,7 @@ impl GeometricAntiQuotient<VersorOdd> for AntiScalar {
     //  no simd       11       40        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12889,13 +12893,13 @@ impl GeometricAntiQuotient<VersorOdd> for AntiScalar {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -12927,7 +12931,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Circle {
     //  no simd      101      128        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -12940,11 +12944,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Circle {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -13021,7 +13025,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Circle {
     //  no simd      144      173        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -13036,13 +13040,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Circle {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13214,15 +13218,15 @@ impl GeometricAntiQuotient<AntiFlector> for Circle {
     //  no simd       71       88        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13271,12 +13275,12 @@ impl GeometricAntiQuotient<AntiLine> for Circle {
     //  no simd       46       68        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -13332,15 +13336,15 @@ impl GeometricAntiQuotient<AntiMotor> for Circle {
     //  no simd       67       89        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -13484,7 +13488,7 @@ impl GeometricAntiQuotient<Circle> for Circle {
     //  no simd       90      116        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -13496,11 +13500,11 @@ impl GeometricAntiQuotient<Circle> for Circle {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13569,7 +13573,7 @@ impl GeometricAntiQuotient<CircleRotor> for Circle {
     //  no simd      101      127        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -13581,11 +13585,11 @@ impl GeometricAntiQuotient<CircleRotor> for Circle {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13664,7 +13668,7 @@ impl GeometricAntiQuotient<Dipole> for Circle {
     //  no simd       90      116        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -13676,11 +13680,11 @@ impl GeometricAntiQuotient<Dipole> for Circle {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -13749,7 +13753,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Circle {
     //  no simd      144      173        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -13765,13 +13769,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Circle {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -13939,15 +13943,15 @@ impl GeometricAntiQuotient<Flector> for Circle {
     //  no simd       68       88        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -14011,12 +14015,12 @@ impl GeometricAntiQuotient<Line> for Circle {
     //  no simd       46       66        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -14071,15 +14075,15 @@ impl GeometricAntiQuotient<Motor> for Circle {
     //  no simd       68       89        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -14148,7 +14152,7 @@ impl GeometricAntiQuotient<MultiVector> for Circle {
     //  no simd      311      369        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -14177,27 +14181,27 @@ impl GeometricAntiQuotient<MultiVector> for Circle {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -14429,11 +14433,11 @@ impl GeometricAntiQuotient<RoundPoint> for Circle {
     //  no simd       38       57        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (Simd32x3::from(geometric_anti_product[e4]) * self.group1().xyz()) + (self.group0().yzx() * geometric_anti_product.group0().zxy())
@@ -14498,15 +14502,15 @@ impl GeometricAntiQuotient<Sphere> for Circle {
     //  no simd       41       58        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -14553,7 +14557,7 @@ impl GeometricAntiQuotient<VersorEven> for Circle {
     //  no simd      155      184        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -14568,13 +14572,13 @@ impl GeometricAntiQuotient<VersorEven> for Circle {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -14681,7 +14685,7 @@ impl GeometricAntiQuotient<VersorOdd> for Circle {
     //  no simd      155      184        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -14698,13 +14702,13 @@ impl GeometricAntiQuotient<VersorOdd> for Circle {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -14818,7 +14822,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for CircleRotor {
     //  no simd      112      139        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -14831,11 +14835,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for CircleRotor {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -14917,7 +14921,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for CircleRotor {
     //  no simd      159      188        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -14932,13 +14936,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for CircleRotor {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -15115,15 +15119,15 @@ impl GeometricAntiQuotient<AntiFlector> for CircleRotor {
     //  no simd       79       96        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -15182,12 +15186,12 @@ impl GeometricAntiQuotient<AntiLine> for CircleRotor {
     //  no simd       52       74        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -15252,15 +15256,15 @@ impl GeometricAntiQuotient<AntiMotor> for CircleRotor {
     //  no simd       78       97        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -15410,7 +15414,7 @@ impl GeometricAntiQuotient<Circle> for CircleRotor {
     //  no simd      100      126        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -15422,11 +15426,11 @@ impl GeometricAntiQuotient<Circle> for CircleRotor {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -15505,7 +15509,7 @@ impl GeometricAntiQuotient<CircleRotor> for CircleRotor {
     //  no simd      112      138        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -15517,11 +15521,11 @@ impl GeometricAntiQuotient<CircleRotor> for CircleRotor {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -15605,7 +15609,7 @@ impl GeometricAntiQuotient<Dipole> for CircleRotor {
     //  no simd      100      126        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -15617,11 +15621,11 @@ impl GeometricAntiQuotient<Dipole> for CircleRotor {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -15694,7 +15698,7 @@ impl GeometricAntiQuotient<DipoleInversion> for CircleRotor {
     //  no simd      159      188        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -15710,13 +15714,13 @@ impl GeometricAntiQuotient<DipoleInversion> for CircleRotor {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -15892,15 +15896,15 @@ impl GeometricAntiQuotient<Flector> for CircleRotor {
     //  no simd       76       96        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -15966,12 +15970,12 @@ impl GeometricAntiQuotient<Line> for CircleRotor {
     //  no simd       53       72        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -16036,15 +16040,15 @@ impl GeometricAntiQuotient<Motor> for CircleRotor {
     //  no simd       76       97        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -16115,7 +16119,7 @@ impl GeometricAntiQuotient<MultiVector> for CircleRotor {
     //  no simd      343      401        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -16144,27 +16148,27 @@ impl GeometricAntiQuotient<MultiVector> for CircleRotor {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -16410,11 +16414,11 @@ impl GeometricAntiQuotient<RoundPoint> for CircleRotor {
     //  no simd       43       62        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (Simd32x3::from(geometric_anti_product[e4]) * self.group1().xyz()) + (self.group0().yzx() * geometric_anti_product.group0().zxy())
@@ -16482,15 +16486,15 @@ impl GeometricAntiQuotient<Sphere> for CircleRotor {
     //  no simd       46       63        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -16538,7 +16542,7 @@ impl GeometricAntiQuotient<VersorEven> for CircleRotor {
     //  no simd      171      200        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -16553,13 +16557,13 @@ impl GeometricAntiQuotient<VersorEven> for CircleRotor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -16666,7 +16670,7 @@ impl GeometricAntiQuotient<VersorOdd> for CircleRotor {
     //  no simd      171      200        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -16683,13 +16687,13 @@ impl GeometricAntiQuotient<VersorOdd> for CircleRotor {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -16812,7 +16816,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Dipole {
     //  no simd      101      130        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -16825,11 +16829,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Dipole {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -16902,7 +16906,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Dipole {
     //  no simd      144      176        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -16917,13 +16921,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Dipole {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17089,15 +17093,15 @@ impl GeometricAntiQuotient<AntiFlector> for Dipole {
     //  no simd       74       89        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17148,12 +17152,12 @@ impl GeometricAntiQuotient<AntiLine> for Dipole {
     //  no simd       46       73        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17207,15 +17211,15 @@ impl GeometricAntiQuotient<AntiMotor> for Dipole {
     //  no simd       69       91        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17348,7 +17352,7 @@ impl GeometricAntiQuotient<Circle> for Dipole {
     //  no simd       90      116        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -17360,11 +17364,11 @@ impl GeometricAntiQuotient<Circle> for Dipole {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17432,7 +17436,7 @@ impl GeometricAntiQuotient<CircleRotor> for Dipole {
     //  no simd      101      127        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -17444,11 +17448,11 @@ impl GeometricAntiQuotient<CircleRotor> for Dipole {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17520,7 +17524,7 @@ impl GeometricAntiQuotient<Dipole> for Dipole {
     //  no simd       90      116        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -17532,11 +17536,11 @@ impl GeometricAntiQuotient<Dipole> for Dipole {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17595,7 +17599,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Dipole {
     //  no simd      144      173        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -17611,13 +17615,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Dipole {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17778,15 +17782,15 @@ impl GeometricAntiQuotient<Flector> for Dipole {
     //  no simd       70       89        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17856,12 +17860,12 @@ impl GeometricAntiQuotient<Line> for Dipole {
     //  no simd       47       67        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17918,15 +17922,15 @@ impl GeometricAntiQuotient<Motor> for Dipole {
     //  no simd       68       89        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17995,7 +17999,7 @@ impl GeometricAntiQuotient<MultiVector> for Dipole {
     //  no simd      311      371        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -18024,27 +18028,27 @@ impl GeometricAntiQuotient<MultiVector> for Dipole {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -18252,11 +18256,11 @@ impl GeometricAntiQuotient<RoundPoint> for Dipole {
     //  no simd       38       63        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return DipoleInversion::from_groups(
             // e41, e42, e43
             (Simd32x3::from(geometric_anti_product[e4]) * self.group1().xyz()) + (self.group0().yzx() * geometric_anti_product.group0().zxy())
@@ -18326,15 +18330,15 @@ impl GeometricAntiQuotient<Sphere> for Dipole {
     //  no simd       38       57        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -18381,7 +18385,7 @@ impl GeometricAntiQuotient<VersorEven> for Dipole {
     //  no simd      155      187        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -18396,13 +18400,13 @@ impl GeometricAntiQuotient<VersorEven> for Dipole {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18509,7 +18513,7 @@ impl GeometricAntiQuotient<VersorOdd> for Dipole {
     //  no simd      155      187        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -18526,13 +18530,13 @@ impl GeometricAntiQuotient<VersorOdd> for Dipole {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18642,7 +18646,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for DipoleInversion {
     //  no simd      156      188        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -18655,11 +18659,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for DipoleInversion {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18748,7 +18752,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for DipoleInversion {
     //  no simd      219      250        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -18763,13 +18767,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for DipoleInversion {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18971,15 +18975,15 @@ impl GeometricAntiQuotient<AntiFlector> for DipoleInversion {
     //  no simd      115      131        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19056,12 +19060,12 @@ impl GeometricAntiQuotient<AntiLine> for DipoleInversion {
     //  no simd       77       99        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19121,15 +19125,15 @@ impl GeometricAntiQuotient<AntiMotor> for DipoleInversion {
     //  no simd      111      129        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19271,7 +19275,7 @@ impl GeometricAntiQuotient<Circle> for DipoleInversion {
     //  no simd      140      166        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -19283,11 +19287,11 @@ impl GeometricAntiQuotient<Circle> for DipoleInversion {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19377,7 +19381,7 @@ impl GeometricAntiQuotient<CircleRotor> for DipoleInversion {
     //  no simd      156      182        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -19389,11 +19393,11 @@ impl GeometricAntiQuotient<CircleRotor> for DipoleInversion {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19489,7 +19493,7 @@ impl GeometricAntiQuotient<Dipole> for DipoleInversion {
     //  no simd      140      169        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -19501,11 +19505,11 @@ impl GeometricAntiQuotient<Dipole> for DipoleInversion {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19595,7 +19599,7 @@ impl GeometricAntiQuotient<DipoleInversion> for DipoleInversion {
     //  no simd      219      248        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -19611,13 +19615,13 @@ impl GeometricAntiQuotient<DipoleInversion> for DipoleInversion {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19809,15 +19813,15 @@ impl GeometricAntiQuotient<Flector> for DipoleInversion {
     //  no simd      111      129        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19890,12 +19894,12 @@ impl GeometricAntiQuotient<Line> for DipoleInversion {
     //  no simd       77       96        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19970,15 +19974,15 @@ impl GeometricAntiQuotient<Motor> for DipoleInversion {
     //  no simd      108      128        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20066,7 +20070,7 @@ impl GeometricAntiQuotient<MultiVector> for DipoleInversion {
     //  no simd      471      538        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -20095,27 +20099,27 @@ impl GeometricAntiQuotient<MultiVector> for DipoleInversion {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -20388,11 +20392,11 @@ impl GeometricAntiQuotient<RoundPoint> for DipoleInversion {
     //  no simd       63       91        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
@@ -20475,15 +20479,15 @@ impl GeometricAntiQuotient<Sphere> for DipoleInversion {
     //  no simd       62       85        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -20543,7 +20547,7 @@ impl GeometricAntiQuotient<VersorEven> for DipoleInversion {
     //  no simd      235      266        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -20558,13 +20562,13 @@ impl GeometricAntiQuotient<VersorEven> for DipoleInversion {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20688,7 +20692,7 @@ impl GeometricAntiQuotient<VersorOdd> for DipoleInversion {
     //  no simd      235      270        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -20705,13 +20709,13 @@ impl GeometricAntiQuotient<VersorOdd> for DipoleInversion {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -20852,7 +20856,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for DualNum {
     //  no simd       14       44        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -20865,11 +20869,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for DualNum {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20900,7 +20904,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for DualNum {
     //  no simd       25       53        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -20915,13 +20919,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for DualNum {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -20992,15 +20996,15 @@ impl GeometricAntiQuotient<AntiFlector> for DualNum {
     //  no simd        7       21        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21026,12 +21030,12 @@ impl GeometricAntiQuotient<AntiLine> for DualNum {
     //  no simd        5       15        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiLine::from_groups(
             // e23, e31, e12
@@ -21052,15 +21056,15 @@ impl GeometricAntiQuotient<AntiMotor> for DualNum {
     //  no simd        7       20        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -21100,15 +21104,14 @@ impl GeometricAntiQuotient<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        3        0
+    // yes simd        0        1        1
+    //  no simd        0        2        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * other[e12345]) * self.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for DualNum {
@@ -21123,7 +21126,7 @@ impl GeometricAntiQuotient<Circle> for DualNum {
     //  no simd       12       40        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -21135,11 +21138,11 @@ impl GeometricAntiQuotient<Circle> for DualNum {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -21166,7 +21169,7 @@ impl GeometricAntiQuotient<CircleRotor> for DualNum {
     //  no simd       14       49        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -21178,11 +21181,11 @@ impl GeometricAntiQuotient<CircleRotor> for DualNum {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21214,7 +21217,7 @@ impl GeometricAntiQuotient<Dipole> for DualNum {
     //  no simd       12       40        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -21226,11 +21229,11 @@ impl GeometricAntiQuotient<Dipole> for DualNum {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -21257,7 +21260,7 @@ impl GeometricAntiQuotient<DipoleInversion> for DualNum {
     //  no simd       24       57        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -21273,13 +21276,13 @@ impl GeometricAntiQuotient<DipoleInversion> for DualNum {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -21356,15 +21359,15 @@ impl GeometricAntiQuotient<Flector> for DualNum {
     //  no simd        7       21        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -21390,12 +21393,12 @@ impl GeometricAntiQuotient<Line> for DualNum {
     //  no simd        5       15        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Line::from_groups(
             // e415, e425, e435
@@ -21416,15 +21419,15 @@ impl GeometricAntiQuotient<Motor> for DualNum {
     //  no simd        7       20        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -21447,7 +21450,7 @@ impl GeometricAntiQuotient<MultiVector> for DualNum {
     //  no simd       55      116        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -21476,27 +21479,27 @@ impl GeometricAntiQuotient<MultiVector> for DualNum {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -21571,11 +21574,11 @@ impl GeometricAntiQuotient<RoundPoint> for DualNum {
     //  no simd        3       21        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x3::from(0.0).with_w(self[e5] * geometric_anti_product[e4]),
@@ -21592,15 +21595,14 @@ impl GeometricAntiQuotient<Scalar> for DualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    // yes simd        0        2        1
+    //  no simd        0        3        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345] * other[scalar]) * self.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(1.0 / other[scalar] * -1.0) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Sphere> for DualNum {
@@ -21614,15 +21616,15 @@ impl GeometricAntiQuotient<Sphere> for DualNum {
     //  no simd        3       18        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -21648,7 +21650,7 @@ impl GeometricAntiQuotient<VersorEven> for DualNum {
     //  no simd       27       57        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -21663,13 +21665,13 @@ impl GeometricAntiQuotient<VersorEven> for DualNum {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21703,7 +21705,7 @@ impl GeometricAntiQuotient<VersorOdd> for DualNum {
     //  no simd       27       61        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -21720,13 +21722,13 @@ impl GeometricAntiQuotient<VersorOdd> for DualNum {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -21775,7 +21777,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for FlatPoint {
     //  no simd       38       69        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -21788,11 +21790,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for FlatPoint {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21835,7 +21837,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for FlatPoint {
     //  no simd       57       84        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -21850,13 +21852,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for FlatPoint {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -21944,15 +21946,15 @@ impl GeometricAntiQuotient<AntiFlector> for FlatPoint {
     //  no simd       15       32        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -21980,12 +21982,12 @@ impl GeometricAntiQuotient<AntiLine> for FlatPoint {
     //  no simd       12       22        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -22011,15 +22013,15 @@ impl GeometricAntiQuotient<AntiMotor> for FlatPoint {
     //  no simd       15       29        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -22067,15 +22069,14 @@ impl GeometricAntiQuotient<AntiScalar> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
+    // yes simd        0        1        1
+    //  no simd        0        4        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345] * other[e12345]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for FlatPoint {
@@ -22090,7 +22091,7 @@ impl GeometricAntiQuotient<Circle> for FlatPoint {
     //  no simd       34       60        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -22102,11 +22103,11 @@ impl GeometricAntiQuotient<Circle> for FlatPoint {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22151,7 +22152,7 @@ impl GeometricAntiQuotient<CircleRotor> for FlatPoint {
     //  no simd       40       65        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -22163,11 +22164,11 @@ impl GeometricAntiQuotient<CircleRotor> for FlatPoint {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22212,7 +22213,7 @@ impl GeometricAntiQuotient<Dipole> for FlatPoint {
     //  no simd       33       64        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -22224,11 +22225,11 @@ impl GeometricAntiQuotient<Dipole> for FlatPoint {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22271,7 +22272,7 @@ impl GeometricAntiQuotient<DipoleInversion> for FlatPoint {
     //  no simd       54       89        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -22287,13 +22288,13 @@ impl GeometricAntiQuotient<DipoleInversion> for FlatPoint {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22383,15 +22384,15 @@ impl GeometricAntiQuotient<Flector> for FlatPoint {
     //  no simd       15       32        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -22419,12 +22420,12 @@ impl GeometricAntiQuotient<Line> for FlatPoint {
     //  no simd       12       22        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -22451,15 +22452,15 @@ impl GeometricAntiQuotient<Motor> for FlatPoint {
     //  no simd       15       29        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -22491,7 +22492,7 @@ impl GeometricAntiQuotient<MultiVector> for FlatPoint {
     //  no simd      122      180        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -22520,27 +22521,27 @@ impl GeometricAntiQuotient<MultiVector> for FlatPoint {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -22655,11 +22656,11 @@ impl GeometricAntiQuotient<RoundPoint> for FlatPoint {
     //  no simd       12       32        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
@@ -22682,17 +22683,16 @@ impl GeometricAntiQuotient<Scalar> for FlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        1
+    //  no simd        0        9        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345] * other[scalar]) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            Simd32x4::from(1.0 / other[scalar] * -1.0) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -22708,15 +22708,15 @@ impl GeometricAntiQuotient<Sphere> for FlatPoint {
     //  no simd       12       33        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -22750,7 +22750,7 @@ impl GeometricAntiQuotient<VersorEven> for FlatPoint {
     //  no simd       62       89        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -22765,13 +22765,13 @@ impl GeometricAntiQuotient<VersorEven> for FlatPoint {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22820,7 +22820,7 @@ impl GeometricAntiQuotient<VersorOdd> for FlatPoint {
     //  no simd       59       94        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -22837,13 +22837,13 @@ impl GeometricAntiQuotient<VersorOdd> for FlatPoint {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22907,7 +22907,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Flector {
     //  no simd       83      108        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -22920,11 +22920,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Flector {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22983,7 +22983,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Flector {
     //  no simd      122      143        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -22998,13 +22998,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Flector {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -23133,15 +23133,15 @@ impl GeometricAntiQuotient<AntiFlector> for Flector {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -23189,12 +23189,12 @@ impl GeometricAntiQuotient<AntiLine> for Flector {
     //  no simd       34       42        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -23225,15 +23225,15 @@ impl GeometricAntiQuotient<AntiMotor> for Flector {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -23329,7 +23329,7 @@ impl GeometricAntiQuotient<Circle> for Flector {
     //  no simd       77       97        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -23341,11 +23341,11 @@ impl GeometricAntiQuotient<Circle> for Flector {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -23396,7 +23396,7 @@ impl GeometricAntiQuotient<CircleRotor> for Flector {
     //  no simd       86      106        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -23408,11 +23408,11 @@ impl GeometricAntiQuotient<CircleRotor> for Flector {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -23474,7 +23474,7 @@ impl GeometricAntiQuotient<Dipole> for Flector {
     //  no simd       74       99        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -23486,11 +23486,11 @@ impl GeometricAntiQuotient<Dipole> for Flector {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -23539,7 +23539,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Flector {
     //  no simd      115      146        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -23555,13 +23555,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Flector {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -23681,15 +23681,15 @@ impl GeometricAntiQuotient<Flector> for Flector {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -23724,12 +23724,12 @@ impl GeometricAntiQuotient<Line> for Flector {
     //  no simd       34       42        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -23762,15 +23762,15 @@ impl GeometricAntiQuotient<Motor> for Flector {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -23813,7 +23813,7 @@ impl GeometricAntiQuotient<MultiVector> for Flector {
     //  no simd      252      304        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -23842,27 +23842,27 @@ impl GeometricAntiQuotient<MultiVector> for Flector {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -24047,11 +24047,11 @@ impl GeometricAntiQuotient<RoundPoint> for Flector {
     //  no simd       27       54        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([geometric_anti_product[e4], geometric_anti_product[e4], geometric_anti_product[e4], 1.0])
@@ -24114,15 +24114,15 @@ impl GeometricAntiQuotient<Sphere> for Flector {
     //  no simd       27       57        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -24163,7 +24163,7 @@ impl GeometricAntiQuotient<VersorEven> for Flector {
     //  no simd      130      152        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -24178,13 +24178,13 @@ impl GeometricAntiQuotient<VersorEven> for Flector {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -24268,7 +24268,7 @@ impl GeometricAntiQuotient<VersorOdd> for Flector {
     //  no simd      124      155        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -24285,13 +24285,13 @@ impl GeometricAntiQuotient<VersorOdd> for Flector {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -24375,7 +24375,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Line {
     //  no simd       58       84        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -24388,11 +24388,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Line {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -24458,7 +24458,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Line {
     //  no simd       84      114        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -24473,13 +24473,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Line {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -24599,15 +24599,15 @@ impl GeometricAntiQuotient<AntiFlector> for Line {
     //  no simd       35       44        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -24639,12 +24639,12 @@ impl GeometricAntiQuotient<AntiLine> for Line {
     //  no simd       21       33        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -24680,15 +24680,15 @@ impl GeometricAntiQuotient<AntiMotor> for Line {
     //  no simd       31       44        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -24786,7 +24786,7 @@ impl GeometricAntiQuotient<Circle> for Line {
     //  no simd       50       77        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -24798,11 +24798,11 @@ impl GeometricAntiQuotient<Circle> for Line {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -24855,7 +24855,7 @@ impl GeometricAntiQuotient<CircleRotor> for Line {
     //  no simd       57       84        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -24867,11 +24867,11 @@ impl GeometricAntiQuotient<CircleRotor> for Line {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -24924,7 +24924,7 @@ impl GeometricAntiQuotient<Dipole> for Line {
     //  no simd       50       77        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -24936,11 +24936,11 @@ impl GeometricAntiQuotient<Dipole> for Line {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -24996,7 +24996,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Line {
     //  no simd       88      114        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -25012,13 +25012,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Line {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -25134,15 +25134,15 @@ impl GeometricAntiQuotient<Flector> for Line {
     //  no simd       31       45        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -25188,12 +25188,12 @@ impl GeometricAntiQuotient<Line> for Line {
     //  no simd       21       33        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -25229,15 +25229,15 @@ impl GeometricAntiQuotient<Motor> for Line {
     //  no simd       31       44        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -25283,7 +25283,7 @@ impl GeometricAntiQuotient<MultiVector> for Line {
     //  no simd      184      241        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -25312,27 +25312,27 @@ impl GeometricAntiQuotient<MultiVector> for Line {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -25489,11 +25489,11 @@ impl GeometricAntiQuotient<RoundPoint> for Line {
     //  no simd       21       41        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(geometric_anti_product[e4]) * self.group0(),
@@ -25548,15 +25548,15 @@ impl GeometricAntiQuotient<Sphere> for Line {
     //  no simd       21       39        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -25597,7 +25597,7 @@ impl GeometricAntiQuotient<VersorEven> for Line {
     //  no simd       91      121        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -25612,13 +25612,13 @@ impl GeometricAntiQuotient<VersorEven> for Line {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -25700,7 +25700,7 @@ impl GeometricAntiQuotient<VersorOdd> for Line {
     //  no simd       92      121        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -25717,13 +25717,13 @@ impl GeometricAntiQuotient<VersorOdd> for Line {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -25807,7 +25807,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Motor {
     //  no simd       83      106        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -25820,11 +25820,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Motor {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -25898,7 +25898,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Motor {
     //  no simd      114      144        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -25913,13 +25913,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Motor {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -26049,15 +26049,15 @@ impl GeometricAntiQuotient<AntiFlector> for Motor {
     //  no simd       47       56        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -26099,12 +26099,12 @@ impl GeometricAntiQuotient<AntiLine> for Motor {
     //  no simd       30       42        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -26149,15 +26149,15 @@ impl GeometricAntiQuotient<AntiMotor> for Motor {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -26260,7 +26260,7 @@ impl GeometricAntiQuotient<Circle> for Motor {
     //  no simd       70       97        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -26272,11 +26272,11 @@ impl GeometricAntiQuotient<Circle> for Motor {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -26342,7 +26342,7 @@ impl GeometricAntiQuotient<CircleRotor> for Motor {
     //  no simd       79      106        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -26354,11 +26354,11 @@ impl GeometricAntiQuotient<CircleRotor> for Motor {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -26435,7 +26435,7 @@ impl GeometricAntiQuotient<Dipole> for Motor {
     //  no simd       71       97        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -26447,11 +26447,11 @@ impl GeometricAntiQuotient<Dipole> for Motor {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -26522,7 +26522,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Motor {
     //  no simd      115      143        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -26538,13 +26538,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Motor {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -26680,15 +26680,15 @@ impl GeometricAntiQuotient<Flector> for Motor {
     //  no simd       43       57        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -26740,12 +26740,12 @@ impl GeometricAntiQuotient<Line> for Motor {
     //  no simd       30       42        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -26790,15 +26790,15 @@ impl GeometricAntiQuotient<Motor> for Motor {
     //  no simd       43       56        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -26847,7 +26847,7 @@ impl GeometricAntiQuotient<MultiVector> for Motor {
     //  no simd      247      306        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -26876,27 +26876,27 @@ impl GeometricAntiQuotient<MultiVector> for Motor {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -27093,11 +27093,11 @@ impl GeometricAntiQuotient<RoundPoint> for Motor {
     //  no simd       27       48        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(geometric_anti_product[e4]) * self.group0().xyz().with_w(self[e5]),
@@ -27158,15 +27158,15 @@ impl GeometricAntiQuotient<Sphere> for Motor {
     //  no simd       27       49        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27214,7 +27214,7 @@ impl GeometricAntiQuotient<VersorEven> for Motor {
     //  no simd      123      153        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -27229,13 +27229,13 @@ impl GeometricAntiQuotient<VersorEven> for Motor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -27327,7 +27327,7 @@ impl GeometricAntiQuotient<VersorOdd> for Motor {
     //  no simd      124      152        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -27344,13 +27344,13 @@ impl GeometricAntiQuotient<VersorOdd> for Motor {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27448,7 +27448,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for MultiVector {
     //  no simd      327      370        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -27461,11 +27461,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for MultiVector {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -27636,7 +27636,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for MultiVector {
     //  no simd      458      503        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -27651,13 +27651,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for MultiVector {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28026,15 +28026,15 @@ impl GeometricAntiQuotient<AntiFlector> for MultiVector {
     //  no simd      232      264        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28175,12 +28175,12 @@ impl GeometricAntiQuotient<AntiLine> for MultiVector {
     //  no simd      164      198        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28296,15 +28296,15 @@ impl GeometricAntiQuotient<AntiMotor> for MultiVector {
     //  no simd      228      265        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28573,7 +28573,7 @@ impl GeometricAntiQuotient<Circle> for MultiVector {
     //  no simd      294      337        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -28585,11 +28585,11 @@ impl GeometricAntiQuotient<Circle> for MultiVector {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28740,7 +28740,7 @@ impl GeometricAntiQuotient<CircleRotor> for MultiVector {
     //  no simd      327      370        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -28752,11 +28752,11 @@ impl GeometricAntiQuotient<CircleRotor> for MultiVector {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -28917,7 +28917,7 @@ impl GeometricAntiQuotient<Dipole> for MultiVector {
     //  no simd      294      339        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -28929,11 +28929,11 @@ impl GeometricAntiQuotient<Dipole> for MultiVector {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -29111,7 +29111,7 @@ impl GeometricAntiQuotient<DipoleInversion> for MultiVector {
     //  no simd      458      509        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -29127,13 +29127,13 @@ impl GeometricAntiQuotient<DipoleInversion> for MultiVector {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -29508,15 +29508,15 @@ impl GeometricAntiQuotient<Flector> for MultiVector {
     //  no simd      227      265        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -29671,12 +29671,12 @@ impl GeometricAntiQuotient<Line> for MultiVector {
     //  no simd      163      199        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -29795,15 +29795,15 @@ impl GeometricAntiQuotient<Motor> for MultiVector {
     //  no simd      228      265        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -29945,7 +29945,7 @@ impl GeometricAntiQuotient<MultiVector> for MultiVector {
     //  no simd     1015     1072        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -29974,27 +29974,27 @@ impl GeometricAntiQuotient<MultiVector> for MultiVector {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -30536,11 +30536,11 @@ impl GeometricAntiQuotient<RoundPoint> for MultiVector {
     //  no simd      131      167        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([
@@ -30677,15 +30677,15 @@ impl GeometricAntiQuotient<Sphere> for MultiVector {
     //  no simd      131      168        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -30791,7 +30791,7 @@ impl GeometricAntiQuotient<VersorEven> for MultiVector {
     //  no simd      491      536        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -30806,13 +30806,13 @@ impl GeometricAntiQuotient<VersorEven> for MultiVector {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -31057,7 +31057,7 @@ impl GeometricAntiQuotient<VersorOdd> for MultiVector {
     //  no simd      491      536        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -31074,13 +31074,13 @@ impl GeometricAntiQuotient<VersorOdd> for MultiVector {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -31329,7 +31329,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Plane {
     //  no simd       39       62        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -31342,11 +31342,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Plane {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -31385,7 +31385,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Plane {
     //  no simd       55       89        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -31400,13 +31400,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Plane {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -31502,15 +31502,15 @@ impl GeometricAntiQuotient<AntiFlector> for Plane {
     //  no simd       23       36        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -31543,12 +31543,12 @@ impl GeometricAntiQuotient<AntiLine> for Plane {
     //  no simd       15       28        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -31580,15 +31580,15 @@ impl GeometricAntiQuotient<AntiMotor> for Plane {
     //  no simd       23       37        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -31642,15 +31642,14 @@ impl GeometricAntiQuotient<AntiScalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        0        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
+    // yes simd        0        1        1
+    //  no simd        0        4        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * other[e12345]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(1.0 / other[e12345]) * self.group0());
     }
 }
 impl GeometricAntiQuotient<Circle> for Plane {
@@ -31665,7 +31664,7 @@ impl GeometricAntiQuotient<Circle> for Plane {
     //  no simd       31       59        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -31677,11 +31676,11 @@ impl GeometricAntiQuotient<Circle> for Plane {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -31723,7 +31722,7 @@ impl GeometricAntiQuotient<CircleRotor> for Plane {
     //  no simd       36       64        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -31735,11 +31734,11 @@ impl GeometricAntiQuotient<CircleRotor> for Plane {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -31782,7 +31781,7 @@ impl GeometricAntiQuotient<Dipole> for Plane {
     //  no simd       34       57        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -31794,11 +31793,11 @@ impl GeometricAntiQuotient<Dipole> for Plane {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -31837,7 +31836,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Plane {
     //  no simd       54       88        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -31853,13 +31852,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Plane {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -31957,15 +31956,15 @@ impl GeometricAntiQuotient<Flector> for Plane {
     //  no simd       23       36        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -31998,12 +31997,12 @@ impl GeometricAntiQuotient<Line> for Plane {
     //  no simd       15       30        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -32034,15 +32033,15 @@ impl GeometricAntiQuotient<Motor> for Plane {
     //  no simd       23       40        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -32077,7 +32076,7 @@ impl GeometricAntiQuotient<MultiVector> for Plane {
     //  no simd      119      182        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -32106,27 +32105,27 @@ impl GeometricAntiQuotient<MultiVector> for Plane {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -32238,11 +32237,11 @@ impl GeometricAntiQuotient<RoundPoint> for Plane {
     //  no simd       12       28        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             Simd32x3::from(geometric_anti_product[e4]) * self.group0().xyz(),
@@ -32266,17 +32265,16 @@ impl GeometricAntiQuotient<Scalar> for Plane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        1
+    //  no simd        0        9        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345] * other[scalar]) * self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from(1.0 / other[scalar] * -1.0) * self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -32292,15 +32290,15 @@ impl GeometricAntiQuotient<Sphere> for Plane {
     //  no simd       15       31        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return CircleRotor::from_groups(
             // e423, e431, e412
@@ -32326,7 +32324,7 @@ impl GeometricAntiQuotient<VersorEven> for Plane {
     //  no simd       60       94        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -32341,13 +32339,13 @@ impl GeometricAntiQuotient<VersorEven> for Plane {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -32398,7 +32396,7 @@ impl GeometricAntiQuotient<VersorOdd> for Plane {
     //  no simd       59       92        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -32415,13 +32413,13 @@ impl GeometricAntiQuotient<VersorOdd> for Plane {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -32479,7 +32477,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for RoundPoint {
     //  no simd       50       75        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -32492,11 +32490,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for RoundPoint {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -32535,7 +32533,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for RoundPoint {
     //  no simd       69       99        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -32550,13 +32548,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for RoundPoint {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -32666,15 +32664,15 @@ impl GeometricAntiQuotient<AntiFlector> for RoundPoint {
     //  no simd       27       54        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -32716,12 +32714,12 @@ impl GeometricAntiQuotient<AntiLine> for RoundPoint {
     //  no simd       20       37        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -32756,15 +32754,15 @@ impl GeometricAntiQuotient<AntiMotor> for RoundPoint {
     //  no simd       27       50        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -32856,7 +32854,7 @@ impl GeometricAntiQuotient<Circle> for RoundPoint {
     //  no simd       41       69        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -32868,11 +32866,11 @@ impl GeometricAntiQuotient<Circle> for RoundPoint {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -32916,7 +32914,7 @@ impl GeometricAntiQuotient<CircleRotor> for RoundPoint {
     //  no simd       47       75        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -32928,11 +32926,11 @@ impl GeometricAntiQuotient<CircleRotor> for RoundPoint {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -32977,7 +32975,7 @@ impl GeometricAntiQuotient<Dipole> for RoundPoint {
     //  no simd       44       70        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -32989,11 +32987,11 @@ impl GeometricAntiQuotient<Dipole> for RoundPoint {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -33036,7 +33034,7 @@ impl GeometricAntiQuotient<DipoleInversion> for RoundPoint {
     //  no simd       70      102        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -33052,13 +33050,13 @@ impl GeometricAntiQuotient<DipoleInversion> for RoundPoint {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -33170,15 +33168,15 @@ impl GeometricAntiQuotient<Flector> for RoundPoint {
     //  no simd       27       55        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -33224,12 +33222,12 @@ impl GeometricAntiQuotient<Line> for RoundPoint {
     //  no simd       20       38        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -33265,15 +33263,15 @@ impl GeometricAntiQuotient<Motor> for RoundPoint {
     //  no simd       27       49        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -33315,7 +33313,7 @@ impl GeometricAntiQuotient<MultiVector> for RoundPoint {
     //  no simd      151      208        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -33344,27 +33342,27 @@ impl GeometricAntiQuotient<MultiVector> for RoundPoint {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -33481,11 +33479,11 @@ impl GeometricAntiQuotient<RoundPoint> for RoundPoint {
     //  no simd       20       32        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return CircleRotor::from_groups(
             // e423, e431, e412
             (Simd32x3::from(self[e4]) * geometric_anti_product.group0().xyz()) - (Simd32x3::from(geometric_anti_product[e4]) * self.group0().xyz()),
@@ -33532,15 +33530,15 @@ impl GeometricAntiQuotient<Sphere> for RoundPoint {
     //  no simd       20       32        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
@@ -33567,7 +33565,7 @@ impl GeometricAntiQuotient<VersorEven> for RoundPoint {
     //  no simd       75      105        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -33582,13 +33580,13 @@ impl GeometricAntiQuotient<VersorEven> for RoundPoint {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -33642,7 +33640,7 @@ impl GeometricAntiQuotient<VersorOdd> for RoundPoint {
     //  no simd       75      107        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -33659,13 +33657,13 @@ impl GeometricAntiQuotient<VersorOdd> for RoundPoint {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -33719,7 +33717,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Scalar {
     //  no simd        7       39        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -33732,11 +33730,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Scalar {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return CircleRotor::from_groups(
             // e423, e431, e412
@@ -33760,7 +33758,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Scalar {
     //  no simd       10       46        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -33775,13 +33773,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Scalar {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -33806,10 +33804,10 @@ impl GeometricAntiQuotient<AntiDualNum> for Scalar {
     //  no simd        0        7        0
     fn geometric_anti_quotient(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
         return DualNum::from_groups(
             // e5, e12345
-            Simd32x2::from(self[scalar]) * Simd32x2::from([other[e3215] * other[e12345], other[scalar] * other[e12345]]) * Simd32x2::from(-1.0),
+            Simd32x2::from(self[scalar]) * Simd32x2::from([other[e3215] * other_2[e12345], other[scalar] * other_2[e12345]]) * Simd32x2::from(-1.0),
         );
     }
 }
@@ -33824,11 +33822,16 @@ impl GeometricAntiQuotient<AntiFlatPoint> for Scalar {
     //  no simd        0       12        0
     fn geometric_anti_quotient(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], -2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], -2));
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
             Simd32x4::from(self[scalar])
-                * Simd32x4::from([other[e235] * other[e12345], other[e315] * other[e12345], other[e125] * other[e12345], other[e321] * other[e12345]])
+                * Simd32x4::from([
+                    other[e235] * other_2[e12345],
+                    other[e315] * other_2[e12345],
+                    other[e125] * other_2[e12345],
+                    other[e321] * other_2[e12345],
+                ])
                 * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
@@ -33844,15 +33847,15 @@ impl GeometricAntiQuotient<AntiFlector> for Scalar {
     //  no simd        3       24        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -33873,12 +33876,12 @@ impl GeometricAntiQuotient<AntiLine> for Scalar {
     //  no simd        2       18        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return Line::from_groups(
             // e415, e425, e435
@@ -33899,15 +33902,15 @@ impl GeometricAntiQuotient<AntiMotor> for Scalar {
     //  no simd        3       24        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -33928,11 +33931,11 @@ impl GeometricAntiQuotient<AntiPlane> for Scalar {
     //  no simd        2       12        0
     fn geometric_anti_quotient(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2));
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from(self[scalar])
-                * Simd32x4::from([other[e1] * other[e12345], other[e2] * other[e12345], other[e3] * other[e12345], other[e5] * other[e12345]])
+                * Simd32x4::from([other[e1] * other_2[e12345], other[e2] * other_2[e12345], other[e3] * other_2[e12345], other[e5] * other_2[e12345]])
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
@@ -33941,11 +33944,10 @@ impl GeometricAntiQuotient<AntiScalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        0        1
     fn geometric_anti_quotient(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
-        return Scalar::from_groups(/* scalar */ other[e12345] * other[e12345] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ self[scalar] / (other[e12345]));
     }
 }
 impl GeometricAntiQuotient<Circle> for Scalar {
@@ -33960,7 +33962,7 @@ impl GeometricAntiQuotient<Circle> for Scalar {
     //  no simd        6       30        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -33972,11 +33974,11 @@ impl GeometricAntiQuotient<Circle> for Scalar {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return Dipole::from_groups(
             // e41, e42, e43
@@ -34000,7 +34002,7 @@ impl GeometricAntiQuotient<CircleRotor> for Scalar {
     //  no simd        7       32        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -34012,11 +34014,11 @@ impl GeometricAntiQuotient<CircleRotor> for Scalar {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
@@ -34040,7 +34042,7 @@ impl GeometricAntiQuotient<Dipole> for Scalar {
     //  no simd        6       36        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -34052,11 +34054,11 @@ impl GeometricAntiQuotient<Dipole> for Scalar {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return Circle::from_groups(
             // e423, e431, e412
@@ -34080,7 +34082,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Scalar {
     //  no simd       10       53        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -34096,13 +34098,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Scalar {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -34127,10 +34129,10 @@ impl GeometricAntiQuotient<DualNum> for Scalar {
     //  no simd        0        4        0
     fn geometric_anti_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], -2));
         return AntiDualNum::from_groups(
             // e3215, scalar
-            Simd32x2::from(self[scalar]) * Simd32x2::from([other[e12345] * other[e5], other[e12345] * other[e12345]]),
+            Simd32x2::from(self[scalar]) * Simd32x2::from([other_2[e12345] * other[e5], other_2[e12345] * other[e12345]]),
         );
     }
 }
@@ -34145,11 +34147,11 @@ impl GeometricAntiQuotient<FlatPoint> for Scalar {
     //  no simd        0       13        0
     fn geometric_anti_quotient(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], -2) * -1.0);
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], -2) * -1.0);
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from(self[scalar])
-                * Simd32x4::from([other[e12345] * other[e15], other[e12345] * other[e25], other[e12345] * other[e35], other[e12345] * other[e45]])
+                * Simd32x4::from([other_2[e12345] * other[e15], other_2[e12345] * other[e25], other_2[e12345] * other[e35], other_2[e12345] * other[e45]])
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
@@ -34165,15 +34167,15 @@ impl GeometricAntiQuotient<Flector> for Scalar {
     //  no simd        3       24        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -34194,12 +34196,12 @@ impl GeometricAntiQuotient<Line> for Scalar {
     //  no simd        2       12        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiLine::from_groups(
             // e23, e31, e12
@@ -34220,15 +34222,15 @@ impl GeometricAntiQuotient<Motor> for Scalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -34251,7 +34253,7 @@ impl GeometricAntiQuotient<MultiVector> for Scalar {
     //  no simd       23      105        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -34280,27 +34282,27 @@ impl GeometricAntiQuotient<MultiVector> for Scalar {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -34339,11 +34341,16 @@ impl GeometricAntiQuotient<Plane> for Scalar {
     //  no simd        2       12        0
     fn geometric_anti_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2));
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
             Simd32x4::from(self[scalar])
-                * Simd32x4::from([other[e12345] * other[e4235], other[e12345] * other[e4315], other[e12345] * other[e4125], other[e12345] * other[e3215]])
+                * Simd32x4::from([
+                    other_2[e12345] * other[e4235],
+                    other_2[e12345] * other[e4315],
+                    other_2[e12345] * other[e4125],
+                    other_2[e12345] * other[e3215],
+                ])
                 * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
@@ -34359,11 +34366,11 @@ impl GeometricAntiQuotient<RoundPoint> for Scalar {
     //  no simd        3       16        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from(self[scalar]) * geometric_anti_product.group0().xyz().with_w(geometric_anti_product[e5]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
@@ -34376,11 +34383,10 @@ impl GeometricAntiQuotient<Scalar> for Scalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        0        1
     fn geometric_anti_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], -2) * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * other[scalar] * self[scalar] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] / (other[scalar]));
     }
 }
 impl GeometricAntiQuotient<Sphere> for Scalar {
@@ -34394,15 +34400,15 @@ impl GeometricAntiQuotient<Sphere> for Scalar {
     //  no simd        3       17        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
@@ -34425,7 +34431,7 @@ impl GeometricAntiQuotient<VersorEven> for Scalar {
     //  no simd       11       48        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -34440,13 +34446,13 @@ impl GeometricAntiQuotient<VersorEven> for Scalar {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -34471,7 +34477,7 @@ impl GeometricAntiQuotient<VersorOdd> for Scalar {
     //  no simd       11       56        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -34488,13 +34494,13 @@ impl GeometricAntiQuotient<VersorOdd> for Scalar {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -34526,7 +34532,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Sphere {
     //  no simd       47       75        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -34539,11 +34545,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for Sphere {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -34585,7 +34591,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Sphere {
     //  no simd       70      104        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -34600,13 +34606,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for Sphere {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -34717,15 +34723,15 @@ impl GeometricAntiQuotient<AntiFlector> for Sphere {
     //  no simd       27       50        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -34768,12 +34774,12 @@ impl GeometricAntiQuotient<AntiLine> for Sphere {
     //  no simd       20       44        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -34810,15 +34816,15 @@ impl GeometricAntiQuotient<AntiMotor> for Sphere {
     //  no simd       27       58        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -34916,7 +34922,7 @@ impl GeometricAntiQuotient<Circle> for Sphere {
     //  no simd       41       69        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -34928,11 +34934,11 @@ impl GeometricAntiQuotient<Circle> for Sphere {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -34977,7 +34983,7 @@ impl GeometricAntiQuotient<CircleRotor> for Sphere {
     //  no simd       50       75        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -34989,11 +34995,11 @@ impl GeometricAntiQuotient<CircleRotor> for Sphere {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -35036,7 +35042,7 @@ impl GeometricAntiQuotient<Dipole> for Sphere {
     //  no simd       41       66        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -35048,11 +35054,11 @@ impl GeometricAntiQuotient<Dipole> for Sphere {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -35093,7 +35099,7 @@ impl GeometricAntiQuotient<DipoleInversion> for Sphere {
     //  no simd       69      102        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -35109,13 +35115,13 @@ impl GeometricAntiQuotient<DipoleInversion> for Sphere {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -35225,15 +35231,15 @@ impl GeometricAntiQuotient<Flector> for Sphere {
     //  no simd       27       49        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -35273,12 +35279,12 @@ impl GeometricAntiQuotient<Line> for Sphere {
     //  no simd       20       40        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return DipoleInversion::from_groups(
             // e41, e42, e43
@@ -35314,15 +35320,15 @@ impl GeometricAntiQuotient<Motor> for Sphere {
     //  no simd       27       52        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -35365,7 +35371,7 @@ impl GeometricAntiQuotient<MultiVector> for Sphere {
     //  no simd      151      215        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -35394,27 +35400,27 @@ impl GeometricAntiQuotient<MultiVector> for Sphere {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -35538,11 +35544,11 @@ impl GeometricAntiQuotient<RoundPoint> for Sphere {
     //  no simd       17       32        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from(geometric_anti_product[e4]) * self.group0().xyz()) + (Simd32x3::from(self[e1234]) * geometric_anti_product.group0().xyz()),
@@ -35597,15 +35603,15 @@ impl GeometricAntiQuotient<Sphere> for Sphere {
     //  no simd       20       32        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return CircleRotor::from_groups(
             // e423, e431, e412
@@ -35633,7 +35639,7 @@ impl GeometricAntiQuotient<VersorEven> for Sphere {
     //  no simd       75      110        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -35648,13 +35654,13 @@ impl GeometricAntiQuotient<VersorEven> for Sphere {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -35707,7 +35713,7 @@ impl GeometricAntiQuotient<VersorOdd> for Sphere {
     //  no simd       75      110        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -35724,13 +35730,13 @@ impl GeometricAntiQuotient<VersorOdd> for Sphere {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -35789,7 +35795,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for VersorEven {
     //  no simd      167      193        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -35802,11 +35808,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for VersorEven {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -35903,7 +35909,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for VersorEven {
     //  no simd      234      263        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -35918,13 +35924,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for VersorEven {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -36173,15 +36179,15 @@ impl GeometricAntiQuotient<AntiFlector> for VersorEven {
     //  no simd      116      136        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -36253,12 +36259,12 @@ impl GeometricAntiQuotient<AntiLine> for VersorEven {
     //  no simd       83      103        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -36336,15 +36342,15 @@ impl GeometricAntiQuotient<AntiMotor> for VersorEven {
     //  no simd      116      136        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -36510,7 +36516,7 @@ impl GeometricAntiQuotient<Circle> for VersorEven {
     //  no simd      150      176        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -36522,11 +36528,11 @@ impl GeometricAntiQuotient<Circle> for VersorEven {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -36628,7 +36634,7 @@ impl GeometricAntiQuotient<CircleRotor> for VersorEven {
     //  no simd      167      193        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -36640,11 +36646,11 @@ impl GeometricAntiQuotient<CircleRotor> for VersorEven {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -36750,7 +36756,7 @@ impl GeometricAntiQuotient<Dipole> for VersorEven {
     //  no simd      150      179        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -36762,11 +36768,11 @@ impl GeometricAntiQuotient<Dipole> for VersorEven {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -36874,7 +36880,7 @@ impl GeometricAntiQuotient<DipoleInversion> for VersorEven {
     //  no simd      234      264        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -36890,13 +36896,13 @@ impl GeometricAntiQuotient<DipoleInversion> for VersorEven {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -37108,15 +37114,15 @@ impl GeometricAntiQuotient<Flector> for VersorEven {
     //  no simd      119      136        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -37203,12 +37209,12 @@ impl GeometricAntiQuotient<Line> for VersorEven {
     //  no simd       83      103        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -37286,15 +37292,15 @@ impl GeometricAntiQuotient<Motor> for VersorEven {
     //  no simd      116      136        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -37383,7 +37389,7 @@ impl GeometricAntiQuotient<MultiVector> for VersorEven {
     //  no simd      503      560        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -37412,27 +37418,27 @@ impl GeometricAntiQuotient<MultiVector> for VersorEven {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -37752,11 +37758,11 @@ impl GeometricAntiQuotient<RoundPoint> for VersorEven {
     //  no simd       67       88        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
@@ -37836,15 +37842,15 @@ impl GeometricAntiQuotient<Sphere> for VersorEven {
     //  no simd       67       88        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -37897,7 +37903,7 @@ impl GeometricAntiQuotient<VersorEven> for VersorEven {
     //  no simd      251      280        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -37912,13 +37918,13 @@ impl GeometricAntiQuotient<VersorEven> for VersorEven {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -38068,7 +38074,7 @@ impl GeometricAntiQuotient<VersorOdd> for VersorEven {
     //  no simd      251      280        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -38085,13 +38091,13 @@ impl GeometricAntiQuotient<VersorOdd> for VersorEven {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -38232,7 +38238,7 @@ impl GeometricAntiQuotient<AntiCircleRotor> for VersorOdd {
     //  no simd      167      193        0
     fn geometric_anti_quotient(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -38245,11 +38251,11 @@ impl GeometricAntiQuotient<AntiCircleRotor> for VersorOdd {
         );
         let geometric_anti_product = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -38339,7 +38345,7 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for VersorOdd {
     //  no simd      234      263        0
     fn geometric_anti_quotient(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -38354,13 +38360,13 @@ impl GeometricAntiQuotient<AntiDipoleInversion> for VersorOdd {
         );
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -38565,15 +38571,15 @@ impl GeometricAntiQuotient<AntiFlector> for VersorOdd {
     //  no simd      122      136        0
     fn geometric_anti_quotient(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -38655,12 +38661,12 @@ impl GeometricAntiQuotient<AntiLine> for VersorOdd {
     //  no simd       83      102        0
     fn geometric_anti_quotient(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2));
         let geometric_anti_product = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -38721,15 +38727,15 @@ impl GeometricAntiQuotient<AntiMotor> for VersorOdd {
     //  no simd      116      139        0
     fn geometric_anti_quotient(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e23], 2) + f32::powi(other[e31], 2) + f32::powi(other[e12], 2) - f32::powi(other[scalar], 2),
         );
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -38874,7 +38880,7 @@ impl GeometricAntiQuotient<Circle> for VersorOdd {
     //  no simd      150      176        0
     fn geometric_anti_quotient(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -38886,11 +38892,11 @@ impl GeometricAntiQuotient<Circle> for VersorOdd {
         );
         let geometric_anti_product = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -38992,7 +38998,7 @@ impl GeometricAntiQuotient<CircleRotor> for VersorOdd {
     //  no simd      167      193        0
     fn geometric_anti_quotient(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e321], 2) + f32::powi(other[e12345], 2)
                 - f32::powi(other[e415], 2)
@@ -39004,11 +39010,11 @@ impl GeometricAntiQuotient<CircleRotor> for VersorOdd {
         );
         let geometric_anti_product = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -39114,7 +39120,7 @@ impl GeometricAntiQuotient<Dipole> for VersorOdd {
     //  no simd      150      179        0
     fn geometric_anti_quotient(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -39126,11 +39132,11 @@ impl GeometricAntiQuotient<Dipole> for VersorOdd {
         );
         let geometric_anti_product = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35
-            Simd32x3::from(other[e12345]) * other.group2(),
+            Simd32x3::from(other_2[e12345]) * other.group2(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -39228,7 +39234,7 @@ impl GeometricAntiQuotient<DipoleInversion> for VersorOdd {
     //  no simd      234      269        0
     fn geometric_anti_quotient(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -39244,13 +39250,13 @@ impl GeometricAntiQuotient<DipoleInversion> for VersorOdd {
         );
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -39448,15 +39454,15 @@ impl GeometricAntiQuotient<Flector> for VersorOdd {
     //  no simd      118      137        0
     fn geometric_anti_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - f32::powi(other[e45], 2),
         );
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -39528,12 +39534,12 @@ impl GeometricAntiQuotient<Line> for VersorOdd {
     //  no simd       83      102        0
     fn geometric_anti_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
+        let other_2 = AntiScalar::from_groups(/* e12345 */ -f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2));
         let geometric_anti_product = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from(other[e12345]) * other.group0(),
+            Simd32x3::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group1(),
+            Simd32x3::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -39620,15 +39626,15 @@ impl GeometricAntiQuotient<Motor> for VersorOdd {
     //  no simd      116      136        0
     fn geometric_anti_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e12345], 2) - f32::powi(other[e415], 2) - f32::powi(other[e425], 2) - f32::powi(other[e435], 2),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -39730,7 +39736,7 @@ impl GeometricAntiQuotient<MultiVector> for VersorOdd {
     //  no simd      503      560        0
     fn geometric_anti_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5])
                 + 2.0 * (other[e15] * other[e41])
@@ -39759,27 +39765,27 @@ impl GeometricAntiQuotient<MultiVector> for VersorOdd {
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * other.group0(),
+            Simd32x2::from(other_2[e12345]) * other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e5
-            other[e12345] * other[e5],
+            other_2[e12345] * other[e5],
             // e15, e25, e35, e45
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
             // e41, e42, e43
-            Simd32x3::from(other[e12345]) * other.group4(),
+            Simd32x3::from(other_2[e12345]) * other.group4(),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * other.group5(),
+            Simd32x3::from(other_2[e12345]) * other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group6(),
+            Simd32x4::from(other_2[e12345]) * other.group6(),
             // e423, e431, e412
-            Simd32x3::from(other[e12345]) * other.group7(),
+            Simd32x3::from(other_2[e12345]) * other.group7(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * other.group8(),
+            Simd32x3::from(other_2[e12345]) * other.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group9(),
+            Simd32x4::from(other_2[e12345]) * other.group9(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return MultiVector::from_groups(
             // scalar, e12345
@@ -40041,11 +40047,11 @@ impl GeometricAntiQuotient<RoundPoint> for VersorOdd {
     //  no simd       67       93        0
     fn geometric_anti_quotient(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e4] * other[e5]) - f32::powi(other[e1], 2) - f32::powi(other[e2], 2) - f32::powi(other[e3], 2),
         );
-        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * other.group0(), /* e5 */ other[e12345] * other[e5]);
+        let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other_2[e12345]) * other.group0(), /* e5 */ other_2[e12345] * other[e5]);
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
@@ -40124,15 +40130,15 @@ impl GeometricAntiQuotient<Sphere> for VersorOdd {
     //  no simd       67       90        0
     fn geometric_anti_quotient(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             f32::powi(other[e4235], 2) + f32::powi(other[e4315], 2) + f32::powi(other[e4125], 2) - 2.0 * (other[e3215] * other[e1234]),
         );
         let geometric_anti_product = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e1234
-            other[e12345] * other[e1234],
+            other_2[e12345] * other[e1234],
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -40184,7 +40190,7 @@ impl GeometricAntiQuotient<VersorEven> for VersorOdd {
     //  no simd      251      280        0
     fn geometric_anti_quotient(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e5] * other[e4]) + f32::powi(other[e12345], 2) + f32::powi(other[e321], 2)
                 - f32::powi(other[e415], 2)
@@ -40199,13 +40205,13 @@ impl GeometricAntiQuotient<VersorEven> for VersorOdd {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -40326,7 +40332,7 @@ impl GeometricAntiQuotient<VersorOdd> for VersorOdd {
     //  no simd      251      280        0
     fn geometric_anti_quotient(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let other = AntiScalar::from_groups(
+        let other_2 = AntiScalar::from_groups(
             // e12345
             2.0 * (other[e41] * other[e15])
                 + 2.0 * (other[e42] * other[e25])
@@ -40343,13 +40349,13 @@ impl GeometricAntiQuotient<VersorOdd> for VersorOdd {
         );
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from(other[e12345]) * other.group0(),
+            Simd32x4::from(other_2[e12345]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from(other[e12345]) * other.group1(),
+            Simd32x4::from(other_2[e12345]) * other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from(other[e12345]) * other.group2(),
+            Simd32x4::from(other_2[e12345]) * other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(other[e12345]) * other.group3(),
+            Simd32x4::from(other_2[e12345]) * other.group3(),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345

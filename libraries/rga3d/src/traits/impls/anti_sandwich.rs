@@ -33,8 +33,7 @@ impl AntiSandwich<AntiScalar> for AntiScalar {
     // f32        0        2        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * self[e1234]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return AntiScalar::from_groups(/* e1234 */ other[e1234] * self[e1234]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for AntiScalar {
@@ -45,8 +44,7 @@ impl AntiSandwich<DualNum> for AntiScalar {
     // no simd        0        4        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(self[e1234]) * other.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(self[e1234]) * other.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for AntiScalar {
@@ -57,13 +55,13 @@ impl AntiSandwich<Flector> for AntiScalar {
     // no simd        0       16        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[e1234]) * other.group0(),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for AntiScalar {
@@ -73,8 +71,7 @@ impl AntiSandwich<Horizon> for AntiScalar {
     // f32        0        2        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ self[e1234] * other[e321]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Horizon::from_groups(/* e321 */ self[e1234] * other[e321]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for AntiScalar {
@@ -85,13 +82,13 @@ impl AntiSandwich<Line> for AntiScalar {
     // no simd        0       12        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[e1234]) * other.group0(),
             // e23, e31, e12
             Simd32x3::from(self[e1234]) * other.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for AntiScalar {
@@ -102,13 +99,13 @@ impl AntiSandwich<Motor> for AntiScalar {
     // no simd        0       16        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(self[e1234]) * other.group0(),
             // e23, e31, e12, scalar
             Simd32x4::from(self[e1234]) * other.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for AntiScalar {
@@ -123,7 +120,7 @@ impl AntiSandwich<MultiVector> for AntiScalar {
     //  no simd        0       32        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(self[e1234]) * other.group0(),
             // e1, e2, e3, e4
@@ -134,8 +131,8 @@ impl AntiSandwich<MultiVector> for AntiScalar {
             Simd32x3::from(self[e1234]) * other.group3(),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group4(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for AntiScalar {
@@ -145,8 +142,7 @@ impl AntiSandwich<Origin> for AntiScalar {
     // f32        0        2        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Origin::from_groups(/* e4 */ self[e1234] * other[e4]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Origin::from_groups(/* e4 */ self[e1234] * other[e4]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for AntiScalar {
@@ -157,8 +153,7 @@ impl AntiSandwich<Plane> for AntiScalar {
     // no simd        0        8        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * other.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * other.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for AntiScalar {
@@ -169,8 +164,7 @@ impl AntiSandwich<Point> for AntiScalar {
     // no simd        0        8        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e1234]) * other.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e1234]) * other.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for AntiScalar {
@@ -180,8 +174,7 @@ impl AntiSandwich<Scalar> for AntiScalar {
     // f32        0        2        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for DualNum {
@@ -201,8 +194,7 @@ impl AntiSandwich<AntiScalar> for DualNum {
     //  no simd        1        5        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[e1234]) * self.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[e1234]) * self.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for DualNum {
@@ -212,11 +204,11 @@ impl AntiSandwich<DualNum> for DualNum {
     // f32        2        6        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([(other[scalar] * self[e1234]) + (other[e1234] * self[scalar]), other[e1234] * self[e1234]]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for DualNum {
@@ -231,13 +223,13 @@ impl AntiSandwich<Flector> for DualNum {
     //  no simd        8       26        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             ((Simd32x3::from(self[scalar]) * other.group1().xyz()) + (Simd32x3::from(self[e1234]) * other.group0().xyz())).with_w(self[e1234] * other[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([other[e423], other[e431], other[e412], 1.0]) * self.group0().yy().with_zw(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for DualNum {
@@ -247,8 +239,7 @@ impl AntiSandwich<Horizon> for DualNum {
     // f32        0        2        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ self[e1234] * other[e321]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Horizon::from_groups(/* e321 */ self[e1234] * other[e321]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for DualNum {
@@ -259,13 +250,13 @@ impl AntiSandwich<Line> for DualNum {
     // no simd        6       18        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[e1234]) * other.group0(),
             // e23, e31, e12
             (Simd32x3::from(self[scalar]) * other.group0()) + (Simd32x3::from(self[e1234]) * other.group1()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for DualNum {
@@ -276,13 +267,13 @@ impl AntiSandwich<Motor> for DualNum {
     // no simd        8       24        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(self[e1234]) * other.group0(),
             // e23, e31, e12, scalar
             (Simd32x4::from(self[scalar]) * other.group0()) + (Simd32x4::from(self[e1234]) * other.group1()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for DualNum {
@@ -297,7 +288,7 @@ impl AntiSandwich<MultiVector> for DualNum {
     //  no simd       16       50        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(self[scalar] * other[e1234]) + (self[e1234] * other[scalar]), self[e1234] * other[e1234]]),
             // e1, e2, e3, e4
@@ -308,8 +299,8 @@ impl AntiSandwich<MultiVector> for DualNum {
             (Simd32x3::from(self[scalar]) * other.group2()) + (Simd32x3::from(self[e1234]) * other.group3()),
             // e423, e431, e412, e321
             Simd32x4::from([other[e423], other[e431], other[e412], 1.0]) * self.group0().yy().with_zw(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for DualNum {
@@ -324,13 +315,13 @@ impl AntiSandwich<Origin> for DualNum {
     //  no simd        4       15        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e1234] * other[e4]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[scalar] * other[e4]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for DualNum {
@@ -345,13 +336,13 @@ impl AntiSandwich<Plane> for DualNum {
     //  no simd        4       29        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             self.group0().xx().with_zw(self[scalar], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group0(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for DualNum {
@@ -366,13 +357,13 @@ impl AntiSandwich<Point> for DualNum {
     //  no simd        4       18        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[e1234]) * other.group0(),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[scalar] * other[e4]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for DualNum {
@@ -382,8 +373,7 @@ impl AntiSandwich<Scalar> for DualNum {
     // f32        0        2        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Flector {
@@ -403,13 +393,13 @@ impl AntiSandwich<AntiScalar> for Flector {
     //  no simd       40       60        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[e1234]) * self.group0(),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Flector {
@@ -424,13 +414,13 @@ impl AntiSandwich<DualNum> for Flector {
     //  no simd       44       65        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             ((Simd32x3::from(other[e1234]) * self.group0().xyz()) - (Simd32x3::from(other[scalar]) * self.group1().xyz())).with_w(other[e1234] * self[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([self[e423], self[e431], self[e412], 1.0]) * other.group0().yy().with_zw(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Flector {
@@ -444,7 +434,7 @@ impl AntiSandwich<Flector> for Flector {
     //  no simd       80      101        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 -(other[e423] * self[e4]) - (other[e412] * self[e431]),
@@ -462,8 +452,8 @@ impl AntiSandwich<Flector> for Flector {
                 - (Simd32x4::from([self[e321], self[e3], self[e1], self[e412]]) * other.group1().xxy().with_w(other[e3]))
                 - (other.group0().yzxx() * self.group1().zxyx())
                 - (other.group0().wwwy() * self.group0().xyz().with_w(self[e431])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Flector {
@@ -477,13 +467,13 @@ impl AntiSandwich<Horizon> for Flector {
     //  no simd       40       57        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
             Simd32x4::from(other[e321]) * self.group1().xyz().with_w(self[e4]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Flector {
@@ -498,7 +488,7 @@ impl AntiSandwich<Line> for Flector {
     //  no simd       72       88        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self[e2] * other[e43]) + (self[e412] * other[e31]) + (self[e321] * other[e41]),
@@ -513,8 +503,8 @@ impl AntiSandwich<Line> for Flector {
                 + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group0().zyz().with_w(other[e31]))
                 + Simd32x3::from(0.0).with_w((self[e412] * other[e12]) - (self[e2] * other[e42]) - (self[e3] * other[e43]))
                 - (other.group0().yzx() * self.group1().zxy()).with_w(self[e1] * other[e41]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Flector {
@@ -529,7 +519,7 @@ impl AntiSandwich<Motor> for Flector {
     //  no simd       84      100        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self[e2] * other[e43]) + (self[e412] * other[e31]) + (self[e321] * other[e41]) - (self[e431] * other[e12]),
@@ -546,8 +536,8 @@ impl AntiSandwich<Motor> for Flector {
                 + Simd32x3::from(0.0).with_w((self[e321] * other[e1234]) - (self[e2] * other[e42]) - (self[e3] * other[e43]) - (self[e4] * other[scalar]))
                 + (self.group0().www() * other.group0().xyz()).with_w(self[e423] * other[e23])
                 - (other.group0().yzxx() * self.group1().zxy().with_w(self[e1])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Flector {
@@ -563,7 +553,7 @@ impl AntiSandwich<MultiVector> for Flector {
     //  no simd      166      197        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(self[e4] * other[e321]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]), 0.0])
                 + (Simd32x2::from(other[e423]) * Simd32x2::from([self[e1], self[e423]]))
@@ -600,8 +590,8 @@ impl AntiSandwich<MultiVector> for Flector {
                 + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group2().zyz().with_w(other[e31]))
                 + Simd32x3::from(0.0).with_w((self[e412] * other[e12]) - (self[e1] * other[e41]) - (self[e2] * other[e42]) - (self[e3] * other[e43]))
                 - (other.group2().yzx() * self.group1().zxy()).with_w(self[e4] * other[scalar]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Flector {
@@ -615,13 +605,13 @@ impl AntiSandwich<Origin> for Flector {
     //  no simd       40       69        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[e4]) * self.group1().xyz().with_w(self[e4]) * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(other[e4]) * self.group0().xyz().with_w(self[e321]) * Simd32x4::from(-1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Flector {
@@ -635,7 +625,7 @@ impl AntiSandwich<Plane> for Flector {
     //  no simd       60       81        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 -(self[e4] * other[e423]) - (self[e431] * other[e412]),
@@ -651,8 +641,8 @@ impl AntiSandwich<Plane> for Flector {
                 (self[e3] * other[e412]) + (self[e4] * other[e321]),
             ]) + (self.group0().zxyx() * other.group0().yzxx())
                 + (other.group0().wwwy() * self.group1().xyz().with_w(self[e2])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Flector {
@@ -666,7 +656,7 @@ impl AntiSandwich<Point> for Flector {
     //  no simd       52       77        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[e4]) * self.group1().xyz().with_w(self[e4]) * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
@@ -677,8 +667,8 @@ impl AntiSandwich<Point> for Flector {
                 -(self[e412] * other[e3]) - (self[e321] * other[e4]),
             ]) - (self.group1().zxyy() * other.group0().yzxy())
                 - (other.group0().wwwx() * self.group0().xyz().with_w(self[e423])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Flector {
@@ -692,13 +682,13 @@ impl AntiSandwich<Scalar> for Flector {
     //  no simd       40       62        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([other[scalar], other[scalar], other[scalar], 0.0]) * self.group1().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e4] * other[scalar] * -1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Horizon {
@@ -718,13 +708,13 @@ impl AntiSandwich<Flector> for Horizon {
     //  no simd        0       17        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
             Simd32x4::from(self[e321]) * other.group1().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Horizon {
@@ -738,11 +728,11 @@ impl AntiSandwich<Line> for Horizon {
     //  no simd        0        9        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(
+        return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Horizon {
@@ -756,13 +746,13 @@ impl AntiSandwich<Motor> for Horizon {
     //  no simd        0       13        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e321] * other[e1234]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Horizon {
@@ -778,7 +768,7 @@ impl AntiSandwich<MultiVector> for Horizon {
     //  no simd        0       33        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([self[e321] * other[e4], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
@@ -789,8 +779,8 @@ impl AntiSandwich<MultiVector> for Horizon {
             Simd32x3::from(self[e321]) * other.group4().xyz() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e321] * other[e1234]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Horizon {
@@ -804,13 +794,13 @@ impl AntiSandwich<Plane> for Horizon {
     //  no simd        0       14        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(self[e321]) * other.group0().xyz() * Simd32x3::from(-1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Line {
@@ -831,13 +821,13 @@ impl AntiSandwich<AntiScalar> for Line {
     //  no simd       19       39        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e1234]) * self.group0(),
             // e23, e31, e12
             Simd32x3::from(other[e1234]) * self.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Line {
@@ -852,13 +842,13 @@ impl AntiSandwich<DualNum> for Line {
     //  no simd       22       42        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e1234]) * self.group0(),
             // e23, e31, e12
             (Simd32x3::from(other[scalar]) * self.group0()) + (Simd32x3::from(other[e1234]) * self.group1()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Line {
@@ -873,7 +863,7 @@ impl AntiSandwich<Flector> for Line {
     //  no simd       60       79        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e3] * self[e42]) + (other[e4] * self[e23]) + (other[e412] * self[e31]) + (other[e321] * self[e41]),
@@ -889,8 +879,8 @@ impl AntiSandwich<Flector> for Line {
                 (other[e4] * self[e43]) + (other[e431] * self[e41]),
                 -(other[e2] * self[e42]) - (other[e3] * self[e43]) - (other[e423] * self[e23]) - (other[e431] * self[e31]) - (other[e412] * self[e12]),
             ]) - (self.group0().zxy() * other.group1().yzx()).with_w(other[e1] * self[e41]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Line {
@@ -905,11 +895,11 @@ impl AntiSandwich<Horizon> for Line {
     //  no simd       10       30        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(
+        return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Line {
@@ -924,7 +914,7 @@ impl AntiSandwich<Line> for Line {
     //  no simd       47       69        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 other[e43] * self[e42],
@@ -940,8 +930,8 @@ impl AntiSandwich<Line> for Line {
                 -(other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
             ]) - (other.group0().yzx() * self.group1().zxy()).with_w(other[e41] * self[e23])
                 - (other.group1().yzx() * self.group0().zxy()).with_w(other[e42] * self[e31]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Line {
@@ -956,7 +946,7 @@ impl AntiSandwich<Motor> for Line {
     //  no simd       56       78        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 (self[e41] * other[e1234]) + (self[e42] * other[e43]),
@@ -972,8 +962,8 @@ impl AntiSandwich<Motor> for Line {
                 -(self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]),
             ]) - (other.group1().yzxx() * self.group0().zxy().with_w(self[e41]))
                 - (self.group1().zxy() * other.group0().yzx()).with_w(self[e42] * other[e31]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Line {
@@ -989,7 +979,7 @@ impl AntiSandwich<MultiVector> for Line {
     //  no simd      118      151        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([-(self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]), 0.0])
                 - (Simd32x2::from(self[e41]) * Simd32x2::from([other[e23], other[e41]]))
@@ -1019,8 +1009,8 @@ impl AntiSandwich<MultiVector> for Line {
                 (self[e41] * other[e431]) + (self[e43] * other[e4]),
                 -(self[e42] * other[e2]) - (self[e43] * other[e3]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412]),
             ]) - (self.group0().zxy() * other.group4().yzx()).with_w(self[e41] * other[e1]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Line {
@@ -1035,13 +1025,13 @@ impl AntiSandwich<Origin> for Line {
     //  no simd       32       58        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Line {
@@ -1056,7 +1046,7 @@ impl AntiSandwich<Plane> for Line {
     //  no simd       45       63        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self[e41] * other[e321]) + (self[e31] * other[e412]),
@@ -1071,8 +1061,8 @@ impl AntiSandwich<Plane> for Line {
                 self[e41] * other[e431],
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
             ]) - (other.group0().yzxx() * self.group0().zxy().with_w(self[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Line {
@@ -1087,14 +1077,14 @@ impl AntiSandwich<Point> for Line {
     //  no simd       42       58        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x3::from(other[e4]) * self.group1()).with_w(0.0) + (self.group0().yzx() * other.group0().zxy()).with_w(0.0)
                 - (self.group0().zxy() * other.group0().yzx()).with_w(0.0),
             // e423, e431, e412, e321
             Simd32x4::from([other[e4], other[e4], other[e4], 1.0]) * self.group0().with_w(-(self[e41] * other[e1]) - (self[e42] * other[e2]) - (self[e43] * other[e3])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Line {
@@ -1109,8 +1099,8 @@ impl AntiSandwich<Scalar> for Line {
     //  no simd       19       36        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[scalar]) * self.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[scalar]) * self.group0())
+            .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Motor {
@@ -1131,13 +1121,13 @@ impl AntiSandwich<AntiScalar> for Motor {
     //  no simd       40       64        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[e1234]) * self.group0(),
             // e23, e31, e12, scalar
             Simd32x4::from(other[e1234]) * self.group1(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Motor {
@@ -1152,13 +1142,13 @@ impl AntiSandwich<DualNum> for Motor {
     //  no simd       44       68        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[e1234]) * self.group0(),
             // e23, e31, e12, scalar
             (Simd32x4::from(other[scalar]) * self.group0()) + (Simd32x4::from(other[e1234]) * self.group1()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Motor {
@@ -1173,7 +1163,7 @@ impl AntiSandwich<Flector> for Motor {
     //  no simd       84      105        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e3] * self[e42]) + (other[e4] * self[e23]) + (other[e423] * self[scalar]) + (other[e412] * self[e31]) + (other[e321] * self[e41]),
@@ -1192,8 +1182,8 @@ impl AntiSandwich<Flector> for Motor {
             ]) + (Simd32x4::from(other[e4]) * self.group0().xyz().with_w(self[scalar]))
                 + (other.group1().xxyw() * self.group0().wzxw())
                 - (self.group0().zxyx() * other.group1().yzx().with_w(other[e1])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Motor {
@@ -1208,13 +1198,13 @@ impl AntiSandwich<Horizon> for Motor {
     //  no simd       44       65        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[e321] * self[e1234]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Motor {
@@ -1229,7 +1219,7 @@ impl AntiSandwich<Line> for Motor {
     //  no simd       68       92        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 (other[e41] * self[e1234]) + (other[e43] * self[e42]),
@@ -1245,8 +1235,8 @@ impl AntiSandwich<Line> for Motor {
                 -(other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
             ]) - (self.group1().zxyx() * other.group0().yzx().with_w(other[e41]))
                 - (other.group1().yzx() * self.group0().zxy()).with_w(other[e42] * self[e31]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Motor {
@@ -1261,7 +1251,7 @@ impl AntiSandwich<Motor> for Motor {
     //  no simd       80      104        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 (other[e43] * self[e42]) + (other[e1234] * self[e41]),
@@ -1280,8 +1270,8 @@ impl AntiSandwich<Motor> for Motor {
                 + (other.group0().zyz() * self.group1().yww()).with_w(other[scalar] * self[e1234])
                 - (other.group0().yzxx() * self.group1().zxyx())
                 - (other.group1().yzx() * self.group0().zxy()).with_w(other[e42] * self[e31]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Motor {
@@ -1297,7 +1287,7 @@ impl AntiSandwich<MultiVector> for Motor {
     //  no simd      166      201        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(self[scalar] * other[e1234]) - (self[e41] * other[e23]) - (self[e42] * other[e31]) - (self[e43] * other[e12]), 0.0])
                 + (Simd32x2::from(self[e1234]) * other.group0())
@@ -1334,8 +1324,8 @@ impl AntiSandwich<MultiVector> for Motor {
             ]) + (self.group0().xyxw() * other.group1().ww().with_zw(other[e431], other[e321]))
                 + (other.group4().zx().with_zw(other[e4], other[e4]) * self.group0().yzz().with_w(self[scalar]))
                 - (self.group0().zxyx() * other.group4().yzx().with_w(other[e1])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Motor {
@@ -1350,13 +1340,13 @@ impl AntiSandwich<Origin> for Motor {
     //  no simd       44       64        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[e4]) * self.group1().xyz().with_w(self[e1234]),
             // e423, e431, e412, e321
             Simd32x4::from(other[e4]) * self.group0().xyz().with_w(self[scalar]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Motor {
@@ -1371,7 +1361,7 @@ impl AntiSandwich<Plane> for Motor {
     //  no simd       64       84        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self[e41] * other[e321]) + (self[e31] * other[e412]) + (self[scalar] * other[e423]),
@@ -1387,8 +1377,8 @@ impl AntiSandwich<Plane> for Motor {
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
             ]) + (self.group0().yzxw() * other.group0().zxyw())
                 - (other.group0().yzxx() * self.group0().zxy().with_w(self[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Motor {
@@ -1403,7 +1393,7 @@ impl AntiSandwich<Point> for Motor {
     //  no simd       56       77        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             ((Simd32x3::from(self[e1234]) * other.group0().xyz()) + (Simd32x3::from(other[e4]) * self.group1().xyz()) + (self.group0().yzx() * other.group0().zxy())
                 - (self.group0().zxy() * other.group0().yzx()))
@@ -1414,8 +1404,8 @@ impl AntiSandwich<Point> for Motor {
                     .group0()
                     .xyz()
                     .with_w((self[scalar] * other[e4]) - (self[e41] * other[e1]) - (self[e42] * other[e2]) - (self[e43] * other[e3])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Motor {
@@ -1430,13 +1420,13 @@ impl AntiSandwich<Scalar> for Motor {
     //  no simd       40       60        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
             Simd32x4::from(other[scalar]) * self.group0(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for MultiVector {
@@ -1458,7 +1448,7 @@ impl AntiSandwich<AntiScalar> for MultiVector {
     //  no simd      181      218        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[e1234]) * self.group0(),
             // e1, e2, e3, e4
@@ -1469,8 +1459,8 @@ impl AntiSandwich<AntiScalar> for MultiVector {
             Simd32x3::from(other[e1234]) * self.group3(),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group4(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for MultiVector {
@@ -1486,7 +1476,7 @@ impl AntiSandwich<DualNum> for MultiVector {
     //  no simd      189      227        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(other[scalar] * self[e1234]) + (other[e1234] * self[scalar]), other[e1234] * self[e1234]]),
             // e1, e2, e3, e4
@@ -1497,8 +1487,8 @@ impl AntiSandwich<DualNum> for MultiVector {
             (Simd32x3::from(other[scalar]) * self.group2()) + (Simd32x3::from(other[e1234]) * self.group3()),
             // e423, e431, e412, e321
             Simd32x4::from([self[e423], self[e431], self[e412], 1.0]) * other.group0().yy().with_zw(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for MultiVector {
@@ -1514,7 +1504,7 @@ impl AntiSandwich<Flector> for MultiVector {
     //  no simd      262      299        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(other[e321] * self[e4]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]), 0.0])
                 + (Simd32x2::from(other[e423]) * Simd32x2::from([self[e1], self[e423]]))
@@ -1553,8 +1543,8 @@ impl AntiSandwich<Flector> for MultiVector {
             ]) + (self.group0().yy().with_zw(self[e1234], self[scalar]) * other.group1().xyz().with_w(other[e4]))
                 + (other.group0().ww().with_zw(other[e431], other[e321]) * self.group2().xyx().with_w(self[e1234]))
                 - (self.group2().zxy() * other.group1().yzx()).with_w(other[e1] * self[e41]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for MultiVector {
@@ -1570,7 +1560,7 @@ impl AntiSandwich<Horizon> for MultiVector {
     //  no simd      181      217        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([other[e321] * self[e4], 1.0]) * Simd32x2::from([1.0, 0.0]),
             // e1, e2, e3, e4
@@ -1581,8 +1571,8 @@ impl AntiSandwich<Horizon> for MultiVector {
             Simd32x3::from(other[e321]) * self.group4().xyz(),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[e321] * self[e1234]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for MultiVector {
@@ -1598,7 +1588,7 @@ impl AntiSandwich<Line> for MultiVector {
     //  no simd      242      274        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([-(other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]), 0.0])
                 - (Simd32x2::from(other[e41]) * Simd32x2::from([self[e23], self[e41]]))
@@ -1627,8 +1617,8 @@ impl AntiSandwich<Line> for MultiVector {
                 + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group0().zyz().with_w(other[e31]))
                 + Simd32x3::from(0.0).with_w((other[e12] * self[e412]) - (other[e42] * self[e2]) - (other[e43] * self[e3]))
                 - (other.group0().yzx() * self.group4().zxy()).with_w(other[e41] * self[e1]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for MultiVector {
@@ -1644,7 +1634,7 @@ impl AntiSandwich<Motor> for MultiVector {
     //  no simd      266      298        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(other[scalar] * self[e1234]) - (other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]), 0.0])
                 + (Simd32x2::from(other[e1234]) * self.group0())
@@ -1679,8 +1669,8 @@ impl AntiSandwich<Motor> for MultiVector {
                 + (self.group4().xyzy() * other.group0().www().with_w(other[e31]))
                 + Simd32x3::from(0.0).with_w((other[e12] * self[e412]) - (other[e42] * self[e2]) - (other[e43] * self[e3]) - (other[scalar] * self[e4]))
                 - (other.group0().yzxx() * self.group4().zxy().with_w(self[e1])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for MultiVector {
@@ -1696,7 +1686,7 @@ impl AntiSandwich<MultiVector> for MultiVector {
     //  no simd      362      394        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
                 (other[e1234] * self[scalar]) + (other[e321] * self[e4])
@@ -1795,8 +1785,8 @@ impl AntiSandwich<MultiVector> for MultiVector {
                 )
                 - (other.group2().yzx() * self.group4().zxy()).with_w(other[scalar] * self[e4])
                 - (self.group2().zxy() * other.group4().yzx()).with_w(other[e41] * self[e1]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for MultiVector {
@@ -1812,7 +1802,7 @@ impl AntiSandwich<Origin> for MultiVector {
     //  no simd      181      226        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[e4]) * Simd32x2::from([self[e321], self[e4]]) * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
@@ -1823,8 +1813,8 @@ impl AntiSandwich<Origin> for MultiVector {
             Simd32x3::from(other[e4]) * self.group1().xyz() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(other[e4]) * self.group2().with_w(self[scalar]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for MultiVector {
@@ -1840,7 +1830,7 @@ impl AntiSandwich<Plane> for MultiVector {
     //  no simd      222      258        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([self[e4] * other[e321], 0.0])
                 + (Simd32x2::from(other[e423]) * Simd32x2::from([self[e1], self[e423]]))
@@ -1867,8 +1857,8 @@ impl AntiSandwich<Plane> for MultiVector {
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
             ]) + (Simd32x4::from(self[e1234]) * other.group0())
                 - (other.group0().yzxx() * self.group2().zxy().with_w(self[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for MultiVector {
@@ -1884,7 +1874,7 @@ impl AntiSandwich<Point> for MultiVector {
     //  no simd      205      248        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
                 -(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]),
@@ -1905,8 +1895,8 @@ impl AntiSandwich<Point> for MultiVector {
                 * self
                     .group2()
                     .with_w((self[scalar] * other[e4]) - (self[e41] * other[e1]) - (self[e42] * other[e2]) - (self[e43] * other[e3])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for MultiVector {
@@ -1922,7 +1912,7 @@ impl AntiSandwich<Scalar> for MultiVector {
     //  no simd      181      218        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([self[e1234] * other[scalar], 1.0]) * Simd32x2::from([1.0, 0.0]),
             // e1, e2, e3, e4
@@ -1933,8 +1923,8 @@ impl AntiSandwich<Scalar> for MultiVector {
             Simd32x3::from(other[scalar]) * self.group2(),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e4] * other[scalar] * -1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Origin {
@@ -1950,8 +1940,7 @@ impl AntiSandwich<AntiScalar> for Origin {
     // f32        0        4        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Origin::from_groups(/* e4 */ other[e1234] * self[e4]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Origin::from_groups(/* e4 */ other[e1234] * self[e4]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Origin {
@@ -1965,13 +1954,13 @@ impl AntiSandwich<DualNum> for Origin {
     //  no simd        0       20        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e1234] * self[e4]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[scalar] * self[e4] * -1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Origin {
@@ -1985,13 +1974,13 @@ impl AntiSandwich<Flector> for Origin {
     //  no simd        0       21        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(self[e4]) * other.group1().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(self[e4]) * other.group0().xyz().with_w(other[e321]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Origin {
@@ -2001,8 +1990,7 @@ impl AntiSandwich<Horizon> for Origin {
     // f32        0        3        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ other[e321] * self[e4]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Scalar::from_groups(/* scalar */ other[e321] * self[e4]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Origin {
@@ -2016,13 +2004,13 @@ impl AntiSandwich<Line> for Origin {
     //  no simd        0       33        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group1().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Origin {
@@ -2036,13 +2024,13 @@ impl AntiSandwich<Motor> for Origin {
     //  no simd        0       33        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[e4]) * other.group1().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412, e321
             Simd32x4::from(self[e4]) * other.group0().xyz().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Origin {
@@ -2058,7 +2046,7 @@ impl AntiSandwich<MultiVector> for Origin {
     //  no simd        0       54        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(self[e4]) * Simd32x2::from([other[e321], other[e4]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
@@ -2069,8 +2057,8 @@ impl AntiSandwich<MultiVector> for Origin {
             Simd32x3::from(self[e4]) * other.group1().xyz(),
             // e423, e431, e412, e321
             Simd32x4::from(self[e4]) * other.group2().with_w(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Origin {
@@ -2080,8 +2068,7 @@ impl AntiSandwich<Origin> for Origin {
     // f32        0        4        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e4] * self[e4] * -1.0);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return AntiScalar::from_groups(/* e1234 */ other[e4] * self[e4] * -1.0).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Origin {
@@ -2095,13 +2082,13 @@ impl AntiSandwich<Plane> for Origin {
     //  no simd        0       18        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
             Simd32x3::from(0.0).with_w(self[e4] * other[e321]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Origin {
@@ -2115,13 +2102,13 @@ impl AntiSandwich<Point> for Origin {
     //  no simd        0       19        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(self[e4] * other[e4] * -1.0),
             // e23, e31, e12, scalar
             Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Origin {
@@ -2131,8 +2118,7 @@ impl AntiSandwich<Scalar> for Origin {
     // f32        0        5        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0).geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Plane {
@@ -2153,8 +2139,7 @@ impl AntiSandwich<AntiScalar> for Plane {
     //  no simd        8       22        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e1234]) * self.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e1234]) * self.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Plane {
@@ -2168,13 +2153,13 @@ impl AntiSandwich<DualNum> for Plane {
     //  no simd       20       44        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             other.group0().xx().with_zw(other[scalar], 0.0) * Simd32x3::from(1.0).with_w(0.0) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group0(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Plane {
@@ -2188,7 +2173,7 @@ impl AntiSandwich<Flector> for Plane {
     //  no simd       40       56        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 -(other[e4] * self[e423]) - (other[e412] * self[e431]),
@@ -2204,8 +2189,8 @@ impl AntiSandwich<Flector> for Plane {
                 -(other[e3] * self[e412]) - (other[e4] * self[e321]),
             ]) - (other.group0().yzxx() * self.group0().zxyx())
                 - (self.group0().wwwy() * other.group1().xyz().with_w(other[e2])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Plane {
@@ -2220,8 +2205,8 @@ impl AntiSandwich<Horizon> for Plane {
     //  no simd       13       24        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[e321]) * self.group0().xyz());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[e321]) * self.group0().xyz())
+            .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Plane {
@@ -2235,7 +2220,7 @@ impl AntiSandwich<Line> for Plane {
     //  no simd       33       52        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e41] * self[e321]) + (other[e31] * self[e412]),
@@ -2250,8 +2235,8 @@ impl AntiSandwich<Line> for Plane {
                 other[e41] * self[e431] * -1.0,
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
             ]) + (self.group0().yzxx() * other.group0().zxy().with_w(other[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Plane {
@@ -2265,7 +2250,7 @@ impl AntiSandwich<Motor> for Plane {
     //  no simd       40       60        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e41] * self[e321]) + (other[e31] * self[e412]),
@@ -2282,8 +2267,8 @@ impl AntiSandwich<Motor> for Plane {
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
             ]) + (other.group0().zxyw() * self.group0().yzxw())
                 + (self.group0().xyzx() * other.group0().www().with_w(other[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Plane {
@@ -2299,7 +2284,7 @@ impl AntiSandwich<MultiVector> for Plane {
     //  no simd       81      116        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
                 -(other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]),
@@ -2327,8 +2312,8 @@ impl AntiSandwich<MultiVector> for Plane {
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
             ]) + (Simd32x4::from(other[e1234]) * self.group0())
                 + (self.group0().yzxx() * other.group2().zxy().with_w(other[e23])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Plane {
@@ -2342,13 +2327,13 @@ impl AntiSandwich<Origin> for Plane {
     //  no simd       20       38        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
             Simd32x3::from(0.0).with_w(other[e4] * self[e321] * -1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Plane {
@@ -2363,7 +2348,7 @@ impl AntiSandwich<Plane> for Plane {
     //  no simd       28       46        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
                 other[e412] * self[e431] * -1.0,
@@ -2373,8 +2358,8 @@ impl AntiSandwich<Plane> for Plane {
             ]) + (other.group0().yzxx() * self.group0().zxyx()),
             // e23, e31, e12, scalar
             ((Simd32x3::from(other[e321]) * self.group0().xyz()) - (Simd32x3::from(self[e321]) * other.group0().xyz())).with_w(0.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Plane {
@@ -2388,7 +2373,7 @@ impl AntiSandwich<Point> for Plane {
     //  no simd       26       50        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(1.0).with_w(0.0) * other.group0().www().with_w(0.0) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
@@ -2398,8 +2383,8 @@ impl AntiSandwich<Point> for Plane {
                 self[e423] * other[e2],
                 -(self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]),
             ]) - (self.group0().zxyx() * other.group0().yzxx()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Plane {
@@ -2413,11 +2398,11 @@ impl AntiSandwich<Scalar> for Plane {
     //  no simd        6       33        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(
+        return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([other[scalar], other[scalar], other[scalar], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Point {
@@ -2438,8 +2423,7 @@ impl AntiSandwich<AntiScalar> for Point {
     //  no simd        3       16        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e1234]) * self.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e1234]) * self.group0()).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<DualNum> for Point {
@@ -2453,13 +2437,13 @@ impl AntiSandwich<DualNum> for Point {
     //  no simd       12       34        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[e1234]) * self.group0(),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[scalar] * self[e4] * -1.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Flector> for Point {
@@ -2474,7 +2458,7 @@ impl AntiSandwich<Flector> for Point {
     //  no simd       24       49        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(self[e4]) * other.group1().xyz().with_w(other[e4]) * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
@@ -2485,8 +2469,8 @@ impl AntiSandwich<Flector> for Point {
                 (other[e412] * self[e3]) + (other[e321] * self[e4]),
             ]) + (other.group1().yzxy() * self.group0().zxyy())
                 + (self.group0().wwwx() * other.group0().xyz().with_w(other[e423])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Horizon> for Point {
@@ -2500,8 +2484,7 @@ impl AntiSandwich<Horizon> for Point {
     //  no simd        0        6        0
     fn anti_sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ other[e321] * self[e4]);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Scalar::from_groups(/* scalar */ other[e321] * self[e4]).geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Point {
@@ -2516,15 +2499,15 @@ impl AntiSandwich<Line> for Point {
     //  no simd       22       44        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (other.group0().zxy() * self.group0().yzx()).with_w(0.0)
                 - (Simd32x3::from(self[e4]) * other.group1()).with_w(0.0)
                 - (other.group0().yzx() * self.group0().zxy()).with_w(0.0),
             // e423, e431, e412, e321
             Simd32x4::from([self[e4], self[e4], self[e4], 1.0]) * other.group0().with_w(-(other[e41] * self[e1]) - (other[e42] * self[e2]) - (other[e43] * self[e3])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Point {
@@ -2539,7 +2522,7 @@ impl AntiSandwich<Motor> for Point {
     //  no simd       24       49        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             ((Simd32x3::from(other[e1234]) * self.group0().xyz()) + (other.group0().zxy() * self.group0().yzx())
                 - (Simd32x3::from(self[e4]) * other.group1().xyz())
@@ -2551,8 +2534,8 @@ impl AntiSandwich<Motor> for Point {
                     .group0()
                     .xyz()
                     .with_w(-(other[e41] * self[e1]) - (other[e42] * self[e2]) - (other[e43] * self[e3]) - (other[scalar] * self[e4])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Point {
@@ -2568,7 +2551,7 @@ impl AntiSandwich<MultiVector> for Point {
     //  no simd       48       96        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
                 (other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]),
@@ -2590,8 +2573,8 @@ impl AntiSandwich<MultiVector> for Point {
                 * other
                     .group2()
                     .with_w(-(other[scalar] * self[e4]) - (other[e41] * self[e1]) - (other[e42] * self[e2]) - (other[e43] * self[e3])),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Origin> for Point {
@@ -2606,13 +2589,13 @@ impl AntiSandwich<Origin> for Point {
     //  no simd       12       35        0
     fn anti_sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(other[e4] * self[e4] * -1.0),
             // e23, e31, e12, scalar
             Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Point {
@@ -2627,7 +2610,7 @@ impl AntiSandwich<Plane> for Point {
     //  no simd       18       50        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(1.0).with_w(0.0) * self.group0().www().with_w(0.0) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
@@ -2637,8 +2620,8 @@ impl AntiSandwich<Plane> for Point {
                 other[e431] * self[e1] * -1.0,
                 (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]),
             ]) + (other.group0().yzxx() * self.group0().zxyx()),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Point> for Point {
@@ -2653,13 +2636,13 @@ impl AntiSandwich<Point> for Point {
     //  no simd       15       33        0
     fn anti_sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(other[e4] * self[e4] * -1.0),
             // e23, e31, e12, scalar
             ((Simd32x3::from(self[e4]) * other.group0().xyz()) - (Simd32x3::from(other[e4]) * self.group0().xyz())).with_w(0.0),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Scalar> for Point {
@@ -2673,8 +2656,7 @@ impl AntiSandwich<Scalar> for Point {
     //  no simd        0        8        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0);
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0).geometric_anti_product(self.anti_reverse());
     }
 }
 impl std::ops::Div<anti_sandwich> for Scalar {
@@ -2694,13 +2676,13 @@ impl AntiSandwich<Flector> for Scalar {
     //  no simd        0       19        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[scalar], self[scalar], self[scalar], 0.0]) * other.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[e4] * self[scalar]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Line> for Scalar {
@@ -2711,8 +2693,8 @@ impl AntiSandwich<Line> for Scalar {
     // no simd        0        6        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(self[scalar]) * other.group0());
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(self[scalar]) * other.group0())
+            .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Motor> for Scalar {
@@ -2723,13 +2705,13 @@ impl AntiSandwich<Motor> for Scalar {
     // no simd        0        8        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
             Simd32x4::from(self[scalar]) * other.group0(),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<MultiVector> for Scalar {
@@ -2745,7 +2727,7 @@ impl AntiSandwich<MultiVector> for Scalar {
     //  no simd        0       31        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([other[e1234] * self[scalar], 1.0]) * Simd32x2::from([1.0, 0.0]),
             // e1, e2, e3, e4
@@ -2756,8 +2738,8 @@ impl AntiSandwich<MultiVector> for Scalar {
             Simd32x3::from(self[scalar]) * other.group2(),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[e4] * self[scalar]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }
 impl AntiSandwich<Plane> for Scalar {
@@ -2771,10 +2753,10 @@ impl AntiSandwich<Plane> for Scalar {
     //  no simd        0       10        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = Point::from_groups(
+        return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[scalar], self[scalar], self[scalar], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+        )
+        .geometric_anti_product(self.anti_reverse());
     }
 }

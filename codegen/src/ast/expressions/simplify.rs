@@ -105,14 +105,44 @@ impl AnyExpression {
 
 impl IntExpr {
     #[allow(unused)]
-    pub(crate) fn simplify(&mut self) {}
+    pub(crate) fn simplify(&mut self) {
+        self.simplify_nuanced(false, false, false, false);
+    }
+    // TODO clean up unued parameters
     #[allow(unused)]
-    fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, inline_single_use_vars: bool) {}
+    fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, prefer_flat_access: bool, inline_single_use_vars: bool) {
+        match self {
+            IntExpr::Variable(v) => {
+                let decl = &v.decl;
+                if 1 == Arc::strong_count(decl) {
+                    if let Some(lock) = decl.expr.as_ref() {
+                        let guard = lock.read();
+                        let inlined_expr = guard.deref().clone();
+                        drop(guard);
+                        if let AnyExpression::Int(mut new_self) = inlined_expr {
+                            new_self.simplify_nuanced(false, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                            *self = new_self;
+                            return
+                        }
+                    }
+                }
+            }
+            IntExpr::Literal(_) => {}
+            IntExpr::TraitInvoke10ToInt(_t, owner) => {
+                // Owner is a type, not an expression
+                // if !insides_already_done {
+                //     owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                // }
+            }
+        }
+    }
 }
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false, false, true, false, false);
     }
+
+    // TODO get rid of param 'distribute_and_flatten_arithmetic' because it seems to always be set true
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, distribute_and_flatten_arithmetic: bool, prefer_flat_access: bool, inline_single_use_vars: bool) {
         match self {
             FloatExpr::Variable(v) => {
@@ -133,7 +163,7 @@ impl FloatExpr {
             FloatExpr::Literal(_) => {}
             FloatExpr::FromInt(a) => {
                 if !insides_already_done {
-                    a.simplify_nuanced(insides_already_done, transpose_simd, inline_single_use_vars);
+                    a.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
                 }
                 match a {
                     IntExpr::Variable(_) => {}
@@ -326,7 +356,11 @@ impl FloatExpr {
                     }
                 }
             }
-            FloatExpr::TraitInvoke11ToFloat(_, _) => {}
+            FloatExpr::TraitInvoke11ToFloat(_t, owner) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                }
+            }
             FloatExpr::Product(product, last_factor) => {
                 if product.is_empty() {
                     panic!("Problem")
@@ -2590,11 +2624,34 @@ impl MultiVectorExpr {
                     *self = result.clone();
                 }
             }
-            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
-            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
-            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
-            MultiVectorVia::TraitInvoke12iToClass(_, _, _) => {}
-            MultiVectorVia::TraitInvoke12fToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke11ToClass(_t, owner) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                }
+            }
+            MultiVectorVia::TraitInvoke21ToClass(_t, owner, other) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                }
+            }
+            MultiVectorVia::TraitInvoke22ToClass(_t, owner, other) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                    other.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                }
+            }
+            MultiVectorVia::TraitInvoke12iToClass(_t, owner, other) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                    other.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, prefer_flat_access);
+                }
+            }
+            MultiVectorVia::TraitInvoke12fToClass(_t, owner, other) => {
+                if !insides_already_done {
+                    owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
+                    other.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access, inline_single_use_vars);
+                }
+            }
         }
     }
 }

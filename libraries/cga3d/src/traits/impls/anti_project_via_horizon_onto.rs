@@ -8,13 +8,13 @@
 // Total Implementations: 499
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:         9      20       0
 //  Average:        19      34       0
 //  Maximum:       222     283       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:        14      42       0
 //  Average:        35      64       0
 //  Maximum:       422     508       0
@@ -2354,18 +2354,20 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        2        0
     //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
         return AntiDualNum::from_groups(
             // e3215, scalar
-            Simd32x2::from([self[e3215] * other[e321] * right_dual[e45] * -1.0, 1.0]) * Simd32x2::from([1.0, 0.0]),
+            Simd32x2::from([
+                self[e3215] * other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45],
+                1.0,
+            ]) * Simd32x2::from([-1.0, 0.0]),
         );
     }
 }
@@ -3168,8 +3170,10 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for AntiFlatPoint {
     //  no simd        0       10        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[e321] * right_dual[e45] * -1.0) * other.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiFlector> for AntiFlatPoint {
@@ -4003,8 +4007,10 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for AntiFlector {
     //  no simd        0       10        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[e321] * right_dual[e45] * -1.0) * other.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiFlector> for AntiFlector {
@@ -5576,18 +5582,20 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for AntiMotor {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        2        0
     //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
         return AntiDualNum::from_groups(
             // e3215, scalar
-            Simd32x2::from([other[e321] * self[e3215] * right_dual[e45] * -1.0, 1.0]) * Simd32x2::from([1.0, 0.0]),
+            Simd32x2::from([
+                other[e321] * self[e3215] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45],
+                1.0,
+            ]) * Simd32x2::from([-1.0, 0.0]),
         );
     }
 }
@@ -6950,8 +6958,10 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for AntiScalar {
     //  no simd        0        7        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ other[e321] * self[e12345] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(
+            // e12345
+            other[e321] * self[e12345] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0,
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiFlector> for AntiScalar {
@@ -7075,11 +7085,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for AntiScalar {
@@ -7291,8 +7300,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for AntiScalar {
     //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar] * self[e12345]) * other.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[scalar] * self[e12345]) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<FlatPoint> for AntiScalar {
@@ -7306,8 +7317,10 @@ impl AntiProjectViaHorizonOnto<FlatPoint> for AntiScalar {
     //  no simd        0        7        0
     fn anti_project_via_horizon_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * self[e12345] * other[e45] * -1.0);
+        return AntiScalar::from_groups(
+            // e12345
+            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e12345] * other[e45] * -1.0,
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for AntiScalar {
@@ -7632,11 +7645,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * self[e12345] * other[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], 2) * self[e12345]);
     }
 }
 impl AntiProjectViaHorizonOnto<Sphere> for AntiScalar {
@@ -9551,11 +9563,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for CircleRotor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for CircleRotor {
@@ -13018,8 +13029,10 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for DualNum {
     //  no simd        0        7        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ other[e321] * self[e12345] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(
+            // e12345
+            other[e321] * self[e12345] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0,
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiFlector> for DualNum {
@@ -13144,11 +13157,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for DualNum {
@@ -13360,8 +13372,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for DualNum {
     //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar] * self[e12345]) * other.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[scalar] * self[e12345]) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<FlatPoint> for DualNum {
@@ -13375,8 +13389,10 @@ impl AntiProjectViaHorizonOnto<FlatPoint> for DualNum {
     //  no simd        0        7        0
     fn anti_project_via_horizon_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * self[e12345] * other[e45] * -1.0);
+        return AntiScalar::from_groups(
+            // e12345
+            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e12345] * other[e45] * -1.0,
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for DualNum {
@@ -14202,8 +14218,11 @@ impl AntiProjectViaHorizonOnto<FlatPoint> for FlatPoint {
     //  no simd        0       10        0
     fn anti_project_via_horizon_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[e321] * self[e45] * -1.0) * other.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e45] * -1.0)
+                * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for FlatPoint {
@@ -17038,8 +17057,10 @@ impl AntiProjectViaHorizonOnto<AntiFlatPoint> for Motor {
     //  no simd        0        7        0
     fn anti_project_via_horizon_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ other[e321] * right_dual[e45] * self[e12345] * -1.0);
+        return AntiScalar::from_groups(
+            // e12345
+            other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * self[e12345] * -1.0,
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiFlector> for Motor {
@@ -17211,11 +17232,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for Motor {
@@ -18998,11 +19018,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for MultiVector {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for MultiVector {
@@ -22130,8 +22149,10 @@ impl AntiProjectViaHorizonOnto<DualNum> for RoundPoint {
     //  no simd        0        5        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[e3215] * self[e4]) * other.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[e3215] * self[e4]) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Motor> for RoundPoint {
@@ -22518,8 +22539,10 @@ impl AntiProjectViaHorizonOnto<AntiDualNum> for Scalar {
     //  no simd        0        3        0
     fn anti_project_via_horizon_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_dual[e12345] * self[scalar]) * other.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(DualNum::from_groups(/* e5, e12345 */ other.group0())[e12345] * self[scalar]) * other.group0(),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<AntiMotor> for Scalar {
@@ -22586,11 +22609,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return Scalar::from_groups(/* scalar */ right_dual[e12345] * other[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
 impl AntiProjectViaHorizonOnto<VersorOdd> for Scalar {
@@ -23228,10 +23250,12 @@ impl AntiProjectViaHorizonOnto<DualNum> for Sphere {
     //  no simd        0        6        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
         return AntiDualNum::from_groups(
             // e3215, scalar
-            Simd32x2::from([right_dual[e3215] * other[e5] * self[e1234], 1.0]) * Simd32x2::from([-1.0, 0.0]),
+            Simd32x2::from([
+                AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[e3215] * other[e5] * self[e1234],
+                1.0,
+            ]) * Simd32x2::from([-1.0, 0.0]),
         );
     }
 }
@@ -24336,11 +24360,10 @@ impl AntiProjectViaHorizonOnto<AntiScalar> for VersorEven {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn anti_project_via_horizon_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * right_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Circle> for VersorEven {

@@ -1,3 +1,5 @@
+use crate::traits::AntiSquareRoot;
+use crate::traits::RoundWeightNormSquared;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
