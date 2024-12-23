@@ -71,7 +71,7 @@ impl std::ops::Div<radius_norm> for AntiFlatPoint {
 impl RadiusNorm for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        3        0
     fn radius_norm(self) -> Scalar {
         return self.radius_norm_squared().square_root();
     }
@@ -225,7 +225,7 @@ impl std::ops::Div<radius_norm> for FlatPoint {
 impl RadiusNorm for FlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn radius_norm(self) -> Scalar {
         return self.radius_norm_squared().square_root();
     }

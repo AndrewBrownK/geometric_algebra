@@ -12,13 +12,13 @@ use crate::traits::FlatWeight;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         2       3       0
-//  Average:         1       3       0
+//  Average:         1       2       0
 //  Maximum:         7       8       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         2       3       0
-//  Average:         1       3       0
+//  Average:         1       2       0
 //  Maximum:         7       8       0
 impl std::ops::Div<flat_weight_norm_squared> for AntiScalar {
     type Output = AntiScalar;
@@ -124,7 +124,7 @@ impl std::ops::Div<flat_weight_norm_squared> for Origin {
 impl FlatWeightNormSquared for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
@@ -154,7 +154,7 @@ impl std::ops::Div<flat_weight_norm_squared> for Point {
 impl FlatWeightNormSquared for Point {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);

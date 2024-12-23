@@ -10,15 +10,15 @@ use crate::traits::FlatWeightNormSquared;
 // Total Implementations: 16
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       4       0
+//  Minimum:         0       5       0
 //   Median:        10      20       0
 //  Average:        16      24       0
 //  Maximum:        87     106       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0      10       0
+//  Minimum:         0      11       0
 //   Median:        15      25       0
-//  Average:        19      35       0
+//  Average:        19      34       0
 //  Maximum:       111     144       0
 impl std::ops::Div<flat_norm_squared> for AntiCircleRotor {
     type Output = MultiVector;
@@ -29,11 +29,11 @@ impl std::ops::Div<flat_norm_squared> for AntiCircleRotor {
 impl FlatNormSquared for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        0
-    //  no simd        8       17        0
+    // yes simd        4        8        0
+    //  no simd        8       16        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -198,11 +198,11 @@ impl std::ops::Div<flat_norm_squared> for Dipole {
 impl FlatNormSquared for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        0
-    //  no simd        8       17        0
+    // yes simd        4        8        0
+    //  no simd        8       16        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -283,11 +283,11 @@ impl std::ops::Div<flat_norm_squared> for DualNum {
 impl FlatNormSquared for DualNum {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        3        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -325,11 +325,11 @@ impl std::ops::Div<flat_norm_squared> for FlatPoint {
 impl FlatNormSquared for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        0
-    //  no simd        8       17        0
+    // yes simd        4        8        0
+    //  no simd        8       16        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(

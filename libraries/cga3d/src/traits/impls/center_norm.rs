@@ -10,13 +10,13 @@ use crate::traits::SquareRoot;
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         3       6       0
+//  Minimum:         3       5       0
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         3       6       0
+//  Minimum:         3       5       0
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
@@ -29,7 +29,7 @@ impl std::ops::Div<center_norm> for AntiCircleRotor {
 impl CenterNorm for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4        7        0
+    // f32        4        6        0
     fn center_norm(self) -> Scalar {
         return self.center_norm_squared().square_root();
     }
@@ -57,7 +57,7 @@ impl std::ops::Div<center_norm> for Circle {
 impl CenterNorm for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        6        0
+    // f32        3        5        0
     fn center_norm(self) -> Scalar {
         return self.center_norm_squared().square_root();
     }
@@ -71,7 +71,7 @@ impl std::ops::Div<center_norm> for CircleRotor {
 impl CenterNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4        7        0
+    // f32        4        6        0
     fn center_norm(self) -> Scalar {
         return self.center_norm_squared().square_root();
     }
@@ -85,7 +85,7 @@ impl std::ops::Div<center_norm> for Dipole {
 impl CenterNorm for Dipole {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        6        0
+    // f32        3        5        0
     fn center_norm(self) -> Scalar {
         return self.center_norm_squared().square_root();
     }

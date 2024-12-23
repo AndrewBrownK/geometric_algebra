@@ -206,7 +206,7 @@ impl std::ops::DivAssign<unitize> for Origin {
 impl Unitize for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        1        1
     fn unitize(self) -> Self {
         use crate::elements::*;
         return Origin::from_groups(/* e4 */ self[e4] / (self.flat_weight_norm_squared().anti_square_root()[e1234]));
@@ -253,11 +253,11 @@ impl std::ops::DivAssign<unitize> for Point {
 impl Unitize for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        1        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        6        1
+    // yes simd        0        2        1
+    //  no simd        0        5        1
     fn unitize(self) -> Self {
         use crate::elements::*;
         return Point::from_groups(

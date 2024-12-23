@@ -10,15 +10,15 @@ use crate::traits::FlatWeightNormSquared;
 // Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       7       1
+//  Minimum:         2       6       1
 //   Median:         6      10       1
 //  Average:         6      11       1
 //  Maximum:        14      23       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2      11       1
+//  Minimum:         2      10       1
 //   Median:         6      16       1
-//  Average:         6      18       1
+//  Average:         6      17       1
 //  Maximum:        14      34       1
 impl std::ops::Div<unitized_flat_norm_squared> for Flector {
     type Output = f32;
@@ -48,11 +48,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for Line {
 impl UnitizedFlatNormSquared for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2       13        1
+    // yes simd        2        6        1
+    //  no simd        2       12        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
@@ -107,11 +107,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for Point {
 impl UnitizedFlatNormSquared for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2       11        1
+    // yes simd        2        6        1
+    //  no simd        2       10        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);

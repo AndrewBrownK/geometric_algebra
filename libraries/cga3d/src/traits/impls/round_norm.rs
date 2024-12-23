@@ -10,15 +10,15 @@ use crate::traits::RoundWeightNorm;
 // Total Implementations: 10
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       6       0
+//  Minimum:         2       5       0
 //   Median:         5      10       0
-//  Average:        10      15       0
+//  Average:        10      14       0
 //  Maximum:        63      73       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2       9       0
+//  Minimum:         2       8       0
 //   Median:         5      16       0
-//  Average:        10      22       0
+//  Average:        10      21       0
 //  Maximum:        63      90       0
 impl std::ops::Div<round_norm> for AntiCircleRotor {
     type Output = MultiVector;
@@ -113,11 +113,11 @@ impl std::ops::Div<round_norm> for Circle {
 impl RoundNorm for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        0
-    //  no simd        2        9        0
+    // yes simd        2        5        0
+    //  no simd        2        8        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -155,11 +155,11 @@ impl std::ops::Div<round_norm> for CircleRotor {
 impl RoundNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        0
-    //  no simd        2        9        0
+    // yes simd        2        5        0
+    //  no simd        2        8        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -329,11 +329,11 @@ impl std::ops::Div<round_norm> for RoundPoint {
 impl RoundNorm for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        0
-    //  no simd        2        9        0
+    // yes simd        2        5        0
+    //  no simd        2        8        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(

@@ -898,11 +898,13 @@ pub mod impls {
         builder.return_expr(result)
     });
 
+    // TODO this is giving incorrect results, which is kind of a big deal
+    //  see impl DotProduct<Plane> for Plane and compare it to page 73
     trait_impl_2_types_2_args!(DotProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements() {
             for (b, b_el) in other.elements() {
-                let sop = builder.ga.scalar_product(a_el, b_el);
+                let sop = builder.ga.inner_product(a_el, b_el);
                 for p in sop.sum {
                     let a = a.clone();
                     let b = b.clone();
@@ -919,7 +921,7 @@ pub mod impls {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements() {
             for (b, b_el) in other.elements() {
-                let sop = builder.ga.anti_scalar_product(a_el, b_el);
+                let sop = builder.ga.inner_anti_product(a_el, b_el);
                 for p in sop.sum {
                     let a = a.clone();
                     let b = b.clone();
@@ -1030,12 +1032,16 @@ pub mod impls {
         builder.return_expr(result)
     });
 
+
+
+
     trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());
         let dot = DotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
         let inverse_squared = scalar_mv.construct_direct([(scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
-        let result = GeometricProduct.inline(&mut builder, slf, inverse_squared).await?;
+        let reverse = Reverse.inline(&mut builder, slf).await?;
+        let result = GeometricProduct.inline(&mut builder, reverse, inverse_squared).await?;
         builder.return_expr(result)
     });
 
@@ -1045,7 +1051,8 @@ pub mod impls {
         let dot = AntiDotProduct.inline(&mut builder, slf.clone(), slf.clone()).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
         let inverse_squared = anti_scalar_mv.construct_direct([(anti_scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
-        let result = GeometricAntiProduct.inline(&mut builder, slf, inverse_squared).await?;
+        let anti_reverse = AntiReverse.inline(&mut builder, slf).await?;
+        let result = GeometricAntiProduct.inline(&mut builder, anti_reverse, inverse_squared).await?;
         builder.return_expr(result)
     });
 

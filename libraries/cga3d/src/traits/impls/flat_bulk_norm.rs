@@ -10,13 +10,13 @@ use crate::traits::SquareRoot;
 // Total Implementations: 23
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       3       0
+//  Minimum:         0       4       0
 //   Median:         7      16       0
 //  Average:        10      17       0
 //  Maximum:        56      74       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       9       0
+//  Minimum:         0      10       0
 //   Median:        12      22       0
 //  Average:        14      27       0
 //  Maximum:        80     112       0
@@ -158,11 +158,11 @@ impl std::ops::Div<flat_bulk_norm> for AntiPlane {
 impl FlatBulkNorm for AntiPlane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0       10        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -249,11 +249,11 @@ impl std::ops::Div<flat_bulk_norm> for DualNum {
 impl FlatBulkNorm for DualNum {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0       10        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -378,11 +378,11 @@ impl std::ops::Div<flat_bulk_norm> for RoundPoint {
 impl FlatBulkNorm for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0       10        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }

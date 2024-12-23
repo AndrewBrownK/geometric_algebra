@@ -327,6 +327,51 @@ impl Vec2Expr {
         mem::swap(&mut x, self);
         x
     }
+
+    fn take_part_as_owned(&mut self, idx: u8) -> FloatExpr {
+        let mut x = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
+        mem::swap(&mut x, self);
+        return match x {
+            Vec2Expr::Variable(_) => FloatExpr::AccessVec2(Box::new(x), idx),
+            Vec2Expr::Gather1(f) => f,
+            Vec2Expr::Gather2(f0, f1) => match idx {
+                0 => f0, 1 => f1, _ => panic!("{idx} does not fit in Vec2 for take_part_as_owned")
+            },
+            Vec2Expr::AccessMultiVecGroup(mve, g_idx) => match *mve.expr {
+                MultiVectorVia::Construct(mut groups) => groups[g_idx as usize].take_part_as_owned(idx),
+                _ => {
+                    let mut flat_idx: u16 = 0;
+                    for (scan_g_idx, (_, g)) in mve.groups().enumerate() {
+                        if scan_g_idx == g_idx as usize {
+                            flat_idx = flat_idx + idx as u16;
+                            break
+                        }
+                        flat_idx = flat_idx + g.simd_width() as u16;
+                    }
+                    FloatExpr::AccessMultiVecFlat(mve, flat_idx)
+                },
+            }
+            Vec2Expr::Product(v_factors, v_lits) => {
+                let mut f_factors = vec![];
+                for mut v_factor in v_factors {
+                    f_factors.push((v_factor.0.take_part_as_owned(idx), v_factor.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Product(f_factors, f_lit)
+            }
+            Vec2Expr::Sum(v_addends, v_lits) => {
+                let mut f_addends = vec![];
+                for mut v_addend in v_addends {
+                    f_addends.push((v_addend.0.take_part_as_owned(idx), v_addend.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Sum(f_addends, f_lit)
+            }
+            Vec2Expr::SwizzleVec2(box mut v, x, y) => v.take_part_as_owned([x, y][idx as usize]),
+            Vec2Expr::Truncate3to2(box mut v3) => v3.take_part_as_owned(idx),
+            Vec2Expr::Truncate4to2(box mut v4) => v4.take_part_as_owned(idx),
+        }
+    }
 }
 impl Vec3Expr {
     fn deep_inline_variables(&mut self) -> bool {
@@ -383,6 +428,54 @@ impl Vec3Expr {
         let mut x = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
         x
+    }
+    fn take_part_as_owned(&mut self, idx: u8) -> FloatExpr {
+        let mut x = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
+        mem::swap(&mut x, self);
+        return match x {
+            Vec3Expr::Variable(_) => FloatExpr::AccessVec3(Box::new(x), idx),
+            Vec3Expr::Gather1(f) => f,
+            Vec3Expr::Gather3(f0, f1, f2) => match idx {
+                0 => f0, 1 => f1, 2 => f2, _ => panic!("{idx} does not fit in Vec3 for take_part_as_owned")
+            },
+            Vec3Expr::AccessMultiVecGroup(mve, g_idx) => match *mve.expr {
+                MultiVectorVia::Construct(mut groups) => groups[g_idx as usize].take_part_as_owned(idx),
+                _ => {
+                    let mut flat_idx: u16 = 0;
+                    for (scan_g_idx, (_, g)) in mve.groups().enumerate() {
+                        if scan_g_idx == g_idx as usize {
+                            flat_idx = flat_idx + idx as u16;
+                            break
+                        }
+                        flat_idx = flat_idx + g.simd_width() as u16;
+                    }
+                    FloatExpr::AccessMultiVecFlat(mve, flat_idx)
+                },
+            }
+            Vec3Expr::Product(v_factors, v_lits) => {
+                let mut f_factors = vec![];
+                for mut v_factor in v_factors {
+                    f_factors.push((v_factor.0.take_part_as_owned(idx), v_factor.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Product(f_factors, f_lit)
+            }
+            Vec3Expr::Sum(v_addends, v_lits) => {
+                let mut f_addends = vec![];
+                for mut v_addend in v_addends {
+                    f_addends.push((v_addend.0.take_part_as_owned(idx), v_addend.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Sum(f_addends, f_lit)
+            }
+            Vec3Expr::SwizzleVec3(box mut v, x, y, z) => v.take_part_as_owned([x, y, z][idx as usize]),
+            Vec3Expr::Truncate4to3(box mut v4) => v4.take_part_as_owned(idx),
+            Vec3Expr::Extend2to3(mut v2, f) => match idx {
+                0 | 1 => v2.take_part_as_owned(idx),
+                2 => f,
+                _ => panic!("{idx} does not fit in Vec3 for take_part_as_owned")
+            }
+        }
     }
 }
 impl Vec4Expr {
@@ -448,6 +541,59 @@ impl Vec4Expr {
         mem::swap(&mut x, self);
         x
     }
+    fn take_part_as_owned(&mut self, idx: u8) -> FloatExpr {
+        let mut x = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
+        mem::swap(&mut x, self);
+        return match x {
+            Vec4Expr::Variable(_) => FloatExpr::AccessVec4(Box::new(x), idx),
+            Vec4Expr::Gather1(f) => f,
+            Vec4Expr::Gather4(f0, f1, f2, f3) => match idx {
+                0 => f0, 1 => f1, 2 => f2, 3 => f3, _ => panic!("{idx} does not fit in Vec4 for take_part_as_owned")
+            },
+            Vec4Expr::AccessMultiVecGroup(mve, g_idx) => match *mve.expr {
+                MultiVectorVia::Construct(mut groups) => groups[g_idx as usize].take_part_as_owned(idx),
+                _ => {
+                    let mut flat_idx: u16 = 0;
+                    for (scan_g_idx, (_, g)) in mve.groups().enumerate() {
+                        if scan_g_idx == g_idx as usize {
+                            flat_idx = flat_idx + idx as u16;
+                            break
+                        }
+                        flat_idx = flat_idx + g.simd_width() as u16;
+                    }
+                    FloatExpr::AccessMultiVecFlat(mve, flat_idx)
+                },
+            }
+            Vec4Expr::Product(v_factors, v_lits) => {
+                let mut f_factors = vec![];
+                for mut v_factor in v_factors {
+                    f_factors.push((v_factor.0.take_part_as_owned(idx), v_factor.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Product(f_factors, f_lit)
+            }
+            Vec4Expr::Sum(v_addends, v_lits) => {
+                let mut f_addends = vec![];
+                for mut v_addend in v_addends {
+                    f_addends.push((v_addend.0.take_part_as_owned(idx), v_addend.1));
+                }
+                let f_lit = v_lits[idx as usize];
+                FloatExpr::Sum(f_addends, f_lit)
+            }
+            Vec4Expr::SwizzleVec4(box mut v, x, y, z, w) => v.take_part_as_owned([x, y, z, w][idx as usize]),
+            Vec4Expr::Extend2to4(mut v2, z, w) => match idx {
+                0 | 1 => v2.take_part_as_owned(idx),
+                2 => z,
+                3 => w,
+                _ => panic!("{idx} does not fit in Vec4 for take_part_as_owned")
+            }
+            Vec4Expr::Extend3to4(mut v3, f) => match idx {
+                0 | 1 | 2 => v3.take_part_as_owned(idx),
+                3 => f,
+                _ => panic!("{idx} does not fit in Vec4 for take_part_as_owned")
+            }
+        }
+    }
 }
 impl MultiVectorGroupExpr {
     fn deep_inline_variables(&mut self) -> bool {
@@ -467,6 +613,16 @@ impl MultiVectorGroupExpr {
         let mut x = MultiVectorGroupExpr::JustFloat(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
         x
+    }
+    fn take_part_as_owned(&mut self, idx: u8) -> FloatExpr {
+        let mut x = MultiVectorGroupExpr::JustFloat(FloatExpr::Literal(0.0));
+        mem::swap(&mut x, self);
+        return match x {
+            MultiVectorGroupExpr::JustFloat(f) => f,
+            MultiVectorGroupExpr::Vec2(mut v) => v.take_part_as_owned(idx),
+            MultiVectorGroupExpr::Vec3(mut v) => v.take_part_as_owned(idx),
+            MultiVectorGroupExpr::Vec4(mut v) => v.take_part_as_owned(idx),
+        }
     }
 }
 impl MultiVectorExpr {

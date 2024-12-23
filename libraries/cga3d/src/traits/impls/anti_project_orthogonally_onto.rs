@@ -10,7 +10,7 @@
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         9      20       0
-//  Average:        19      34       0
+//  Average:        19      33       0
 //  Maximum:       222     283       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -2366,21 +2366,14 @@ impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([
-                self[e3215] * other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45],
-                1.0,
-            ]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([f32::powi(other[e321], 2) * self[e3215], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for AntiDualNum {
@@ -3175,17 +3168,14 @@ impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(self[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0) * other.group0(),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for AntiFlatPoint {
@@ -4012,17 +4002,14 @@ impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for AntiFlector {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(self[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0) * other.group0(),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for AntiFlector {
@@ -5603,21 +5590,14 @@ impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for AntiMotor {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([
-                other[e321] * self[e3215] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45],
-                1.0,
-            ]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([f32::powi(other[e321], 2) * self[e3215], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for AntiMotor {
@@ -6979,18 +6959,11 @@ impl AntiProjectOrthogonallyOnto<AntiDualNum> for AntiScalar {
 impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(
-            // e12345
-            other[e321] * self[e12345] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0,
-        );
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], 2) * self[e12345]);
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for AntiScalar {
@@ -7322,34 +7295,24 @@ impl AntiProjectOrthogonallyOnto<DualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn anti_project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[scalar] * self[e12345]) * other.group0(),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[e12345] * other[e12345] * -1.0) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<FlatPoint> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(
-            // e12345
-            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e12345] * other[e45] * -1.0,
-        );
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectOrthogonallyOnto<Flector> for AntiScalar {
@@ -13089,18 +13052,11 @@ impl AntiProjectOrthogonallyOnto<AntiDualNum> for DualNum {
 impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(
-            // e12345
-            other[e321] * self[e12345] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0,
-        );
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], 2) * self[e12345]);
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for DualNum {
@@ -13433,34 +13389,24 @@ impl AntiProjectOrthogonallyOnto<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn anti_project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[scalar] * self[e12345]) * other.group0(),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * self[e12345] * -1.0) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<FlatPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(
-            // e12345
-            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e12345] * other[e45] * -1.0,
-        );
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], 2) * self[e12345] * -1.0);
     }
 }
 impl AntiProjectOrthogonallyOnto<Flector> for DualNum {
@@ -14280,17 +14226,13 @@ impl AntiProjectOrthogonallyOnto<FlatPoint> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e45] * -1.0)
-                * other.group0(),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e45] * self[e45] * -1.0) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<Flector> for FlatPoint {
@@ -17142,18 +17084,11 @@ impl AntiProjectOrthogonallyOnto<AntiDualNum> for Motor {
 impl AntiProjectOrthogonallyOnto<AntiFlatPoint> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(
-            // e12345
-            other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * self[e12345] * -1.0,
-        );
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], 2) * self[e12345]);
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiFlector> for Motor {
@@ -22285,17 +22220,14 @@ impl AntiProjectOrthogonallyOnto<DualNum> for RoundPoint {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn anti_project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[e3215] * self[e4]) * other.group0(),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e5] * self[e4] * -1.0) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<Motor> for RoundPoint {
@@ -22694,10 +22626,7 @@ impl AntiProjectOrthogonallyOnto<AntiDualNum> for Scalar {
     //  no simd        0        3        0
     fn anti_project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from(DualNum::from_groups(/* e5, e12345 */ other.group0())[e12345] * self[scalar]) * other.group0(),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl AntiProjectOrthogonallyOnto<AntiMotor> for Scalar {
@@ -23405,20 +23334,14 @@ impl AntiProjectOrthogonallyOnto<DualNum> for Sphere {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
+    //      f32        0        1        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn anti_project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([
-                AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[e3215] * other[e5] * self[e1234],
-                1.0,
-            ]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([f32::powi(other[e5], 2) * self[e1234], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl AntiProjectOrthogonallyOnto<FlatPoint> for Sphere {

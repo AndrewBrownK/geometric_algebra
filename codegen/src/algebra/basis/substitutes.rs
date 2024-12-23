@@ -482,7 +482,7 @@ impl Substitutions {
             .clone()
     }
 
-    pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+    pub fn inner_product(&self, a: BasisElement, b: BasisElement) -> Sum {
         let a = a.anon();
         let b = b.anon();
         let a = self.substitute_element_to_underlying_sum(a);
@@ -490,7 +490,7 @@ impl Substitutions {
         let mut underlying_result = Sum { sum: vec![] };
         for a in a.sum.iter() {
             for b in b.sum.iter() {
-                let mut c = self.underlying_squares.scalar_product(a.element, b.element);
+                let mut c = self.underlying_squares.inner_product(a.element, b.element);
                 c.coefficient *= a.coefficient * b.coefficient;
                 underlying_result += c;
             }
@@ -498,7 +498,7 @@ impl Substitutions {
         self.underlying_sum_to_substitute_sum(underlying_result)
     }
 
-    pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+    pub fn inner_anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
         let a = a.anon();
         let b = b.anon();
         let a = self.substitute_element_to_underlying_sum(a);
@@ -506,7 +506,7 @@ impl Substitutions {
         let mut underlying_result = Sum { sum: vec![] };
         for a in a.sum.iter() {
             for b in b.sum.iter() {
-                let mut c = self.underlying_squares.anti_scalar_product(a.element, b.element);
+                let mut c = self.underlying_squares.inner_anti_product(a.element, b.element);
                 c.coefficient *= a.coefficient * b.coefficient;
                 underlying_result += c;
             }

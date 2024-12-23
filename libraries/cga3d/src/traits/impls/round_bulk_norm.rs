@@ -71,7 +71,7 @@ impl std::ops::Div<round_bulk_norm> for AntiFlatPoint {
 impl RoundBulkNorm for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm(self) -> Scalar {
         return self.round_bulk_norm_squared().square_root();
     }
@@ -141,7 +141,7 @@ impl std::ops::Div<round_bulk_norm> for Circle {
 impl RoundBulkNorm for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm(self) -> Scalar {
         return self.round_bulk_norm_squared().square_root();
     }
@@ -155,7 +155,7 @@ impl std::ops::Div<round_bulk_norm> for CircleRotor {
 impl RoundBulkNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm(self) -> Scalar {
         return self.round_bulk_norm_squared().square_root();
     }

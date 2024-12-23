@@ -132,16 +132,16 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.fix_name_and_sign(a.anti_wedge(b, self.anti_scalar()))
     }
 
-    pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+    pub fn inner_product(&self, a: BasisElement, b: BasisElement) -> Sum {
         let a = self.name_in(a);
         let b = self.name_in(b);
-        self.name_out_sum(self.repo.scalar_product(a, b))
+        self.name_out_sum(self.repo.inner_product(a, b))
     }
 
-    pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+    pub fn inner_anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
         let a = self.name_in(a);
         let b = self.name_in(b);
-        self.name_out_sum(self.repo.anti_scalar_product(a, b))
+        self.name_out_sum(self.repo.inner_anti_product(a, b))
     }
 
     pub fn apply_metric(&self, a: BasisElement) -> (f32, BasisElement) {

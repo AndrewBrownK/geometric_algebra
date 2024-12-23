@@ -10,15 +10,15 @@ use crate::traits::RoundWeightNormSquared;
 // Total Implementations: 10
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       6       1
+//  Minimum:         2       5       1
 //   Median:         5      10       1
-//  Average:        10      15       1
+//  Average:        10      14       1
 //  Maximum:        63      73       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2       9       1
+//  Minimum:         2       8       1
 //   Median:         5      16       1
-//  Average:        10      22       1
+//  Average:        10      21       1
 //  Maximum:        63      90       1
 impl std::ops::Div<unitized_round_norm_squared> for AntiCircleRotor {
     type Output = f32;
@@ -67,11 +67,11 @@ impl std::ops::Div<unitized_round_norm_squared> for Circle {
 impl UnitizedRoundNormSquared for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
@@ -86,11 +86,11 @@ impl std::ops::Div<unitized_round_norm_squared> for CircleRotor {
 impl UnitizedRoundNormSquared for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
@@ -163,11 +163,11 @@ impl std::ops::Div<unitized_round_norm_squared> for RoundPoint {
 impl UnitizedRoundNormSquared for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);

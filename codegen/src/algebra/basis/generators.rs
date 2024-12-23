@@ -164,36 +164,30 @@ impl GeneratorSquares {
     // Maybe the motivation is... "The dot product doesn't mean to only match identical elements,
     // it means to only exclude orthogonal elements"?
 
-    pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Product {
+    pub fn inner_product(&self, a: BasisElement, b: BasisElement) -> Product {
         if a.coefficient == 0 || b.coefficient == 0 {
             return Product::zero();
         }
         if a.signature != b.signature {
             return Product::zero();
         }
-
-        // a ⋅ b = ⟨ab̃⟩₀
-        // The reversal is what lets us chew through the dot product one squared generator at a time
-        // e.g.  e123 ⋅ e321
-        let b = b.reverse();
         // Take care of the outer sign
         let mut result = a.coefficient * b.coefficient;
         // Then simply square the generators
         for g in a.signature.into_generator_elements_const().1.into_iter().filter_map(|it| it) {
             result *= self.square_generator(g);
         }
-
         // And construct a Product for the result
         let coefficient = result as f32;
         use crate::algebra::basis::elements::*;
         Product { coefficient, element: scalar }
     }
 
-    pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Product {
+    pub fn inner_anti_product(&self, a: BasisElement, b: BasisElement) -> Product {
         let anti_scalar = self.anti_scalar();
         let a = a.left_complement(anti_scalar);
         let b = b.left_complement(anti_scalar);
-        let mut p = self.scalar_product(a, b);
+        let mut p = self.inner_product(a, b);
         p.element = p.element.right_complement(anti_scalar);
         p
     }

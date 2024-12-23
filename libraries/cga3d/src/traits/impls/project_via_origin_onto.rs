@@ -2995,27 +2995,17 @@ impl ProjectViaOriginOnto<AntiDualNum> for AntiDualNum {
     //  no simd        0        3        0
     fn project_via_origin_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from(self[scalar] * DualNum::from_groups(/* e5, e12345 */ other.group0())[e12345]) * other.group0(),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<AntiFlatPoint> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn project_via_origin_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            self[scalar] * other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0,
-        );
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectViaOriginOnto<AntiFlector> for AntiDualNum {
@@ -3391,18 +3381,11 @@ impl ProjectViaOriginOnto<DualNum> for AntiDualNum {
 impl ProjectViaOriginOnto<FlatPoint> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            self[scalar] * AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * other[e45] * -1.0,
-        );
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e45], 2) * self[scalar] * -1.0);
     }
 }
 impl ProjectViaOriginOnto<Flector> for AntiDualNum {
@@ -3969,17 +3952,14 @@ impl ProjectViaOriginOnto<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn project_via_origin_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(self[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * -1.0) * other.group0(),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<AntiFlector> for AntiFlatPoint {
@@ -7488,18 +7468,11 @@ impl ProjectViaOriginOnto<DualNum> for AntiMotor {
 impl ProjectViaOriginOnto<FlatPoint> for AntiMotor {
     type Output = Scalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[scalar] * other[e45] * -1.0,
-        );
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e45], 2) * self[scalar] * -1.0);
     }
 }
 impl ProjectViaOriginOnto<Flector> for AntiMotor {
@@ -9296,17 +9269,14 @@ impl ProjectViaOriginOnto<DualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn project_via_origin_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from(AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0))[scalar] * self[e12345]) * other.group0(),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[e12345] * other[e12345] * -1.0) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<Motor> for AntiScalar {
@@ -14030,21 +14000,14 @@ impl ProjectViaOriginOnto<FlatPoint> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from([
-                AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e5] * other[e45],
-                1.0,
-            ]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([f32::powi(other[e45], 2) * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl ProjectViaOriginOnto<Flector> for DualNum {
@@ -14830,17 +14793,13 @@ impl ProjectViaOriginOnto<FlatPoint> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e45] * -1.0)
-                * other.group0(),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e45] * self[e45] * -1.0) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<Flector> for FlatPoint {
@@ -15665,17 +15624,13 @@ impl ProjectViaOriginOnto<FlatPoint> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * self[e45] * -1.0)
-                * other.group0(),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e45] * self[e45] * -1.0) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<Flector> for Flector {
@@ -17282,21 +17237,14 @@ impl ProjectViaOriginOnto<FlatPoint> for Motor {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from([
-                AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * other[e45] * self[e5],
-                1.0,
-            ]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([f32::powi(other[e45], 2) * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl ProjectViaOriginOnto<Flector> for Motor {
@@ -21015,17 +20963,14 @@ impl ProjectViaOriginOnto<AntiDualNum> for RoundPoint {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_via_origin_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(
-            // e5, e12345
-            Simd32x2::from([other[e3215] * DualNum::from_groups(/* e5, e12345 */ other.group0())[e5] * self[e4], 1.0]) * Simd32x2::from([-1.0, 0.0]),
-        );
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([f32::powi(other[e3215], 2) * self[e4], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl ProjectViaOriginOnto<AntiFlatPoint> for RoundPoint {
@@ -22217,27 +22162,17 @@ impl ProjectViaOriginOnto<AntiDualNum> for Scalar {
     //  no simd        0        3        0
     fn project_via_origin_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from(DualNum::from_groups(/* e5, e12345 */ other.group0())[e12345] * self[scalar]) * other.group0(),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[scalar] * self[scalar]) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<AntiFlatPoint> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn project_via_origin_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            other[e321] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[e45] * self[scalar] * -1.0,
-        );
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * self[scalar]);
     }
 }
 impl ProjectViaOriginOnto<AntiFlector> for Scalar {
@@ -22586,18 +22521,11 @@ impl ProjectViaOriginOnto<DualNum> for Scalar {
 impl ProjectViaOriginOnto<FlatPoint> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn project_via_origin_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[e321] * other[e45] * self[scalar] * -1.0,
-        );
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e45], 2) * self[scalar] * -1.0);
     }
 }
 impl ProjectViaOriginOnto<Flector> for Scalar {
@@ -23110,10 +23038,7 @@ impl ProjectViaOriginOnto<AntiDualNum> for Sphere {
     //  no simd        0        3        0
     fn project_via_origin_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from(DualNum::from_groups(/* e5, e12345 */ other.group0())[e5] * self[e1234]) * other.group0(),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e3215] * self[e1234]) * other.group0());
     }
 }
 impl ProjectViaOriginOnto<AntiMotor> for Sphere {

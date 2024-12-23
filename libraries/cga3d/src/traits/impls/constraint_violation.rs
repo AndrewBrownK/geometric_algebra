@@ -9,15 +9,15 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        14      13       0
-//  Average:        26      30       0
-//  Maximum:       212     240       0
+//   Median:         7       9       0
+//  Average:        23      28       0
+//  Maximum:       188     224       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        15      16       0
-//  Average:        42      48       0
-//  Maximum:       397     420       0
+//   Median:         7      12       0
+//  Average:        39      46       0
+//  Maximum:       372     404       0
 impl std::ops::Div<constraint_violation> for AntiCircleRotor {
     type Output = VersorOdd;
     fn div(self, _rhs: constraint_violation) -> Self::Output {
@@ -82,14 +82,14 @@ impl ConstraintViolation for AntiCircleRotor {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e41] * self[e15])
-                        + 2.0 * (self[e42] * self[e25])
-                        + 2.0 * (self[e43] * self[e35])
-                        + f32::powi(self[e23], 2)
-                        + f32::powi(self[e31], 2)
-                        + f32::powi(self[e12], 2)
-                        - f32::powi(self[e45], 2)
-                        - f32::powi(self[scalar], 2),
+                    f32::powi(self[e45], 2)
+                        - f32::powi(self[e23], 2)
+                        - f32::powi(self[e31], 2)
+                        - f32::powi(self[e12], 2)
+                        - f32::powi(self[scalar], 2)
+                        - 2.0 * (self[e41] * self[e15])
+                        - 2.0 * (self[e42] * self[e25])
+                        - 2.0 * (self[e43] * self[e35]),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -189,16 +189,17 @@ impl ConstraintViolation for AntiDipoleInversion {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e4] * self[e5]) + f32::powi(self[e321], 2)
-                        - f32::powi(self[e415], 2)
-                        - f32::powi(self[e425], 2)
-                        - f32::powi(self[e435], 2)
+                    2.0 * (self[e423] * self[e235])
+                        + 2.0 * (self[e431] * self[e315])
+                        + 2.0 * (self[e412] * self[e125])
+                        + 2.0 * (self[e4] * self[e5])
+                        + f32::powi(self[e415], 2)
+                        + f32::powi(self[e425], 2)
+                        + f32::powi(self[e435], 2)
+                        - f32::powi(self[e321], 2)
                         - f32::powi(self[e1], 2)
                         - f32::powi(self[e2], 2)
-                        - f32::powi(self[e3], 2)
-                        - 2.0 * (self[e423] * self[e235])
-                        - 2.0 * (self[e431] * self[e315])
-                        - 2.0 * (self[e412] * self[e125]),
+                        - f32::powi(self[e3], 2),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -238,19 +239,8 @@ impl std::ops::Div<constraint_violation> for AntiFlatPoint {
 }
 impl ConstraintViolation for AntiFlatPoint {
     type Output = Scalar;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        1        2        0
-    //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            f32::powi(self[e321], 2) - (self[e321] * AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0))[e321]),
-        );
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl std::ops::Div<constraint_violation> for AntiFlector {
@@ -263,27 +253,22 @@ impl ConstraintViolation for AntiFlector {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       12        0
-    //    simd2        1        0        0
+    //      f32        7        8        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       14       13        0
-    //  no simd       15       16        0
+    // yes simd        7        9        0
+    //  no simd        7       12        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, f32::powi(self[e321], 2) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2)])
-                + Simd32x2::from([
-                    (reverse[e1] * self[e235]) + (reverse[e2] * self[e315]) + (reverse[e3] * self[e125]) + (reverse[e5] * self[e321])
-                        - (reverse[e235] * self[e1])
-                        - (reverse[e315] * self[e2])
-                        - (reverse[e125] * self[e3])
-                        - (reverse[e321] * self[e5]),
-                    (reverse[e1] * self[e1]) + (reverse[e2] * self[e2]) + (reverse[e3] * self[e3]) - (reverse[e321] * self[e321]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (reverse[e1] * self[e235]) + (reverse[e2] * self[e315]) + (reverse[e3] * self[e125]) + (reverse[e5] * self[e321])
+                - (reverse[e235] * self[e1])
+                - (reverse[e315] * self[e2])
+                - (reverse[e125] * self[e3])
+                - (reverse[e321] * self[e5]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for AntiLine {
@@ -296,12 +281,11 @@ impl ConstraintViolation for AntiLine {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9        9        0
-    //    simd2        1        0        0
+    //      f32        5        6        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       10       11        0
-    //  no simd       11       15        0
+    // yes simd        5        8        0
+    //  no simd        5       12        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = AntiLine::from_groups(
@@ -310,19 +294,15 @@ impl ConstraintViolation for AntiLine {
             // e15, e25, e35
             self.group1() * Simd32x3::from(-1.0),
         );
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2)])
-                + Simd32x2::from([
-                    -(reverse[e23] * self[e15])
-                        - (reverse[e31] * self[e25])
-                        - (reverse[e12] * self[e35])
-                        - (reverse[e15] * self[e23])
-                        - (reverse[e25] * self[e31])
-                        - (reverse[e35] * self[e12]),
-                    -(reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            -(reverse[e23] * self[e15])
+                - (reverse[e31] * self[e25])
+                - (reverse[e12] * self[e35])
+                - (reverse[e15] * self[e23])
+                - (reverse[e25] * self[e31])
+                - (reverse[e35] * self[e12]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for AntiMotor {
@@ -335,12 +315,11 @@ impl ConstraintViolation for AntiMotor {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       12        0
-    //    simd2        1        0        0
+    //      f32        7        8        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       14       14        0
-    //  no simd       15       20        0
+    // yes simd        7       10        0
+    //  no simd        7       16        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = AntiMotor::from_groups(
@@ -349,20 +328,16 @@ impl ConstraintViolation for AntiMotor {
             // e15, e25, e35, e3215
             self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2)])
-                + Simd32x2::from([
-                    (reverse[scalar] * self[e3215]) + (reverse[e3215] * self[scalar])
-                        - (reverse[e23] * self[e15])
-                        - (reverse[e31] * self[e25])
-                        - (reverse[e12] * self[e35])
-                        - (reverse[e15] * self[e23])
-                        - (reverse[e25] * self[e31])
-                        - (reverse[e35] * self[e12]),
-                    (reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (reverse[scalar] * self[e3215]) + (reverse[e3215] * self[scalar])
+                - (reverse[e23] * self[e15])
+                - (reverse[e31] * self[e25])
+                - (reverse[e12] * self[e35])
+                - (reverse[e15] * self[e23])
+                - (reverse[e25] * self[e31])
+                - (reverse[e35] * self[e12]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for AntiPlane {
@@ -455,13 +430,13 @@ impl ConstraintViolation for Circle {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    f32::powi(self[e321], 2)
-                        - f32::powi(self[e415], 2)
-                        - f32::powi(self[e425], 2)
-                        - f32::powi(self[e435], 2)
-                        - 2.0 * (self[e423] * self[e235])
-                        - 2.0 * (self[e431] * self[e315])
-                        - 2.0 * (self[e412] * self[e125]),
+                    2.0 * (self[e423] * self[e235])
+                        + 2.0 * (self[e431] * self[e315])
+                        + 2.0 * (self[e412] * self[e125])
+                        + f32::powi(self[e415], 2)
+                        + f32::powi(self[e425], 2)
+                        + f32::powi(self[e435], 2)
+                        - f32::powi(self[e321], 2),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -539,13 +514,14 @@ impl ConstraintViolation for CircleRotor {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    f32::powi(self[e321], 2) + f32::powi(self[e12345], 2)
-                        - f32::powi(self[e415], 2)
-                        - f32::powi(self[e425], 2)
-                        - f32::powi(self[e435], 2)
-                        - 2.0 * (self[e423] * self[e235])
-                        - 2.0 * (self[e431] * self[e315])
-                        - 2.0 * (self[e412] * self[e125]),
+                    2.0 * (self[e423] * self[e235])
+                        + 2.0 * (self[e431] * self[e315])
+                        + 2.0 * (self[e412] * self[e125])
+                        + f32::powi(self[e415], 2)
+                        + f32::powi(self[e425], 2)
+                        + f32::powi(self[e435], 2)
+                        + f32::powi(self[e12345], 2)
+                        - f32::powi(self[e321], 2),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -620,13 +596,13 @@ impl ConstraintViolation for Dipole {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e41] * self[e15])
-                        + 2.0 * (self[e42] * self[e25])
-                        + 2.0 * (self[e43] * self[e35])
-                        + f32::powi(self[e23], 2)
-                        + f32::powi(self[e31], 2)
-                        + f32::powi(self[e12], 2)
-                        - f32::powi(self[e45], 2),
+                    f32::powi(self[e45], 2)
+                        - f32::powi(self[e23], 2)
+                        - f32::powi(self[e31], 2)
+                        - f32::powi(self[e12], 2)
+                        - 2.0 * (self[e41] * self[e15])
+                        - 2.0 * (self[e42] * self[e25])
+                        - 2.0 * (self[e43] * self[e35]),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -719,16 +695,13 @@ impl ConstraintViolation for DipoleInversion {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e41] * self[e15])
-                        + 2.0 * (self[e42] * self[e25])
-                        + 2.0 * (self[e43] * self[e35])
-                        + f32::powi(self[e23], 2)
-                        + f32::powi(self[e31], 2)
-                        + f32::powi(self[e12], 2)
-                        + f32::powi(self[e4235], 2)
-                        + f32::powi(self[e4315], 2)
-                        + f32::powi(self[e4125], 2)
-                        - f32::powi(self[e45], 2)
+                    f32::powi(self[e45], 2) + f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2)
+                        - f32::powi(self[e23], 2)
+                        - f32::powi(self[e31], 2)
+                        - f32::powi(self[e12], 2)
+                        - 2.0 * (self[e41] * self[e15])
+                        - 2.0 * (self[e42] * self[e25])
+                        - 2.0 * (self[e43] * self[e35])
                         - 2.0 * (self[e1234] * self[e3215]),
                 ),
             // e23, e31, e12, e45
@@ -764,19 +737,8 @@ impl std::ops::Div<constraint_violation> for FlatPoint {
 }
 impl ConstraintViolation for FlatPoint {
     type Output = Scalar;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        1        2        0
-    //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(
-            // scalar
-            (self[e45] * FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0))[e45]) - f32::powi(self[e45], 2),
-        );
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl std::ops::Div<constraint_violation> for Flector {
@@ -789,27 +751,22 @@ impl ConstraintViolation for Flector {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       12        0
-    //    simd2        1        0        0
+    //      f32        7        8        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       14       13        0
-    //  no simd       15       16        0
+    // yes simd        7        9        0
+    //  no simd        7       12        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[e45], 2)])
-                + Simd32x2::from([
-                    (reverse[e4235] * self[e15]) + (reverse[e4315] * self[e25]) + (reverse[e4125] * self[e35]) + (reverse[e3215] * self[e45])
-                        - (reverse[e15] * self[e4235])
-                        - (reverse[e25] * self[e4315])
-                        - (reverse[e35] * self[e4125])
-                        - (reverse[e45] * self[e3215]),
-                    (reverse[e45] * self[e45]) - (reverse[e4235] * self[e4235]) - (reverse[e4315] * self[e4315]) - (reverse[e4125] * self[e4125]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (reverse[e4235] * self[e15]) + (reverse[e4315] * self[e25]) + (reverse[e4125] * self[e35]) + (reverse[e3215] * self[e45])
+                - (reverse[e15] * self[e4235])
+                - (reverse[e25] * self[e4315])
+                - (reverse[e35] * self[e4125])
+                - (reverse[e45] * self[e3215]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for Line {
@@ -822,12 +779,11 @@ impl ConstraintViolation for Line {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9        9        0
-    //    simd2        1        0        0
+    //      f32        5        6        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       10       11        0
-    //  no simd       11       15        0
+    // yes simd        5        8        0
+    //  no simd        5       12        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Line::from_groups(
@@ -836,19 +792,15 @@ impl ConstraintViolation for Line {
             // e235, e315, e125
             self.group1() * Simd32x3::from(-1.0),
         );
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, -f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2)])
-                + Simd32x2::from([
-                    (reverse[e415] * self[e235])
-                        + (reverse[e425] * self[e315])
-                        + (reverse[e435] * self[e125])
-                        + (reverse[e235] * self[e415])
-                        + (reverse[e315] * self[e425])
-                        + (reverse[e125] * self[e435]),
-                    (reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (reverse[e415] * self[e235])
+                + (reverse[e425] * self[e315])
+                + (reverse[e435] * self[e125])
+                + (reverse[e235] * self[e415])
+                + (reverse[e315] * self[e425])
+                + (reverse[e125] * self[e435]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for Motor {
@@ -861,12 +813,11 @@ impl ConstraintViolation for Motor {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       12        0
-    //    simd2        1        0        0
+    //      f32        7        8        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       14       14        0
-    //  no simd       15       20        0
+    // yes simd        7       10        0
+    //  no simd        7       16        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Motor::from_groups(
@@ -875,21 +826,17 @@ impl ConstraintViolation for Motor {
             // e235, e315, e125, e5
             self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
-        return AntiDualNum::from_groups(
-            // e3215, scalar
-            Simd32x2::from([0.0, f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2)])
-                + Simd32x2::from([
-                    (reverse[e415] * self[e235])
-                        + (reverse[e425] * self[e315])
-                        + (reverse[e435] * self[e125])
-                        + (reverse[e235] * self[e415])
-                        + (reverse[e315] * self[e425])
-                        + (reverse[e125] * self[e435])
-                        - (reverse[e12345] * self[e5])
-                        - (reverse[e5] * self[e12345]),
-                    (reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345]),
-                ]),
-        );
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (reverse[e415] * self[e235])
+                + (reverse[e425] * self[e315])
+                + (reverse[e435] * self[e125])
+                + (reverse[e235] * self[e415])
+                + (reverse[e315] * self[e425])
+                + (reverse[e125] * self[e435])
+                - (reverse[e12345] * self[e5])
+                - (reverse[e5] * self[e12345]),
+            0.0,
+        ]));
     }
 }
 impl std::ops::Div<constraint_violation> for MultiVector {
@@ -907,13 +854,13 @@ impl ConstraintViolation for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      162        0
-    //    simd2       17       16        0
+    //      f32      116      146        0
+    //    simd2       16       16        0
     //    simd3        0       22        0
     //    simd4       56       40        0
     // Totals...
-    // yes simd      212      240        0
-    //  no simd      397      420        0
+    // yes simd      188      224        0
+    //  no simd      372      404        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = MultiVector::from_groups(
@@ -1140,33 +1087,7 @@ impl ConstraintViolation for MultiVector {
         );
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([
-                2.0 * (self[e4] * self[e5])
-                    + 2.0 * (self[e15] * self[e41])
-                    + 2.0 * (self[e25] * self[e42])
-                    + 2.0 * (self[e35] * self[e43])
-                    + f32::powi(self[e12345], 2)
-                    + f32::powi(self[e23], 2)
-                    + f32::powi(self[e31], 2)
-                    + f32::powi(self[e12], 2)
-                    + f32::powi(self[e321], 2)
-                    + f32::powi(self[e4235], 2)
-                    + f32::powi(self[e4315], 2)
-                    + f32::powi(self[e4125], 2)
-                    - f32::powi(self[scalar], 2)
-                    - f32::powi(self[e1], 2)
-                    - f32::powi(self[e2], 2)
-                    - f32::powi(self[e3], 2)
-                    - f32::powi(self[e45], 2)
-                    - f32::powi(self[e415], 2)
-                    - f32::powi(self[e425], 2)
-                    - f32::powi(self[e435], 2)
-                    - 2.0 * (self[e423] * self[e235])
-                    - 2.0 * (self[e431] * self[e315])
-                    - 2.0 * (self[e412] * self[e125])
-                    - 2.0 * (self[e3215] * self[e1234]),
-                0.0,
-            ]) + geometric_product.group0(),
+            Simd32x2::from([0.0, geometric_product[e12345]]),
             // e1, e2, e3, e4
             geometric_product.group1(),
             // e5
@@ -1334,16 +1255,18 @@ impl ConstraintViolation for VersorEven {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e5] * self[e4]) + f32::powi(self[e12345], 2) + f32::powi(self[e321], 2)
-                        - f32::powi(self[e415], 2)
-                        - f32::powi(self[e425], 2)
-                        - f32::powi(self[e435], 2)
+                    2.0 * (self[e423] * self[e235])
+                        + 2.0 * (self[e431] * self[e315])
+                        + 2.0 * (self[e412] * self[e125])
+                        + 2.0 * (self[e5] * self[e4])
+                        + f32::powi(self[e12345], 2)
+                        + f32::powi(self[e415], 2)
+                        + f32::powi(self[e425], 2)
+                        + f32::powi(self[e435], 2)
+                        - f32::powi(self[e321], 2)
                         - f32::powi(self[e1], 2)
                         - f32::powi(self[e2], 2)
-                        - f32::powi(self[e3], 2)
-                        - 2.0 * (self[e423] * self[e235])
-                        - 2.0 * (self[e431] * self[e315])
-                        - 2.0 * (self[e412] * self[e125]),
+                        - f32::powi(self[e3], 2),
                 ),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -1448,17 +1371,14 @@ impl ConstraintViolation for VersorOdd {
             // e41, e42, e43, scalar
             geometric_product.group0()
                 + Simd32x3::from(0.0).with_w(
-                    2.0 * (self[e41] * self[e15])
-                        + 2.0 * (self[e42] * self[e25])
-                        + 2.0 * (self[e43] * self[e35])
-                        + f32::powi(self[e23], 2)
-                        + f32::powi(self[e31], 2)
-                        + f32::powi(self[e12], 2)
-                        + f32::powi(self[e4235], 2)
-                        + f32::powi(self[e4315], 2)
-                        + f32::powi(self[e4125], 2)
+                    f32::powi(self[e45], 2) + f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2)
                         - f32::powi(self[scalar], 2)
-                        - f32::powi(self[e45], 2)
+                        - f32::powi(self[e23], 2)
+                        - f32::powi(self[e31], 2)
+                        - f32::powi(self[e12], 2)
+                        - 2.0 * (self[e41] * self[e15])
+                        - 2.0 * (self[e42] * self[e25])
+                        - 2.0 * (self[e43] * self[e35])
                         - 2.0 * (self[e1234] * self[e3215]),
                 ),
             // e23, e31, e12, e45

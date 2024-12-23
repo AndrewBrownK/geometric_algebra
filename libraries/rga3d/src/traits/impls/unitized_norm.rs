@@ -9,15 +9,15 @@ use crate::traits::UnitizedFlatNormSquared;
 // Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       7       1
+//  Minimum:         2       6       1
 //   Median:         6      10       1
 //  Average:         6      11       1
 //  Maximum:        14      23       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2      11       1
+//  Minimum:         2      10       1
 //   Median:         6      16       1
-//  Average:         6      18       1
+//  Average:         6      17       1
 //  Maximum:        14      34       1
 impl std::ops::Div<unitized_norm> for Flector {
     type Output = f32;
@@ -46,11 +46,11 @@ impl std::ops::Div<unitized_norm> for Line {
 impl UnitizedNorm for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2       13        1
+    // yes simd        2        6        1
+    //  no simd        2       12        1
     fn unitized_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -102,11 +102,11 @@ impl std::ops::Div<unitized_norm> for Point {
 impl UnitizedNorm for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2       11        1
+    // yes simd        2        6        1
+    //  no simd        2       10        1
     fn unitized_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }

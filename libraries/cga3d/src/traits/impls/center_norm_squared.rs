@@ -11,13 +11,13 @@ use crate::traits::RoundBulkNormSquared;
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         3       6       0
+//  Minimum:         3       5       0
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         3       6       0
+//  Minimum:         3       5       0
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
@@ -30,7 +30,7 @@ impl std::ops::Div<center_norm_squared> for AntiCircleRotor {
 impl CenterNormSquared for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4        7        0
+    // f32        4        6        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
@@ -60,7 +60,7 @@ impl std::ops::Div<center_norm_squared> for Circle {
 impl CenterNormSquared for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        6        0
+    // f32        3        5        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
@@ -75,7 +75,7 @@ impl std::ops::Div<center_norm_squared> for CircleRotor {
 impl CenterNormSquared for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4        7        0
+    // f32        4        6        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
@@ -90,7 +90,7 @@ impl std::ops::Div<center_norm_squared> for Dipole {
 impl CenterNormSquared for Dipole {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        6        0
+    // f32        3        5        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);

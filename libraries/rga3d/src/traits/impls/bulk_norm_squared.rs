@@ -11,7 +11,7 @@ use crate::traits::Wedge;
 // Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       4       0
+//  Minimum:         0       3       0
 //   Median:         3       6       0
 //  Average:         3       7       0
 //  Maximum:         7      15       0
@@ -19,7 +19,7 @@ use crate::traits::Wedge;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       9       0
 //   Median:         3      12       0
-//  Average:         3      14       0
+//  Average:         3      13       0
 //  Maximum:         7      26       0
 impl std::ops::Div<bulk_norm_squared> for Flector {
     type Output = Scalar;
@@ -49,11 +49,11 @@ impl std::ops::Div<bulk_norm_squared> for Line {
 impl BulkNormSquared for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(/* e4 */ 1.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);

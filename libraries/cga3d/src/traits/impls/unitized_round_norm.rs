@@ -9,15 +9,15 @@ use crate::traits::UnitizedRoundNormSquared;
 // Total Implementations: 10
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       6       1
+//  Minimum:         2       5       1
 //   Median:         5      10       1
-//  Average:        10      15       1
+//  Average:        10      14       1
 //  Maximum:        63      73       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2       9       1
+//  Minimum:         2       8       1
 //   Median:         5      16       1
-//  Average:        10      22       1
+//  Average:        10      21       1
 //  Maximum:        63      90       1
 impl std::ops::Div<unitized_round_norm> for AntiCircleRotor {
     type Output = f32;
@@ -64,11 +64,11 @@ impl std::ops::Div<unitized_round_norm> for Circle {
 impl UnitizedRoundNorm for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm(self) -> f32 {
         return f32::powf(self.unitized_round_norm_squared(), 0.5);
     }
@@ -82,11 +82,11 @@ impl std::ops::Div<unitized_round_norm> for CircleRotor {
 impl UnitizedRoundNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm(self) -> f32 {
         return f32::powf(self.unitized_round_norm_squared(), 0.5);
     }
@@ -155,11 +155,11 @@ impl std::ops::Div<unitized_round_norm> for RoundPoint {
 impl UnitizedRoundNorm for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2        9        1
+    // yes simd        2        5        1
+    //  no simd        2        8        1
     fn unitized_round_norm(self) -> f32 {
         return f32::powf(self.unitized_round_norm_squared(), 0.5);
     }

@@ -18,7 +18,7 @@ use crate::traits::RoundWeightNormSquared;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       7       1
 //   Median:         2      20       1
-//  Average:         4      28       1
+//  Average:         4      27       1
 //  Maximum:        32      90       1
 impl std::ops::Div<unitize> for AntiCircleRotor {
     type Output = AntiCircleRotor;
@@ -286,11 +286,11 @@ impl std::ops::DivAssign<unitize> for RoundPoint {
 impl Unitize for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        2        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       11        1
+    // yes simd        0        4        1
+    //  no simd        0       10        1
     fn unitize(self) -> Self {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ 1.0 / self.round_weight_norm_squared().anti_square_root()[e12345]);

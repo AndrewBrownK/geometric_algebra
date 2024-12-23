@@ -10,13 +10,13 @@ use crate::traits::FlatWeightNormSquared;
 // Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:         3       4       0
 //  Average:         3       4       0
 //  Maximum:         7       8       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       1       0
 //   Median:         3       4       0
 //  Average:         3       4       0
 //  Maximum:         7       8       0
@@ -85,7 +85,7 @@ impl std::ops::Div<flat_weight_norm> for Point {
 impl FlatWeightNorm for Point {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm(self) -> AntiScalar {
         return self.flat_weight_norm_squared().anti_square_root();
     }

@@ -143,6 +143,7 @@ impl FloatExpr {
     }
 
     // TODO get rid of param 'distribute_and_flatten_arithmetic' because it seems to always be set true
+    // TODO impl ConstraintViolation for Plane should simplify to zero
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, distribute_and_flatten_arithmetic: bool, prefer_flat_access: bool, inline_single_use_vars: bool) {
         match self {
             FloatExpr::Variable(v) => {
@@ -305,49 +306,22 @@ impl FloatExpr {
                             }
                             MultiVectorGroupExpr::Vec2(v2) => {
                                 if i < 2 {
-                                    match v2 {
-                                        Vec2Expr::Gather1(f) => {
-                                            *self = f.take_as_owned();
-                                            return;
-                                        }
-                                        Vec2Expr::Gather2(f0, f1) => {
-                                            *self = [f0, f1][i as usize].take_as_owned();
-                                            return;
-                                        }
-                                        _ => {}
-                                    }
+                                    *self = v2.take_part_as_owned(i as u8);
+                                    return
                                 }
                                 scan_idx += 2;
                             }
                             MultiVectorGroupExpr::Vec3(v3) => {
                                 if i < 3 {
-                                    match v3 {
-                                        Vec3Expr::Gather1(f) => {
-                                            *self = f.take_as_owned();
-                                            return;
-                                        }
-                                        Vec3Expr::Gather3(f0, f1, f2) => {
-                                            *self = [f0, f1, f2][i as usize].take_as_owned();
-                                            return;
-                                        }
-                                        _ => {}
-                                    }
+                                    *self = v3.take_part_as_owned(i as u8);
+                                    return
                                 }
                                 scan_idx += 3;
                             }
                             MultiVectorGroupExpr::Vec4(v4) => {
                                 if i < 4 {
-                                    match v4 {
-                                        Vec4Expr::Gather1(f) => {
-                                            *self = f.take_as_owned();
-                                            return;
-                                        }
-                                        Vec4Expr::Gather4(f0, f1, f2, f3) => {
-                                            *self = [f0, f1, f2, f3][i as usize].take_as_owned();
-                                            return;
-                                        }
-                                        _ => {}
-                                    }
+                                    *self = v4.take_part_as_owned(i as u8);
+                                    return
                                 }
                                 scan_idx += 4;
                             }

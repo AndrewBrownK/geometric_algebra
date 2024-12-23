@@ -10,15 +10,15 @@ use crate::traits::FlatWeightNorm;
 // Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       7       0
+//  Minimum:         2       6       0
 //   Median:         6      10       0
 //  Average:         6      11       0
 //  Maximum:        14      23       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2      11       0
+//  Minimum:         2      10       0
 //   Median:         6      16       0
-//  Average:         6      18       0
+//  Average:         6      17       0
 //  Maximum:        14      34       0
 impl std::ops::Div<norm> for Flector {
     type Output = DualNum;
@@ -48,11 +48,11 @@ impl std::ops::Div<norm> for Line {
 impl Norm for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        2        7        0
-    //  no simd        2       13        0
+    // yes simd        2        6        0
+    //  no simd        2       12        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
@@ -107,11 +107,11 @@ impl std::ops::Div<norm> for Point {
 impl Norm for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
+    //      f32        2        4        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        7        0
-    //  no simd        2       11        0
+    // yes simd        2        6        0
+    //  no simd        2       10        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));

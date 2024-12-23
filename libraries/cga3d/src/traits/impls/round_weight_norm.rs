@@ -156,11 +156,11 @@ impl std::ops::Div<round_weight_norm> for RoundPoint {
 impl RoundWeightNorm for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn round_weight_norm(self) -> AntiScalar {
         return self.round_weight_norm_squared().anti_square_root();
     }

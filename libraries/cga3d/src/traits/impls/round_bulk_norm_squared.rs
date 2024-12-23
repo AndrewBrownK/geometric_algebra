@@ -74,7 +74,7 @@ impl std::ops::Div<round_bulk_norm_squared> for AntiFlatPoint {
 impl RoundBulkNormSquared for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
         return round_bulk.dot_product(round_bulk);
@@ -149,7 +149,7 @@ impl std::ops::Div<round_bulk_norm_squared> for Circle {
 impl RoundBulkNormSquared for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
         return round_bulk.dot_product(round_bulk);
@@ -164,7 +164,7 @@ impl std::ops::Div<round_bulk_norm_squared> for CircleRotor {
 impl RoundBulkNormSquared for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
         return round_bulk.dot_product(round_bulk);

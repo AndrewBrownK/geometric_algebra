@@ -18,7 +18,7 @@ use crate::traits::RoundWeightNormSquared;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         4       8       1
 //   Median:        12      21       1
-//  Average:        17      29       1
+//  Average:        17      28       1
 //  Maximum:        63      91       1
 impl std::ops::Div<unitized_radius_norm_squared> for AntiCircleRotor {
     type Output = f32;
@@ -163,11 +163,11 @@ impl std::ops::Div<unitized_radius_norm_squared> for RoundPoint {
 impl UnitizedRadiusNormSquared for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        8        1
+    //      f32        4        7        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        4        9        1
-    //  no simd        4       12        1
+    // yes simd        4        8        1
+    //  no simd        4       11        1
     fn unitized_radius_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.radius_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);

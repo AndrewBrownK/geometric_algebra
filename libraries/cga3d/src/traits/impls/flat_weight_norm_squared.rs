@@ -29,7 +29,7 @@ impl std::ops::Div<flat_weight_norm_squared> for AntiCircleRotor {
 impl FlatWeightNormSquared for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
@@ -109,7 +109,7 @@ impl std::ops::Div<flat_weight_norm_squared> for Dipole {
 impl FlatWeightNormSquared for Dipole {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
@@ -154,7 +154,7 @@ impl std::ops::Div<flat_weight_norm_squared> for FlatPoint {
 impl FlatWeightNormSquared for FlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);

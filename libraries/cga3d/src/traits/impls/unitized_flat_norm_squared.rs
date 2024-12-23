@@ -10,15 +10,15 @@ use crate::traits::FlatWeightNormSquared;
 // Total Implementations: 16
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       4       1
+//  Minimum:         0       5       1
 //   Median:        10      20       1
 //  Average:        16      24       1
 //  Maximum:        87     106       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0      10       1
+//  Minimum:         0      11       1
 //   Median:        15      25       1
-//  Average:        19      35       1
+//  Average:        19      34       1
 //  Maximum:       111     144       1
 impl std::ops::Div<unitized_flat_norm_squared> for AntiCircleRotor {
     type Output = f32;
@@ -29,11 +29,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for AntiCircleRotor {
 impl UnitizedFlatNormSquared for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        1
-    //  no simd        8       17        1
+    // yes simd        4        8        1
+    //  no simd        8       16        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
@@ -106,11 +106,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for Dipole {
 impl UnitizedFlatNormSquared for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        1
-    //  no simd        8       17        1
+    // yes simd        4        8        1
+    //  no simd        8       16        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
@@ -145,11 +145,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for DualNum {
 impl UnitizedFlatNormSquared for DualNum {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        3        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        1
-    //  no simd        0       10        1
+    // yes simd        0        5        1
+    //  no simd        0       11        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
@@ -164,11 +164,11 @@ impl std::ops::Div<unitized_flat_norm_squared> for FlatPoint {
 impl UnitizedFlatNormSquared for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        1
+    //      f32        2        4        1
     //    simd3        2        4        0
     // Totals...
-    // yes simd        4        9        1
-    //  no simd        8       17        1
+    // yes simd        4        8        1
+    //  no simd        8       16        1
     fn unitized_flat_norm_squared(self) -> f32 {
         use crate::elements::*;
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e12345]);
