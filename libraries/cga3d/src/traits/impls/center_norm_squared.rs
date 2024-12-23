@@ -33,9 +33,7 @@ impl CenterNormSquared for AntiCircleRotor {
     // f32        4        7        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for AntiDipoleInversion {
@@ -50,9 +48,7 @@ impl CenterNormSquared for AntiDipoleInversion {
     // f32        6        8        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for Circle {
@@ -67,9 +63,7 @@ impl CenterNormSquared for Circle {
     // f32        3        6        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for CircleRotor {
@@ -84,9 +78,7 @@ impl CenterNormSquared for CircleRotor {
     // f32        4        7        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for Dipole {
@@ -101,9 +93,7 @@ impl CenterNormSquared for Dipole {
     // f32        3        6        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for DipoleInversion {
@@ -118,9 +108,7 @@ impl CenterNormSquared for DipoleInversion {
     // f32        6        8        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for MultiVector {
@@ -135,9 +123,7 @@ impl CenterNormSquared for MultiVector {
     // f32       63       65        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for VersorEven {
@@ -152,9 +138,7 @@ impl CenterNormSquared for VersorEven {
     // f32        7        9        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
 impl std::ops::Div<center_norm_squared> for VersorOdd {
@@ -169,8 +153,6 @@ impl CenterNormSquared for VersorOdd {
     // f32        7        9        0
     fn center_norm_squared(self) -> Scalar {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared().right_anti_dual();
-        return Scalar::from_groups(/* scalar */ other[scalar] + self_2[scalar]);
+        return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }

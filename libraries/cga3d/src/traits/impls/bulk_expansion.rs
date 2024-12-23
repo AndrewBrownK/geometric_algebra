@@ -16,7 +16,7 @@
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         5      22       0
-//  Average:        11      29       0
+//  Average:        11      28       0
 //  Maximum:       211     265       0
 impl std::ops::Div<bulk_expansion> for AntiCircleRotor {
     type Output = bulk_expansion_partial<AntiCircleRotor>;
@@ -264,13 +264,18 @@ impl BulkExpansion<AntiMotor> for AntiCircleRotor {
 impl BulkExpansion<AntiPlane> for AntiCircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiScalar> for AntiCircleRotor {
@@ -815,8 +820,7 @@ impl BulkExpansion<Scalar> for AntiCircleRotor {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for AntiCircleRotor {
@@ -1958,20 +1962,24 @@ impl BulkExpansion<AntiDualNum> for AntiDualNum {
     // no simd        0        2        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * other.group0());
     }
 }
 impl BulkExpansion<AntiFlatPoint> for AntiDualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiFlector> for AntiDualNum {
@@ -2043,13 +2051,18 @@ impl BulkExpansion<AntiMotor> for AntiDualNum {
 impl BulkExpansion<AntiPlane> for AntiDualNum {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiScalar> for AntiDualNum {
@@ -2063,8 +2076,7 @@ impl BulkExpansion<AntiScalar> for AntiDualNum {
     //  no simd        0        3        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_dual[scalar]) * self.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Circle> for AntiDualNum {
@@ -2210,13 +2222,18 @@ impl BulkExpansion<DualNum> for AntiDualNum {
 impl BulkExpansion<FlatPoint> for AntiDualNum {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl BulkExpansion<Flector> for AntiDualNum {
@@ -2351,13 +2368,18 @@ impl BulkExpansion<MultiVector> for AntiDualNum {
 impl BulkExpansion<Plane> for AntiDualNum {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bulk_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
     }
 }
 impl BulkExpansion<RoundPoint> for AntiDualNum {
@@ -2392,8 +2414,7 @@ impl BulkExpansion<Scalar> for AntiDualNum {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for AntiDualNum {
@@ -2537,43 +2558,27 @@ impl BulkExpansion<AntiDualNum> for AntiFlatPoint {
     //  no simd        0        3        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * right_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e3215] * self[e321], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl BulkExpansion<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ self[e321] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e321] * self[e321]);
     }
 }
 impl BulkExpansion<AntiFlector> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn bulk_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Flector::from_groups(
-            // e15, e25, e35, e45
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e321] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ self[e321] * other[e321]);
     }
 }
 impl BulkExpansion<AntiMotor> for AntiFlatPoint {
@@ -2582,19 +2587,12 @@ impl BulkExpansion<AntiMotor> for AntiFlatPoint {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       11        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * right_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * other[e3215], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl BulkExpansion<AntiScalar> for AntiFlatPoint {
@@ -2608,8 +2606,7 @@ impl BulkExpansion<AntiScalar> for AntiFlatPoint {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Circle> for AntiFlatPoint {
@@ -2709,15 +2706,14 @@ impl BulkExpansion<DualNum> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Flector> for AntiFlatPoint {
@@ -2746,18 +2742,15 @@ impl BulkExpansion<Flector> for AntiFlatPoint {
 impl BulkExpansion<Motor> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<MultiVector> for AntiFlatPoint {
@@ -4590,13 +4583,18 @@ impl BulkExpansion<AntiMotor> for AntiMotor {
 impl BulkExpansion<AntiPlane> for AntiMotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiScalar> for AntiMotor {
@@ -4821,13 +4819,18 @@ impl BulkExpansion<DualNum> for AntiMotor {
 impl BulkExpansion<FlatPoint> for AntiMotor {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl BulkExpansion<Flector> for AntiMotor {
@@ -5066,8 +5069,7 @@ impl BulkExpansion<Scalar> for AntiMotor {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for AntiMotor {
@@ -5434,8 +5436,7 @@ impl BulkExpansion<AntiScalar> for AntiPlane {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Circle> for AntiPlane {
@@ -5594,15 +5595,14 @@ impl BulkExpansion<DualNum> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<FlatPoint> for AntiPlane {
@@ -5958,129 +5958,57 @@ impl BulkExpansion<AntiScalar> for AntiScalar {
     // f32        0        2        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * -1.0);
     }
 }
 impl BulkExpansion<CircleRotor> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl BulkExpansion<DualNum> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl BulkExpansion<Motor> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl BulkExpansion<MultiVector> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       23        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let right_dual = MultiVector::from_groups(
-            // scalar, e12345
-            other.group0().yx() * Simd32x2::from([-1.0, 1.0]),
-            // e1, e2, e3, e4
-            other.group9().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
-            // e15, e25, e35, e45
-            other.group8().with_w(other[e321] * -1.0),
-            // e41, e42, e43
-            other.group7(),
-            // e23, e31, e12
-            other.group6().xyz(),
-            // e415, e425, e435, e321
-            other.group5().with_w(other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e423, e431, e412
-            other.group4() * Simd32x3::from(-1.0),
-            // e235, e315, e125
-            other.group3().xyz() * Simd32x3::from(-1.0),
-            // e4235, e4315, e4125, e3215
-            other.group1().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl BulkExpansion<VersorEven> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       17        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl std::ops::Div<bulk_expansion> for Circle {
@@ -6133,8 +6061,7 @@ impl BulkExpansion<AntiDualNum> for Circle {
     // no simd        0        4        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl BulkExpansion<AntiFlatPoint> for Circle {
@@ -6182,17 +6109,11 @@ impl BulkExpansion<AntiMotor> for Circle {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl BulkExpansion<AntiScalar> for Circle {
@@ -6709,8 +6630,7 @@ impl BulkExpansion<AntiDualNum> for CircleRotor {
     // no simd        0        4        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl BulkExpansion<AntiFlatPoint> for CircleRotor {
@@ -6758,17 +6678,11 @@ impl BulkExpansion<AntiMotor> for CircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl BulkExpansion<AntiScalar> for CircleRotor {
@@ -8929,8 +8843,7 @@ impl BulkExpansion<AntiScalar> for DualNum {
     //  no simd        0        3        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar]) * self.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Circle> for DualNum {
@@ -9041,13 +8954,15 @@ impl BulkExpansion<DipoleInversion> for DualNum {
 impl BulkExpansion<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar]) * self.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<FlatPoint> for DualNum {
@@ -9056,14 +8971,12 @@ impl BulkExpansion<FlatPoint> for DualNum {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e5] * other[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl BulkExpansion<Flector> for DualNum {
@@ -9099,10 +9012,9 @@ impl BulkExpansion<Line> for DualNum {
     // no simd        0       12        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -9197,53 +9109,48 @@ impl BulkExpansion<MultiVector> for DualNum {
 impl BulkExpansion<Plane> for DualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn bulk_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]).xyz().with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
 }
 impl BulkExpansion<RoundPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e5] * right_dual[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
     }
 }
 impl BulkExpansion<Sphere> for DualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let right_dual = RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            other.group0().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[e5]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e1234]]) * Simd32x4::from(-1.0),
         );
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e5]) * right_dual.group0() * Simd32x4::from(-1.0));
     }
 }
 impl BulkExpansion<VersorEven> for DualNum {
@@ -9377,8 +9284,7 @@ impl BulkExpansion<AntiScalar> for FlatPoint {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Circle> for FlatPoint {
@@ -9508,30 +9414,24 @@ impl BulkExpansion<DualNum> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<FlatPoint> for FlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * self[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e45] * self[e45] * -1.0);
     }
 }
 impl BulkExpansion<Flector> for FlatPoint {
@@ -10028,16 +9928,11 @@ impl BulkExpansion<DualNum> for Flector {
 impl BulkExpansion<FlatPoint> for Flector {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * self[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e45] * self[e45] * -1.0);
     }
 }
 impl BulkExpansion<Flector> for Flector {
@@ -11013,14 +10908,12 @@ impl BulkExpansion<FlatPoint> for Motor {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e45] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl BulkExpansion<Flector> for Motor {
@@ -11206,21 +11099,11 @@ impl BulkExpansion<Plane> for Motor {
 impl BulkExpansion<RoundPoint> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bulk_expansion(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e5] * right_dual[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
     }
 }
 impl BulkExpansion<Sphere> for Motor {
@@ -12642,8 +12525,7 @@ impl BulkExpansion<Scalar> for MultiVector {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for MultiVector {
@@ -12894,27 +12776,21 @@ impl BulkExpansion<AntiScalar> for Plane {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<CircleRotor> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<DipoleInversion> for Plane {
@@ -12949,15 +12825,14 @@ impl BulkExpansion<DualNum> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<Flector> for Plane {
@@ -12983,18 +12858,15 @@ impl BulkExpansion<Flector> for Plane {
 impl BulkExpansion<Motor> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<MultiVector> for Plane {
@@ -13104,22 +12976,15 @@ impl BulkExpansion<Sphere> for Plane {
 impl BulkExpansion<VersorEven> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        5        0
-    // no simd        0       20        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl BulkExpansion<VersorOdd> for Plane {
@@ -13240,8 +13105,7 @@ impl BulkExpansion<AntiDualNum> for RoundPoint {
     // no simd        0        4        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[e5]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e3215]) * self.group0());
     }
 }
 impl BulkExpansion<AntiFlatPoint> for RoundPoint {
@@ -14004,20 +13868,24 @@ impl BulkExpansion<AntiDualNum> for Scalar {
     // no simd        0        2        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * other.group0());
     }
 }
 impl BulkExpansion<AntiFlatPoint> for Scalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiFlector> for Scalar {
@@ -14089,13 +13957,18 @@ impl BulkExpansion<AntiMotor> for Scalar {
 impl BulkExpansion<AntiPlane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiScalar> for Scalar {
@@ -14105,8 +13978,7 @@ impl BulkExpansion<AntiScalar> for Scalar {
     // f32        0        2        0
     fn bulk_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Scalar::from_groups(/* scalar */ right_dual[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ other[e12345] * self[scalar] * -1.0);
     }
 }
 impl BulkExpansion<Circle> for Scalar {
@@ -14232,25 +14104,32 @@ impl BulkExpansion<DipoleInversion> for Scalar {
 impl BulkExpansion<DualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn bulk_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar]) * right_dual.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar]) * Simd32x2::from([other[e5] * -1.0, other[e12345] * -1.0]));
     }
 }
 impl BulkExpansion<FlatPoint> for Scalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl BulkExpansion<Flector> for Scalar {
@@ -14380,13 +14259,18 @@ impl BulkExpansion<MultiVector> for Scalar {
 impl BulkExpansion<Plane> for Scalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bulk_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
     }
 }
 impl BulkExpansion<RoundPoint> for Scalar {
@@ -14421,8 +14305,7 @@ impl BulkExpansion<Scalar> for Scalar {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[scalar] * self[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for Scalar {
@@ -14523,28 +14406,17 @@ impl BulkExpansion<AntiDualNum> for Sphere {
     // f32        0        1        0
     fn bulk_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e5] * self[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ other[e3215] * self[e1234]);
     }
 }
 impl BulkExpansion<AntiMotor> for Sphere {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e5] * self[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ other[e3215] * self[e1234]);
     }
 }
 impl BulkExpansion<AntiScalar> for Sphere {
@@ -16030,13 +15902,18 @@ impl BulkExpansion<AntiMotor> for VersorOdd {
 impl BulkExpansion<AntiPlane> for VersorOdd {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl BulkExpansion<AntiScalar> for VersorOdd {
@@ -16602,8 +16479,7 @@ impl BulkExpansion<Scalar> for VersorOdd {
     // f32        0        1        0
     fn bulk_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[scalar] * self[scalar]);
     }
 }
 impl BulkExpansion<Sphere> for VersorOdd {

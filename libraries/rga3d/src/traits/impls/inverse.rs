@@ -8,15 +8,15 @@
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
-//   Median:         2       2       1
-//  Average:         1       2       1
+//  Minimum:         0       0       0
+//   Median:         2       2       0
+//  Average:         1       1       0
 //  Maximum:         7       5       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
-//   Median:         2       5       1
-//  Average:         1       5       1
+//  Minimum:         0       0       0
+//   Median:         2       5       0
+//  Average:         1       5       0
 //  Maximum:         7      16       1
 impl std::ops::Div<inverse> for DualNum {
     type Output = DualNum;
@@ -31,17 +31,12 @@ impl std::ops::DivAssign<inverse> for DualNum {
 }
 impl Inverse for DualNum {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        0        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        1        1
-    //  no simd        0        2        1
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * self.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(self[scalar], -2)) * self.group0());
     }
 }
 impl std::ops::Div<inverse> for Flector {
@@ -58,15 +53,14 @@ impl std::ops::DivAssign<inverse> for Flector {
 impl Inverse for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        2        1
-    //  no simd        3        8        1
+    // yes simd        3        2        0
+    //  no simd        3        8        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * self.group0(),
@@ -89,12 +83,10 @@ impl std::ops::DivAssign<inverse> for Horizon {
 impl Inverse for Horizon {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        1        1
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Horizon::from_groups(/* e321 */ self[e321] * other[scalar]);
+        return Horizon::from_groups(/* e321 */ 1.0 / self[e321] * -1.0);
     }
 }
 impl std::ops::Div<inverse> for Line {
@@ -111,15 +103,14 @@ impl std::ops::DivAssign<inverse> for Line {
 impl Inverse for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        2        1
-    //  no simd        2        6        1
+    // yes simd        2        2        0
+    //  no simd        2        6        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2));
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * self.group0(),
@@ -142,18 +133,17 @@ impl std::ops::DivAssign<inverse> for Motor {
 impl Inverse for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        2        1
-    //  no simd        3        8        1
+    // yes simd        3        2        0
+    //  no simd        3        8        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(self[scalar], 2) - f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * self.group0(),
@@ -176,16 +166,16 @@ impl std::ops::DivAssign<inverse> for MultiVector {
 impl Inverse for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        0        1
+    //      f32        7        0        0
     //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        7        5        1
-    //  no simd        7       16        1
+    // yes simd        7        5        0
+    //  no simd        7       16        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(self[scalar], 2) + f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2)
                 - f32::powi(self[e23], 2)
@@ -193,7 +183,6 @@ impl Inverse for MultiVector {
                 - f32::powi(self[e12], 2)
                 - f32::powi(self[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * self.group0(),
@@ -222,16 +211,14 @@ impl std::ops::DivAssign<inverse> for Plane {
 impl Inverse for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        5        1
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * self.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(self[e321], -2) * -1.0) * self.group0());
     }
 }
 impl std::ops::Div<inverse> for Point {
@@ -248,16 +235,17 @@ impl std::ops::DivAssign<inverse> for Point {
 impl Inverse for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        1        1
-    //  no simd        2        4        1
+    // yes simd        2        1        0
+    //  no simd        2        4        0
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * self.group0());
+        return Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2)) * self.group0(),
+        );
     }
 }
 impl std::ops::Div<inverse> for Scalar {
@@ -274,11 +262,9 @@ impl std::ops::DivAssign<inverse> for Scalar {
 impl Inverse for Scalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        1
+    // f32        0        0        1
     fn inverse(self) -> Self {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Scalar::from_groups(/* scalar */ other[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ 1.0 / self[scalar]);
     }
 }

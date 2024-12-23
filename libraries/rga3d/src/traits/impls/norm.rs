@@ -36,9 +36,7 @@ impl Norm for Flector {
     //  no simd        6       16        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm();
-        let other = self.flat_weight_norm();
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self_2[scalar], other[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
 impl std::ops::Div<norm> for Line {
@@ -57,9 +55,7 @@ impl Norm for Line {
     //  no simd        2       13        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm();
-        let other = self.flat_weight_norm();
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self_2[scalar], other[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
 impl std::ops::Div<norm> for Motor {
@@ -78,9 +74,7 @@ impl Norm for Motor {
     //  no simd        6       17        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm();
-        let other = self.flat_weight_norm();
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self_2[scalar], other[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
 impl std::ops::Div<norm> for MultiVector {
@@ -101,9 +95,7 @@ impl Norm for MultiVector {
     //  no simd       14       34        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm();
-        let other = self.flat_weight_norm();
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self_2[scalar], other[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
 impl std::ops::Div<norm> for Point {
@@ -122,8 +114,6 @@ impl Norm for Point {
     //  no simd        2       11        0
     fn norm(self) -> DualNum {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm();
-        let other = self.flat_weight_norm();
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self_2[scalar], other[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }

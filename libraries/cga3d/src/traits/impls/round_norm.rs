@@ -36,11 +36,9 @@ impl RoundNorm for AntiCircleRotor {
     //  no simd        5       13        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -80,11 +78,9 @@ impl RoundNorm for AntiDipoleInversion {
     //  no simd        6       16        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -124,11 +120,9 @@ impl RoundNorm for Circle {
     //  no simd        2        9        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -168,11 +162,9 @@ impl RoundNorm for CircleRotor {
     //  no simd        2        9        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -212,11 +204,9 @@ impl RoundNorm for Dipole {
     //  no simd        4       12        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -256,11 +246,9 @@ impl RoundNorm for DipoleInversion {
     //  no simd        5       23        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -306,11 +294,9 @@ impl RoundNorm for MultiVector {
     //  no simd       63       90        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -350,11 +336,9 @@ impl RoundNorm for RoundPoint {
     //  no simd        2        9        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -394,11 +378,9 @@ impl RoundNorm for VersorEven {
     //  no simd        6       16        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -438,11 +420,9 @@ impl RoundNorm for VersorOdd {
     //  no simd        6       24        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.round_bulk_norm();
-        let other = self.round_weight_norm();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.round_bulk_norm()[scalar], self.round_weight_norm()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5

@@ -8,16 +8,16 @@
 // Total Implementations: 4
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
-//   Median:         0       5       1
-//  Average:         0       3       1
-//  Maximum:         2       5       1
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         0       2       0
+//  Maximum:         2       4       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
-//   Median:         0       5       1
-//  Average:         0       5       1
-//  Maximum:         2      11       1
+//  Minimum:         0       0       0
+//   Median:         0       5       0
+//  Average:         0       4       0
+//  Maximum:         2      10       0
 impl std::ops::Div<anti_fix> for AntiScalar {
     type Output = AntiScalar;
     fn div(self, _rhs: anti_fix) -> Self::Output {
@@ -30,17 +30,10 @@ impl std::ops::DivAssign<anti_fix> for AntiScalar {
     }
 }
 impl AntiFix for AntiScalar {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
-        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product_2 = AntiScalar::from_groups(/* e1234 */ anti_square_root[e1234] * other[e1234]);
-        return AntiScalar::from_groups(/* e1234 */ geometric_anti_product_2[e1234] * self[e1234]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], -2));
+        return AntiScalar::from_groups(/* e1234 */ other[e1234] * f32::powi(self[e1234], 2));
     }
 }
 impl std::ops::Div<anti_fix> for Origin {
@@ -57,16 +50,12 @@ impl std::ops::DivAssign<anti_fix> for Origin {
 impl AntiFix for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        5        1
+    // f32        0        2        0
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = Origin::from_groups(/* e4 */ self[e4] * -1.0);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ anti_reverse[e4] * self[e4] * -1.0);
-        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product_2 = AntiScalar::from_groups(/* e1234 */ anti_square_root[e1234] * other[e1234]);
-        return Origin::from_groups(/* e4 */ geometric_anti_product_2[e1234] * self[e4]);
+        let anti_square_root = AntiScalar::from_groups(/* e1234 */ self[e4]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], -2));
+        return Origin::from_groups(/* e4 */ anti_square_root[e1234] * other[e1234] * self[e4]);
     }
 }
 impl std::ops::Div<anti_fix> for Plane {
@@ -83,19 +72,16 @@ impl std::ops::DivAssign<anti_fix> for Plane {
 impl AntiFix for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        1        1
+    //      f32        2        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        2        1
-    //  no simd        2        5        1
+    // yes simd        2        2        0
+    //  no simd        2        5        0
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2));
-        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product_2 = AntiScalar::from_groups(/* e1234 */ anti_square_root[e1234] * other[e1234]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(geometric_anti_product_2[e1234]) * self.group0());
+        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2));
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], -2));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(anti_square_root[e1234] * other[e1234]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for Point {
@@ -112,19 +98,15 @@ impl std::ops::DivAssign<anti_fix> for Point {
 impl AntiFix for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       11        1
+    // yes simd        0        4        0
+    //  no simd        0       10        0
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ anti_reverse[e4] * self[e4] * -1.0);
-        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product_2 = AntiScalar::from_groups(/* e1234 */ anti_square_root[e1234] * other[e1234]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(geometric_anti_product_2[e1234]) * self.group0());
+        let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf((self.group0() * Simd32x4::from(-1.0))[3], 0.5) * f32::powf(self[e4], 0.5) * -1.0);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], -2));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(anti_square_root[e1234] * other[e1234]) * self.group0());
     }
 }

@@ -36,8 +36,7 @@ impl AntiSupport for AntiCircleRotor {
     //  no simd       16       39        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = CircleRotor::from_groups(
             // e423, e431, e412
             self.group0() * Simd32x3::from(-1.0),
@@ -87,8 +86,7 @@ impl AntiSupport for AntiDipoleInversion {
     //  no simd       17       51        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0(),
@@ -138,9 +136,7 @@ impl AntiSupport for AntiDualNum {
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
         let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ self.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e12345]) * right_complement.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * self_2.group0());
     }
 }
 impl std::ops::Div<anti_support> for AntiFlatPoint {
@@ -160,8 +156,7 @@ impl AntiSupport for AntiFlatPoint {
     //  no simd        3        8        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
             -(right_dual[e15] * right_complement[e4235])
@@ -190,8 +185,7 @@ impl AntiSupport for AntiFlector {
     //  no simd        9       24        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Flector::from_groups(
             // e15, e25, e35, e45
             self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
@@ -229,8 +223,7 @@ impl AntiSupport for AntiLine {
     //  no simd        8       18        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Line::from_groups(
             // e415, e425, e435
             self.group0() * Simd32x3::from(-1.0),
@@ -265,8 +258,7 @@ impl AntiSupport for AntiMotor {
     //  no simd        8       24        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Motor::from_groups(
             // e415, e425, e435, e12345
             self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
@@ -303,8 +295,7 @@ impl AntiSupport for AntiPlane {
     //  no simd        6       16        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
         return Line::from_groups(
             // e415, e425, e435
@@ -331,8 +322,7 @@ impl AntiSupport for Circle {
     //  no simd       11       20        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Dipole::from_groups(
             // e41, e42, e43
             self.group0(),
@@ -374,8 +364,7 @@ impl AntiSupport for CircleRotor {
     //  no simd       11       24        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
@@ -423,8 +412,7 @@ impl AntiSupport for Dipole {
     //  no simd       14       34        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Circle::from_groups(
             // e423, e431, e412
             self.group0() * Simd32x3::from(-1.0),
@@ -467,8 +455,7 @@ impl AntiSupport for DipoleInversion {
     //  no simd       17       46        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiDipoleInversion::from_groups(
             // e423, e431, e412
             self.group0() * Simd32x3::from(-1.0),
@@ -518,14 +505,10 @@ impl AntiSupport for DualNum {
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
         let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
         let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ self.group0() * Simd32x2::from(-1.0));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0)
-                * Simd32x3::from(1.0).with_w(0.0)
-                * right_complement.group0().xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * self_2.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -546,8 +529,7 @@ impl AntiSupport for FlatPoint {
     //  no simd        3       16        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return AntiLine::from_groups(
             // e23, e31, e12
@@ -575,8 +557,7 @@ impl AntiSupport for Flector {
     //  no simd        5       25        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
@@ -613,8 +594,7 @@ impl AntiSupport for Line {
     //  no simd        5        9        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ self.group0(), /* e15, e25, e35 */ self.group1());
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
@@ -644,8 +624,7 @@ impl AntiSupport for Motor {
     //  no simd        5       29        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiMotor::from_groups(
             // e23, e31, e12, scalar
             self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
@@ -689,8 +668,7 @@ impl AntiSupport for MultiVector {
     //  no simd       34       90        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = MultiVector::from_groups(
             // scalar, e12345
             self.group0().yx() * Simd32x2::from([-1.0, 1.0]),
@@ -778,8 +756,7 @@ impl AntiSupport for Plane {
     //  no simd        2        7        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return Scalar::from_groups(
             // scalar
@@ -805,8 +782,7 @@ impl AntiSupport for RoundPoint {
     //  no simd        6       25        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             self.group0().xyz().with_w(self[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
@@ -839,9 +815,7 @@ impl AntiSupport for Scalar {
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
         let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
-        let right_dual = AntiScalar::from_groups(/* e12345 */ self[scalar]);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[e12345]) * right_complement.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * self_2.group0());
     }
 }
 impl std::ops::Div<anti_support> for Sphere {
@@ -861,8 +835,7 @@ impl AntiSupport for Sphere {
     //  no simd        3        8        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = RoundPoint::from_groups(
             // e1, e2, e3, e4
             self.group0().xyz().with_w(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
@@ -896,8 +869,7 @@ impl AntiSupport for VersorEven {
     //  no simd       17       55        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
@@ -955,8 +927,7 @@ impl AntiSupport for VersorOdd {
     //  no simd       19       51        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self_2.group0());
+        let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
         let right_dual = VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),

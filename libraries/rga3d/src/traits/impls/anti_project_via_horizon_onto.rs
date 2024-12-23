@@ -32,8 +32,7 @@ impl AntiProjectViaHorizonOnto<DualNum> for AntiScalar {
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234]);
-        return AntiScalar::from_groups(/* e1234 */ anti_wedge[e1234] * other[scalar]);
+        return AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234] * other[scalar]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for AntiScalar {
@@ -83,8 +82,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for AntiScalar {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ other[e321] * anti_wedge[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e321] * right_dual[e4] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for AntiScalar {
@@ -243,8 +241,7 @@ impl AntiProjectViaHorizonOnto<Plane> for AntiScalar {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ anti_wedge[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for AntiScalar {
@@ -258,8 +255,7 @@ impl AntiProjectViaHorizonOnto<Point> for AntiScalar {
     //  no simd        3        8        0
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * right_dual.group0());
+        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
         return AntiScalar::from_groups(
             // e1234
             (anti_wedge[e423] * other[e1]) + (anti_wedge[e431] * other[e2]) + (anti_wedge[e412] * other[e3]) + (anti_wedge[e321] * other[e4]),
@@ -274,8 +270,7 @@ impl AntiProjectViaHorizonOnto<Scalar> for AntiScalar {
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234]);
-        return AntiScalar::from_groups(/* e1234 */ anti_wedge[e1234] * other[scalar]);
+        return AntiScalar::from_groups(/* e1234 */ right_dual[e1234] * self[e1234] * other[scalar]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for DualNum {
@@ -295,8 +290,7 @@ impl AntiProjectViaHorizonOnto<DualNum> for DualNum {
     //  no simd        1        5        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_dual[e1234]) * self.group0());
+        let anti_wedge = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * self.group0());
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([
             anti_wedge[scalar] * other[scalar],
             (anti_wedge[scalar] * other[e1234]) + (anti_wedge[e1234] * other[scalar]),
@@ -350,8 +344,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for DualNum {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ other[e321] * anti_wedge[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e321] * right_dual[e4] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for DualNum {
@@ -511,8 +504,7 @@ impl AntiProjectViaHorizonOnto<Plane> for DualNum {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ anti_wedge[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for DualNum {
@@ -526,8 +518,7 @@ impl AntiProjectViaHorizonOnto<Point> for DualNum {
     //  no simd        3        8        0
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * right_dual.group0());
+        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e1234]) * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
         return AntiScalar::from_groups(
             // e1234
             (anti_wedge[e423] * other[e1]) + (anti_wedge[e431] * other[e2]) + (anti_wedge[e412] * other[e3]) + (anti_wedge[e321] * other[e4]),
@@ -537,14 +528,19 @@ impl AntiProjectViaHorizonOnto<Point> for DualNum {
 impl AntiProjectViaHorizonOnto<Scalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_dual[e1234]) * self.group0());
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * anti_wedge.group0());
+        return DualNum::from_groups(
+            // scalar, e1234
+            Simd32x2::from(other[scalar]) * Simd32x2::from([right_dual[e1234] * self[scalar], right_dual[e1234] * self[e1234]]),
+        );
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Flector {
@@ -629,8 +625,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for Flector {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * right_dual[e4] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * anti_wedge[scalar]);
+        return Horizon::from_groups(/* e321 */ self[e321] * other[e321] * right_dual[e4] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Flector {
@@ -813,8 +808,7 @@ impl AntiProjectViaHorizonOnto<Plane> for Flector {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * right_dual[e4] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(anti_wedge[scalar]) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * right_dual[e4] * -1.0) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Flector {
@@ -891,8 +885,7 @@ impl AntiProjectViaHorizonOnto<DualNum> for Horizon {
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Horizon::from_groups(/* e321 */ right_dual[e1234] * self[e321]);
-        return Horizon::from_groups(/* e321 */ other[scalar] * anti_wedge[e321]);
+        return Horizon::from_groups(/* e321 */ right_dual[e1234] * other[scalar] * self[e321]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Horizon {
@@ -941,26 +934,25 @@ impl AntiProjectViaHorizonOnto<Horizon> for Horizon {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * right_dual[e4] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * anti_wedge[scalar]);
+        return Horizon::from_groups(/* e321 */ other[e321] * self[e321] * right_dual[e4] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Horizon {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd3        0        1        0
+    //      f32        4       11        0
     //    simd4        1        3        0
     // Totals...
-    // yes simd        5       12        0
+    // yes simd        5       14        0
     //  no simd        8       23        0
     fn anti_project_via_horizon_onto(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Line::from_groups(/* e41, e42, e43 */ other.group1() * Simd32x3::from(-1.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
         let anti_wedge = Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * right_dual.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            Simd32x4::from([self[e321], self[e321], self[e321], 0.0])
+                * Simd32x3::from([other[e23] * -1.0, other[e31] * -1.0, other[e12] * -1.0]).with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
         return Plane::from_groups(
             // e423, e431, e412, e321
@@ -1102,8 +1094,7 @@ impl AntiProjectViaHorizonOnto<Plane> for Horizon {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * right_dual[e4] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(anti_wedge[scalar]) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * right_dual[e4] * -1.0) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Horizon {
@@ -1118,12 +1109,11 @@ impl AntiProjectViaHorizonOnto<Point> for Horizon {
     //  no simd        8       18        0
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
         let anti_wedge = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(self[e321]) * right_dual.group0().xyz() * Simd32x3::from(-1.0),
+            Simd32x3::from(self[e321]) * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz() * Simd32x3::from(-1.0),
         );
         return Plane::from_groups(
             // e423, e431, e412, e321
@@ -1144,8 +1134,7 @@ impl AntiProjectViaHorizonOnto<Scalar> for Horizon {
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Horizon::from_groups(/* e321 */ right_dual[e1234] * self[e321]);
-        return Horizon::from_groups(/* e321 */ anti_wedge[e321] * other[scalar]);
+        return Horizon::from_groups(/* e321 */ right_dual[e1234] * self[e321] * other[scalar]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Line {
@@ -1525,8 +1514,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for Motor {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ other[e321] * anti_wedge[e4] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ other[e321] * self[e1234] * right_dual[e4] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Motor {
@@ -1723,8 +1711,7 @@ impl AntiProjectViaHorizonOnto<Plane> for Motor {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Origin::from_groups(/* e4 */ self[e1234] * right_dual[e4]);
-        return AntiScalar::from_groups(/* e1234 */ anti_wedge[e4] * other[e321] * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * right_dual[e4] * other[e321] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Motor {
@@ -2336,28 +2323,21 @@ impl AntiProjectViaHorizonOnto<DualNum> for Origin {
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Origin::from_groups(/* e4 */ right_dual[e1234] * self[e4]);
-        return Origin::from_groups(/* e4 */ other[scalar] * anti_wedge[e4]);
+        return Origin::from_groups(/* e4 */ right_dual[e1234] * other[scalar] * self[e4]);
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Origin {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn anti_project_via_horizon_onto(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Flector::from_groups(
-            // e1, e2, e3, e4
-            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
-            // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
-        );
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e321] * self[e4]);
+        let anti_wedge = Scalar::from_groups(/* scalar */ self[e4] * 0.0);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(anti_wedge[scalar]) * other.group0(),
@@ -2377,13 +2357,7 @@ impl AntiProjectViaHorizonOnto<Motor> for Origin {
     //  no simd        0       14        0
     fn anti_project_via_horizon_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e41, e42, e43, e1234
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e23, e31, e12, scalar
-            Simd32x4::from(0.0),
-        );
-        let anti_wedge = Origin::from_groups(/* e4 */ right_dual[e1234] * self[e4]);
+        let anti_wedge = Origin::from_groups(/* e4 */ (other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[3] * self[e4]);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[scalar] * anti_wedge[e4]),
@@ -2483,8 +2457,7 @@ impl AntiProjectViaHorizonOnto<Point> for Origin {
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e4] * right_dual[e321]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(anti_wedge[scalar]) * other.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * right_dual[e321]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Scalar> for Origin {
@@ -2495,8 +2468,7 @@ impl AntiProjectViaHorizonOnto<Scalar> for Origin {
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Origin::from_groups(/* e4 */ right_dual[e1234] * self[e4]);
-        return Origin::from_groups(/* e4 */ anti_wedge[e4] * other[scalar]);
+        return Origin::from_groups(/* e4 */ right_dual[e1234] * self[e4] * other[scalar]);
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Plane {
@@ -2508,14 +2480,25 @@ impl std::ops::Div<anti_project_via_horizon_onto> for Plane {
 impl AntiProjectViaHorizonOnto<DualNum> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(right_dual[e1234]) * self.group0());
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * anti_wedge.group0());
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from(other[scalar])
+                * Simd32x4::from([
+                    right_dual[e1234] * self[e423],
+                    right_dual[e1234] * self[e431],
+                    right_dual[e1234] * self[e412],
+                    right_dual[e1234] * self[e321],
+                ]),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Plane {
@@ -2569,8 +2552,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for Plane {
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e4] * self[e321] * -1.0);
-        return Horizon::from_groups(/* e321 */ other[e321] * anti_wedge[scalar]);
+        return Horizon::from_groups(/* e321 */ other[e321] * right_dual[e4] * self[e321] * -1.0);
     }
 }
 impl AntiProjectViaHorizonOnto<Line> for Plane {
@@ -2747,8 +2729,7 @@ impl AntiProjectViaHorizonOnto<Plane> for Plane {
     fn anti_project_via_horizon_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e4] * self[e321] * -1.0);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(anti_wedge[scalar]) * other.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(right_dual[e4] * self[e321] * -1.0) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Point> for Plane {
@@ -2784,14 +2765,25 @@ impl AntiProjectViaHorizonOnto<Point> for Plane {
 impl AntiProjectViaHorizonOnto<Scalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(right_dual[e1234]) * self.group0());
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * anti_wedge.group0());
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from(other[scalar])
+                * Simd32x4::from([
+                    right_dual[e1234] * self[e423],
+                    right_dual[e1234] * self[e431],
+                    right_dual[e1234] * self[e412],
+                    right_dual[e1234] * self[e321],
+                ]),
+        );
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Point {
@@ -2803,14 +2795,20 @@ impl std::ops::Div<anti_project_via_horizon_onto> for Point {
 impl AntiProjectViaHorizonOnto<DualNum> for Point {
     type Output = Point;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(right_dual[e1234]) * self.group0());
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * anti_wedge.group0());
+        return Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(other[scalar])
+                * Simd32x4::from([right_dual[e1234] * self[e1], right_dual[e1234] * self[e2], right_dual[e1234] * self[e3], right_dual[e1234] * self[e4]]),
+        );
     }
 }
 impl AntiProjectViaHorizonOnto<Flector> for Point {
@@ -2847,19 +2845,13 @@ impl AntiProjectViaHorizonOnto<Motor> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4        8        0
-    //    simd4        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        5       12        0
-    //  no simd        8       24        0
+    // yes simd        5       11        0
+    //  no simd        8       20        0
     fn anti_project_via_horizon_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e41, e42, e43, e1234
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e23, e31, e12, scalar
-            Simd32x4::from(0.0),
-        );
-        let anti_wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(right_dual[e1234]) * self.group0());
+        let anti_wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * self.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * anti_wedge.group0(),
@@ -2966,24 +2958,29 @@ impl AntiProjectViaHorizonOnto<Point> for Point {
     fn anti_project_via_horizon_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            (right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]) + (right_dual[e321] * self[e4]),
+        return Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from((right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]) + (right_dual[e321] * self[e4])) * other.group0(),
         );
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(anti_wedge[scalar]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Scalar> for Point {
     type Output = Point;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(right_dual[e1234]) * self.group0());
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * anti_wedge.group0());
+        return Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(other[scalar])
+                * Simd32x4::from([right_dual[e1234] * self[e1], right_dual[e1234] * self[e2], right_dual[e1234] * self[e3], right_dual[e1234] * self[e4]]),
+        );
     }
 }
 impl std::ops::Div<anti_project_via_horizon_onto> for Scalar {
@@ -3004,8 +3001,7 @@ impl AntiProjectViaHorizonOnto<DualNum> for Scalar {
     fn anti_project_via_horizon_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e1234] * self[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(anti_wedge[scalar]) * other.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(right_dual[e1234] * self[scalar]) * other.group0());
     }
 }
 impl AntiProjectViaHorizonOnto<Motor> for Scalar {
@@ -3019,13 +3015,7 @@ impl AntiProjectViaHorizonOnto<Motor> for Scalar {
     //  no simd        0       13        0
     fn anti_project_via_horizon_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Motor::from_groups(
-            // e41, e42, e43, e1234
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e23, e31, e12, scalar
-            Simd32x4::from(0.0),
-        );
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e1234] * self[scalar]);
+        let anti_wedge = Scalar::from_groups(/* scalar */ (other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[3] * self[scalar]);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(anti_wedge[scalar]) * other.group0(),
@@ -3038,28 +3028,16 @@ impl AntiProjectViaHorizonOnto<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        3        0
+    //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       21        0
+    // yes simd        0        6        0
+    //  no simd        0       17        0
     fn anti_project_via_horizon_onto(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let right_dual = MultiVector::from_groups(
-            // scalar, e1234
-            Simd32x2::from([0.0, other[scalar]]),
-            // e1, e2, e3, e4
-            Simd32x3::from(0.0).with_w(other[e321] * -1.0),
-            // e41, e42, e43
-            other.group3() * Simd32x3::from(-1.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
-        );
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e1234] * self[scalar]);
+        let anti_wedge = Scalar::from_groups(/* scalar */ other[scalar] * self[scalar]);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(anti_wedge[scalar]) * other.group0(),
@@ -3082,7 +3060,6 @@ impl AntiProjectViaHorizonOnto<Scalar> for Scalar {
     fn anti_project_via_horizon_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiScalar::from_groups(/* e1234 */ other[scalar]);
-        let anti_wedge = Scalar::from_groups(/* scalar */ right_dual[e1234] * self[scalar]);
-        return Scalar::from_groups(/* scalar */ anti_wedge[scalar] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ right_dual[e1234] * other[scalar] * self[scalar]);
     }
 }

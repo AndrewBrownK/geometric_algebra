@@ -1376,24 +1376,16 @@ fn antiScalar_antiConstraintViolation(self_: AntiScalar) -> Scalar {
     return Scalar(0.0);
 }
 fn dualNum_antiConstraintViolation(self_: DualNum) -> Scalar {
-    let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_.scalar * self_.e1234_, pow(self_.e1234_, 2), 0.0, 0.0) * vec4<f32>(2.0, 1.0)
-    ));
-    return Scalar(geometric_anti_product.scalar);
+    return Scalar(self_.scalar * self_.e1234_ * 2.0);
 }
 fn flector_antiConstraintViolation(self_: Flector) -> DualNum {
     let self_groups = flector_grouped(self_);
-    let anti_reverse_groups: FlectorGroups = FlectorGroups(
+    let anti_reverse: Flector = flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e423, e431, e412, e321 */ self_groups.group1_
-    );
-    let anti_reverse: Flector = flector_degroup(anti_reverse_groups);
-    let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>((anti_reverse.e321_ * self_.e4_) - (anti_reverse.e2_ * self_.e431_) - (anti_reverse.e3_ * self_.e412_) - (anti_reverse.e4_ * self_.e321_), 0.0, 0.0, 0.0) + ((vec4<f32>(anti_reverse.e423_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e1_, self_.e423_, 0.0, 0.0)) + ((vec4<f32>(anti_reverse.e431_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e2_, self_.e431_, 0.0, 0.0)) + ((vec4<f32>(anti_reverse.e412_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e3_, self_.e412_, 0.0, 0.0)) - (vec4<f32>(self_.e423_, self_.e4_, 0.0, 0.0) * anti_reverse_groups.group0_.xwzw)
-    );
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2));
+    ));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, anti_dot_product.e1234_ * -1.0, 0.0, 0.0) + geometric_anti_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(0.0, pow(self_.e4_, 2) - pow(self_.e423_, 2) - pow(self_.e431_, 2) - pow(self_.e412_, 2), 0.0, 0.0) + vec4<f32>((anti_reverse.e423_ * self_.e1_) + (anti_reverse.e431_ * self_.e2_) + (anti_reverse.e412_ * self_.e3_) + (anti_reverse.e321_ * self_.e4_) - (anti_reverse.e1_ * self_.e423_) - (anti_reverse.e2_ * self_.e431_) - (anti_reverse.e3_ * self_.e412_) - (anti_reverse.e4_ * self_.e321_), (anti_reverse.e423_ * self_.e423_) + (anti_reverse.e431_ * self_.e431_) + (anti_reverse.e412_ * self_.e412_) - (anti_reverse.e4_ * self_.e4_), 0.0, 0.0)
     ));
 }
 fn line_antiConstraintViolation(self_: Line) -> DualNum {
@@ -1402,12 +1394,8 @@ fn line_antiConstraintViolation(self_: Line) -> DualNum {
         /* e41, e42, e43 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
-    let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(-(anti_reverse.e23_ * self_.e41_) - (anti_reverse.e31_ * self_.e42_) - (anti_reverse.e12_ * self_.e43_), 0.0, 0.0, 0.0) - ((vec4<f32>(anti_reverse.e41_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e23_, self_.e41_, 0.0, 0.0)) - ((vec4<f32>(anti_reverse.e42_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e31_, self_.e42_, 0.0, 0.0)) - ((vec4<f32>(anti_reverse.e43_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e12_, self_.e43_, 0.0, 0.0))
-    );
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, anti_dot_product.e1234_ * -1.0, 0.0, 0.0) + geometric_anti_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(0.0, pow(self_.e41_, 2) + pow(self_.e42_, 2) + pow(self_.e43_, 2), 0.0, 0.0) + vec4<f32>(-(anti_reverse.e41_ * self_.e23_) - (anti_reverse.e42_ * self_.e31_) - (anti_reverse.e43_ * self_.e12_) - (anti_reverse.e23_ * self_.e41_) - (anti_reverse.e31_ * self_.e42_) - (anti_reverse.e12_ * self_.e43_), -(anti_reverse.e41_ * self_.e41_) - (anti_reverse.e42_ * self_.e42_) - (anti_reverse.e43_ * self_.e43_), 0.0, 0.0)
     ));
 }
 fn motor_antiConstraintViolation(self_: Motor) -> DualNum {
@@ -1416,12 +1404,8 @@ fn motor_antiConstraintViolation(self_: Motor) -> DualNum {
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
-    let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>((anti_reverse.scalar * self_.e1234_) - (anti_reverse.e23_ * self_.e41_) - (anti_reverse.e31_ * self_.e42_) - (anti_reverse.e12_ * self_.e43_), 0.0, 0.0, 0.0) + ((vec4<f32>(anti_reverse.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.scalar, self_.e1234_, 0.0, 0.0)) - ((vec4<f32>(anti_reverse.e41_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e23_, self_.e41_, 0.0, 0.0)) - ((vec4<f32>(anti_reverse.e42_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e31_, self_.e42_, 0.0, 0.0)) - ((vec4<f32>(anti_reverse.e43_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e12_, self_.e43_, 0.0, 0.0))
-    );
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, anti_dot_product.e1234_ * -1.0, 0.0, 0.0) + geometric_anti_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(0.0, pow(self_.e41_, 2) + pow(self_.e42_, 2) + pow(self_.e43_, 2) - pow(self_.e1234_, 2), 0.0, 0.0) + vec4<f32>((anti_reverse.e1234_ * self_.scalar) + (anti_reverse.scalar * self_.e1234_) - (anti_reverse.e41_ * self_.e23_) - (anti_reverse.e42_ * self_.e31_) - (anti_reverse.e43_ * self_.e12_) - (anti_reverse.e23_ * self_.e41_) - (anti_reverse.e31_ * self_.e42_) - (anti_reverse.e12_ * self_.e43_), (anti_reverse.e1234_ * self_.e1234_) - (anti_reverse.e41_ * self_.e41_) - (anti_reverse.e42_ * self_.e42_) - (anti_reverse.e43_ * self_.e43_), 0.0, 0.0)
     ));
 }
 fn multiVector_antiConstraintViolation(self_: MultiVector) -> MultiVector {
@@ -1441,9 +1425,8 @@ fn multiVector_antiConstraintViolation(self_: MultiVector) -> MultiVector {
         /* e23, e31, e12 */ vec4<f32>(0.0), 
         /* e423, e431, e412, e321 */ (vec4<f32>(anti_reverse.e1234_) * self_groups.group4_) + (vec4<f32>(self_.e4_, self_.e412_, self_.e423_, anti_reverse.e321_) * vec4<f32>(anti_reverse_groups.group2_.xxyw.xyz, self_.e1234_)) + (vec4<f32>(self_.e431_, self_.e4_, self_.e4_, self_.e423_) * vec4<f32>(anti_reverse_groups.group2_.zyzw.xyz, anti_reverse.e23_)) + (vec4<f32>(self_groups.group0_.yyzw.xy, self_.e1234_, self_.scalar) * vec4<f32>(anti_reverse_groups.group4_.xyz, anti_reverse.e4_)) + (vec4<f32>(anti_reverse_groups.group1_.wwzw.xy, anti_reverse.e431_, self_.e431_) * vec4<f32>(self_groups.group2_.xyxw.xyz, anti_reverse.e31_)) + (vec4<f32>(anti_reverse_groups.group4_.zxzw.xy, anti_reverse.e4_, self_.e412_) * vec4<f32>(self_groups.group2_.yzzw.xyz, anti_reverse.e12_)) + vec4<f32>(vec4<f32>(0.0).xyz, -(anti_reverse.e1_ * self_.e41_) - (anti_reverse.e2_ * self_.e42_) - (anti_reverse.e3_ * self_.e43_) - (anti_reverse.e42_ * self_.e2_) - (anti_reverse.e43_ * self_.e3_) - (anti_reverse.e423_ * self_.e23_) - (anti_reverse.e431_ * self_.e31_) - (anti_reverse.e412_ * self_.e12_)) - vec4<f32>((anti_reverse_groups.group2_.yzxw * self_groups.group4_.zxyw).xyz, anti_reverse.scalar * self_.e4_) - vec4<f32>((self_groups.group2_.zxyw * anti_reverse_groups.group4_.yzxw).xyz, anti_reverse.e41_ * self_.e1_)
     );
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2) + pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, anti_dot_product.e1234_ * -1.0, 0.0, 0.0) + geometric_anti_product_groups.group0_, 
+        /* scalar, e1234 */ vec4<f32>(0.0, pow(self_.e4_, 2) + pow(self_.e41_, 2) + pow(self_.e42_, 2) + pow(self_.e43_, 2) - pow(self_.e1234_, 2) - pow(self_.e423_, 2) - pow(self_.e431_, 2) - pow(self_.e412_, 2), 0.0, 0.0) + geometric_anti_product_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(0.0), 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0), 
@@ -1452,9 +1435,7 @@ fn multiVector_antiConstraintViolation(self_: MultiVector) -> MultiVector {
 }
 fn origin_antiConstraintViolation(self_: Origin) -> AntiScalar {
     let anti_reverse: Origin = Origin(self_.e4_ * -1.0);
-    let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e4_, 2) * -1.0);
-    return AntiScalar(geometric_anti_product.e1234_ - anti_dot_product.e1234_);
+    return AntiScalar(pow(self_.e4_, 2) - (anti_reverse.e4_ * self_.e4_));
 }
 fn plane_antiConstraintViolation(self_: Plane) -> Scalar {
     return Scalar(0.0);
@@ -1464,9 +1445,7 @@ fn point_antiConstraintViolation(self_: Point) -> AntiScalar {
     let anti_reverse: Point = point_degroup(PointGroups(
         /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
-    let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e4_, 2) * -1.0);
-    return AntiScalar(geometric_anti_product.e1234_ - anti_dot_product.e1234_);
+    return AntiScalar(pow(self_.e4_, 2) - (anti_reverse.e4_ * self_.e4_));
 }
 fn antiScalar_antiDotProduct_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
     return AntiScalar(other.e1234_ * self_.e1234_);
@@ -1592,45 +1571,28 @@ fn point_antiDotProduct_point(self_: Point, other: Point) -> AntiScalar {
     return AntiScalar(other.e4_ * self_.e4_ * -1.0);
 }
 fn antiScalar_antiFix(self_: AntiScalar) -> AntiScalar {
-    let geometric_anti_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2));
-    let anti_square_root: AntiScalar = AntiScalar(pow(geometric_anti_product.e1234_, 0.5));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product_2: AntiScalar = AntiScalar(anti_square_root.e1234_ * other.e1234_);
-    return AntiScalar(geometric_anti_product_2.e1234_ * self_.e1234_);
+    let other: AntiScalar = AntiScalar(pow(self_.e1234_, -2));
+    return AntiScalar(other.e1234_ * pow(self_.e1234_, 2));
 }
 fn origin_antiFix(self_: Origin) -> Origin {
-    let anti_reverse: Origin = Origin(self_.e4_ * -1.0);
-    let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
-    let anti_square_root: AntiScalar = AntiScalar(pow(geometric_anti_product.e1234_, 0.5));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product_2: AntiScalar = AntiScalar(anti_square_root.e1234_ * other.e1234_);
-    return Origin(geometric_anti_product_2.e1234_ * self_.e4_);
+    let anti_square_root: AntiScalar = AntiScalar(self_.e4_);
+    let other: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, -2));
+    return Origin(anti_square_root.e1234_ * other.e1234_ * self_.e4_);
 }
 fn plane_antiFix(self_: Plane) -> Plane {
     let self_groups = plane_grouped(self_);
-    let geometric_anti_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2));
-    let anti_square_root: AntiScalar = AntiScalar(pow(geometric_anti_product.e1234_, 0.5));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product_2: AntiScalar = AntiScalar(anti_square_root.e1234_ * other.e1234_);
+    let anti_square_root: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2));
+    let other: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, -2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product_2.e1234_) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(anti_square_root.e1234_ * other.e1234_) * self_groups.group0_
     ));
 }
 fn point_antiFix(self_: Point) -> Point {
     let self_groups = point_grouped(self_);
-    let anti_reverse: Point = point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ self_groups.group0_ * vec4<f32>(-1.0)
-    ));
-    let geometric_anti_product: AntiScalar = AntiScalar(anti_reverse.e4_ * self_.e4_ * -1.0);
-    let anti_square_root: AntiScalar = AntiScalar(pow(geometric_anti_product.e1234_, 0.5));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product_2: AntiScalar = AntiScalar(anti_square_root.e1234_ * other.e1234_);
+    let anti_square_root: AntiScalar = AntiScalar(pow((self_groups.group0_ * vec4<f32>(-1.0)).w, 0.5) * pow(self_.e4_, 0.5) * -1.0);
+    let other: AntiScalar = AntiScalar(pow(anti_square_root.e1234_, -2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product_2.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(anti_square_root.e1234_ * other.e1234_) * self_groups.group0_
     ));
 }
 fn antiScalar_antiGrade() -> i32 {
@@ -1655,22 +1617,17 @@ fn scalar_antiGrade() -> i32 {
     return 4;
 }
 fn antiScalar_antiInverse(self_: AntiScalar) -> AntiScalar {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    return AntiScalar(other.e1234_ * self_.e1234_);
+    return AntiScalar(1.0/(self_.e1234_));
 }
 fn dualNum_antiInverse(self_: DualNum) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(self_.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
 }
 fn flector_antiInverse(self_: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
+    let other: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * self_groups.group1_
@@ -1678,8 +1635,7 @@ fn flector_antiInverse(self_: Flector) -> Flector {
 }
 fn line_antiInverse(self_: Line) -> Line {
     let self_groups = line_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
+    let other: AntiScalar = AntiScalar(-pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
         /* e23, e31, e12 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_
@@ -1687,8 +1643,7 @@ fn line_antiInverse(self_: Line) -> Line {
 }
 fn motor_antiInverse(self_: Motor) -> Motor {
     let self_groups = motor_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
+    let other: AntiScalar = AntiScalar(pow(self_.e1234_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(other.e1234_) * self_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(other.e1234_) * self_groups.group1_
@@ -1696,8 +1651,7 @@ fn motor_antiInverse(self_: Motor) -> Motor {
 }
 fn multiVector_antiInverse(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e1234_, 2) + pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
+    let other: AntiScalar = AntiScalar(pow(self_.e1234_, 2) + pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2) - pow(self_.e4_, 2) - pow(self_.e41_, 2) - pow(self_.e42_, 2) - pow(self_.e43_, 2));
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * self_groups.group1_, 
@@ -1707,24 +1661,18 @@ fn multiVector_antiInverse(self_: MultiVector) -> MultiVector {
     ));
 }
 fn origin_antiInverse(self_: Origin) -> Origin {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    return Origin(other.e1234_ * self_.e4_);
+    return Origin(1.0/(self_.e4_) * -1.0);
 }
 fn plane_antiInverse(self_: Plane) -> Plane {
     let self_groups = plane_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(self_.e423_, 2) + pow(self_.e431_, 2) + pow(self_.e412_, 2)) * self_groups.group0_
     ));
 }
 fn point_antiInverse(self_: Point) -> Point {
     let self_groups = point_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(self_.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(self_.e4_, -2) * -1.0) * self_groups.group0_
     ));
 }
 fn antiScalar_antiOne() -> AntiScalar {
@@ -1752,8 +1700,7 @@ fn multiVector_antiOne() -> MultiVector {
 }
 fn antiScalar_antiProjectOrthogonallyOnto_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.e1234_);
-    return AntiScalar(anti_wedge.e1234_ * other.scalar);
+    return AntiScalar(right_anti_dual.e1234_ * self_.e1234_ * other.scalar);
 }
 fn antiScalar_antiProjectOrthogonallyOnto_flector(self_: AntiScalar, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -1773,8 +1720,7 @@ fn antiScalar_antiProjectOrthogonallyOnto_flector(self_: AntiScalar, other: Flec
 }
 fn antiScalar_antiProjectOrthogonallyOnto_horizon(self_: AntiScalar, other: Horizon) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * other.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn antiScalar_antiProjectOrthogonallyOnto_line(self_: AntiScalar, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -1831,28 +1777,22 @@ fn antiScalar_antiProjectOrthogonallyOnto_multiVector(self_: AntiScalar, other: 
 }
 fn antiScalar_antiProjectOrthogonallyOnto_plane(self_: AntiScalar, other: Plane) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_anti_dual.e4_ * other.e321_ * -1.0);
 }
 fn antiScalar_antiProjectOrthogonallyOnto_point(self_: AntiScalar, other: Point) -> AntiScalar {
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return AntiScalar((anti_wedge.e423_ * other.e1_) + (anti_wedge.e431_ * other.e2_) + (anti_wedge.e412_ * other.e3_) + (anti_wedge.e321_ * other.e4_));
 }
 fn antiScalar_antiProjectOrthogonallyOnto_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.e1234_);
-    return AntiScalar(anti_wedge.e1234_ * other.scalar);
+    return AntiScalar(right_anti_dual.e1234_ * self_.e1234_ * other.scalar);
 }
 fn dualNum_antiProjectOrthogonallyOnto_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
     return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ vec4<f32>(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234_) + (anti_wedge.e1234_ * other.scalar), 0.0, 0.0)
@@ -1876,8 +1816,7 @@ fn dualNum_antiProjectOrthogonallyOnto_flector(self_: DualNum, other: Flector) -
 }
 fn dualNum_antiProjectOrthogonallyOnto_horizon(self_: DualNum, other: Horizon) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * other.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn dualNum_antiProjectOrthogonallyOnto_line(self_: DualNum, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -1937,26 +1876,18 @@ fn dualNum_antiProjectOrthogonallyOnto_multiVector(self_: DualNum, other: MultiV
 }
 fn dualNum_antiProjectOrthogonallyOnto_plane(self_: DualNum, other: Plane) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_anti_dual.e4_ * other.e321_ * -1.0);
 }
 fn dualNum_antiProjectOrthogonallyOnto_point(self_: DualNum, other: Point) -> AntiScalar {
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return AntiScalar((anti_wedge.e423_ * other.e1_) + (anti_wedge.e431_ * other.e2_) + (anti_wedge.e412_ * other.e3_) + (anti_wedge.e321_ * other.e4_));
 }
 fn dualNum_antiProjectOrthogonallyOnto_scalar(self_: DualNum, other: Scalar) -> DualNum {
-    let self_groups = dualNum_grouped(self_);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
-    );
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * anti_wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(right_anti_dual.e1234_ * self_.scalar, right_anti_dual.e1234_ * self_.e1234_, 0.0, 0.0)
     ));
 }
 fn flector_antiProjectOrthogonallyOnto_dualNum(self_: Flector, other: DualNum) -> Flector {
@@ -1991,8 +1922,7 @@ fn flector_antiProjectOrthogonallyOnto_flector(self_: Flector, other: Flector) -
 }
 fn flector_antiProjectOrthogonallyOnto_horizon(self_: Flector, other: Horizon) -> Horizon {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(self_.e321_ * other.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn flector_antiProjectOrthogonallyOnto_line(self_: Flector, other: Line) -> Plane {
     let self_groups = flector_grouped(self_);
@@ -2058,9 +1988,8 @@ fn flector_antiProjectOrthogonallyOnto_multiVector(self_: Flector, other: MultiV
 fn flector_antiProjectOrthogonallyOnto_plane(self_: Flector, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_anti_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn flector_antiProjectOrthogonallyOnto_point(self_: Flector, other: Point) -> Flector {
@@ -2094,8 +2023,7 @@ fn flector_antiProjectOrthogonallyOnto_scalar(self_: Flector, other: Scalar) -> 
 }
 fn horizon_antiProjectOrthogonallyOnto_dualNum(self_: Horizon, other: DualNum) -> Horizon {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Horizon = Horizon(right_anti_dual.e1234_ * self_.e321_);
-    return Horizon(other.scalar * anti_wedge.e321_);
+    return Horizon(right_anti_dual.e1234_ * other.scalar * self_.e321_);
 }
 fn horizon_antiProjectOrthogonallyOnto_flector(self_: Horizon, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -2116,17 +2044,12 @@ fn horizon_antiProjectOrthogonallyOnto_flector(self_: Horizon, other: Flector) -
 }
 fn horizon_antiProjectOrthogonallyOnto_horizon(self_: Horizon, other: Horizon) -> Horizon {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(other.e321_ * self_.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn horizon_antiProjectOrthogonallyOnto_line(self_: Horizon, other: Line) -> Plane {
     let other_groups = line_grouped(other);
-    let right_anti_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(right_anti_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     );
     let anti_wedge: Point = point_degroup(anti_wedge_groups);
     return plane_degroup(PlaneGroups(
@@ -2179,19 +2102,15 @@ fn horizon_antiProjectOrthogonallyOnto_multiVector(self_: Horizon, other: MultiV
 fn horizon_antiProjectOrthogonallyOnto_plane(self_: Horizon, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_anti_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn horizon_antiProjectOrthogonallyOnto_point(self_: Horizon, other: Point) -> Plane {
     let other_groups = point_grouped(other);
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge_groups: LineGroups = LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0) * vec4<f32>(-1.0)
     );
     let anti_wedge: Line = line_degroup(anti_wedge_groups);
     return plane_degroup(PlaneGroups(
@@ -2200,8 +2119,7 @@ fn horizon_antiProjectOrthogonallyOnto_point(self_: Horizon, other: Point) -> Pl
 }
 fn horizon_antiProjectOrthogonallyOnto_scalar(self_: Horizon, other: Scalar) -> Horizon {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Horizon = Horizon(right_anti_dual.e1234_ * self_.e321_);
-    return Horizon(anti_wedge.e321_ * other.scalar);
+    return Horizon(right_anti_dual.e1234_ * self_.e321_ * other.scalar);
 }
 fn line_antiProjectOrthogonallyOnto_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
@@ -2351,8 +2269,7 @@ fn motor_antiProjectOrthogonallyOnto_flector(self_: Motor, other: Flector) -> Mo
 }
 fn motor_antiProjectOrthogonallyOnto_horizon(self_: Motor, other: Horizon) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(other.e321_ * self_.e1234_ * right_anti_dual.e4_ * -1.0);
 }
 fn motor_antiProjectOrthogonallyOnto_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -2419,8 +2336,7 @@ fn motor_antiProjectOrthogonallyOnto_multiVector(self_: Motor, other: MultiVecto
 }
 fn motor_antiProjectOrthogonallyOnto_plane(self_: Motor, other: Plane) -> AntiScalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_anti_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_anti_dual.e4_ * other.e321_ * -1.0);
 }
 fn motor_antiProjectOrthogonallyOnto_point(self_: Motor, other: Point) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -2647,16 +2563,11 @@ fn multiVector_antiProjectOrthogonallyOnto_scalar(self_: MultiVector, other: Sca
 }
 fn origin_antiProjectOrthogonallyOnto_dualNum(self_: Origin, other: DualNum) -> Origin {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Origin = Origin(right_anti_dual.e1234_ * self_.e4_);
-    return Origin(other.scalar * anti_wedge.e4_);
+    return Origin(right_anti_dual.e1234_ * other.scalar * self_.e4_);
 }
 fn origin_antiProjectOrthogonallyOnto_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let right_anti_dual: Flector = flector_degroup(FlectorGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e321_ * self_.e4_);
+    let anti_wedge: Scalar = Scalar(self_.e4_ * 0.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_
@@ -2664,11 +2575,7 @@ fn origin_antiProjectOrthogonallyOnto_flector(self_: Origin, other: Flector) -> 
 }
 fn origin_antiProjectOrthogonallyOnto_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let right_anti_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let anti_wedge: Origin = Origin(right_anti_dual.e1234_ * self_.e4_);
+    let anti_wedge: Origin = Origin((other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)).w * self_.e4_);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.scalar * anti_wedge.e4_), 
         /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.e4_, anti_wedge.e4_, anti_wedge.e4_, 0.0) * vec4<f32>(other_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
@@ -2704,24 +2611,18 @@ fn origin_antiProjectOrthogonallyOnto_point(self_: Origin, other: Point) -> Poin
     let right_anti_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let anti_wedge: Scalar = Scalar(self_.e4_ * right_anti_dual.e321_);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e4_ * right_anti_dual.e321_) * other_groups.group0_
     ));
 }
 fn origin_antiProjectOrthogonallyOnto_scalar(self_: Origin, other: Scalar) -> Origin {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Origin = Origin(right_anti_dual.e1234_ * self_.e4_);
-    return Origin(anti_wedge.e4_ * other.scalar);
+    return Origin(right_anti_dual.e1234_ * self_.e4_ * other.scalar);
 }
 fn plane_antiProjectOrthogonallyOnto_dualNum(self_: Plane, other: DualNum) -> Plane {
-    let self_groups = plane_grouped(self_);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e1234_) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(right_anti_dual.e1234_ * self_.e423_, right_anti_dual.e1234_ * self_.e431_, right_anti_dual.e1234_ * self_.e412_, right_anti_dual.e1234_ * self_.e321_)
     ));
 }
 fn plane_antiProjectOrthogonallyOnto_flector(self_: Plane, other: Flector) -> Flector {
@@ -2744,8 +2645,7 @@ fn plane_antiProjectOrthogonallyOnto_flector(self_: Plane, other: Flector) -> Fl
 }
 fn plane_antiProjectOrthogonallyOnto_horizon(self_: Plane, other: Horizon) -> Horizon {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e4_ * self_.e321_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(other.e321_ * right_anti_dual.e4_ * self_.e321_ * -1.0);
 }
 fn plane_antiProjectOrthogonallyOnto_line(self_: Plane, other: Line) -> Plane {
     let self_groups = plane_grouped(self_);
@@ -2811,9 +2711,8 @@ fn plane_antiProjectOrthogonallyOnto_multiVector(self_: Plane, other: MultiVecto
 fn plane_antiProjectOrthogonallyOnto_plane(self_: Plane, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e4_ * self_.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_ * self_.e321_ * -1.0) * other_groups.group0_
     ));
 }
 fn plane_antiProjectOrthogonallyOnto_point(self_: Plane, other: Point) -> Plane {
@@ -2833,23 +2732,15 @@ fn plane_antiProjectOrthogonallyOnto_point(self_: Plane, other: Point) -> Plane 
     ));
 }
 fn plane_antiProjectOrthogonallyOnto_scalar(self_: Plane, other: Scalar) -> Plane {
-    let self_groups = plane_grouped(self_);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e1234_) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(right_anti_dual.e1234_ * self_.e423_, right_anti_dual.e1234_ * self_.e431_, right_anti_dual.e1234_ * self_.e412_, right_anti_dual.e1234_ * self_.e321_)
     ));
 }
 fn point_antiProjectOrthogonallyOnto_dualNum(self_: Point, other: DualNum) -> Point {
-    let self_groups = point_grouped(self_);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_anti_dual.e1234_) * self_groups.group0_
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(right_anti_dual.e1234_ * self_.e1_, right_anti_dual.e1234_ * self_.e2_, right_anti_dual.e1234_ * self_.e3_, right_anti_dual.e1234_ * self_.e4_)
     ));
 }
 fn point_antiProjectOrthogonallyOnto_flector(self_: Point, other: Flector) -> Flector {
@@ -2867,12 +2758,8 @@ fn point_antiProjectOrthogonallyOnto_flector(self_: Point, other: Flector) -> Fl
 fn point_antiProjectOrthogonallyOnto_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = motor_grouped(other);
-    let right_anti_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
     let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_anti_dual.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
     );
     let anti_wedge: Point = point_degroup(anti_wedge_groups);
     return flector_degroup(FlectorGroups(
@@ -2911,36 +2798,26 @@ fn point_antiProjectOrthogonallyOnto_point(self_: Point, other: Point) -> Point 
     let right_anti_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let anti_wedge: Scalar = Scalar((right_anti_dual.e423_ * self_.e1_) + (right_anti_dual.e431_ * self_.e2_) + (right_anti_dual.e412_ * self_.e3_) + (right_anti_dual.e321_ * self_.e4_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((right_anti_dual.e423_ * self_.e1_) + (right_anti_dual.e431_ * self_.e2_) + (right_anti_dual.e412_ * self_.e3_) + (right_anti_dual.e321_ * self_.e4_)) * other_groups.group0_
     ));
 }
 fn point_antiProjectOrthogonallyOnto_scalar(self_: Point, other: Scalar) -> Point {
-    let self_groups = point_grouped(self_);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_anti_dual.e1234_) * self_groups.group0_
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(right_anti_dual.e1234_ * self_.e1_, right_anti_dual.e1234_ * self_.e2_, right_anti_dual.e1234_ * self_.e3_, right_anti_dual.e1234_ * self_.e4_)
     ));
 }
 fn scalar_antiProjectOrthogonallyOnto_dualNum(self_: Scalar, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn scalar_antiProjectOrthogonallyOnto_motor(self_: Scalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let right_anti_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e1234_ * self_.scalar);
+    let anti_wedge: Scalar = Scalar((other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)).w * self_.scalar);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_
@@ -2948,14 +2825,7 @@ fn scalar_antiProjectOrthogonallyOnto_motor(self_: Scalar, other: Motor) -> Moto
 }
 fn scalar_antiProjectOrthogonallyOnto_multiVector(self_: Scalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let right_anti_dual: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, other.scalar, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e41, e42, e43 */ other_groups.group3_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e1234_ * self_.scalar);
+    let anti_wedge: Scalar = Scalar(other.scalar * self_.scalar);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_, 
@@ -2966,13 +2836,11 @@ fn scalar_antiProjectOrthogonallyOnto_multiVector(self_: Scalar, other: MultiVec
 }
 fn scalar_antiProjectOrthogonallyOnto_scalar(self_: Scalar, other: Scalar) -> Scalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Scalar = Scalar(right_anti_dual.e1234_ * self_.scalar);
-    return Scalar(anti_wedge.scalar * other.scalar);
+    return Scalar(right_anti_dual.e1234_ * other.scalar * self_.scalar);
 }
 fn antiScalar_antiProjectViaHorizonOnto_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.e1234_);
-    return AntiScalar(anti_wedge.e1234_ * other.scalar);
+    return AntiScalar(right_dual.e1234_ * self_.e1234_ * other.scalar);
 }
 fn antiScalar_antiProjectViaHorizonOnto_flector(self_: AntiScalar, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -2992,8 +2860,7 @@ fn antiScalar_antiProjectViaHorizonOnto_flector(self_: AntiScalar, other: Flecto
 }
 fn antiScalar_antiProjectViaHorizonOnto_horizon(self_: AntiScalar, other: Horizon) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * other.e321_ * right_dual.e4_ * -1.0);
 }
 fn antiScalar_antiProjectViaHorizonOnto_line(self_: AntiScalar, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -3050,28 +2917,22 @@ fn antiScalar_antiProjectViaHorizonOnto_multiVector(self_: AntiScalar, other: Mu
 }
 fn antiScalar_antiProjectViaHorizonOnto_plane(self_: AntiScalar, other: Plane) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_dual.e4_ * other.e321_ * -1.0);
 }
 fn antiScalar_antiProjectViaHorizonOnto_point(self_: AntiScalar, other: Point) -> AntiScalar {
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return AntiScalar((anti_wedge.e423_ * other.e1_) + (anti_wedge.e431_ * other.e2_) + (anti_wedge.e412_ * other.e3_) + (anti_wedge.e321_ * other.e4_));
 }
 fn antiScalar_antiProjectViaHorizonOnto_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.e1234_);
-    return AntiScalar(anti_wedge.e1234_ * other.scalar);
+    return AntiScalar(right_dual.e1234_ * self_.e1234_ * other.scalar);
 }
 fn dualNum_antiProjectViaHorizonOnto_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
     return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ vec4<f32>(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234_) + (anti_wedge.e1234_ * other.scalar), 0.0, 0.0)
@@ -3095,8 +2956,7 @@ fn dualNum_antiProjectViaHorizonOnto_flector(self_: DualNum, other: Flector) -> 
 }
 fn dualNum_antiProjectViaHorizonOnto_horizon(self_: DualNum, other: Horizon) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * other.e321_ * right_dual.e4_ * -1.0);
 }
 fn dualNum_antiProjectViaHorizonOnto_line(self_: DualNum, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -3156,26 +3016,18 @@ fn dualNum_antiProjectViaHorizonOnto_multiVector(self_: DualNum, other: MultiVec
 }
 fn dualNum_antiProjectViaHorizonOnto_plane(self_: DualNum, other: Plane) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_dual.e4_ * other.e321_ * -1.0);
 }
 fn dualNum_antiProjectViaHorizonOnto_point(self_: DualNum, other: Point) -> AntiScalar {
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return AntiScalar((anti_wedge.e423_ * other.e1_) + (anti_wedge.e431_ * other.e2_) + (anti_wedge.e412_ * other.e3_) + (anti_wedge.e321_ * other.e4_));
 }
 fn dualNum_antiProjectViaHorizonOnto_scalar(self_: DualNum, other: Scalar) -> DualNum {
-    let self_groups = dualNum_grouped(self_);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
-    );
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * anti_wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(right_dual.e1234_ * self_.scalar, right_dual.e1234_ * self_.e1234_, 0.0, 0.0)
     ));
 }
 fn flector_antiProjectViaHorizonOnto_dualNum(self_: Flector, other: DualNum) -> Flector {
@@ -3210,8 +3062,7 @@ fn flector_antiProjectViaHorizonOnto_flector(self_: Flector, other: Flector) -> 
 }
 fn flector_antiProjectViaHorizonOnto_horizon(self_: Flector, other: Horizon) -> Horizon {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_dual.e4_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(self_.e321_ * other.e321_ * right_dual.e4_ * -1.0);
 }
 fn flector_antiProjectViaHorizonOnto_line(self_: Flector, other: Line) -> Plane {
     let self_groups = flector_grouped(self_);
@@ -3277,9 +3128,8 @@ fn flector_antiProjectViaHorizonOnto_multiVector(self_: Flector, other: MultiVec
 fn flector_antiProjectViaHorizonOnto_plane(self_: Flector, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn flector_antiProjectViaHorizonOnto_point(self_: Flector, other: Point) -> Flector {
@@ -3313,8 +3163,7 @@ fn flector_antiProjectViaHorizonOnto_scalar(self_: Flector, other: Scalar) -> Fl
 }
 fn horizon_antiProjectViaHorizonOnto_dualNum(self_: Horizon, other: DualNum) -> Horizon {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Horizon = Horizon(right_dual.e1234_ * self_.e321_);
-    return Horizon(other.scalar * anti_wedge.e321_);
+    return Horizon(right_dual.e1234_ * other.scalar * self_.e321_);
 }
 fn horizon_antiProjectViaHorizonOnto_flector(self_: Horizon, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -3335,17 +3184,12 @@ fn horizon_antiProjectViaHorizonOnto_flector(self_: Horizon, other: Flector) -> 
 }
 fn horizon_antiProjectViaHorizonOnto_horizon(self_: Horizon, other: Horizon) -> Horizon {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_dual.e4_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(other.e321_ * self_.e321_ * right_dual.e4_ * -1.0);
 }
 fn horizon_antiProjectViaHorizonOnto_line(self_: Horizon, other: Line) -> Plane {
     let other_groups = line_grouped(other);
-    let right_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     );
     let anti_wedge: Point = point_degroup(anti_wedge_groups);
     return plane_degroup(PlaneGroups(
@@ -3398,19 +3242,15 @@ fn horizon_antiProjectViaHorizonOnto_multiVector(self_: Horizon, other: MultiVec
 fn horizon_antiProjectViaHorizonOnto_plane(self_: Horizon, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(self_.e321_ * right_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn horizon_antiProjectViaHorizonOnto_point(self_: Horizon, other: Point) -> Plane {
     let other_groups = point_grouped(other);
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let anti_wedge_groups: LineGroups = LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0) * vec4<f32>(-1.0)
     );
     let anti_wedge: Line = line_degroup(anti_wedge_groups);
     return plane_degroup(PlaneGroups(
@@ -3419,8 +3259,7 @@ fn horizon_antiProjectViaHorizonOnto_point(self_: Horizon, other: Point) -> Plan
 }
 fn horizon_antiProjectViaHorizonOnto_scalar(self_: Horizon, other: Scalar) -> Horizon {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Horizon = Horizon(right_dual.e1234_ * self_.e321_);
-    return Horizon(anti_wedge.e321_ * other.scalar);
+    return Horizon(right_dual.e1234_ * self_.e321_ * other.scalar);
 }
 fn line_antiProjectViaHorizonOnto_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
@@ -3570,8 +3409,7 @@ fn motor_antiProjectViaHorizonOnto_flector(self_: Motor, other: Flector) -> Moto
 }
 fn motor_antiProjectViaHorizonOnto_horizon(self_: Motor, other: Horizon) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(other.e321_ * anti_wedge.e4_ * -1.0);
+    return AntiScalar(other.e321_ * self_.e1234_ * right_dual.e4_ * -1.0);
 }
 fn motor_antiProjectViaHorizonOnto_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -3638,8 +3476,7 @@ fn motor_antiProjectViaHorizonOnto_multiVector(self_: Motor, other: MultiVector)
 }
 fn motor_antiProjectViaHorizonOnto_plane(self_: Motor, other: Plane) -> AntiScalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Origin = Origin(self_.e1234_ * right_dual.e4_);
-    return AntiScalar(anti_wedge.e4_ * other.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * right_dual.e4_ * other.e321_ * -1.0);
 }
 fn motor_antiProjectViaHorizonOnto_point(self_: Motor, other: Point) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -3866,16 +3703,11 @@ fn multiVector_antiProjectViaHorizonOnto_scalar(self_: MultiVector, other: Scala
 }
 fn origin_antiProjectViaHorizonOnto_dualNum(self_: Origin, other: DualNum) -> Origin {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Origin = Origin(right_dual.e1234_ * self_.e4_);
-    return Origin(other.scalar * anti_wedge.e4_);
+    return Origin(right_dual.e1234_ * other.scalar * self_.e4_);
 }
 fn origin_antiProjectViaHorizonOnto_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let right_dual: Flector = flector_degroup(FlectorGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_dual.e321_ * self_.e4_);
+    let anti_wedge: Scalar = Scalar(self_.e4_ * 0.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_
@@ -3883,11 +3715,7 @@ fn origin_antiProjectViaHorizonOnto_flector(self_: Origin, other: Flector) -> Fl
 }
 fn origin_antiProjectViaHorizonOnto_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let right_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let anti_wedge: Origin = Origin(right_dual.e1234_ * self_.e4_);
+    let anti_wedge: Origin = Origin((other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)).w * self_.e4_);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.scalar * anti_wedge.e4_), 
         /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.e4_, anti_wedge.e4_, anti_wedge.e4_, 0.0) * vec4<f32>(other_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
@@ -3923,24 +3751,18 @@ fn origin_antiProjectViaHorizonOnto_point(self_: Origin, other: Point) -> Point 
     let right_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let anti_wedge: Scalar = Scalar(self_.e4_ * right_dual.e321_);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e4_ * right_dual.e321_) * other_groups.group0_
     ));
 }
 fn origin_antiProjectViaHorizonOnto_scalar(self_: Origin, other: Scalar) -> Origin {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Origin = Origin(right_dual.e1234_ * self_.e4_);
-    return Origin(anti_wedge.e4_ * other.scalar);
+    return Origin(right_dual.e1234_ * self_.e4_ * other.scalar);
 }
 fn plane_antiProjectViaHorizonOnto_dualNum(self_: Plane, other: DualNum) -> Plane {
-    let self_groups = plane_grouped(self_);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e1234_) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(right_dual.e1234_ * self_.e423_, right_dual.e1234_ * self_.e431_, right_dual.e1234_ * self_.e412_, right_dual.e1234_ * self_.e321_)
     ));
 }
 fn plane_antiProjectViaHorizonOnto_flector(self_: Plane, other: Flector) -> Flector {
@@ -3963,8 +3785,7 @@ fn plane_antiProjectViaHorizonOnto_flector(self_: Plane, other: Flector) -> Flec
 }
 fn plane_antiProjectViaHorizonOnto_horizon(self_: Plane, other: Horizon) -> Horizon {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(right_dual.e4_ * self_.e321_ * -1.0);
-    return Horizon(other.e321_ * anti_wedge.scalar);
+    return Horizon(other.e321_ * right_dual.e4_ * self_.e321_ * -1.0);
 }
 fn plane_antiProjectViaHorizonOnto_line(self_: Plane, other: Line) -> Plane {
     let self_groups = plane_grouped(self_);
@@ -4030,9 +3851,8 @@ fn plane_antiProjectViaHorizonOnto_multiVector(self_: Plane, other: MultiVector)
 fn plane_antiProjectViaHorizonOnto_plane(self_: Plane, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let anti_wedge: Scalar = Scalar(right_dual.e4_ * self_.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_ * self_.e321_ * -1.0) * other_groups.group0_
     ));
 }
 fn plane_antiProjectViaHorizonOnto_point(self_: Plane, other: Point) -> Plane {
@@ -4052,23 +3872,15 @@ fn plane_antiProjectViaHorizonOnto_point(self_: Plane, other: Point) -> Plane {
     ));
 }
 fn plane_antiProjectViaHorizonOnto_scalar(self_: Plane, other: Scalar) -> Plane {
-    let self_groups = plane_grouped(self_);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e1234_) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(right_dual.e1234_ * self_.e423_, right_dual.e1234_ * self_.e431_, right_dual.e1234_ * self_.e412_, right_dual.e1234_ * self_.e321_)
     ));
 }
 fn point_antiProjectViaHorizonOnto_dualNum(self_: Point, other: DualNum) -> Point {
-    let self_groups = point_grouped(self_);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_dual.e1234_) * self_groups.group0_
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(right_dual.e1234_ * self_.e1_, right_dual.e1234_ * self_.e2_, right_dual.e1234_ * self_.e3_, right_dual.e1234_ * self_.e4_)
     ));
 }
 fn point_antiProjectViaHorizonOnto_flector(self_: Point, other: Flector) -> Flector {
@@ -4086,12 +3898,8 @@ fn point_antiProjectViaHorizonOnto_flector(self_: Point, other: Flector) -> Flec
 fn point_antiProjectViaHorizonOnto_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = motor_grouped(other);
-    let right_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
     let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_dual.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
     );
     let anti_wedge: Point = point_degroup(anti_wedge_groups);
     return flector_degroup(FlectorGroups(
@@ -4130,36 +3938,26 @@ fn point_antiProjectViaHorizonOnto_point(self_: Point, other: Point) -> Point {
     let right_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let anti_wedge: Scalar = Scalar((right_dual.e423_ * self_.e1_) + (right_dual.e431_ * self_.e2_) + (right_dual.e412_ * self_.e3_) + (right_dual.e321_ * self_.e4_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((right_dual.e423_ * self_.e1_) + (right_dual.e431_ * self_.e2_) + (right_dual.e412_ * self_.e3_) + (right_dual.e321_ * self_.e4_)) * other_groups.group0_
     ));
 }
 fn point_antiProjectViaHorizonOnto_scalar(self_: Point, other: Scalar) -> Point {
-    let self_groups = point_grouped(self_);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_dual.e1234_) * self_groups.group0_
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * anti_wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(right_dual.e1234_ * self_.e1_, right_dual.e1234_ * self_.e2_, right_dual.e1234_ * self_.e3_, right_dual.e1234_ * self_.e4_)
     ));
 }
 fn scalar_antiProjectViaHorizonOnto_dualNum(self_: Scalar, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Scalar = Scalar(right_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn scalar_antiProjectViaHorizonOnto_motor(self_: Scalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let right_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_dual.e1234_ * self_.scalar);
+    let anti_wedge: Scalar = Scalar((other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)).w * self_.scalar);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(anti_wedge.scalar) * other_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_
@@ -4167,14 +3965,7 @@ fn scalar_antiProjectViaHorizonOnto_motor(self_: Scalar, other: Motor) -> Motor 
 }
 fn scalar_antiProjectViaHorizonOnto_multiVector(self_: Scalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let right_dual: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, other.scalar, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e41, e42, e43 */ other_groups.group3_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let anti_wedge: Scalar = Scalar(right_dual.e1234_ * self_.scalar);
+    let anti_wedge: Scalar = Scalar(other.scalar * self_.scalar);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(anti_wedge.scalar) * other_groups.group1_, 
@@ -4185,13 +3976,10 @@ fn scalar_antiProjectViaHorizonOnto_multiVector(self_: Scalar, other: MultiVecto
 }
 fn scalar_antiProjectViaHorizonOnto_scalar(self_: Scalar, other: Scalar) -> Scalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let anti_wedge: Scalar = Scalar(right_dual.e1234_ * self_.scalar);
-    return Scalar(anti_wedge.scalar * other.scalar);
+    return Scalar(right_dual.e1234_ * other.scalar * self_.scalar);
 }
 fn antiScalar_antiRejectOrthogonallyFrom_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * wedge.e1234_);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn antiScalar_antiRejectOrthogonallyFrom_motor(self_: AntiScalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
@@ -4224,17 +4012,11 @@ fn antiScalar_antiRejectOrthogonallyFrom_multiVector(self_: AntiScalar, other: M
     ));
 }
 fn antiScalar_antiRejectOrthogonallyFrom_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * wedge.e1234_);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn dualNum_antiRejectOrthogonallyFrom_dualNum(self_: DualNum, other: DualNum) -> DualNum {
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(other.scalar * self_.scalar, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), 0.0, 0.0)
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.scalar * self_.scalar, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), 0.0, 0.0)
     ));
 }
 fn dualNum_antiRejectOrthogonallyFrom_flector(self_: DualNum, other: Flector) -> Motor {
@@ -4255,9 +4037,7 @@ fn dualNum_antiRejectOrthogonallyFrom_flector(self_: DualNum, other: Flector) ->
     ));
 }
 fn dualNum_antiRejectOrthogonallyFrom_horizon(self_: DualNum, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(self_.scalar * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_anti_dual.e4_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn dualNum_antiRejectOrthogonallyFrom_line(self_: DualNum, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -4316,12 +4096,7 @@ fn dualNum_antiRejectOrthogonallyFrom_multiVector(self_: DualNum, other: MultiVe
     ));
 }
 fn dualNum_antiRejectOrthogonallyFrom_plane(self_: DualNum, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_anti_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn dualNum_antiRejectOrthogonallyFrom_point(self_: DualNum, other: Point) -> Scalar {
     let other_groups = point_grouped(other);
@@ -4334,13 +4109,8 @@ fn dualNum_antiRejectOrthogonallyFrom_point(self_: DualNum, other: Point) -> Sca
     return Scalar((right_anti_dual.e423_ * wedge.e1_) + (right_anti_dual.e431_ * wedge.e2_) + (right_anti_dual.e412_ * wedge.e3_) + (right_anti_dual.e321_ * wedge.e4_));
 }
 fn dualNum_antiRejectOrthogonallyFrom_scalar(self_: DualNum, other: Scalar) -> DualNum {
-    let self_groups = dualNum_grouped(self_);
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.scalar * other.scalar, self_.e1234_ * other.scalar, 0.0, 0.0)
     ));
 }
 fn flector_antiRejectOrthogonallyFrom_dualNum(self_: Flector, other: DualNum) -> Flector {
@@ -4374,9 +4144,7 @@ fn flector_antiRejectOrthogonallyFrom_flector(self_: Flector, other: Flector) ->
     ));
 }
 fn flector_antiRejectOrthogonallyFrom_horizon(self_: Flector, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn flector_antiRejectOrthogonallyFrom_line(self_: Flector, other: Line) -> Point {
     let self_groups = flector_grouped(self_);
@@ -4440,9 +4208,7 @@ fn flector_antiRejectOrthogonallyFrom_multiVector(self_: Flector, other: MultiVe
     ));
 }
 fn flector_antiRejectOrthogonallyFrom_plane(self_: Flector, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar((self_.e1_ * other.e423_) + (self_.e2_ * other.e431_) + (self_.e3_ * other.e412_) + (self_.e4_ * other.e321_));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (self_.e1_ * other.e423_ * other.e321_) - (self_.e2_ * other.e431_ * other.e321_) - (self_.e3_ * other.e412_ * other.e321_));
 }
 fn flector_antiRejectOrthogonallyFrom_point(self_: Flector, other: Point) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -4474,9 +4240,7 @@ fn flector_antiRejectOrthogonallyFrom_scalar(self_: Flector, other: Scalar) -> F
     ));
 }
 fn horizon_antiRejectOrthogonallyFrom_dualNum(self_: Horizon, other: DualNum) -> Horizon {
-    let wedge: Horizon = Horizon(other.scalar * self_.e321_);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return Horizon(right_anti_dual.e1234_ * wedge.e321_);
+    return Horizon(pow(other.scalar, 2) * self_.e321_);
 }
 fn horizon_antiRejectOrthogonallyFrom_flector(self_: Horizon, other: Flector) -> Flector {
     let wedge: AntiScalar = AntiScalar(other.e4_ * self_.e321_ * -1.0);
@@ -4529,18 +4293,12 @@ fn horizon_antiRejectOrthogonallyFrom_multiVector(self_: Horizon, other: MultiVe
     ));
 }
 fn horizon_antiRejectOrthogonallyFrom_point(self_: Horizon, other: Point) -> Plane {
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * other.e4_ * -1.0);
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * other.e4_ * -1.0) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
 }
 fn horizon_antiRejectOrthogonallyFrom_scalar(self_: Horizon, other: Scalar) -> Horizon {
-    let wedge: Horizon = Horizon(self_.e321_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return Horizon(right_anti_dual.e1234_ * wedge.e321_);
+    return Horizon(self_.e321_ * pow(other.scalar, 2));
 }
 fn line_antiRejectOrthogonallyFrom_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
@@ -4572,14 +4330,8 @@ fn line_antiRejectOrthogonallyFrom_flector(self_: Line, other: Flector) -> Motor
     ));
 }
 fn line_antiRejectOrthogonallyFrom_line(self_: Line, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let wedge: AntiScalar = AntiScalar(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_));
-    let right_anti_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group0_, 
+        /* e41, e42, e43 */ (vec4<f32>(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -4688,9 +4440,7 @@ fn motor_antiRejectOrthogonallyFrom_flector(self_: Motor, other: Flector) -> Mot
     ));
 }
 fn motor_antiRejectOrthogonallyFrom_horizon(self_: Motor, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(other.e321_ * self_.scalar);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_anti_dual.e4_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn motor_antiRejectOrthogonallyFrom_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -4756,12 +4506,7 @@ fn motor_antiRejectOrthogonallyFrom_multiVector(self_: Motor, other: MultiVector
     ));
 }
 fn motor_antiRejectOrthogonallyFrom_plane(self_: Motor, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_anti_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn motor_antiRejectOrthogonallyFrom_point(self_: Motor, other: Point) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -4986,9 +4731,7 @@ fn multiVector_antiRejectOrthogonallyFrom_scalar(self_: MultiVector, other: Scal
     ));
 }
 fn origin_antiRejectOrthogonallyFrom_dualNum(self_: Origin, other: DualNum) -> Origin {
-    let wedge: Origin = Origin(other.scalar * self_.e4_);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return Origin(right_anti_dual.e1234_ * wedge.e4_);
+    return Origin(pow(other.scalar, 2) * self_.e4_);
 }
 fn origin_antiRejectOrthogonallyFrom_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -5008,9 +4751,7 @@ fn origin_antiRejectOrthogonallyFrom_flector(self_: Origin, other: Flector) -> F
     ));
 }
 fn origin_antiRejectOrthogonallyFrom_horizon(self_: Origin, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(other.e321_ * self_.e4_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn origin_antiRejectOrthogonallyFrom_line(self_: Origin, other: Line) -> Origin {
     let other_groups = line_grouped(other);
@@ -5067,9 +4808,7 @@ fn origin_antiRejectOrthogonallyFrom_multiVector(self_: Origin, other: MultiVect
     ));
 }
 fn origin_antiRejectOrthogonallyFrom_plane(self_: Origin, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn origin_antiRejectOrthogonallyFrom_point(self_: Origin, other: Point) -> Origin {
     let other_groups = point_grouped(other);
@@ -5083,18 +4822,11 @@ fn origin_antiRejectOrthogonallyFrom_point(self_: Origin, other: Point) -> Origi
     return Origin(-(wedge.e41_ * right_anti_dual.e423_) - (wedge.e42_ * right_anti_dual.e431_) - (wedge.e43_ * right_anti_dual.e412_));
 }
 fn origin_antiRejectOrthogonallyFrom_scalar(self_: Origin, other: Scalar) -> Origin {
-    let wedge: Origin = Origin(self_.e4_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return Origin(right_anti_dual.e1234_ * wedge.e4_);
+    return Origin(self_.e4_ * pow(other.scalar, 2));
 }
 fn plane_antiRejectOrthogonallyFrom_dualNum(self_: Plane, other: DualNum) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(other.scalar * self_.e423_, other.scalar * self_.e431_, other.scalar * self_.e412_, other.scalar * self_.e321_)
     ));
 }
 fn plane_antiRejectOrthogonallyFrom_flector(self_: Plane, other: Flector) -> Flector {
@@ -5154,31 +4886,18 @@ fn plane_antiRejectOrthogonallyFrom_multiVector(self_: Plane, other: MultiVector
 }
 fn plane_antiRejectOrthogonallyFrom_point(self_: Plane, other: Point) -> Plane {
     let wedge: AntiScalar = AntiScalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_, wedge.e1234_, wedge.e1234_, 0.0) * vec4<f32>(right_anti_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_, wedge.e1234_, wedge.e1234_, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_antiRejectOrthogonallyFrom_scalar(self_: Plane, other: Scalar) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(self_.e423_ * other.scalar, self_.e431_ * other.scalar, self_.e412_ * other.scalar, self_.e321_ * other.scalar)
     ));
 }
 fn point_antiRejectOrthogonallyFrom_dualNum(self_: Point, other: DualNum) -> Point {
-    let self_groups = point_grouped(self_);
-    let wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_anti_dual.e1234_) * wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(other.scalar * self_.e1_, other.scalar * self_.e2_, other.scalar * self_.e3_, other.scalar * self_.e4_)
     ));
 }
 fn point_antiRejectOrthogonallyFrom_flector(self_: Point, other: Flector) -> Flector {
@@ -5200,9 +4919,7 @@ fn point_antiRejectOrthogonallyFrom_flector(self_: Point, other: Flector) -> Fle
     ));
 }
 fn point_antiRejectOrthogonallyFrom_horizon(self_: Point, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(other.e321_ * self_.e4_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn point_antiRejectOrthogonallyFrom_line(self_: Point, other: Line) -> Point {
     let self_groups = point_grouped(self_);
@@ -5266,9 +4983,7 @@ fn point_antiRejectOrthogonallyFrom_multiVector(self_: Point, other: MultiVector
     ));
 }
 fn point_antiRejectOrthogonallyFrom_plane(self_: Point, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar((other.e423_ * self_.e1_) + (other.e431_ * self_.e2_) + (other.e412_ * self_.e3_) + (other.e321_ * self_.e4_));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_anti_dual.e4_);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (other.e423_ * other.e321_ * self_.e1_) - (other.e431_ * other.e321_ * self_.e2_) - (other.e412_ * other.e321_ * self_.e3_));
 }
 fn point_antiRejectOrthogonallyFrom_point(self_: Point, other: Point) -> Point {
     let self_groups = point_grouped(self_);
@@ -5287,23 +5002,13 @@ fn point_antiRejectOrthogonallyFrom_point(self_: Point, other: Point) -> Point {
     ));
 }
 fn point_antiRejectOrthogonallyFrom_scalar(self_: Point, other: Scalar) -> Point {
-    let self_groups = point_grouped(self_);
-    let wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_anti_dual.e1234_) * wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(self_.e1_ * other.scalar, self_.e2_ * other.scalar, self_.e3_ * other.scalar, self_.e4_ * other.scalar)
     ));
 }
 fn scalar_antiRejectOrthogonallyFrom_dualNum(self_: Scalar, other: DualNum) -> DualNum {
-    let other_groups = dualNum_grouped(other);
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    );
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.scalar * self_.scalar, other.e1234_ * self_.scalar, 0.0, 0.0)
     ));
 }
 fn scalar_antiRejectOrthogonallyFrom_flector(self_: Scalar, other: Flector) -> Motor {
@@ -5324,9 +5029,7 @@ fn scalar_antiRejectOrthogonallyFrom_flector(self_: Scalar, other: Flector) -> M
     ));
 }
 fn scalar_antiRejectOrthogonallyFrom_horizon(self_: Scalar, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(other.e321_ * self_.scalar);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_anti_dual.e4_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn scalar_antiRejectOrthogonallyFrom_line(self_: Scalar, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -5384,12 +5087,7 @@ fn scalar_antiRejectOrthogonallyFrom_multiVector(self_: Scalar, other: MultiVect
     ));
 }
 fn scalar_antiRejectOrthogonallyFrom_plane(self_: Scalar, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_anti_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn scalar_antiRejectOrthogonallyFrom_point(self_: Scalar, other: Point) -> Scalar {
     let other_groups = point_grouped(other);
@@ -5402,14 +5100,10 @@ fn scalar_antiRejectOrthogonallyFrom_point(self_: Scalar, other: Point) -> Scala
     return Scalar((right_anti_dual.e423_ * wedge.e1_) + (right_anti_dual.e431_ * wedge.e2_) + (right_anti_dual.e412_ * wedge.e3_) + (right_anti_dual.e321_ * wedge.e4_));
 }
 fn scalar_antiRejectOrthogonallyFrom_scalar(self_: Scalar, other: Scalar) -> Scalar {
-    let wedge: Scalar = Scalar(other.scalar * self_.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return Scalar(right_anti_dual.e1234_ * wedge.scalar);
+    return Scalar(pow(other.scalar, 2) * self_.scalar);
 }
 fn antiScalar_antiRejectViaHorizonFrom_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * wedge.e1234_);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn antiScalar_antiRejectViaHorizonFrom_motor(self_: AntiScalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
@@ -5442,17 +5136,11 @@ fn antiScalar_antiRejectViaHorizonFrom_multiVector(self_: AntiScalar, other: Mul
     ));
 }
 fn antiScalar_antiRejectViaHorizonFrom_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * wedge.e1234_);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn dualNum_antiRejectViaHorizonFrom_dualNum(self_: DualNum, other: DualNum) -> DualNum {
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(other.scalar * self_.scalar, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), 0.0, 0.0)
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.scalar * self_.scalar, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), 0.0, 0.0)
     ));
 }
 fn dualNum_antiRejectViaHorizonFrom_flector(self_: DualNum, other: Flector) -> Motor {
@@ -5473,9 +5161,7 @@ fn dualNum_antiRejectViaHorizonFrom_flector(self_: DualNum, other: Flector) -> M
     ));
 }
 fn dualNum_antiRejectViaHorizonFrom_horizon(self_: DualNum, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(self_.scalar * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_dual.e4_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn dualNum_antiRejectViaHorizonFrom_line(self_: DualNum, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -5534,12 +5220,7 @@ fn dualNum_antiRejectViaHorizonFrom_multiVector(self_: DualNum, other: MultiVect
     ));
 }
 fn dualNum_antiRejectViaHorizonFrom_plane(self_: DualNum, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn dualNum_antiRejectViaHorizonFrom_point(self_: DualNum, other: Point) -> Scalar {
     let other_groups = point_grouped(other);
@@ -5552,13 +5233,8 @@ fn dualNum_antiRejectViaHorizonFrom_point(self_: DualNum, other: Point) -> Scala
     return Scalar((right_dual.e423_ * wedge.e1_) + (right_dual.e431_ * wedge.e2_) + (right_dual.e412_ * wedge.e3_) + (right_dual.e321_ * wedge.e4_));
 }
 fn dualNum_antiRejectViaHorizonFrom_scalar(self_: DualNum, other: Scalar) -> DualNum {
-    let self_groups = dualNum_grouped(self_);
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.scalar * other.scalar, self_.e1234_ * other.scalar, 0.0, 0.0)
     ));
 }
 fn flector_antiRejectViaHorizonFrom_dualNum(self_: Flector, other: DualNum) -> Flector {
@@ -5592,9 +5268,7 @@ fn flector_antiRejectViaHorizonFrom_flector(self_: Flector, other: Flector) -> F
     ));
 }
 fn flector_antiRejectViaHorizonFrom_horizon(self_: Flector, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn flector_antiRejectViaHorizonFrom_line(self_: Flector, other: Line) -> Point {
     let self_groups = flector_grouped(self_);
@@ -5658,9 +5332,7 @@ fn flector_antiRejectViaHorizonFrom_multiVector(self_: Flector, other: MultiVect
     ));
 }
 fn flector_antiRejectViaHorizonFrom_plane(self_: Flector, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar((self_.e1_ * other.e423_) + (self_.e2_ * other.e431_) + (self_.e3_ * other.e412_) + (self_.e4_ * other.e321_));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (self_.e1_ * other.e423_ * other.e321_) - (self_.e2_ * other.e431_ * other.e321_) - (self_.e3_ * other.e412_ * other.e321_));
 }
 fn flector_antiRejectViaHorizonFrom_point(self_: Flector, other: Point) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -5692,9 +5364,7 @@ fn flector_antiRejectViaHorizonFrom_scalar(self_: Flector, other: Scalar) -> Fle
     ));
 }
 fn horizon_antiRejectViaHorizonFrom_dualNum(self_: Horizon, other: DualNum) -> Horizon {
-    let wedge: Horizon = Horizon(other.scalar * self_.e321_);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return Horizon(right_dual.e1234_ * wedge.e321_);
+    return Horizon(pow(other.scalar, 2) * self_.e321_);
 }
 fn horizon_antiRejectViaHorizonFrom_flector(self_: Horizon, other: Flector) -> Flector {
     let wedge: AntiScalar = AntiScalar(other.e4_ * self_.e321_ * -1.0);
@@ -5747,18 +5417,12 @@ fn horizon_antiRejectViaHorizonFrom_multiVector(self_: Horizon, other: MultiVect
     ));
 }
 fn horizon_antiRejectViaHorizonFrom_point(self_: Horizon, other: Point) -> Plane {
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * other.e4_ * -1.0);
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * other.e4_ * -1.0) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
 }
 fn horizon_antiRejectViaHorizonFrom_scalar(self_: Horizon, other: Scalar) -> Horizon {
-    let wedge: Horizon = Horizon(self_.e321_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return Horizon(right_dual.e1234_ * wedge.e321_);
+    return Horizon(self_.e321_ * pow(other.scalar, 2));
 }
 fn line_antiRejectViaHorizonFrom_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
@@ -5790,14 +5454,8 @@ fn line_antiRejectViaHorizonFrom_flector(self_: Line, other: Flector) -> Motor {
     ));
 }
 fn line_antiRejectViaHorizonFrom_line(self_: Line, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let wedge: AntiScalar = AntiScalar(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_));
-    let right_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group0_, 
+        /* e41, e42, e43 */ (vec4<f32>(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -5906,9 +5564,7 @@ fn motor_antiRejectViaHorizonFrom_flector(self_: Motor, other: Flector) -> Motor
     ));
 }
 fn motor_antiRejectViaHorizonFrom_horizon(self_: Motor, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(other.e321_ * self_.scalar);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_dual.e4_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn motor_antiRejectViaHorizonFrom_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -5974,12 +5630,7 @@ fn motor_antiRejectViaHorizonFrom_multiVector(self_: Motor, other: MultiVector) 
     ));
 }
 fn motor_antiRejectViaHorizonFrom_plane(self_: Motor, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(self_.scalar * pow(other.e321_, 2));
 }
 fn motor_antiRejectViaHorizonFrom_point(self_: Motor, other: Point) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -6204,9 +5855,7 @@ fn multiVector_antiRejectViaHorizonFrom_scalar(self_: MultiVector, other: Scalar
     ));
 }
 fn origin_antiRejectViaHorizonFrom_dualNum(self_: Origin, other: DualNum) -> Origin {
-    let wedge: Origin = Origin(other.scalar * self_.e4_);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return Origin(right_dual.e1234_ * wedge.e4_);
+    return Origin(pow(other.scalar, 2) * self_.e4_);
 }
 fn origin_antiRejectViaHorizonFrom_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -6226,9 +5875,7 @@ fn origin_antiRejectViaHorizonFrom_flector(self_: Origin, other: Flector) -> Fle
     ));
 }
 fn origin_antiRejectViaHorizonFrom_horizon(self_: Origin, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(other.e321_ * self_.e4_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn origin_antiRejectViaHorizonFrom_line(self_: Origin, other: Line) -> Origin {
     let other_groups = line_grouped(other);
@@ -6285,9 +5932,7 @@ fn origin_antiRejectViaHorizonFrom_multiVector(self_: Origin, other: MultiVector
     ));
 }
 fn origin_antiRejectViaHorizonFrom_plane(self_: Origin, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn origin_antiRejectViaHorizonFrom_point(self_: Origin, other: Point) -> Origin {
     let other_groups = point_grouped(other);
@@ -6301,18 +5946,11 @@ fn origin_antiRejectViaHorizonFrom_point(self_: Origin, other: Point) -> Origin 
     return Origin(-(wedge.e41_ * right_dual.e423_) - (wedge.e42_ * right_dual.e431_) - (wedge.e43_ * right_dual.e412_));
 }
 fn origin_antiRejectViaHorizonFrom_scalar(self_: Origin, other: Scalar) -> Origin {
-    let wedge: Origin = Origin(self_.e4_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return Origin(right_dual.e1234_ * wedge.e4_);
+    return Origin(self_.e4_ * pow(other.scalar, 2));
 }
 fn plane_antiRejectViaHorizonFrom_dualNum(self_: Plane, other: DualNum) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(other.scalar * self_.e423_, other.scalar * self_.e431_, other.scalar * self_.e412_, other.scalar * self_.e321_)
     ));
 }
 fn plane_antiRejectViaHorizonFrom_flector(self_: Plane, other: Flector) -> Flector {
@@ -6372,31 +6010,18 @@ fn plane_antiRejectViaHorizonFrom_multiVector(self_: Plane, other: MultiVector) 
 }
 fn plane_antiRejectViaHorizonFrom_point(self_: Plane, other: Point) -> Plane {
     let wedge: AntiScalar = AntiScalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_, wedge.e1234_, wedge.e1234_, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_, wedge.e1234_, wedge.e1234_, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_antiRejectViaHorizonFrom_scalar(self_: Plane, other: Scalar) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * vec4<f32>(self_.e423_ * other.scalar, self_.e431_ * other.scalar, self_.e412_ * other.scalar, self_.e321_ * other.scalar)
     ));
 }
 fn point_antiRejectViaHorizonFrom_dualNum(self_: Point, other: DualNum) -> Point {
-    let self_groups = point_grouped(self_);
-    let wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_dual.e1234_) * wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(other.scalar * self_.e1_, other.scalar * self_.e2_, other.scalar * self_.e3_, other.scalar * self_.e4_)
     ));
 }
 fn point_antiRejectViaHorizonFrom_flector(self_: Point, other: Flector) -> Flector {
@@ -6418,9 +6043,7 @@ fn point_antiRejectViaHorizonFrom_flector(self_: Point, other: Flector) -> Flect
     ));
 }
 fn point_antiRejectViaHorizonFrom_horizon(self_: Point, other: Horizon) -> Origin {
-    let wedge: AntiScalar = AntiScalar(other.e321_ * self_.e4_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn point_antiRejectViaHorizonFrom_line(self_: Point, other: Line) -> Point {
     let self_groups = point_grouped(self_);
@@ -6484,9 +6107,7 @@ fn point_antiRejectViaHorizonFrom_multiVector(self_: Point, other: MultiVector) 
     ));
 }
 fn point_antiRejectViaHorizonFrom_plane(self_: Point, other: Plane) -> Origin {
-    let wedge: AntiScalar = AntiScalar((other.e423_ * self_.e1_) + (other.e431_ * self_.e2_) + (other.e412_ * self_.e3_) + (other.e321_ * self_.e4_));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(wedge.e1234_ * right_dual.e4_);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (other.e423_ * other.e321_ * self_.e1_) - (other.e431_ * other.e321_ * self_.e2_) - (other.e412_ * other.e321_ * self_.e3_));
 }
 fn point_antiRejectViaHorizonFrom_point(self_: Point, other: Point) -> Point {
     let self_groups = point_grouped(self_);
@@ -6505,23 +6126,13 @@ fn point_antiRejectViaHorizonFrom_point(self_: Point, other: Point) -> Point {
     ));
 }
 fn point_antiRejectViaHorizonFrom_scalar(self_: Point, other: Scalar) -> Point {
-    let self_groups = point_grouped(self_);
-    let wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_dual.e1234_) * wedge_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * vec4<f32>(self_.e1_ * other.scalar, self_.e2_ * other.scalar, self_.e3_ * other.scalar, self_.e4_ * other.scalar)
     ));
 }
 fn scalar_antiRejectViaHorizonFrom_dualNum(self_: Scalar, other: DualNum) -> DualNum {
-    let other_groups = dualNum_grouped(other);
-    let wedge_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    );
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * wedge_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.scalar * self_.scalar, other.e1234_ * self_.scalar, 0.0, 0.0)
     ));
 }
 fn scalar_antiRejectViaHorizonFrom_flector(self_: Scalar, other: Flector) -> Motor {
@@ -6542,9 +6153,7 @@ fn scalar_antiRejectViaHorizonFrom_flector(self_: Scalar, other: Flector) -> Mot
     ));
 }
 fn scalar_antiRejectViaHorizonFrom_horizon(self_: Scalar, other: Horizon) -> Scalar {
-    let wedge: Horizon = Horizon(other.e321_ * self_.scalar);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(wedge.e321_ * right_dual.e4_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn scalar_antiRejectViaHorizonFrom_line(self_: Scalar, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -6602,12 +6211,7 @@ fn scalar_antiRejectViaHorizonFrom_multiVector(self_: Scalar, other: MultiVector
     ));
 }
 fn scalar_antiRejectViaHorizonFrom_plane(self_: Scalar, other: Plane) -> Scalar {
-    let other_groups = plane_grouped(other);
-    let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * other_groups.group0_
-    ));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Scalar(right_dual.e4_ * wedge.e321_ * -1.0);
+    return Scalar(pow(other.e321_, 2) * self_.scalar);
 }
 fn scalar_antiRejectViaHorizonFrom_point(self_: Scalar, other: Point) -> Scalar {
     let other_groups = point_grouped(other);
@@ -6620,9 +6224,7 @@ fn scalar_antiRejectViaHorizonFrom_point(self_: Scalar, other: Point) -> Scalar 
     return Scalar((right_dual.e423_ * wedge.e1_) + (right_dual.e431_ * wedge.e2_) + (right_dual.e412_ * wedge.e3_) + (right_dual.e321_ * wedge.e4_));
 }
 fn scalar_antiRejectViaHorizonFrom_scalar(self_: Scalar, other: Scalar) -> Scalar {
-    let wedge: Scalar = Scalar(other.scalar * self_.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return Scalar(right_dual.e1234_ * wedge.scalar);
+    return Scalar(pow(other.scalar, 2) * self_.scalar);
 }
 fn antiScalar_antiReverse(self_: AntiScalar) -> AntiScalar {
     return self_;
@@ -6684,13 +6286,10 @@ fn antiScalar_antiSquareRoot(self_: AntiScalar) -> AntiScalar {
 }
 fn dualNum_antiSupport(self_: DualNum) -> Horizon {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual: AntiScalar = AntiScalar(self_.scalar);
-    return Horizon(right_dual.e1234_ * right_complement.e321_);
+    return Horizon(self_.scalar * self_2.e4_);
 }
 fn flector_antiSupport(self_: Flector) -> Motor {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
     let right_dual_groups: FlectorGroups = FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
@@ -6698,31 +6297,22 @@ fn flector_antiSupport(self_: Flector) -> Motor {
     let right_dual: Flector = flector_degroup(right_dual_groups);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(0.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(right_complement.e321_) * vec4<f32>(right_dual_groups.group1_.xyz, right_dual.e4_) * vec4<f32>(-1.0)
+        /* e23, e31, e12, scalar */ vec4<f32>(self_2.e4_) * vec4<f32>(right_dual_groups.group1_.xyz, right_dual.e4_) * vec4<f32>(-1.0)
     ));
 }
 fn horizon_antiSupport(self_: Horizon) -> Scalar {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual: Origin = Origin(self_.e321_ * -1.0);
-    return Scalar(right_complement.e321_ * right_dual.e4_ * -1.0);
+    return Scalar(self_.e321_ * self_2.e4_);
 }
 fn line_antiSupport(self_: Line) -> Point {
-    let self_groups = line_grouped(self_);
-    let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ self_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
+    let right_complement: Horizon = Horizon(1.0);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(right_complement.e321_, right_complement.e321_, right_complement.e321_, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(right_complement.e321_, right_complement.e321_, right_complement.e321_, 0.0) * vec4<f32>(vec4<f32>(self_.e23_ * -1.0, self_.e31_ * -1.0, self_.e12_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn motor_antiSupport(self_: Motor) -> Flector {
     let self_groups = motor_grouped(self_);
-    let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_complement: Horizon = Horizon(1.0);
     let right_dual_groups: MotorGroups = MotorGroups(
         /* e41, e42, e43, e1234 */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
@@ -6735,8 +6325,7 @@ fn motor_antiSupport(self_: Motor) -> Flector {
 }
 fn multiVector_antiSupport(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
+    let right_complement: Horizon = Horizon(1.0);
     let right_dual_groups: MultiVectorGroups = MultiVectorGroups(
         /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
@@ -6755,26 +6344,18 @@ fn multiVector_antiSupport(self_: MultiVector) -> MultiVector {
 }
 fn plane_antiSupport(self_: Plane) -> Scalar {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual: Origin = Origin(self_.e321_ * -1.0);
-    return Scalar(right_complement.e321_ * right_dual.e4_ * -1.0);
+    return Scalar(self_2.e4_ * self_.e321_);
 }
 fn point_antiSupport(self_: Point) -> Line {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
-    );
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(right_complement.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(self_2.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0) * vec4<f32>(-1.0)
     ));
 }
 fn scalar_antiSupport(self_: Scalar) -> Horizon {
     let self_2: Origin = Origin(1.0);
-    let right_complement: Horizon = Horizon(self_2.e4_);
-    let right_dual: AntiScalar = AntiScalar(self_.scalar);
-    return Horizon(right_dual.e1234_ * right_complement.e321_);
+    return Horizon(self_2.e4_ * self_.scalar);
 }
 fn antiScalar_antiWedge_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
     return AntiScalar(other.e1234_ * self_.e1234_);
@@ -7561,10 +7142,7 @@ fn origin_constraintValid(self_: Origin) -> Origin {
     return self_;
 }
 fn dualNum_constraintViolation(self_: DualNum) -> AntiScalar {
-    let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(pow(self_.scalar, 2), self_.scalar * self_.e1234_, 0.0, 0.0) * vec4<f32>(1.0, 2.0)
-    ));
-    return AntiScalar(geometric_product.e1234_);
+    return AntiScalar(self_.scalar * self_.e1234_ * 2.0);
 }
 fn flector_constraintViolation(self_: Flector) -> DualNum {
     let self_groups = flector_grouped(self_);
@@ -7572,19 +7150,13 @@ fn flector_constraintViolation(self_: Flector) -> DualNum {
         /* e1, e2, e3, e4 */ self_groups.group0_, 
         /* e423, e431, e412, e321 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
-    let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, (reverse.e321_ * self_.e4_) - (reverse.e2_ * self_.e431_) - (reverse.e3_ * self_.e412_) - (reverse.e4_ * self_.e321_), 0.0, 0.0) + ((vec4<f32>(self_.e1_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e1_, reverse.e423_, 0.0, 0.0)) + ((vec4<f32>(self_.e2_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e2_, reverse.e431_, 0.0, 0.0)) + ((vec4<f32>(self_.e3_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e3_, reverse.e412_, 0.0, 0.0)) - (vec4<f32>(reverse.e321_, reverse.e1_, 0.0, 0.0) * self_groups.group1_.wxzw)
-    );
-    let dot_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e321_, 2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(dot_product.scalar * -1.0, 0.0, 0.0, 0.0) + geometric_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(pow(self_.e321_, 2) - pow(self_.e1_, 2) - pow(self_.e2_, 2) - pow(self_.e3_, 2), 0.0, 0.0, 0.0) + vec4<f32>((reverse.e1_ * self_.e1_) + (reverse.e2_ * self_.e2_) + (reverse.e3_ * self_.e3_) - (reverse.e321_ * self_.e321_), (reverse.e423_ * self_.e1_) + (reverse.e431_ * self_.e2_) + (reverse.e412_ * self_.e3_) + (reverse.e321_ * self_.e4_) - (reverse.e1_ * self_.e423_) - (reverse.e2_ * self_.e431_) - (reverse.e3_ * self_.e412_) - (reverse.e4_ * self_.e321_), 0.0, 0.0)
     ));
 }
 fn horizon_constraintViolation(self_: Horizon) -> Scalar {
     let reverse: Horizon = Horizon(self_.e321_ * -1.0);
-    let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
-    let dot_product: Scalar = Scalar(pow(self_.e321_, 2) * -1.0);
-    return Scalar(geometric_product.scalar - dot_product.scalar);
+    return Scalar(pow(self_.e321_, 2) - (reverse.e321_ * self_.e321_));
 }
 fn line_constraintViolation(self_: Line) -> DualNum {
     let self_groups = line_grouped(self_);
@@ -7592,12 +7164,8 @@ fn line_constraintViolation(self_: Line) -> DualNum {
         /* e41, e42, e43 */ self_groups.group0_ * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group1_ * vec4<f32>(-1.0)
     ));
-    let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, -(reverse.e23_ * self_.e41_) - (reverse.e31_ * self_.e42_) - (reverse.e12_ * self_.e43_), 0.0, 0.0) - ((vec4<f32>(self_.e23_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e23_, reverse.e41_, 0.0, 0.0)) - ((vec4<f32>(self_.e31_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e31_, reverse.e42_, 0.0, 0.0)) - ((vec4<f32>(self_.e12_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e12_, reverse.e43_, 0.0, 0.0))
-    );
-    let dot_product: Scalar = Scalar(-pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(dot_product.scalar * -1.0, 0.0, 0.0, 0.0) + geometric_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(-(reverse.e23_ * self_.e23_) - (reverse.e31_ * self_.e31_) - (reverse.e12_ * self_.e12_), -(reverse.e41_ * self_.e23_) - (reverse.e42_ * self_.e31_) - (reverse.e43_ * self_.e12_) - (reverse.e23_ * self_.e41_) - (reverse.e31_ * self_.e42_) - (reverse.e12_ * self_.e43_), 0.0, 0.0) + vec4<f32>(pow(self_.e23_, 2) + pow(self_.e31_, 2) + pow(self_.e12_, 2), 0.0, 0.0, 0.0)
     ));
 }
 fn motor_constraintViolation(self_: Motor) -> DualNum {
@@ -7606,12 +7174,8 @@ fn motor_constraintViolation(self_: Motor) -> DualNum {
         /* e41, e42, e43, e1234 */ self_groups.group0_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ self_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
     ));
-    let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, (reverse.scalar * self_.e1234_) - (reverse.e23_ * self_.e41_) - (reverse.e31_ * self_.e42_) - (reverse.e12_ * self_.e43_), 0.0, 0.0) + ((vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.scalar, reverse.e1234_, 0.0, 0.0)) - ((vec4<f32>(self_.e23_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e23_, reverse.e41_, 0.0, 0.0)) - ((vec4<f32>(self_.e31_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e31_, reverse.e42_, 0.0, 0.0)) - ((vec4<f32>(self_.e12_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(reverse.e12_, reverse.e43_, 0.0, 0.0))
-    );
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(dot_product.scalar * -1.0, 0.0, 0.0, 0.0) + geometric_product_groups.group0_
+        /* scalar, e1234 */ vec4<f32>(pow(self_.e23_, 2) + pow(self_.e31_, 2) + pow(self_.e12_, 2) - pow(self_.scalar, 2), 0.0, 0.0, 0.0) + vec4<f32>((reverse.scalar * self_.scalar) - (reverse.e23_ * self_.e23_) - (reverse.e31_ * self_.e31_) - (reverse.e12_ * self_.e12_), (reverse.e1234_ * self_.scalar) + (reverse.scalar * self_.e1234_) - (reverse.e41_ * self_.e23_) - (reverse.e42_ * self_.e31_) - (reverse.e43_ * self_.e12_) - (reverse.e23_ * self_.e41_) - (reverse.e31_ * self_.e42_) - (reverse.e12_ * self_.e43_), 0.0, 0.0)
     ));
 }
 fn multiVector_constraintViolation(self_: MultiVector) -> MultiVector {
@@ -7631,9 +7195,8 @@ fn multiVector_constraintViolation(self_: MultiVector) -> MultiVector {
         /* e23, e31, e12 */ vec4<f32>(0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(0.0)
     );
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2) + pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2) - pow(self_.e321_, 2));
     return multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(dot_product.scalar * -1.0, 0.0, 0.0, 0.0) + geometric_product_groups.group0_, 
+        /* scalar, e1234 */ vec4<f32>(pow(self_.e23_, 2) + pow(self_.e31_, 2) + pow(self_.e12_, 2) + pow(self_.e321_, 2) - pow(self_.scalar, 2) - pow(self_.e1_, 2) - pow(self_.e2_, 2) - pow(self_.e3_, 2), 0.0, 0.0, 0.0) + geometric_product_groups.group0_, 
         /* e1, e2, e3, e4 */ geometric_product_groups.group1_, 
         /* e41, e42, e43 */ vec4<f32>(0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0), 
@@ -7645,9 +7208,7 @@ fn plane_constraintViolation(self_: Plane) -> Scalar {
     let reverse: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
     ));
-    let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
-    let dot_product: Scalar = Scalar(pow(self_.e321_, 2) * -1.0);
-    return Scalar(geometric_product.scalar - dot_product.scalar);
+    return Scalar(pow(self_.e321_, 2) - (reverse.e321_ * self_.e321_));
 }
 fn point_constraintViolation(self_: Point) -> Scalar {
     return Scalar(0.0);
@@ -7829,46 +7390,29 @@ fn scalar_doubleComplement(self_: Scalar) -> Scalar {
     return self_;
 }
 fn horizon_fix(self_: Horizon) -> Horizon {
-    let reverse: Horizon = Horizon(self_.e321_ * -1.0);
-    let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
-    let square_root: Scalar = Scalar(pow(geometric_product.scalar, 0.5));
-    let dot_product: Scalar = Scalar(pow(square_root.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product_2: Scalar = Scalar(other.scalar * square_root.scalar);
-    return Horizon(self_.e321_ * geometric_product_2.scalar);
+    let square_root: Scalar = Scalar(self_.e321_);
+    let other: Scalar = Scalar(pow(square_root.scalar, -2));
+    return Horizon(self_.e321_ * other.scalar * square_root.scalar);
 }
 fn plane_fix(self_: Plane) -> Plane {
     let self_groups = plane_grouped(self_);
-    let reverse: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ self_groups.group0_ * vec4<f32>(-1.0)
-    ));
-    let geometric_product: Scalar = Scalar(reverse.e321_ * self_.e321_ * -1.0);
-    let square_root: Scalar = Scalar(pow(geometric_product.scalar, 0.5));
-    let dot_product: Scalar = Scalar(pow(square_root.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product_2: Scalar = Scalar(other.scalar * square_root.scalar);
+    let square_root: Scalar = Scalar(pow((self_groups.group0_ * vec4<f32>(-1.0)).w, 0.5) * pow(self_.e321_, 0.5) * -1.0);
+    let other: Scalar = Scalar(pow(square_root.scalar, -2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(geometric_product_2.scalar) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar * square_root.scalar) * self_groups.group0_
     ));
 }
 fn point_fix(self_: Point) -> Point {
     let self_groups = point_grouped(self_);
-    let geometric_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2));
-    let square_root: Scalar = Scalar(pow(geometric_product.scalar, 0.5));
-    let dot_product: Scalar = Scalar(pow(square_root.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product_2: Scalar = Scalar(other.scalar * square_root.scalar);
+    let square_root: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2));
+    let other: Scalar = Scalar(pow(square_root.scalar, -2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(geometric_product_2.scalar) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar * square_root.scalar) * self_groups.group0_
     ));
 }
 fn scalar_fix(self_: Scalar) -> Scalar {
-    let geometric_product: Scalar = Scalar(pow(self_.scalar, 2));
-    let square_root: Scalar = Scalar(pow(geometric_product.scalar, 0.5));
-    let dot_product: Scalar = Scalar(pow(square_root.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product_2: Scalar = Scalar(other.scalar * square_root.scalar);
-    return Scalar(geometric_product_2.scalar * self_.scalar);
+    let other: Scalar = Scalar(pow(self_.scalar, -2));
+    return Scalar(other.scalar * pow(self_.scalar, 2));
 }
 fn dualNum_flatBulk(self_: DualNum) -> Scalar {
     return Scalar(self_.scalar);
@@ -8834,30 +8378,19 @@ fn scalar_geometricAntiProduct_point(self_: Scalar, other: Point) -> Horizon {
     return Horizon(other.e4_ * self_.scalar);
 }
 fn antiScalar_geometricAntiQuotient_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
-    return AntiScalar(geometric_anti_product.e1234_ * self_.e1234_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return AntiScalar(other.e1234_ * other.e1234_ * self_.e1234_);
 }
 fn antiScalar_geometricAntiQuotient_dualNum(self_: AntiScalar, other: DualNum) -> DualNum {
-    let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * geometric_anti_product_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.e1234_ * other.scalar, other.e1234_ * other.e1234_, 0.0, 0.0)
     ));
 }
 fn antiScalar_geometricAntiQuotient_flector(self_: AntiScalar, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -8871,9 +8404,8 @@ fn antiScalar_geometricAntiQuotient_flector(self_: AntiScalar, other: Flector) -
 }
 fn antiScalar_geometricAntiQuotient_line(self_: AntiScalar, other: Line) -> Line {
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -8887,9 +8419,8 @@ fn antiScalar_geometricAntiQuotient_line(self_: AntiScalar, other: Line) -> Line
 }
 fn antiScalar_geometricAntiQuotient_motor(self_: AntiScalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -8903,9 +8434,8 @@ fn antiScalar_geometricAntiQuotient_motor(self_: AntiScalar, other: Motor) -> Mo
 }
 fn antiScalar_geometricAntiQuotient_multiVector(self_: AntiScalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -8924,57 +8454,32 @@ fn antiScalar_geometricAntiQuotient_multiVector(self_: AntiScalar, other: MultiV
     ));
 }
 fn antiScalar_geometricAntiQuotient_origin(self_: AntiScalar, other: Origin) -> Origin {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
-    return Origin(self_.e1234_ * geometric_anti_product.e4_);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return Origin(other.e1234_ * self_.e1234_ * other.e4_);
 }
 fn antiScalar_geometricAntiQuotient_plane(self_: AntiScalar, other: Plane) -> Plane {
-    let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * geometric_anti_product_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1234_ * other.e423_, other.e1234_ * other.e431_, other.e1234_ * other.e412_, other.e1234_ * other.e321_)
     ));
 }
 fn antiScalar_geometricAntiQuotient_point(self_: AntiScalar, other: Point) -> Point {
-    let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.e1234_) * geometric_anti_product_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e1234_ * other.e1_, other.e1234_ * other.e2_, other.e1234_ * other.e3_, other.e1234_ * other.e4_)
     ));
 }
 fn dualNum_geometricAntiQuotient_antiScalar(self_: DualNum, other: AntiScalar) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.e1234_ * other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
 }
 fn dualNum_geometricAntiQuotient_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ vec4<f32>((geometric_anti_product.scalar * self_.e1234_) + (geometric_anti_product.e1234_ * self_.scalar), geometric_anti_product.e1234_ * self_.e1234_, 0.0, 0.0)
@@ -8983,9 +8488,8 @@ fn dualNum_geometricAntiQuotient_dualNum(self_: DualNum, other: DualNum) -> Dual
 fn dualNum_geometricAntiQuotient_flector(self_: DualNum, other: Flector) -> Flector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9000,9 +8504,8 @@ fn dualNum_geometricAntiQuotient_flector(self_: DualNum, other: Flector) -> Flec
 }
 fn dualNum_geometricAntiQuotient_line(self_: DualNum, other: Line) -> Line {
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9016,9 +8519,8 @@ fn dualNum_geometricAntiQuotient_line(self_: DualNum, other: Line) -> Line {
 }
 fn dualNum_geometricAntiQuotient_motor(self_: DualNum, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9033,9 +8535,8 @@ fn dualNum_geometricAntiQuotient_motor(self_: DualNum, other: Motor) -> Motor {
 fn dualNum_geometricAntiQuotient_multiVector(self_: DualNum, other: MultiVector) -> MultiVector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9055,9 +8556,7 @@ fn dualNum_geometricAntiQuotient_multiVector(self_: DualNum, other: MultiVector)
     ));
 }
 fn dualNum_geometricAntiQuotient_origin(self_: DualNum, other: Origin) -> Flector {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e1234_ * geometric_anti_product.e4_), 
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.scalar * geometric_anti_product.e4_)
@@ -9066,13 +8565,8 @@ fn dualNum_geometricAntiQuotient_origin(self_: DualNum, other: Origin) -> Flecto
 fn dualNum_geometricAntiQuotient_plane(self_: DualNum, other: Plane) -> Flector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(self_groups.group0_.xxzw.xy, self_.scalar, 0.0) * vec4<f32>((vec4<f32>(1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)).xyz, 0.0) * vec4<f32>(geometric_anti_product_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
@@ -9081,13 +8575,8 @@ fn dualNum_geometricAntiQuotient_plane(self_: DualNum, other: Plane) -> Flector 
 }
 fn dualNum_geometricAntiQuotient_point(self_: DualNum, other: Point) -> Flector {
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9097,9 +8586,7 @@ fn dualNum_geometricAntiQuotient_point(self_: DualNum, other: Point) -> Flector 
 }
 fn flector_geometricAntiQuotient_antiScalar(self_: Flector, other: AntiScalar) -> Flector {
     let self_groups = flector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(other.e1234_));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_
@@ -9108,13 +8595,8 @@ fn flector_geometricAntiQuotient_antiScalar(self_: Flector, other: AntiScalar) -
 fn flector_geometricAntiQuotient_dualNum(self_: Flector, other: DualNum) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_anti_product: DualNum = dualNum_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9125,9 +8607,8 @@ fn flector_geometricAntiQuotient_dualNum(self_: Flector, other: DualNum) -> Flec
 fn flector_geometricAntiQuotient_flector(self_: Flector, other: Flector) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9143,9 +8624,8 @@ fn flector_geometricAntiQuotient_flector(self_: Flector, other: Flector) -> Moto
 fn flector_geometricAntiQuotient_line(self_: Flector, other: Line) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9161,9 +8641,8 @@ fn flector_geometricAntiQuotient_line(self_: Flector, other: Line) -> Flector {
 fn flector_geometricAntiQuotient_motor(self_: Flector, other: Motor) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9179,9 +8658,8 @@ fn flector_geometricAntiQuotient_motor(self_: Flector, other: Motor) -> Flector 
 fn flector_geometricAntiQuotient_multiVector(self_: Flector, other: MultiVector) -> MultiVector {
     let self_groups = flector_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9202,9 +8680,7 @@ fn flector_geometricAntiQuotient_multiVector(self_: Flector, other: MultiVector)
 }
 fn flector_geometricAntiQuotient_origin(self_: Flector, other: Origin) -> Motor {
     let self_groups = flector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(self_groups.group1_.xyz, self_.e4_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0)
@@ -9213,13 +8689,8 @@ fn flector_geometricAntiQuotient_origin(self_: Flector, other: Origin) -> Motor 
 fn flector_geometricAntiQuotient_plane(self_: Flector, other: Plane) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -9230,13 +8701,8 @@ fn flector_geometricAntiQuotient_plane(self_: Flector, other: Plane) -> Motor {
 fn flector_geometricAntiQuotient_point(self_: Flector, other: Point) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -9245,28 +8711,17 @@ fn flector_geometricAntiQuotient_point(self_: Flector, other: Point) -> Motor {
     ));
 }
 fn horizon_geometricAntiQuotient_antiScalar(self_: Horizon, other: AntiScalar) -> Horizon {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
-    return Horizon(geometric_anti_product.e1234_ * self_.e321_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return Horizon(other.e1234_ * other.e1234_ * self_.e321_);
 }
 fn horizon_geometricAntiQuotient_dualNum(self_: Horizon, other: DualNum) -> Horizon {
-    let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    return Horizon(geometric_anti_product.e1234_ * self_.e321_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return Horizon(other.e1234_ * other.e1234_ * self_.e321_);
 }
 fn horizon_geometricAntiQuotient_flector(self_: Horizon, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9280,25 +8735,15 @@ fn horizon_geometricAntiQuotient_flector(self_: Horizon, other: Flector) -> Moto
     ));
 }
 fn horizon_geometricAntiQuotient_line(self_: Horizon, other: Line) -> Point {
-    let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group1_
-    );
+    let other: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(geometric_anti_product_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e321_, self_.e321_, self_.e321_, 0.0) * vec4<f32>(vec4<f32>(other.e1234_ * other.e41_, other.e1234_ * other.e42_, other.e1234_ * other.e43_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn horizon_geometricAntiQuotient_motor(self_: Horizon, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9313,9 +8758,8 @@ fn horizon_geometricAntiQuotient_motor(self_: Horizon, other: Motor) -> Flector 
 }
 fn horizon_geometricAntiQuotient_multiVector(self_: Horizon, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9335,43 +8779,23 @@ fn horizon_geometricAntiQuotient_multiVector(self_: Horizon, other: MultiVector)
     ));
 }
 fn horizon_geometricAntiQuotient_origin(self_: Horizon, other: Origin) -> Scalar {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
-    return Scalar(self_.e321_ * geometric_anti_product.e4_ * -1.0);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return Scalar(other.e1234_ * self_.e321_ * other.e4_ * -1.0);
 }
 fn horizon_geometricAntiQuotient_plane(self_: Horizon, other: Plane) -> Line {
-    let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * geometric_anti_product_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e1234_ * other.e423_, other.e1234_ * other.e431_, other.e1234_ * other.e412_, other.e1234_ * other.e321_) * vec4<f32>(-1.0)
     ));
 }
 fn horizon_geometricAntiQuotient_point(self_: Horizon, other: Point) -> Scalar {
-    let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product: Point = point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    ));
-    return Scalar(self_.e321_ * geometric_anti_product.e4_ * -1.0);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return Scalar(other.e1234_ * self_.e321_ * other.e4_ * -1.0);
 }
 fn line_geometricAntiQuotient_antiScalar(self_: Line, other: AntiScalar) -> Line {
     let self_groups = line_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(other.e1234_));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
         /* e23, e31, e12 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_
@@ -9380,13 +8804,8 @@ fn line_geometricAntiQuotient_antiScalar(self_: Line, other: AntiScalar) -> Line
 fn line_geometricAntiQuotient_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
@@ -9396,9 +8815,8 @@ fn line_geometricAntiQuotient_dualNum(self_: Line, other: DualNum) -> Line {
 fn line_geometricAntiQuotient_flector(self_: Line, other: Flector) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9414,9 +8832,8 @@ fn line_geometricAntiQuotient_flector(self_: Line, other: Flector) -> Flector {
 fn line_geometricAntiQuotient_line(self_: Line, other: Line) -> Motor {
     let self_groups = line_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9432,9 +8849,8 @@ fn line_geometricAntiQuotient_line(self_: Line, other: Line) -> Motor {
 fn line_geometricAntiQuotient_motor(self_: Line, other: Motor) -> Motor {
     let self_groups = line_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9450,9 +8866,8 @@ fn line_geometricAntiQuotient_motor(self_: Line, other: Motor) -> Motor {
 fn line_geometricAntiQuotient_multiVector(self_: Line, other: MultiVector) -> MultiVector {
     let self_groups = line_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9473,9 +8888,7 @@ fn line_geometricAntiQuotient_multiVector(self_: Line, other: MultiVector) -> Mu
 }
 fn line_geometricAntiQuotient_origin(self_: Line, other: Origin) -> Flector {
     let self_groups = line_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e4_, geometric_anti_product.e4_, geometric_anti_product.e4_, 0.0) * vec4<f32>(self_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e4_, geometric_anti_product.e4_, geometric_anti_product.e4_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
@@ -9484,13 +8897,8 @@ fn line_geometricAntiQuotient_origin(self_: Line, other: Origin) -> Flector {
 fn line_geometricAntiQuotient_plane(self_: Line, other: Plane) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9501,13 +8909,8 @@ fn line_geometricAntiQuotient_plane(self_: Line, other: Plane) -> Flector {
 fn line_geometricAntiQuotient_point(self_: Line, other: Point) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9517,9 +8920,7 @@ fn line_geometricAntiQuotient_point(self_: Line, other: Point) -> Flector {
 }
 fn motor_geometricAntiQuotient_antiScalar(self_: Motor, other: AntiScalar) -> Motor {
     let self_groups = motor_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(other.e1234_));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_
@@ -9528,13 +8929,8 @@ fn motor_geometricAntiQuotient_antiScalar(self_: Motor, other: AntiScalar) -> Mo
 fn motor_geometricAntiQuotient_dualNum(self_: Motor, other: DualNum) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
@@ -9544,9 +8940,8 @@ fn motor_geometricAntiQuotient_dualNum(self_: Motor, other: DualNum) -> Motor {
 fn motor_geometricAntiQuotient_flector(self_: Motor, other: Flector) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9562,9 +8957,8 @@ fn motor_geometricAntiQuotient_flector(self_: Motor, other: Flector) -> Flector 
 fn motor_geometricAntiQuotient_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9580,9 +8974,8 @@ fn motor_geometricAntiQuotient_line(self_: Motor, other: Line) -> Motor {
 fn motor_geometricAntiQuotient_motor(self_: Motor, other: Motor) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9598,9 +8991,8 @@ fn motor_geometricAntiQuotient_motor(self_: Motor, other: Motor) -> Motor {
 fn motor_geometricAntiQuotient_multiVector(self_: Motor, other: MultiVector) -> MultiVector {
     let self_groups = motor_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9621,9 +9013,7 @@ fn motor_geometricAntiQuotient_multiVector(self_: Motor, other: MultiVector) -> 
 }
 fn motor_geometricAntiQuotient_origin(self_: Motor, other: Origin) -> Flector {
     let self_groups = motor_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(self_groups.group1_.xyz, self_.e1234_), 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.scalar)
@@ -9632,13 +9022,8 @@ fn motor_geometricAntiQuotient_origin(self_: Motor, other: Origin) -> Flector {
 fn motor_geometricAntiQuotient_plane(self_: Motor, other: Plane) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9649,13 +9034,8 @@ fn motor_geometricAntiQuotient_plane(self_: Motor, other: Plane) -> Flector {
 fn motor_geometricAntiQuotient_point(self_: Motor, other: Point) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9665,9 +9045,7 @@ fn motor_geometricAntiQuotient_point(self_: Motor, other: Point) -> Flector {
 }
 fn multiVector_geometricAntiQuotient_antiScalar(self_: MultiVector, other: AntiScalar) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(other.e1234_));
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_, 
@@ -9679,13 +9057,8 @@ fn multiVector_geometricAntiQuotient_antiScalar(self_: MultiVector, other: AntiS
 fn multiVector_geometricAntiQuotient_dualNum(self_: MultiVector, other: DualNum) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_anti_product: DualNum = dualNum_degroup(geometric_anti_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -9699,9 +9072,8 @@ fn multiVector_geometricAntiQuotient_dualNum(self_: MultiVector, other: DualNum)
 fn multiVector_geometricAntiQuotient_flector(self_: MultiVector, other: Flector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9720,9 +9092,8 @@ fn multiVector_geometricAntiQuotient_flector(self_: MultiVector, other: Flector)
 fn multiVector_geometricAntiQuotient_line(self_: MultiVector, other: Line) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9741,9 +9112,8 @@ fn multiVector_geometricAntiQuotient_line(self_: MultiVector, other: Line) -> Mu
 fn multiVector_geometricAntiQuotient_motor(self_: MultiVector, other: Motor) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9762,9 +9132,8 @@ fn multiVector_geometricAntiQuotient_motor(self_: MultiVector, other: Motor) -> 
 fn multiVector_geometricAntiQuotient_multiVector(self_: MultiVector, other: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9785,9 +9154,7 @@ fn multiVector_geometricAntiQuotient_multiVector(self_: MultiVector, other: Mult
 }
 fn multiVector_geometricAntiQuotient_origin(self_: MultiVector, other: Origin) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e321_, self_.e4_, 0.0, 0.0) * vec4<f32>(-1.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e4_) * vec4<f32>(self_groups.group3_.xyz, self_.e1234_), 
@@ -9799,13 +9166,8 @@ fn multiVector_geometricAntiQuotient_origin(self_: MultiVector, other: Origin) -
 fn multiVector_geometricAntiQuotient_plane(self_: MultiVector, other: Plane) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -9819,13 +9181,8 @@ fn multiVector_geometricAntiQuotient_plane(self_: MultiVector, other: Plane) -> 
 fn multiVector_geometricAntiQuotient_point(self_: MultiVector, other: Point) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -9837,20 +9194,13 @@ fn multiVector_geometricAntiQuotient_point(self_: MultiVector, other: Point) -> 
     ));
 }
 fn origin_geometricAntiQuotient_antiScalar(self_: Origin, other: AntiScalar) -> Origin {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
-    return Origin(geometric_anti_product.e1234_ * self_.e4_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return Origin(other.e1234_ * other.e1234_ * self_.e4_);
 }
 fn origin_geometricAntiQuotient_dualNum(self_: Origin, other: DualNum) -> Flector {
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_anti_product.e1234_ * self_.e4_), 
@@ -9859,9 +9209,8 @@ fn origin_geometricAntiQuotient_dualNum(self_: Origin, other: DualNum) -> Flecto
 }
 fn origin_geometricAntiQuotient_flector(self_: Origin, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -9876,9 +9225,8 @@ fn origin_geometricAntiQuotient_flector(self_: Origin, other: Flector) -> Motor 
 }
 fn origin_geometricAntiQuotient_line(self_: Origin, other: Line) -> Flector {
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -9892,9 +9240,8 @@ fn origin_geometricAntiQuotient_line(self_: Origin, other: Line) -> Flector {
 }
 fn origin_geometricAntiQuotient_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -9909,9 +9256,8 @@ fn origin_geometricAntiQuotient_motor(self_: Origin, other: Motor) -> Flector {
 }
 fn origin_geometricAntiQuotient_multiVector(self_: Origin, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -9931,20 +9277,13 @@ fn origin_geometricAntiQuotient_multiVector(self_: Origin, other: MultiVector) -
     ));
 }
 fn origin_geometricAntiQuotient_origin(self_: Origin, other: Origin) -> AntiScalar {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
-    return AntiScalar(geometric_anti_product.e4_ * self_.e4_ * -1.0);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return AntiScalar(other.e1234_ * other.e4_ * self_.e4_ * -1.0);
 }
 fn origin_geometricAntiQuotient_plane(self_: Origin, other: Plane) -> Motor {
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -9954,13 +9293,8 @@ fn origin_geometricAntiQuotient_plane(self_: Origin, other: Plane) -> Motor {
 }
 fn origin_geometricAntiQuotient_point(self_: Origin, other: Point) -> Motor {
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -9970,23 +9304,16 @@ fn origin_geometricAntiQuotient_point(self_: Origin, other: Point) -> Motor {
 }
 fn plane_geometricAntiQuotient_antiScalar(self_: Plane, other: AntiScalar) -> Plane {
     let self_groups = plane_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_ * other.e1234_) * self_groups.group0_
     ));
 }
 fn plane_geometricAntiQuotient_dualNum(self_: Plane, other: DualNum) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_anti_product: DualNum = dualNum_degroup(geometric_anti_product_groups);
     return flector_degroup(FlectorGroups(
@@ -9997,9 +9324,8 @@ fn plane_geometricAntiQuotient_dualNum(self_: Plane, other: DualNum) -> Flector 
 fn plane_geometricAntiQuotient_flector(self_: Plane, other: Flector) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -10015,9 +9341,8 @@ fn plane_geometricAntiQuotient_flector(self_: Plane, other: Flector) -> Motor {
 fn plane_geometricAntiQuotient_line(self_: Plane, other: Line) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -10033,9 +9358,8 @@ fn plane_geometricAntiQuotient_line(self_: Plane, other: Line) -> Flector {
 fn plane_geometricAntiQuotient_motor(self_: Plane, other: Motor) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -10051,9 +9375,8 @@ fn plane_geometricAntiQuotient_motor(self_: Plane, other: Motor) -> Flector {
 fn plane_geometricAntiQuotient_multiVector(self_: Plane, other: MultiVector) -> MultiVector {
     let self_groups = plane_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -10074,9 +9397,7 @@ fn plane_geometricAntiQuotient_multiVector(self_: Plane, other: MultiVector) -> 
 }
 fn plane_geometricAntiQuotient_origin(self_: Plane, other: Origin) -> Motor {
     let self_groups = plane_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_anti_product.e4_, geometric_anti_product.e4_, geometric_anti_product.e4_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_anti_product.e4_ * self_.e321_ * -1.0)
@@ -10085,13 +9406,8 @@ fn plane_geometricAntiQuotient_origin(self_: Plane, other: Origin) -> Motor {
 fn plane_geometricAntiQuotient_plane(self_: Plane, other: Plane) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -10102,13 +9418,8 @@ fn plane_geometricAntiQuotient_plane(self_: Plane, other: Plane) -> Motor {
 fn plane_geometricAntiQuotient_point(self_: Plane, other: Point) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -10118,23 +9429,16 @@ fn plane_geometricAntiQuotient_point(self_: Plane, other: Point) -> Motor {
 }
 fn point_geometricAntiQuotient_antiScalar(self_: Point, other: AntiScalar) -> Point {
     let self_groups = point_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_ * other.e1234_) * self_groups.group0_
     ));
 }
 fn point_geometricAntiQuotient_dualNum(self_: Point, other: DualNum) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.e1234_, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
@@ -10144,9 +9448,8 @@ fn point_geometricAntiQuotient_dualNum(self_: Point, other: DualNum) -> Flector 
 fn point_geometricAntiQuotient_flector(self_: Point, other: Flector) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -10162,9 +9465,8 @@ fn point_geometricAntiQuotient_flector(self_: Point, other: Flector) -> Motor {
 fn point_geometricAntiQuotient_line(self_: Point, other: Line) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: LineGroups = LineGroups(
@@ -10180,9 +9482,8 @@ fn point_geometricAntiQuotient_line(self_: Point, other: Line) -> Flector {
 fn point_geometricAntiQuotient_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MotorGroups = MotorGroups(
@@ -10198,9 +9499,8 @@ fn point_geometricAntiQuotient_motor(self_: Point, other: Motor) -> Flector {
 fn point_geometricAntiQuotient_multiVector(self_: Point, other: MultiVector) -> MultiVector {
     let self_groups = point_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -10221,9 +9521,7 @@ fn point_geometricAntiQuotient_multiVector(self_: Point, other: MultiVector) -> 
 }
 fn point_geometricAntiQuotient_origin(self_: Point, other: Origin) -> Motor {
     let self_groups = point_grouped(self_);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
+    let geometric_anti_product: Origin = Origin(1.0/(other.e4_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_anti_product.e4_ * self_.e4_ * -1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_anti_product.e4_, geometric_anti_product.e4_, geometric_anti_product.e4_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0)
@@ -10232,13 +9530,8 @@ fn point_geometricAntiQuotient_origin(self_: Point, other: Origin) -> Motor {
 fn point_geometricAntiQuotient_plane(self_: Point, other: Plane) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2)) * other_groups.group0_
     );
     let geometric_anti_product: Plane = plane_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -10249,13 +9542,8 @@ fn point_geometricAntiQuotient_plane(self_: Point, other: Plane) -> Motor {
 fn point_geometricAntiQuotient_point(self_: Point, other: Point) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e4_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_anti_product: Point = point_degroup(geometric_anti_product_groups);
     return motor_degroup(MotorGroups(
@@ -10264,28 +9552,17 @@ fn point_geometricAntiQuotient_point(self_: Point, other: Point) -> Motor {
     ));
 }
 fn scalar_geometricAntiQuotient_antiScalar(self_: Scalar, other: AntiScalar) -> Scalar {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * other.e1234_);
-    return Scalar(geometric_anti_product.e1234_ * self_.scalar);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return Scalar(other.e1234_ * other.e1234_ * self_.scalar);
 }
 fn scalar_geometricAntiQuotient_dualNum(self_: Scalar, other: DualNum) -> Scalar {
-    let other_groups = dualNum_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    return Scalar(geometric_anti_product.e1234_ * self_.scalar);
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, -2));
+    return Scalar(other.e1234_ * other.e1234_ * self_.scalar);
 }
 fn scalar_geometricAntiQuotient_flector(self_: Scalar, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: FlectorGroups = FlectorGroups(
@@ -10299,42 +9576,23 @@ fn scalar_geometricAntiQuotient_flector(self_: Scalar, other: Flector) -> Flecto
     ));
 }
 fn scalar_geometricAntiQuotient_line(self_: Scalar, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group1_
-    );
+    let other: AntiScalar = AntiScalar(-pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * geometric_anti_product_groups.group0_
+        /* e23, e31, e12 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e1234_ * other.e41_, other.e1234_ * other.e42_, other.e1234_ * other.e43_, 0.0)
     ));
 }
 fn scalar_geometricAntiQuotient_motor(self_: Scalar, other: Motor) -> Motor {
-    let other_groups = motor_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(other.e1234_) * other_groups.group0_, 
-        /* e23, e31, e12, scalar */ vec4<f32>(other.e1234_) * other_groups.group1_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e1234_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(0.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(self_.scalar) * geometric_anti_product_groups.group0_
+        /* e23, e31, e12, scalar */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1234_ * other.e41_, other.e1234_ * other.e42_, other.e1234_ * other.e43_, other.e1234_ * other.e1234_)
     ));
 }
 fn scalar_geometricAntiQuotient_multiVector(self_: Scalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2));
     let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
+        /* e1234 */ vec4<f32>(pow(other.e1234_, 2) + pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2) - pow(other.e4_, 2) - pow(other.e41_, 2) - pow(other.e42_, 2) - pow(other.e43_, 2), 0.0, 0.0, 0.0)
     );
     let other: AntiScalar = antiScalar_degroup(other_groups);
     let geometric_anti_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -10354,36 +9612,18 @@ fn scalar_geometricAntiQuotient_multiVector(self_: Scalar, other: MultiVector) -
     ));
 }
 fn scalar_geometricAntiQuotient_origin(self_: Scalar, other: Origin) -> Horizon {
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: Origin = Origin(other.e1234_ * other.e4_);
-    return Horizon(geometric_anti_product.e4_ * self_.scalar);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return Horizon(other.e1234_ * other.e4_ * self_.scalar);
 }
 fn scalar_geometricAntiQuotient_plane(self_: Scalar, other: Plane) -> Point {
-    let other_groups = plane_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    );
+    let other: AntiScalar = AntiScalar(pow(other.e423_, 2) + pow(other.e431_, 2) + pow(other.e412_, 2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.scalar, self_.scalar, self_.scalar, 0.0) * vec4<f32>(geometric_anti_product_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.scalar, self_.scalar, self_.scalar, 0.0) * vec4<f32>(vec4<f32>(other.e1234_ * other.e423_, other.e1234_ * other.e431_, other.e1234_ * other.e412_, other.e1234_ * other.e321_).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn scalar_geometricAntiQuotient_point(self_: Scalar, other: Point) -> Horizon {
-    let other_groups = point_grouped(other);
-    let anti_dot_product: AntiScalar = AntiScalar(pow(other.e4_, 2) * -1.0);
-    let other_groups: AntiScalarGroups = AntiScalarGroups(
-        /* e1234 */ vec4<f32>(1.0/(anti_dot_product.e1234_), 0.0, 0.0, 0.0)
-    );
-    let other: AntiScalar = antiScalar_degroup(other_groups);
-    let geometric_anti_product: Point = point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * other_groups.group0_
-    ));
-    return Horizon(geometric_anti_product.e4_ * self_.scalar);
+    let other: AntiScalar = AntiScalar(pow(other.e4_, -2) * -1.0);
+    return Horizon(other.e1234_ * other.e4_ * self_.scalar);
 }
 fn antiScalar_geometricProduct_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
     return AntiScalar(self_.e1234_ * other.scalar);
@@ -11216,22 +10456,13 @@ fn scalar_geometricProduct_scalar(self_: Scalar, other: Scalar) -> Scalar {
     return Scalar(other.scalar * self_.scalar);
 }
 fn antiScalar_geometricQuotient_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
-    let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    return AntiScalar(self_.e1234_ * geometric_product.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return AntiScalar(self_.e1234_ * other.scalar * other.scalar);
 }
 fn antiScalar_geometricQuotient_flector(self_: AntiScalar, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11245,48 +10476,27 @@ fn antiScalar_geometricQuotient_flector(self_: AntiScalar, other: Flector) -> Fl
     ));
 }
 fn antiScalar_geometricQuotient_horizon(self_: AntiScalar, other: Horizon) -> Origin {
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
-    return Origin(self_.e1234_ * geometric_product.e321_ * -1.0);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return Origin(self_.e1234_ * other.e321_ * other.scalar * -1.0);
 }
 fn antiScalar_geometricQuotient_line(self_: AntiScalar, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group1_
-    );
+    let other: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * geometric_product_groups.group1_, 
+        /* e41, e42, e43 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e23_ * other.scalar, other.e31_ * other.scalar, other.e12_ * other.scalar, 0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn antiScalar_geometricQuotient_motor(self_: AntiScalar, other: Motor) -> Motor {
-    let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(other.scalar) * other_groups.group0_, 
-        /* e23, e31, e12, scalar */ vec4<f32>(other.scalar) * other_groups.group1_
-    );
+    let other: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(self_.e1234_) * geometric_product_groups.group1_, 
+        /* e41, e42, e43, e1234 */ vec4<f32>(self_.e1234_) * vec4<f32>(other.e23_ * other.scalar, other.e31_ * other.scalar, other.e12_ * other.scalar, other.scalar * other.scalar), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
 fn antiScalar_geometricQuotient_multiVector(self_: AntiScalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -11306,46 +10516,23 @@ fn antiScalar_geometricQuotient_multiVector(self_: AntiScalar, other: MultiVecto
     ));
 }
 fn antiScalar_geometricQuotient_plane(self_: AntiScalar, other: Plane) -> Origin {
-    let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
-    ));
-    return Origin(self_.e1234_ * geometric_product.e321_ * -1.0);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return Origin(self_.e1234_ * other.e321_ * other.scalar * -1.0);
 }
 fn antiScalar_geometricQuotient_point(self_: AntiScalar, other: Point) -> Plane {
-    let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
-    );
+    let other: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_, self_.e1234_, self_.e1234_, 0.0) * vec4<f32>(geometric_product_groups.group0_.xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_, self_.e1234_, self_.e1234_, 0.0) * vec4<f32>(vec4<f32>(other.e1_ * other.scalar, other.e2_ * other.scalar, other.e3_ * other.scalar, other.e4_ * other.scalar).xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0)
     ));
 }
 fn antiScalar_geometricQuotient_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
-    return AntiScalar(self_.e1234_ * geometric_product.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return AntiScalar(self_.e1234_ * other.scalar * other.scalar);
 }
 fn dualNum_geometricQuotient_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return dualNum_degroup(DualNumGroups(
         /* scalar, e1234 */ vec4<f32>(geometric_product.scalar * self_.scalar, (geometric_product.scalar * self_.e1234_) + (geometric_product.e1234_ * self_.scalar), 0.0, 0.0)
@@ -11354,9 +10541,8 @@ fn dualNum_geometricQuotient_dualNum(self_: DualNum, other: DualNum) -> DualNum 
 fn dualNum_geometricQuotient_flector(self_: DualNum, other: Flector) -> Flector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11370,9 +10556,7 @@ fn dualNum_geometricQuotient_flector(self_: DualNum, other: Flector) -> Flector 
     ));
 }
 fn dualNum_geometricQuotient_horizon(self_: DualNum, other: Horizon) -> Flector {
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e1234_ * geometric_product.e321_ * -1.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.scalar * geometric_product.e321_)
@@ -11380,9 +10564,8 @@ fn dualNum_geometricQuotient_horizon(self_: DualNum, other: Horizon) -> Flector 
 }
 fn dualNum_geometricQuotient_line(self_: DualNum, other: Line) -> Line {
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -11396,9 +10579,8 @@ fn dualNum_geometricQuotient_line(self_: DualNum, other: Line) -> Line {
 }
 fn dualNum_geometricQuotient_motor(self_: DualNum, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -11413,9 +10595,8 @@ fn dualNum_geometricQuotient_motor(self_: DualNum, other: Motor) -> Motor {
 fn dualNum_geometricQuotient_multiVector(self_: DualNum, other: MultiVector) -> MultiVector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -11436,13 +10617,8 @@ fn dualNum_geometricQuotient_multiVector(self_: DualNum, other: MultiVector) -> 
 }
 fn dualNum_geometricQuotient_plane(self_: DualNum, other: Plane) -> Flector {
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -11453,13 +10629,8 @@ fn dualNum_geometricQuotient_plane(self_: DualNum, other: Plane) -> Flector {
 fn dualNum_geometricQuotient_point(self_: DualNum, other: Point) -> Flector {
     let self_groups = dualNum_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(self_.scalar) * geometric_product_groups.group0_, 
@@ -11468,23 +10639,16 @@ fn dualNum_geometricQuotient_point(self_: DualNum, other: Point) -> Flector {
 }
 fn dualNum_geometricQuotient_scalar(self_: DualNum, other: Scalar) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(geometric_product.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.scalar * other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
 }
 fn flector_geometricQuotient_dualNum(self_: Flector, other: DualNum) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_product: DualNum = dualNum_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -11495,9 +10659,8 @@ fn flector_geometricQuotient_dualNum(self_: Flector, other: DualNum) -> Flector 
 fn flector_geometricQuotient_flector(self_: Flector, other: Flector) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11512,9 +10675,7 @@ fn flector_geometricQuotient_flector(self_: Flector, other: Flector) -> Motor {
 }
 fn flector_geometricQuotient_horizon(self_: Flector, other: Horizon) -> Motor {
     let self_groups = flector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_product.e321_) * vec4<f32>(self_groups.group1_.xyz, self_.e4_), 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_product.e321_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0)
@@ -11523,9 +10684,8 @@ fn flector_geometricQuotient_horizon(self_: Flector, other: Horizon) -> Motor {
 fn flector_geometricQuotient_line(self_: Flector, other: Line) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -11541,9 +10701,8 @@ fn flector_geometricQuotient_line(self_: Flector, other: Line) -> Flector {
 fn flector_geometricQuotient_motor(self_: Flector, other: Motor) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -11559,9 +10718,8 @@ fn flector_geometricQuotient_motor(self_: Flector, other: Motor) -> Flector {
 fn flector_geometricQuotient_multiVector(self_: Flector, other: MultiVector) -> MultiVector {
     let self_groups = flector_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -11583,13 +10741,8 @@ fn flector_geometricQuotient_multiVector(self_: Flector, other: MultiVector) -> 
 fn flector_geometricQuotient_plane(self_: Flector, other: Plane) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -11600,13 +10753,8 @@ fn flector_geometricQuotient_plane(self_: Flector, other: Plane) -> Motor {
 fn flector_geometricQuotient_point(self_: Flector, other: Point) -> Motor {
     let self_groups = flector_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -11616,9 +10764,7 @@ fn flector_geometricQuotient_point(self_: Flector, other: Point) -> Motor {
 }
 fn flector_geometricQuotient_scalar(self_: Flector, other: Scalar) -> Flector {
     let self_groups = flector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let geometric_product: Scalar = Scalar(1.0/(other.scalar));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.scalar) * self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_product.scalar) * self_groups.group1_
@@ -11626,13 +10772,8 @@ fn flector_geometricQuotient_scalar(self_: Flector, other: Scalar) -> Flector {
 }
 fn horizon_geometricQuotient_dualNum(self_: Horizon, other: DualNum) -> Flector {
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_product.e1234_ * self_.e321_), 
@@ -11641,9 +10782,8 @@ fn horizon_geometricQuotient_dualNum(self_: Horizon, other: DualNum) -> Flector 
 }
 fn horizon_geometricQuotient_flector(self_: Horizon, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11657,16 +10797,13 @@ fn horizon_geometricQuotient_flector(self_: Horizon, other: Flector) -> Motor {
     ));
 }
 fn horizon_geometricQuotient_horizon(self_: Horizon, other: Horizon) -> Scalar {
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
-    return Scalar(geometric_product.e321_ * self_.e321_ * -1.0);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return Scalar(other.e321_ * self_.e321_ * other.scalar * -1.0);
 }
 fn horizon_geometricQuotient_line(self_: Horizon, other: Line) -> Flector {
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -11680,9 +10817,8 @@ fn horizon_geometricQuotient_line(self_: Horizon, other: Line) -> Flector {
 }
 fn horizon_geometricQuotient_motor(self_: Horizon, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -11697,9 +10833,8 @@ fn horizon_geometricQuotient_motor(self_: Horizon, other: Motor) -> Flector {
 }
 fn horizon_geometricQuotient_multiVector(self_: Horizon, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -11720,13 +10855,8 @@ fn horizon_geometricQuotient_multiVector(self_: Horizon, other: MultiVector) -> 
 }
 fn horizon_geometricQuotient_plane(self_: Horizon, other: Plane) -> Motor {
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -11736,13 +10866,8 @@ fn horizon_geometricQuotient_plane(self_: Horizon, other: Plane) -> Motor {
 }
 fn horizon_geometricQuotient_point(self_: Horizon, other: Point) -> Motor {
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -11751,21 +10876,14 @@ fn horizon_geometricQuotient_point(self_: Horizon, other: Point) -> Motor {
     ));
 }
 fn horizon_geometricQuotient_scalar(self_: Horizon, other: Scalar) -> Horizon {
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
-    return Horizon(self_.e321_ * geometric_product.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return Horizon(self_.e321_ * other.scalar * other.scalar);
 }
 fn line_geometricQuotient_dualNum(self_: Line, other: DualNum) -> Line {
     let self_groups = line_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ ((vec4<f32>(geometric_product.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_) + ((vec4<f32>(geometric_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_), 
@@ -11775,9 +10893,8 @@ fn line_geometricQuotient_dualNum(self_: Line, other: DualNum) -> Line {
 fn line_geometricQuotient_flector(self_: Line, other: Flector) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11792,9 +10909,7 @@ fn line_geometricQuotient_flector(self_: Line, other: Flector) -> Flector {
 }
 fn line_geometricQuotient_horizon(self_: Line, other: Horizon) -> Flector {
     let self_groups = line_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.e321_, geometric_product.e321_, geometric_product.e321_, 0.0) * vec4<f32>(self_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_product.e321_, geometric_product.e321_, geometric_product.e321_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0)
@@ -11803,9 +10918,8 @@ fn line_geometricQuotient_horizon(self_: Line, other: Horizon) -> Flector {
 fn line_geometricQuotient_line(self_: Line, other: Line) -> Motor {
     let self_groups = line_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -11821,9 +10935,8 @@ fn line_geometricQuotient_line(self_: Line, other: Line) -> Motor {
 fn line_geometricQuotient_motor(self_: Line, other: Motor) -> Motor {
     let self_groups = line_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -11839,9 +10952,8 @@ fn line_geometricQuotient_motor(self_: Line, other: Motor) -> Motor {
 fn line_geometricQuotient_multiVector(self_: Line, other: MultiVector) -> MultiVector {
     let self_groups = line_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -11863,13 +10975,8 @@ fn line_geometricQuotient_multiVector(self_: Line, other: MultiVector) -> MultiV
 fn line_geometricQuotient_plane(self_: Line, other: Plane) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -11880,13 +10987,8 @@ fn line_geometricQuotient_plane(self_: Line, other: Plane) -> Flector {
 fn line_geometricQuotient_point(self_: Line, other: Point) -> Flector {
     let self_groups = line_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -11896,9 +10998,7 @@ fn line_geometricQuotient_point(self_: Line, other: Point) -> Flector {
 }
 fn line_geometricQuotient_scalar(self_: Line, other: Scalar) -> Line {
     let self_groups = line_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let geometric_product: Scalar = Scalar(1.0/(other.scalar));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(geometric_product.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
         /* e23, e31, e12 */ (vec4<f32>(geometric_product.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_
@@ -11907,13 +11007,8 @@ fn line_geometricQuotient_scalar(self_: Line, other: Scalar) -> Line {
 fn motor_geometricQuotient_dualNum(self_: Motor, other: DualNum) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ (vec4<f32>(geometric_product.scalar) * self_groups.group0_) + (vec4<f32>(geometric_product.e1234_) * self_groups.group1_), 
@@ -11923,9 +11018,8 @@ fn motor_geometricQuotient_dualNum(self_: Motor, other: DualNum) -> Motor {
 fn motor_geometricQuotient_flector(self_: Motor, other: Flector) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -11940,9 +11034,7 @@ fn motor_geometricQuotient_flector(self_: Motor, other: Flector) -> Flector {
 }
 fn motor_geometricQuotient_horizon(self_: Motor, other: Horizon) -> Flector {
     let self_groups = motor_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.e321_) * vec4<f32>(self_groups.group1_.xyz, self_.e1234_) * vec4<f32>(1.0, 1.0, 1.0, -1.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_product.e321_) * vec4<f32>(self_groups.group0_.xyz, self_.scalar) * vec4<f32>(-1.0, -1.0, -1.0, 1.0)
@@ -11951,9 +11043,8 @@ fn motor_geometricQuotient_horizon(self_: Motor, other: Horizon) -> Flector {
 fn motor_geometricQuotient_line(self_: Motor, other: Line) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -11969,9 +11060,8 @@ fn motor_geometricQuotient_line(self_: Motor, other: Line) -> Motor {
 fn motor_geometricQuotient_motor(self_: Motor, other: Motor) -> Motor {
     let self_groups = motor_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -11987,9 +11077,8 @@ fn motor_geometricQuotient_motor(self_: Motor, other: Motor) -> Motor {
 fn motor_geometricQuotient_multiVector(self_: Motor, other: MultiVector) -> MultiVector {
     let self_groups = motor_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12011,13 +11100,8 @@ fn motor_geometricQuotient_multiVector(self_: Motor, other: MultiVector) -> Mult
 fn motor_geometricQuotient_plane(self_: Motor, other: Plane) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -12028,13 +11112,8 @@ fn motor_geometricQuotient_plane(self_: Motor, other: Plane) -> Flector {
 fn motor_geometricQuotient_point(self_: Motor, other: Point) -> Flector {
     let self_groups = motor_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -12044,9 +11123,7 @@ fn motor_geometricQuotient_point(self_: Motor, other: Point) -> Flector {
 }
 fn motor_geometricQuotient_scalar(self_: Motor, other: Scalar) -> Motor {
     let self_groups = motor_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let geometric_product: Scalar = Scalar(1.0/(other.scalar));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_product.scalar) * self_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_product.scalar) * self_groups.group1_
@@ -12055,13 +11132,8 @@ fn motor_geometricQuotient_scalar(self_: Motor, other: Scalar) -> Motor {
 fn multiVector_geometricQuotient_dualNum(self_: MultiVector, other: DualNum) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_product: DualNum = dualNum_degroup(geometric_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -12075,9 +11147,8 @@ fn multiVector_geometricQuotient_dualNum(self_: MultiVector, other: DualNum) -> 
 fn multiVector_geometricQuotient_flector(self_: MultiVector, other: Flector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -12095,9 +11166,7 @@ fn multiVector_geometricQuotient_flector(self_: MultiVector, other: Flector) -> 
 }
 fn multiVector_geometricQuotient_horizon(self_: MultiVector, other: Horizon) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(geometric_product.e321_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(self_.e321_, self_.e4_, 0.0, 0.0) * vec4<f32>(-1.0, 1.0), 
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.e321_) * vec4<f32>(self_groups.group3_.xyz, self_.e1234_) * vec4<f32>(1.0, 1.0, 1.0, -1.0), 
@@ -12109,9 +11178,8 @@ fn multiVector_geometricQuotient_horizon(self_: MultiVector, other: Horizon) -> 
 fn multiVector_geometricQuotient_line(self_: MultiVector, other: Line) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -12130,9 +11198,8 @@ fn multiVector_geometricQuotient_line(self_: MultiVector, other: Line) -> MultiV
 fn multiVector_geometricQuotient_motor(self_: MultiVector, other: Motor) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -12151,9 +11218,8 @@ fn multiVector_geometricQuotient_motor(self_: MultiVector, other: Motor) -> Mult
 fn multiVector_geometricQuotient_multiVector(self_: MultiVector, other: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12175,13 +11241,8 @@ fn multiVector_geometricQuotient_multiVector(self_: MultiVector, other: MultiVec
 fn multiVector_geometricQuotient_plane(self_: MultiVector, other: Plane) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -12195,13 +11256,8 @@ fn multiVector_geometricQuotient_plane(self_: MultiVector, other: Plane) -> Mult
 fn multiVector_geometricQuotient_point(self_: MultiVector, other: Point) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return multiVector_degroup(MultiVectorGroups(
@@ -12214,9 +11270,7 @@ fn multiVector_geometricQuotient_point(self_: MultiVector, other: Point) -> Mult
 }
 fn multiVector_geometricQuotient_scalar(self_: MultiVector, other: Scalar) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let geometric_product: Scalar = Scalar(1.0/(other.scalar));
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(geometric_product.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.scalar) * self_groups.group1_, 
@@ -12226,22 +11280,13 @@ fn multiVector_geometricQuotient_scalar(self_: MultiVector, other: Scalar) -> Mu
     ));
 }
 fn origin_geometricQuotient_dualNum(self_: Origin, other: DualNum) -> Origin {
-    let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    return Origin(geometric_product.scalar * self_.e4_);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return Origin(other.scalar * self_.e4_ * other.scalar);
 }
 fn origin_geometricQuotient_flector(self_: Origin, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -12255,31 +11300,19 @@ fn origin_geometricQuotient_flector(self_: Origin, other: Flector) -> Motor {
     ));
 }
 fn origin_geometricQuotient_horizon(self_: Origin, other: Horizon) -> AntiScalar {
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
-    return AntiScalar(geometric_product.e321_ * self_.e4_);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return AntiScalar(other.e321_ * self_.e4_ * other.scalar);
 }
 fn origin_geometricQuotient_line(self_: Origin, other: Line) -> Plane {
-    let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group1_
-    );
+    let other: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e4_, self_.e4_, self_.e4_, 0.0) * vec4<f32>(geometric_product_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e4_, self_.e4_, self_.e4_, 0.0) * vec4<f32>(vec4<f32>(other.e23_ * other.scalar, other.e31_ * other.scalar, other.e12_ * other.scalar, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn origin_geometricQuotient_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -12294,9 +11327,8 @@ fn origin_geometricQuotient_motor(self_: Origin, other: Motor) -> Flector {
 }
 fn origin_geometricQuotient_multiVector(self_: Origin, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12316,48 +11348,25 @@ fn origin_geometricQuotient_multiVector(self_: Origin, other: MultiVector) -> Mu
     ));
 }
 fn origin_geometricQuotient_plane(self_: Origin, other: Plane) -> AntiScalar {
-    let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
-    ));
-    return AntiScalar(self_.e4_ * geometric_product.e321_);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return AntiScalar(self_.e4_ * other.e321_ * other.scalar);
 }
 fn origin_geometricQuotient_point(self_: Origin, other: Point) -> Line {
-    let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
-    );
+    let other: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(self_.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * geometric_product_groups.group0_, 
+        /* e41, e42, e43 */ (vec4<f32>(self_.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e1_ * other.scalar, other.e2_ * other.scalar, other.e3_ * other.scalar, other.e4_ * other.scalar), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn origin_geometricQuotient_scalar(self_: Origin, other: Scalar) -> Origin {
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
-    return Origin(self_.e4_ * geometric_product.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return Origin(self_.e4_ * other.scalar * other.scalar);
 }
 fn plane_geometricQuotient_dualNum(self_: Plane, other: DualNum) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_product.e1234_ * self_.e321_), 
@@ -12367,9 +11376,8 @@ fn plane_geometricQuotient_dualNum(self_: Plane, other: DualNum) -> Flector {
 fn plane_geometricQuotient_flector(self_: Plane, other: Flector) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -12384,9 +11392,7 @@ fn plane_geometricQuotient_flector(self_: Plane, other: Flector) -> Motor {
 }
 fn plane_geometricQuotient_horizon(self_: Plane, other: Horizon) -> Motor {
     let self_groups = plane_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_product.e321_, geometric_product.e321_, geometric_product.e321_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_product.e321_ * self_.e321_ * -1.0)
@@ -12395,9 +11401,8 @@ fn plane_geometricQuotient_horizon(self_: Plane, other: Horizon) -> Motor {
 fn plane_geometricQuotient_line(self_: Plane, other: Line) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -12413,9 +11418,8 @@ fn plane_geometricQuotient_line(self_: Plane, other: Line) -> Flector {
 fn plane_geometricQuotient_motor(self_: Plane, other: Motor) -> Flector {
     let self_groups = plane_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -12431,9 +11435,8 @@ fn plane_geometricQuotient_motor(self_: Plane, other: Motor) -> Flector {
 fn plane_geometricQuotient_multiVector(self_: Plane, other: MultiVector) -> MultiVector {
     let self_groups = plane_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12455,13 +11458,8 @@ fn plane_geometricQuotient_multiVector(self_: Plane, other: MultiVector) -> Mult
 fn plane_geometricQuotient_plane(self_: Plane, other: Plane) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -12472,13 +11470,8 @@ fn plane_geometricQuotient_plane(self_: Plane, other: Plane) -> Motor {
 fn plane_geometricQuotient_point(self_: Plane, other: Point) -> Motor {
     let self_groups = plane_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -12488,23 +11481,16 @@ fn plane_geometricQuotient_point(self_: Plane, other: Point) -> Motor {
 }
 fn plane_geometricQuotient_scalar(self_: Plane, other: Scalar) -> Plane {
     let self_groups = plane_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(geometric_product.scalar) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar * other.scalar) * self_groups.group0_
     ));
 }
 fn point_geometricQuotient_dualNum(self_: Point, other: DualNum) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(other.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     );
     let geometric_product: DualNum = dualNum_degroup(geometric_product_groups);
     return flector_degroup(FlectorGroups(
@@ -12515,9 +11501,8 @@ fn point_geometricQuotient_dualNum(self_: Point, other: DualNum) -> Flector {
 fn point_geometricQuotient_flector(self_: Point, other: Flector) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -12532,9 +11517,7 @@ fn point_geometricQuotient_flector(self_: Point, other: Flector) -> Motor {
 }
 fn point_geometricQuotient_horizon(self_: Point, other: Horizon) -> Motor {
     let self_groups = point_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
+    let geometric_product: Horizon = Horizon(1.0/(other.e321_) * -1.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(vec4<f32>(0.0).xyz, geometric_product.e321_ * self_.e4_), 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_product.e321_, geometric_product.e321_, geometric_product.e321_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(-1.0, -1.0, -1.0, 0.0)
@@ -12543,9 +11526,8 @@ fn point_geometricQuotient_horizon(self_: Point, other: Horizon) -> Motor {
 fn point_geometricQuotient_line(self_: Point, other: Line) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -12561,9 +11543,8 @@ fn point_geometricQuotient_line(self_: Point, other: Line) -> Flector {
 fn point_geometricQuotient_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -12579,9 +11560,8 @@ fn point_geometricQuotient_motor(self_: Point, other: Motor) -> Flector {
 fn point_geometricQuotient_multiVector(self_: Point, other: MultiVector) -> MultiVector {
     let self_groups = point_grouped(self_);
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12603,13 +11583,8 @@ fn point_geometricQuotient_multiVector(self_: Point, other: MultiVector) -> Mult
 fn point_geometricQuotient_plane(self_: Point, other: Plane) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(other.e321_, -2) * -1.0) * other_groups.group0_
     );
     let geometric_product: Plane = plane_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -12620,13 +11595,8 @@ fn point_geometricQuotient_plane(self_: Point, other: Plane) -> Motor {
 fn point_geometricQuotient_point(self_: Point, other: Point) -> Motor {
     let self_groups = point_grouped(self_);
     let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2)) * other_groups.group0_
     );
     let geometric_product: Point = point_degroup(geometric_product_groups);
     return motor_degroup(MotorGroups(
@@ -12636,32 +11606,21 @@ fn point_geometricQuotient_point(self_: Point, other: Point) -> Motor {
 }
 fn point_geometricQuotient_scalar(self_: Point, other: Scalar) -> Point {
     let self_groups = point_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(geometric_product.scalar) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar * other.scalar) * self_groups.group0_
     ));
 }
 fn scalar_geometricQuotient_dualNum(self_: Scalar, other: DualNum) -> DualNum {
-    let other_groups = dualNum_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: DualNumGroups = DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    );
+    let other: Scalar = Scalar(pow(other.scalar, -2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * geometric_product_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * vec4<f32>(other.scalar * other.scalar, other.e1234_ * other.scalar, 0.0, 0.0)
     ));
 }
 fn scalar_geometricQuotient_flector(self_: Scalar, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: FlectorGroups = FlectorGroups(
@@ -12674,16 +11633,13 @@ fn scalar_geometricQuotient_flector(self_: Scalar, other: Flector) -> Flector {
     ));
 }
 fn scalar_geometricQuotient_horizon(self_: Scalar, other: Horizon) -> Horizon {
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Horizon = Horizon(other.e321_ * other.scalar);
-    return Horizon(geometric_product.e321_ * self_.scalar);
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
+    return Horizon(other.e321_ * other.scalar * self_.scalar);
 }
 fn scalar_geometricQuotient_line(self_: Scalar, other: Line) -> Line {
     let other_groups = line_grouped(other);
-    let dot_product: Scalar = Scalar(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(-pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: LineGroups = LineGroups(
@@ -12697,9 +11653,8 @@ fn scalar_geometricQuotient_line(self_: Scalar, other: Line) -> Line {
 }
 fn scalar_geometricQuotient_motor(self_: Scalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MotorGroups = MotorGroups(
@@ -12713,9 +11668,8 @@ fn scalar_geometricQuotient_motor(self_: Scalar, other: Motor) -> Motor {
 }
 fn scalar_geometricQuotient_multiVector(self_: Scalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2));
     let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
+        /* scalar */ vec4<f32>(pow(other.scalar, 2) + pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2) - pow(other.e23_, 2) - pow(other.e31_, 2) - pow(other.e12_, 2) - pow(other.e321_, 2), 0.0, 0.0, 0.0)
     );
     let other: Scalar = scalar_degroup(other_groups);
     let geometric_product_groups: MultiVectorGroups = MultiVectorGroups(
@@ -12734,38 +11688,20 @@ fn scalar_geometricQuotient_multiVector(self_: Scalar, other: MultiVector) -> Mu
     ));
 }
 fn scalar_geometricQuotient_plane(self_: Scalar, other: Plane) -> Plane {
-    let other_groups = plane_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e321_, 2) * -1.0);
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * other_groups.group0_
-    );
+    let other: Scalar = Scalar(pow(other.e321_, -2) * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * geometric_product_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e423_ * other.scalar, other.e431_ * other.scalar, other.e412_ * other.scalar, other.e321_ * other.scalar)
     ));
 }
 fn scalar_geometricQuotient_point(self_: Scalar, other: Point) -> Point {
-    let other_groups = point_grouped(other);
-    let dot_product: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
-    let other_groups: ScalarGroups = ScalarGroups(
-        /* scalar */ vec4<f32>(1.0/(dot_product.scalar), 0.0, 0.0, 0.0)
-    );
-    let other: Scalar = scalar_degroup(other_groups);
-    let geometric_product_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * other_groups.group0_
-    );
+    let other: Scalar = Scalar(pow(other.e1_, 2) + pow(other.e2_, 2) + pow(other.e3_, 2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(self_.scalar) * geometric_product_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_ * other.scalar, other.e2_ * other.scalar, other.e3_ * other.scalar, other.e4_ * other.scalar)
     ));
 }
 fn scalar_geometricQuotient_scalar(self_: Scalar, other: Scalar) -> Scalar {
-    let dot_product: Scalar = Scalar(pow(other.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    let geometric_product: Scalar = Scalar(other.scalar * other.scalar);
-    return Scalar(geometric_product.scalar * self_.scalar);
+    let other: Scalar = Scalar(pow(other.scalar, -2));
+    return Scalar(other.scalar * other.scalar * self_.scalar);
 }
 fn antiScalar_grade() -> i32 {
     return 4;
@@ -12957,30 +11893,24 @@ fn scalar_into_multiVector(self_: Scalar) -> MultiVector {
 }
 fn dualNum_inverse(self_: DualNum) -> DualNum {
     let self_groups = dualNum_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(pow(self_.scalar, -2)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
 }
 fn flector_inverse(self_: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e321_, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
+    let other: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e321_, 2));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group1_
     ));
 }
 fn horizon_inverse(self_: Horizon) -> Horizon {
-    let dot_product: Scalar = Scalar(pow(self_.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    return Horizon(self_.e321_ * other.scalar);
+    return Horizon(1.0/(self_.e321_) * -1.0);
 }
 fn line_inverse(self_: Line) -> Line {
     let self_groups = line_grouped(self_);
-    let dot_product: Scalar = Scalar(-pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
+    let other: Scalar = Scalar(-pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
         /* e23, e31, e12 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_
@@ -12988,8 +11918,7 @@ fn line_inverse(self_: Line) -> Line {
 }
 fn motor_inverse(self_: Motor) -> Motor {
     let self_groups = motor_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
+    let other: Scalar = Scalar(pow(self_.scalar, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(other.scalar) * self_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(other.scalar) * self_groups.group1_
@@ -12997,8 +11926,7 @@ fn motor_inverse(self_: Motor) -> Motor {
 }
 fn multiVector_inverse(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2) + pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2) - pow(self_.e321_, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
+    let other: Scalar = Scalar(pow(self_.scalar, 2) + pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2) - pow(self_.e23_, 2) - pow(self_.e31_, 2) - pow(self_.e12_, 2) - pow(self_.e321_, 2));
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(other.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group1_, 
@@ -13009,24 +11937,18 @@ fn multiVector_inverse(self_: MultiVector) -> MultiVector {
 }
 fn plane_inverse(self_: Plane) -> Plane {
     let self_groups = plane_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.e321_, 2) * -1.0);
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.scalar) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(pow(self_.e321_, -2) * -1.0) * self_groups.group0_
     ));
 }
 fn point_inverse(self_: Point) -> Point {
     let self_groups = point_grouped(self_);
-    let dot_product: Scalar = Scalar(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.scalar) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(pow(self_.e1_, 2) + pow(self_.e2_, 2) + pow(self_.e3_, 2)) * self_groups.group0_
     ));
 }
 fn scalar_inverse(self_: Scalar) -> Scalar {
-    let dot_product: Scalar = Scalar(pow(self_.scalar, 2));
-    let other: Scalar = Scalar(1.0/(dot_product.scalar));
-    return Scalar(other.scalar * self_.scalar);
+    return Scalar(1.0/(self_.scalar));
 }
 fn antiScalar_leftComplement(self_: AntiScalar) -> Scalar {
     return Scalar(self_.e1234_);
@@ -13662,11 +12584,7 @@ fn scalar_one() -> Scalar {
 }
 fn antiScalar_projectOrthogonallyOnto_motor(self_: AntiScalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let right_anti_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * right_anti_dual.scalar);
+    let wedge: AntiScalar = AntiScalar(self_.e1234_ * 0.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(wedge.e1234_) * other_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(wedge.e1234_) * other_groups.group1_
@@ -13674,14 +12592,7 @@ fn antiScalar_projectOrthogonallyOnto_motor(self_: AntiScalar, other: Motor) -> 
 }
 fn antiScalar_projectOrthogonallyOnto_multiVector(self_: AntiScalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let right_anti_dual: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, other.scalar, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e41, e42, e43 */ other_groups.group3_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * right_anti_dual.scalar);
+    let wedge: AntiScalar = AntiScalar(self_.e1234_ * 0.0);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group1_, 
@@ -13693,9 +12604,8 @@ fn antiScalar_projectOrthogonallyOnto_multiVector(self_: AntiScalar, other: Mult
 fn dualNum_projectOrthogonallyOnto_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn dualNum_projectOrthogonallyOnto_flector(self_: DualNum, other: Flector) -> Motor {
@@ -13716,8 +12626,7 @@ fn dualNum_projectOrthogonallyOnto_flector(self_: DualNum, other: Flector) -> Mo
 }
 fn dualNum_projectOrthogonallyOnto_horizon(self_: DualNum, other: Horizon) -> Scalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(self_.scalar * right_anti_dual.e4_);
-    return Scalar(other.e321_ * wedge.e4_ * -1.0);
+    return Scalar(self_.scalar * other.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn dualNum_projectOrthogonallyOnto_line(self_: DualNum, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -13777,22 +12686,17 @@ fn dualNum_projectOrthogonallyOnto_multiVector(self_: DualNum, other: MultiVecto
 }
 fn dualNum_projectOrthogonallyOnto_plane(self_: DualNum, other: Plane) -> Scalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(self_.scalar * right_anti_dual.e4_);
-    return Scalar(wedge.e4_ * other.e321_ * -1.0);
+    return Scalar(self_.scalar * right_anti_dual.e4_ * other.e321_ * -1.0);
 }
 fn dualNum_projectOrthogonallyOnto_point(self_: DualNum, other: Point) -> Scalar {
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn dualNum_projectOrthogonallyOnto_scalar(self_: DualNum, other: Scalar) -> Scalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_anti_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn flector_projectOrthogonallyOnto_flector(self_: Flector, other: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -13814,9 +12718,8 @@ fn flector_projectOrthogonallyOnto_flector(self_: Flector, other: Flector) -> Fl
 }
 fn flector_projectOrthogonallyOnto_horizon(self_: Flector, other: Horizon) -> Flector {
     let self_groups = flector_grouped(self_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_anti_dual.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     );
     let wedge: Motor = motor_degroup(wedge_groups);
@@ -13888,9 +12791,8 @@ fn flector_projectOrthogonallyOnto_multiVector(self_: Flector, other: MultiVecto
 fn flector_projectOrthogonallyOnto_plane(self_: Flector, other: Plane) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_anti_dual.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     );
     let wedge: Motor = motor_degroup(wedge_groups);
@@ -13904,18 +12806,13 @@ fn flector_projectOrthogonallyOnto_point(self_: Flector, other: Point) -> Point 
     let right_anti_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar((self_.e1_ * right_anti_dual.e423_) + (self_.e2_ * right_anti_dual.e431_) + (self_.e3_ * right_anti_dual.e412_) + (self_.e4_ * right_anti_dual.e321_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((self_.e1_ * right_anti_dual.e423_) + (self_.e2_ * right_anti_dual.e431_) + (self_.e3_ * right_anti_dual.e412_) + (self_.e4_ * right_anti_dual.e321_)) * other_groups.group0_
     ));
 }
 fn horizon_projectOrthogonallyOnto_flector(self_: Horizon, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let right_anti_dual: Flector = flector_degroup(FlectorGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e4_ * self_.e321_ * -1.0);
+    let wedge: AntiScalar = AntiScalar(vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0).w * self_.e321_ * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group1_
@@ -13923,16 +12820,11 @@ fn horizon_projectOrthogonallyOnto_flector(self_: Horizon, other: Flector) -> Fl
 }
 fn horizon_projectOrthogonallyOnto_horizon(self_: Horizon, other: Horizon) -> Horizon {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
-    return Horizon(wedge.e1234_ * other.e321_);
+    return Horizon(other.e321_ * self_.e321_ * right_anti_dual.e4_ * -1.0);
 }
 fn horizon_projectOrthogonallyOnto_motor(self_: Horizon, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let right_anti_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let wedge: Horizon = Horizon(self_.e321_ * right_anti_dual.scalar);
+    let wedge: Horizon = Horizon(self_.e321_ * 0.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e321_, wedge.e321_, wedge.e321_, 0.0) * vec4<f32>(other_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, wedge.e321_ * other.e1234_)
@@ -13966,9 +12858,8 @@ fn horizon_projectOrthogonallyOnto_multiVector(self_: Horizon, other: MultiVecto
 fn horizon_projectOrthogonallyOnto_plane(self_: Horizon, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * right_anti_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_anti_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn line_projectOrthogonallyOnto_flector(self_: Line, other: Flector) -> Motor {
@@ -13989,14 +12880,10 @@ fn line_projectOrthogonallyOnto_flector(self_: Line, other: Flector) -> Motor {
     ));
 }
 fn line_projectOrthogonallyOnto_horizon(self_: Line, other: Horizon) -> Line {
-    let self_groups = line_grouped(self_);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(self_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
-    );
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * wedge_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(self_.e23_ * right_anti_dual.e4_, self_.e31_ * right_anti_dual.e4_, self_.e12_ * right_anti_dual.e4_, 0.0) * vec4<f32>(-1.0)
     ));
 }
 fn line_projectOrthogonallyOnto_line(self_: Line, other: Line) -> Line {
@@ -14072,9 +12959,8 @@ fn line_projectOrthogonallyOnto_plane(self_: Line, other: Plane) -> Line {
 fn motor_projectOrthogonallyOnto_dualNum(self_: Motor, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn motor_projectOrthogonallyOnto_flector(self_: Motor, other: Flector) -> Motor {
@@ -14186,25 +13072,20 @@ fn motor_projectOrthogonallyOnto_plane(self_: Motor, other: Plane) -> Motor {
     ));
 }
 fn motor_projectOrthogonallyOnto_point(self_: Motor, other: Point) -> Scalar {
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn motor_projectOrthogonallyOnto_scalar(self_: Motor, other: Scalar) -> Scalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_anti_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn multiVector_projectOrthogonallyOnto_dualNum(self_: MultiVector, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn multiVector_projectOrthogonallyOnto_flector(self_: MultiVector, other: Flector) -> MultiVector {
@@ -14368,8 +13249,7 @@ fn multiVector_projectOrthogonallyOnto_point(self_: MultiVector, other: Point) -
 }
 fn multiVector_projectOrthogonallyOnto_scalar(self_: MultiVector, other: Scalar) -> Scalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_anti_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn origin_projectOrthogonallyOnto_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -14439,9 +13319,8 @@ fn origin_projectOrthogonallyOnto_point(self_: Origin, other: Point) -> Point {
     let right_anti_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * right_anti_dual.e321_);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e4_ * right_anti_dual.e321_) * other_groups.group0_
     ));
 }
 fn plane_projectOrthogonallyOnto_flector(self_: Plane, other: Flector) -> Flector {
@@ -14458,21 +13337,16 @@ fn plane_projectOrthogonallyOnto_flector(self_: Plane, other: Flector) -> Flecto
 }
 fn plane_projectOrthogonallyOnto_horizon(self_: Plane, other: Horizon) -> Horizon {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e4_ * self_.e321_ * -1.0);
-    return Horizon(wedge.e1234_ * other.e321_);
+    return Horizon(other.e321_ * right_anti_dual.e4_ * self_.e321_ * -1.0);
 }
 fn plane_projectOrthogonallyOnto_motor(self_: Plane, other: Motor) -> Plane {
-    let self_groups = plane_grouped(self_);
     let other_groups = motor_grouped(other);
     let right_anti_dual: Motor = motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.scalar) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * vec4<f32>(right_anti_dual.scalar * self_.e423_, right_anti_dual.scalar * self_.e431_, right_anti_dual.scalar * self_.e412_, right_anti_dual.scalar * self_.e321_)
     ));
 }
 fn plane_projectOrthogonallyOnto_multiVector(self_: Plane, other: MultiVector) -> MultiVector {
@@ -14504,9 +13378,8 @@ fn plane_projectOrthogonallyOnto_multiVector(self_: Plane, other: MultiVector) -
 fn plane_projectOrthogonallyOnto_plane(self_: Plane, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e4_ * self_.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_ * self_.e321_ * -1.0) * other_groups.group0_
     ));
 }
 fn point_projectOrthogonallyOnto_flector(self_: Point, other: Flector) -> Flector {
@@ -14528,14 +13401,9 @@ fn point_projectOrthogonallyOnto_flector(self_: Point, other: Flector) -> Flecto
     ));
 }
 fn point_projectOrthogonallyOnto_horizon(self_: Point, other: Horizon) -> Point {
-    let self_groups = point_grouped(self_);
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_anti_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(wedge_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(vec4<f32>(right_anti_dual.e4_ * self_.e1_ * -1.0, right_anti_dual.e4_ * self_.e2_ * -1.0, right_anti_dual.e4_ * self_.e3_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn point_projectOrthogonallyOnto_line(self_: Point, other: Line) -> Point {
@@ -14601,9 +13469,8 @@ fn point_projectOrthogonallyOnto_multiVector(self_: Point, other: MultiVector) -
 fn point_projectOrthogonallyOnto_plane(self_: Point, other: Plane) -> Point {
     let self_groups = point_grouped(self_);
     let other_groups = plane_grouped(other);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_anti_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     );
     let wedge: Line = line_degroup(wedge_groups);
@@ -14616,17 +13483,15 @@ fn point_projectOrthogonallyOnto_point(self_: Point, other: Point) -> Point {
     let right_anti_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar((right_anti_dual.e423_ * self_.e1_) + (right_anti_dual.e431_ * self_.e2_) + (right_anti_dual.e412_ * self_.e3_) + (right_anti_dual.e321_ * self_.e4_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((right_anti_dual.e423_ * self_.e1_) + (right_anti_dual.e431_ * self_.e2_) + (right_anti_dual.e412_ * self_.e3_) + (right_anti_dual.e321_ * self_.e4_)) * other_groups.group0_
     ));
 }
 fn scalar_projectOrthogonallyOnto_dualNum(self_: Scalar, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_anti_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn scalar_projectOrthogonallyOnto_flector(self_: Scalar, other: Flector) -> Motor {
@@ -14647,8 +13512,7 @@ fn scalar_projectOrthogonallyOnto_flector(self_: Scalar, other: Flector) -> Moto
 }
 fn scalar_projectOrthogonallyOnto_horizon(self_: Scalar, other: Horizon) -> Scalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(right_anti_dual.e4_ * self_.scalar);
-    return Scalar(other.e321_ * wedge.e4_ * -1.0);
+    return Scalar(other.e321_ * right_anti_dual.e4_ * self_.scalar * -1.0);
 }
 fn scalar_projectOrthogonallyOnto_line(self_: Scalar, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -14705,30 +13569,21 @@ fn scalar_projectOrthogonallyOnto_multiVector(self_: Scalar, other: MultiVector)
 }
 fn scalar_projectOrthogonallyOnto_plane(self_: Scalar, other: Plane) -> Scalar {
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(right_anti_dual.e4_ * self_.scalar);
-    return Scalar(wedge.e4_ * other.e321_ * -1.0);
+    return Scalar(right_anti_dual.e4_ * other.e321_ * self_.scalar * -1.0);
 }
 fn scalar_projectOrthogonallyOnto_point(self_: Scalar, other: Point) -> Scalar {
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn scalar_projectOrthogonallyOnto_scalar(self_: Scalar, other: Scalar) -> Scalar {
     let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_anti_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_anti_dual.e1234_ * other.scalar * self_.scalar);
 }
 fn antiScalar_projectViaOriginOnto_motor(self_: AntiScalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
-    let right_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * right_dual.scalar);
+    let wedge: AntiScalar = AntiScalar(self_.e1234_ * 0.0);
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(wedge.e1234_) * other_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(wedge.e1234_) * other_groups.group1_
@@ -14736,14 +13591,7 @@ fn antiScalar_projectViaOriginOnto_motor(self_: AntiScalar, other: Motor) -> Mot
 }
 fn antiScalar_projectViaOriginOnto_multiVector(self_: AntiScalar, other: MultiVector) -> MultiVector {
     let other_groups = multiVector_grouped(other);
-    let right_dual: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, other.scalar, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e41, e42, e43 */ other_groups.group3_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(self_.e1234_ * right_dual.scalar);
+    let wedge: AntiScalar = AntiScalar(self_.e1234_ * 0.0);
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group1_, 
@@ -14755,9 +13603,8 @@ fn antiScalar_projectViaOriginOnto_multiVector(self_: AntiScalar, other: MultiVe
 fn dualNum_projectViaOriginOnto_dualNum(self_: DualNum, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn dualNum_projectViaOriginOnto_flector(self_: DualNum, other: Flector) -> Motor {
@@ -14778,8 +13625,7 @@ fn dualNum_projectViaOriginOnto_flector(self_: DualNum, other: Flector) -> Motor
 }
 fn dualNum_projectViaOriginOnto_horizon(self_: DualNum, other: Horizon) -> Scalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(self_.scalar * right_dual.e4_);
-    return Scalar(other.e321_ * wedge.e4_ * -1.0);
+    return Scalar(self_.scalar * other.e321_ * right_dual.e4_ * -1.0);
 }
 fn dualNum_projectViaOriginOnto_line(self_: DualNum, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -14839,22 +13685,17 @@ fn dualNum_projectViaOriginOnto_multiVector(self_: DualNum, other: MultiVector) 
 }
 fn dualNum_projectViaOriginOnto_plane(self_: DualNum, other: Plane) -> Scalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(self_.scalar * right_dual.e4_);
-    return Scalar(wedge.e4_ * other.e321_ * -1.0);
+    return Scalar(self_.scalar * right_dual.e4_ * other.e321_ * -1.0);
 }
 fn dualNum_projectViaOriginOnto_point(self_: DualNum, other: Point) -> Scalar {
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn dualNum_projectViaOriginOnto_scalar(self_: DualNum, other: Scalar) -> Scalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn flector_projectViaOriginOnto_flector(self_: Flector, other: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -14876,9 +13717,8 @@ fn flector_projectViaOriginOnto_flector(self_: Flector, other: Flector) -> Flect
 }
 fn flector_projectViaOriginOnto_horizon(self_: Flector, other: Horizon) -> Flector {
     let self_groups = flector_grouped(self_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_dual.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     );
     let wedge: Motor = motor_degroup(wedge_groups);
@@ -14950,9 +13790,8 @@ fn flector_projectViaOriginOnto_multiVector(self_: Flector, other: MultiVector) 
 fn flector_projectViaOriginOnto_plane(self_: Flector, other: Plane) -> Flector {
     let self_groups = flector_grouped(self_);
     let other_groups = plane_grouped(other);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: MotorGroups = MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_dual.e4_) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(self_groups.group0_.xyz, self_.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     );
     let wedge: Motor = motor_degroup(wedge_groups);
@@ -14966,18 +13805,13 @@ fn flector_projectViaOriginOnto_point(self_: Flector, other: Point) -> Point {
     let right_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar((self_.e1_ * right_dual.e423_) + (self_.e2_ * right_dual.e431_) + (self_.e3_ * right_dual.e412_) + (self_.e4_ * right_dual.e321_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((self_.e1_ * right_dual.e423_) + (self_.e2_ * right_dual.e431_) + (self_.e3_ * right_dual.e412_) + (self_.e4_ * right_dual.e321_)) * other_groups.group0_
     ));
 }
 fn horizon_projectViaOriginOnto_flector(self_: Horizon, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
-    let right_dual: Flector = flector_degroup(FlectorGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    ));
-    let wedge: AntiScalar = AntiScalar(right_dual.e4_ * self_.e321_ * -1.0);
+    let wedge: AntiScalar = AntiScalar(vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * -1.0).w * self_.e321_ * -1.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group1_
@@ -14985,16 +13819,11 @@ fn horizon_projectViaOriginOnto_flector(self_: Horizon, other: Flector) -> Flect
 }
 fn horizon_projectViaOriginOnto_horizon(self_: Horizon, other: Horizon) -> Horizon {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * right_dual.e4_ * -1.0);
-    return Horizon(wedge.e1234_ * other.e321_);
+    return Horizon(other.e321_ * self_.e321_ * right_dual.e4_ * -1.0);
 }
 fn horizon_projectViaOriginOnto_motor(self_: Horizon, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
-    let right_dual: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
-        /* e23, e31, e12, scalar */ vec4<f32>(0.0)
-    ));
-    let wedge: Horizon = Horizon(self_.e321_ * right_dual.scalar);
+    let wedge: Horizon = Horizon(self_.e321_ * 0.0);
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(wedge.e321_, wedge.e321_, wedge.e321_, 0.0) * vec4<f32>(other_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, wedge.e321_ * other.e1234_)
@@ -15028,9 +13857,8 @@ fn horizon_projectViaOriginOnto_multiVector(self_: Horizon, other: MultiVector) 
 fn horizon_projectViaOriginOnto_plane(self_: Horizon, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(self_.e321_ * right_dual.e4_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * right_dual.e4_ * -1.0) * other_groups.group0_
     ));
 }
 fn line_projectViaOriginOnto_flector(self_: Line, other: Flector) -> Motor {
@@ -15051,14 +13879,10 @@ fn line_projectViaOriginOnto_flector(self_: Line, other: Flector) -> Motor {
     ));
 }
 fn line_projectViaOriginOnto_horizon(self_: Line, other: Horizon) -> Line {
-    let self_groups = line_grouped(self_);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(self_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
-    );
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * wedge_groups.group0_ * vec4<f32>(-1.0)
+        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(self_.e23_ * right_dual.e4_, self_.e31_ * right_dual.e4_, self_.e12_ * right_dual.e4_, 0.0) * vec4<f32>(-1.0)
     ));
 }
 fn line_projectViaOriginOnto_line(self_: Line, other: Line) -> Line {
@@ -15134,9 +13958,8 @@ fn line_projectViaOriginOnto_plane(self_: Line, other: Plane) -> Line {
 fn motor_projectViaOriginOnto_dualNum(self_: Motor, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn motor_projectViaOriginOnto_flector(self_: Motor, other: Flector) -> Motor {
@@ -15248,25 +14071,20 @@ fn motor_projectViaOriginOnto_plane(self_: Motor, other: Plane) -> Motor {
     ));
 }
 fn motor_projectViaOriginOnto_point(self_: Motor, other: Point) -> Scalar {
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn motor_projectViaOriginOnto_scalar(self_: Motor, other: Scalar) -> Scalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn multiVector_projectViaOriginOnto_dualNum(self_: MultiVector, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn multiVector_projectViaOriginOnto_flector(self_: MultiVector, other: Flector) -> MultiVector {
@@ -15430,8 +14248,7 @@ fn multiVector_projectViaOriginOnto_point(self_: MultiVector, other: Point) -> M
 }
 fn multiVector_projectViaOriginOnto_scalar(self_: MultiVector, other: Scalar) -> Scalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_dual.e1234_ * self_.scalar * other.scalar);
 }
 fn origin_projectViaOriginOnto_flector(self_: Origin, other: Flector) -> Flector {
     let other_groups = flector_grouped(other);
@@ -15501,9 +14318,8 @@ fn origin_projectViaOriginOnto_point(self_: Origin, other: Point) -> Point {
     let right_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar(self_.e4_ * right_dual.e321_);
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(self_.e4_ * right_dual.e321_) * other_groups.group0_
     ));
 }
 fn plane_projectViaOriginOnto_flector(self_: Plane, other: Flector) -> Flector {
@@ -15520,21 +14336,16 @@ fn plane_projectViaOriginOnto_flector(self_: Plane, other: Flector) -> Flector {
 }
 fn plane_projectViaOriginOnto_horizon(self_: Plane, other: Horizon) -> Horizon {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(right_dual.e4_ * self_.e321_ * -1.0);
-    return Horizon(wedge.e1234_ * other.e321_);
+    return Horizon(other.e321_ * right_dual.e4_ * self_.e321_ * -1.0);
 }
 fn plane_projectViaOriginOnto_motor(self_: Plane, other: Motor) -> Plane {
-    let self_groups = plane_grouped(self_);
     let other_groups = motor_grouped(other);
     let right_dual: Motor = motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ other_groups.group1_ * vec4<f32>(-1.0, -1.0, -1.0, 1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
-    let wedge_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.scalar) * self_groups.group0_
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * wedge_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * vec4<f32>(right_dual.scalar * self_.e423_, right_dual.scalar * self_.e431_, right_dual.scalar * self_.e412_, right_dual.scalar * self_.e321_)
     ));
 }
 fn plane_projectViaOriginOnto_multiVector(self_: Plane, other: MultiVector) -> MultiVector {
@@ -15566,9 +14377,8 @@ fn plane_projectViaOriginOnto_multiVector(self_: Plane, other: MultiVector) -> M
 fn plane_projectViaOriginOnto_plane(self_: Plane, other: Plane) -> Plane {
     let other_groups = plane_grouped(other);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: AntiScalar = AntiScalar(right_dual.e4_ * self_.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_ * self_.e321_ * -1.0) * other_groups.group0_
     ));
 }
 fn point_projectViaOriginOnto_flector(self_: Point, other: Flector) -> Flector {
@@ -15590,14 +14400,9 @@ fn point_projectViaOriginOnto_flector(self_: Point, other: Flector) -> Flector {
     ));
 }
 fn point_projectViaOriginOnto_horizon(self_: Point, other: Horizon) -> Point {
-    let self_groups = point_grouped(self_);
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(wedge_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(vec4<f32>(right_dual.e4_ * self_.e1_ * -1.0, right_dual.e4_ * self_.e2_ * -1.0, right_dual.e4_ * self_.e3_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn point_projectViaOriginOnto_line(self_: Point, other: Line) -> Point {
@@ -15663,9 +14468,8 @@ fn point_projectViaOriginOnto_multiVector(self_: Point, other: MultiVector) -> M
 fn point_projectViaOriginOnto_plane(self_: Point, other: Plane) -> Point {
     let self_groups = point_grouped(self_);
     let other_groups = plane_grouped(other);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     let wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_ * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     );
     let wedge: Line = line_degroup(wedge_groups);
@@ -15678,17 +14482,15 @@ fn point_projectViaOriginOnto_point(self_: Point, other: Point) -> Point {
     let right_dual: Plane = plane_degroup(PlaneGroups(
         /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
-    let wedge: AntiScalar = AntiScalar((right_dual.e423_ * self_.e1_) + (right_dual.e431_ * self_.e2_) + (right_dual.e412_ * self_.e3_) + (right_dual.e321_ * self_.e4_));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(wedge.e1234_) * other_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>((right_dual.e423_ * self_.e1_) + (right_dual.e431_ * self_.e2_) + (right_dual.e412_ * self_.e3_) + (right_dual.e321_ * self_.e4_)) * other_groups.group0_
     ));
 }
 fn scalar_projectViaOriginOnto_dualNum(self_: Scalar, other: DualNum) -> DualNum {
     let other_groups = dualNum_grouped(other);
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(wedge.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(right_dual.e1234_ * self_.scalar) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
     ));
 }
 fn scalar_projectViaOriginOnto_flector(self_: Scalar, other: Flector) -> Motor {
@@ -15709,8 +14511,7 @@ fn scalar_projectViaOriginOnto_flector(self_: Scalar, other: Flector) -> Motor {
 }
 fn scalar_projectViaOriginOnto_horizon(self_: Scalar, other: Horizon) -> Scalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(right_dual.e4_ * self_.scalar);
-    return Scalar(other.e321_ * wedge.e4_ * -1.0);
+    return Scalar(other.e321_ * right_dual.e4_ * self_.scalar * -1.0);
 }
 fn scalar_projectViaOriginOnto_line(self_: Scalar, other: Line) -> Scalar {
     let other_groups = line_grouped(other);
@@ -15767,30 +14568,20 @@ fn scalar_projectViaOriginOnto_multiVector(self_: Scalar, other: MultiVector) ->
 }
 fn scalar_projectViaOriginOnto_plane(self_: Scalar, other: Plane) -> Scalar {
     let right_dual: Origin = Origin(other.e321_ * -1.0);
-    let wedge: Origin = Origin(right_dual.e4_ * self_.scalar);
-    return Scalar(wedge.e4_ * other.e321_ * -1.0);
+    return Scalar(right_dual.e4_ * other.e321_ * self_.scalar * -1.0);
 }
 fn scalar_projectViaOriginOnto_point(self_: Scalar, other: Point) -> Scalar {
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     let wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.scalar) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
     return Scalar((wedge.e423_ * other.e1_) + (wedge.e431_ * other.e2_) + (wedge.e412_ * other.e3_) + (wedge.e321_ * other.e4_));
 }
 fn scalar_projectViaOriginOnto_scalar(self_: Scalar, other: Scalar) -> Scalar {
     let right_dual: AntiScalar = AntiScalar(other.scalar);
-    let wedge: AntiScalar = AntiScalar(right_dual.e1234_ * self_.scalar);
-    return Scalar(wedge.e1234_ * other.scalar);
+    return Scalar(right_dual.e1234_ * other.scalar * self_.scalar);
 }
 fn antiScalar_rejectOrthogonallyFrom_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
-    let other_groups = dualNum_grouped(other);
-    let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn antiScalar_rejectOrthogonallyFrom_flector(self_: AntiScalar, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -15810,9 +14601,7 @@ fn antiScalar_rejectOrthogonallyFrom_flector(self_: AntiScalar, other: Flector) 
     ));
 }
 fn antiScalar_rejectOrthogonallyFrom_horizon(self_: AntiScalar, other: Horizon) -> AntiScalar {
-    let anti_wedge: Horizon = Horizon(self_.e1234_ * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(anti_wedge.e321_ * right_anti_dual.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn antiScalar_rejectOrthogonallyFrom_line(self_: AntiScalar, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -15870,12 +14659,7 @@ fn antiScalar_rejectOrthogonallyFrom_multiVector(self_: AntiScalar, other: Multi
     ));
 }
 fn antiScalar_rejectOrthogonallyFrom_plane(self_: AntiScalar, other: Plane) -> AntiScalar {
-    let other_groups = plane_grouped(other);
-    let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
-    ));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(right_anti_dual.e4_ * anti_wedge.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn antiScalar_rejectOrthogonallyFrom_point(self_: AntiScalar, other: Point) -> AntiScalar {
     let other_groups = point_grouped(other);
@@ -15888,16 +14672,10 @@ fn antiScalar_rejectOrthogonallyFrom_point(self_: AntiScalar, other: Point) -> A
     return AntiScalar((right_anti_dual.e423_ * anti_wedge.e1_) + (right_anti_dual.e431_ * anti_wedge.e2_) + (right_anti_dual.e412_ * anti_wedge.e3_) + (right_anti_dual.e321_ * anti_wedge.e4_));
 }
 fn antiScalar_rejectOrthogonallyFrom_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn dualNum_rejectOrthogonallyFrom_dualNum(self_: DualNum, other: DualNum) -> AntiScalar {
-    let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>((other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), other.e1234_ * self_.e1234_, 0.0, 0.0)
-    ));
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn dualNum_rejectOrthogonallyFrom_flector(self_: DualNum, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -15917,9 +14695,7 @@ fn dualNum_rejectOrthogonallyFrom_flector(self_: DualNum, other: Flector) -> Mot
     ));
 }
 fn dualNum_rejectOrthogonallyFrom_horizon(self_: DualNum, other: Horizon) -> AntiScalar {
-    let anti_wedge: Horizon = Horizon(self_.e1234_ * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(anti_wedge.e321_ * right_anti_dual.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn dualNum_rejectOrthogonallyFrom_line(self_: DualNum, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -15978,12 +14754,7 @@ fn dualNum_rejectOrthogonallyFrom_multiVector(self_: DualNum, other: MultiVector
     ));
 }
 fn dualNum_rejectOrthogonallyFrom_plane(self_: DualNum, other: Plane) -> AntiScalar {
-    let other_groups = plane_grouped(other);
-    let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
-    ));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(right_anti_dual.e4_ * anti_wedge.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn dualNum_rejectOrthogonallyFrom_point(self_: DualNum, other: Point) -> AntiScalar {
     let other_groups = point_grouped(other);
@@ -15996,9 +14767,7 @@ fn dualNum_rejectOrthogonallyFrom_point(self_: DualNum, other: Point) -> AntiSca
     return AntiScalar((right_anti_dual.e423_ * anti_wedge.e1_) + (right_anti_dual.e431_ * anti_wedge.e2_) + (right_anti_dual.e412_ * anti_wedge.e3_) + (right_anti_dual.e321_ * anti_wedge.e4_));
 }
 fn dualNum_rejectOrthogonallyFrom_scalar(self_: DualNum, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn flector_rejectOrthogonallyFrom_flector(self_: Flector, other: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -16106,11 +14875,8 @@ fn flector_rejectOrthogonallyFrom_plane(self_: Flector, other: Plane) -> Flector
 }
 fn flector_rejectOrthogonallyFrom_point(self_: Flector, other: Point) -> Plane {
     let anti_wedge: Scalar = Scalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(right_anti_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn horizon_rejectOrthogonallyFrom_flector(self_: Horizon, other: Flector) -> Flector {
@@ -16188,23 +14954,14 @@ fn horizon_rejectOrthogonallyFrom_multiVector(self_: Horizon, other: MultiVector
     ));
 }
 fn horizon_rejectOrthogonallyFrom_plane(self_: Horizon, other: Plane) -> Plane {
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_ * vec4<f32>(-1.0)
-    );
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(vec4<f32>(self_.e321_ * other.e423_ * -1.0, self_.e321_ * other.e431_ * -1.0, self_.e321_ * other.e412_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn horizon_rejectOrthogonallyFrom_point(self_: Horizon, other: Point) -> Plane {
-    let anti_wedge: Scalar = Scalar(self_.e321_ * other.e4_ * -1.0);
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * right_anti_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * other.e4_ * -1.0) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
 }
 fn line_rejectOrthogonallyFrom_flector(self_: Line, other: Flector) -> Motor {
@@ -16225,25 +14982,14 @@ fn line_rejectOrthogonallyFrom_flector(self_: Line, other: Flector) -> Motor {
     ));
 }
 fn line_rejectOrthogonallyFrom_horizon(self_: Line, other: Horizon) -> Line {
-    let self_groups = line_grouped(self_);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
-    );
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_anti_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * anti_wedge_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e321_ * self_.e41_, other.e321_ * self_.e42_, other.e321_ * self_.e43_, 0.0) * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn line_rejectOrthogonallyFrom_line(self_: Line, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let anti_wedge: Scalar = Scalar(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_));
-    let right_anti_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group0_, 
+        /* e41, e42, e43 */ (vec4<f32>(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -16293,26 +15039,13 @@ fn line_rejectOrthogonallyFrom_multiVector(self_: Line, other: MultiVector) -> M
     ));
 }
 fn line_rejectOrthogonallyFrom_plane(self_: Line, other: Plane) -> Line {
-    let self_groups = line_grouped(self_);
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>((self_.e41_ * other.e321_) + (self_.e31_ * other.e412_), (self_.e42_ * other.e321_) + (self_.e12_ * other.e423_), (self_.e43_ * other.e321_) + (self_.e23_ * other.e431_), -(self_.e42_ * other.e431_) - (self_.e43_ * other.e412_)) - (other_groups.group0_.yzxx * vec4<f32>(self_groups.group1_.zxyw.xyz, self_.e41_))
-    );
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_anti_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * anti_wedge_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>((self_.e41_ * other.e321_) + (self_.e31_ * other.e412_) - (self_.e12_ * other.e431_), (self_.e42_ * other.e321_) + (self_.e12_ * other.e423_) - (self_.e23_ * other.e412_), (self_.e43_ * other.e321_) + (self_.e23_ * other.e431_) - (self_.e31_ * other.e423_), -(self_.e41_ * other.e423_) - (self_.e42_ * other.e431_) - (self_.e43_ * other.e412_)) * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn motor_rejectOrthogonallyFrom_dualNum(self_: Motor, other: DualNum) -> AntiScalar {
-    let self_groups = motor_grouped(self_);
-    let other_groups = dualNum_grouped(other);
-    let anti_wedge: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(other.e1234_) * self_groups.group0_, 
-        /* e23, e31, e12, scalar */ vec4<f32>(self_.e23_, self_.e31_, self_.e12_, 1.0) * vec4<f32>(other_groups.group0_.yyzw.xy, other.e1234_, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar))
-    ));
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn motor_rejectOrthogonallyFrom_flector(self_: Motor, other: Flector) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -16339,9 +15072,8 @@ fn motor_rejectOrthogonallyFrom_horizon(self_: Motor, other: Horizon) -> Motor {
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * self_.e1234_)
     );
     let anti_wedge: Flector = flector_degroup(anti_wedge_groups);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_anti_dual.e4_) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
@@ -16415,9 +15147,8 @@ fn motor_rejectOrthogonallyFrom_plane(self_: Motor, other: Plane) -> Motor {
         /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
     );
     let anti_wedge: Flector = flector_degroup(anti_wedge_groups);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_anti_dual.e4_) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
@@ -16432,21 +15163,10 @@ fn motor_rejectOrthogonallyFrom_point(self_: Motor, other: Point) -> AntiScalar 
     return AntiScalar((right_anti_dual.e423_ * anti_wedge.e1_) + (right_anti_dual.e431_ * anti_wedge.e2_) + (right_anti_dual.e412_ * anti_wedge.e3_) + (right_anti_dual.e321_ * anti_wedge.e4_));
 }
 fn motor_rejectOrthogonallyFrom_scalar(self_: Motor, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn multiVector_rejectOrthogonallyFrom_dualNum(self_: MultiVector, other: DualNum) -> AntiScalar {
-    let self_groups = multiVector_grouped(self_);
-    let anti_wedge: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>((other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), other.e1234_ * self_.e1234_, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * self_groups.group1_, 
-        /* e41, e42, e43 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group2_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group3_, 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * self_groups.group4_
-    ));
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn multiVector_rejectOrthogonallyFrom_flector(self_: MultiVector, other: Flector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
@@ -16609,9 +15329,7 @@ fn multiVector_rejectOrthogonallyFrom_point(self_: MultiVector, other: Point) ->
     ));
 }
 fn multiVector_rejectOrthogonallyFrom_scalar(self_: MultiVector, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn origin_rejectOrthogonallyFrom_flector(self_: Origin, other: Flector) -> Flector {
     let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
@@ -16625,9 +15343,7 @@ fn origin_rejectOrthogonallyFrom_flector(self_: Origin, other: Flector) -> Flect
     ));
 }
 fn origin_rejectOrthogonallyFrom_horizon(self_: Origin, other: Horizon) -> Origin {
-    let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_anti_dual.e4_ * anti_wedge.scalar);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn origin_rejectOrthogonallyFrom_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
@@ -16669,9 +15385,7 @@ fn origin_rejectOrthogonallyFrom_multiVector(self_: Origin, other: MultiVector) 
     ));
 }
 fn origin_rejectOrthogonallyFrom_plane(self_: Origin, other: Plane) -> Origin {
-    let anti_wedge: Scalar = Scalar(self_.e4_ * other.e321_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_anti_dual.e4_ * anti_wedge.scalar);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn plane_rejectOrthogonallyFrom_flector(self_: Plane, other: Flector) -> Flector {
     let self_groups = plane_grouped(self_);
@@ -16692,14 +15406,9 @@ fn plane_rejectOrthogonallyFrom_flector(self_: Plane, other: Flector) -> Flector
     ));
 }
 fn plane_rejectOrthogonallyFrom_horizon(self_: Plane, other: Horizon) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_
-    );
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(vec4<f32>(other.e321_ * self_.e423_, other.e321_ * self_.e431_, other.e321_ * self_.e412_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_rejectOrthogonallyFrom_line(self_: Plane, other: Line) -> Plane {
@@ -16762,24 +15471,15 @@ fn plane_rejectOrthogonallyFrom_multiVector(self_: Plane, other: MultiVector) ->
     ));
 }
 fn plane_rejectOrthogonallyFrom_plane(self_: Plane, other: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (other_groups.group0_.yzxw * self_groups.group0_.zxyw) - (other_groups.group0_.zxyw * self_groups.group0_.yzxw), 
-        /* e23, e31, e12 */ ((vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_) - ((vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_)
-    );
     let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_anti_dual.e4_, right_anti_dual.e4_, right_anti_dual.e4_, 0.0) * vec4<f32>(vec4<f32>((other.e321_ * self_.e423_) - (other.e423_ * self_.e321_), (other.e321_ * self_.e431_) - (other.e431_ * self_.e321_), (other.e321_ * self_.e412_) - (other.e412_ * self_.e321_), 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_rejectOrthogonallyFrom_point(self_: Plane, other: Point) -> Plane {
     let anti_wedge: Scalar = Scalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_anti_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(right_anti_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn point_rejectOrthogonallyFrom_flector(self_: Point, other: Flector) -> Flector {
@@ -16794,9 +15494,7 @@ fn point_rejectOrthogonallyFrom_flector(self_: Point, other: Flector) -> Flector
     ));
 }
 fn point_rejectOrthogonallyFrom_horizon(self_: Point, other: Horizon) -> Origin {
-    let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_anti_dual.e4_ * anti_wedge.scalar);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn point_rejectOrthogonallyFrom_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
@@ -16843,14 +15541,10 @@ fn point_rejectOrthogonallyFrom_multiVector(self_: Point, other: MultiVector) ->
     ));
 }
 fn point_rejectOrthogonallyFrom_plane(self_: Point, other: Plane) -> Origin {
-    let anti_wedge: Scalar = Scalar((other.e423_ * self_.e1_) + (other.e431_ * self_.e2_) + (other.e412_ * self_.e3_) + (other.e321_ * self_.e4_));
-    let right_anti_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_anti_dual.e4_ * anti_wedge.scalar);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (other.e423_ * other.e321_ * self_.e1_) - (other.e431_ * other.e321_ * self_.e2_) - (other.e412_ * other.e321_ * self_.e3_));
 }
 fn scalar_rejectOrthogonallyFrom_dualNum(self_: Scalar, other: DualNum) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(other.e1234_ * self_.scalar);
-    let right_anti_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_anti_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(other.scalar * other.e1234_ * self_.scalar);
 }
 fn scalar_rejectOrthogonallyFrom_motor(self_: Scalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
@@ -16883,12 +15577,7 @@ fn scalar_rejectOrthogonallyFrom_multiVector(self_: Scalar, other: MultiVector) 
     ));
 }
 fn antiScalar_rejectViaOriginFrom_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
-    let other_groups = dualNum_grouped(other);
-    let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(self_.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * other_groups.group0_
-    ));
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn antiScalar_rejectViaOriginFrom_flector(self_: AntiScalar, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -16908,9 +15597,7 @@ fn antiScalar_rejectViaOriginFrom_flector(self_: AntiScalar, other: Flector) -> 
     ));
 }
 fn antiScalar_rejectViaOriginFrom_horizon(self_: AntiScalar, other: Horizon) -> AntiScalar {
-    let anti_wedge: Horizon = Horizon(self_.e1234_ * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(anti_wedge.e321_ * right_dual.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn antiScalar_rejectViaOriginFrom_line(self_: AntiScalar, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -16968,12 +15655,7 @@ fn antiScalar_rejectViaOriginFrom_multiVector(self_: AntiScalar, other: MultiVec
     ));
 }
 fn antiScalar_rejectViaOriginFrom_plane(self_: AntiScalar, other: Plane) -> AntiScalar {
-    let other_groups = plane_grouped(other);
-    let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
-    ));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(right_dual.e4_ * anti_wedge.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn antiScalar_rejectViaOriginFrom_point(self_: AntiScalar, other: Point) -> AntiScalar {
     let other_groups = point_grouped(other);
@@ -16986,16 +15668,10 @@ fn antiScalar_rejectViaOriginFrom_point(self_: AntiScalar, other: Point) -> Anti
     return AntiScalar((right_dual.e423_ * anti_wedge.e1_) + (right_dual.e431_ * anti_wedge.e2_) + (right_dual.e412_ * anti_wedge.e3_) + (right_dual.e321_ * anti_wedge.e4_));
 }
 fn antiScalar_rejectViaOriginFrom_scalar(self_: AntiScalar, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn dualNum_rejectViaOriginFrom_dualNum(self_: DualNum, other: DualNum) -> AntiScalar {
-    let anti_wedge: DualNum = dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>((other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), other.e1234_ * self_.e1234_, 0.0, 0.0)
-    ));
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn dualNum_rejectViaOriginFrom_flector(self_: DualNum, other: Flector) -> Motor {
     let other_groups = flector_grouped(other);
@@ -17015,9 +15691,7 @@ fn dualNum_rejectViaOriginFrom_flector(self_: DualNum, other: Flector) -> Motor 
     ));
 }
 fn dualNum_rejectViaOriginFrom_horizon(self_: DualNum, other: Horizon) -> AntiScalar {
-    let anti_wedge: Horizon = Horizon(self_.e1234_ * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(anti_wedge.e321_ * right_dual.e4_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn dualNum_rejectViaOriginFrom_line(self_: DualNum, other: Line) -> AntiScalar {
     let other_groups = line_grouped(other);
@@ -17076,12 +15750,7 @@ fn dualNum_rejectViaOriginFrom_multiVector(self_: DualNum, other: MultiVector) -
     ));
 }
 fn dualNum_rejectViaOriginFrom_plane(self_: DualNum, other: Plane) -> AntiScalar {
-    let other_groups = plane_grouped(other);
-    let anti_wedge: Plane = plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
-    ));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return AntiScalar(right_dual.e4_ * anti_wedge.e321_ * -1.0);
+    return AntiScalar(self_.e1234_ * pow(other.e321_, 2));
 }
 fn dualNum_rejectViaOriginFrom_point(self_: DualNum, other: Point) -> AntiScalar {
     let other_groups = point_grouped(other);
@@ -17094,9 +15763,7 @@ fn dualNum_rejectViaOriginFrom_point(self_: DualNum, other: Point) -> AntiScalar
     return AntiScalar((right_dual.e423_ * anti_wedge.e1_) + (right_dual.e431_ * anti_wedge.e2_) + (right_dual.e412_ * anti_wedge.e3_) + (right_dual.e321_ * anti_wedge.e4_));
 }
 fn dualNum_rejectViaOriginFrom_scalar(self_: DualNum, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn flector_rejectViaOriginFrom_flector(self_: Flector, other: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
@@ -17204,11 +15871,8 @@ fn flector_rejectViaOriginFrom_plane(self_: Flector, other: Plane) -> Flector {
 }
 fn flector_rejectViaOriginFrom_point(self_: Flector, other: Point) -> Plane {
     let anti_wedge: Scalar = Scalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn horizon_rejectViaOriginFrom_flector(self_: Horizon, other: Flector) -> Flector {
@@ -17286,23 +15950,14 @@ fn horizon_rejectViaOriginFrom_multiVector(self_: Horizon, other: MultiVector) -
     ));
 }
 fn horizon_rejectViaOriginFrom_plane(self_: Horizon, other: Plane) -> Plane {
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_ * vec4<f32>(-1.0)
-    );
     let right_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(vec4<f32>(self_.e321_ * other.e423_ * -1.0, self_.e321_ * other.e431_ * -1.0, self_.e321_ * other.e412_ * -1.0, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn horizon_rejectViaOriginFrom_point(self_: Horizon, other: Point) -> Plane {
-    let anti_wedge: Scalar = Scalar(self_.e321_ * other.e4_ * -1.0);
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar) * right_dual_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(self_.e321_ * other.e4_ * -1.0) * vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
     ));
 }
 fn line_rejectViaOriginFrom_flector(self_: Line, other: Flector) -> Motor {
@@ -17323,25 +15978,14 @@ fn line_rejectViaOriginFrom_flector(self_: Line, other: Flector) -> Motor {
     ));
 }
 fn line_rejectViaOriginFrom_horizon(self_: Line, other: Horizon) -> Line {
-    let self_groups = line_grouped(self_);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e321_, other.e321_, other.e321_, 0.0) * vec4<f32>(self_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
-    );
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * anti_wedge_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e321_ * self_.e41_, other.e321_ * self_.e42_, other.e321_ * self_.e43_, 0.0) * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn line_rejectViaOriginFrom_line(self_: Line, other: Line) -> Line {
-    let other_groups = line_grouped(other);
-    let anti_wedge: Scalar = Scalar(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_));
-    let right_dual_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ other_groups.group1_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0)
-    );
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(anti_wedge.scalar) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_dual_groups.group0_, 
+        /* e41, e42, e43 */ (vec4<f32>(-(other.e41_ * self_.e23_) - (other.e42_ * self_.e31_) - (other.e43_ * self_.e12_) - (other.e23_ * self_.e41_) - (other.e31_ * self_.e42_) - (other.e12_ * self_.e43_)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>(other.e23_ * -1.0, other.e31_ * -1.0, other.e12_ * -1.0, 0.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -17391,26 +16035,13 @@ fn line_rejectViaOriginFrom_multiVector(self_: Line, other: MultiVector) -> Mult
     ));
 }
 fn line_rejectViaOriginFrom_plane(self_: Line, other: Plane) -> Line {
-    let self_groups = line_grouped(self_);
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: PointGroups = PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>((self_.e41_ * other.e321_) + (self_.e31_ * other.e412_), (self_.e42_ * other.e321_) + (self_.e12_ * other.e423_), (self_.e43_ * other.e321_) + (self_.e23_ * other.e431_), -(self_.e42_ * other.e431_) - (self_.e43_ * other.e412_)) - (other_groups.group0_.yzxx * vec4<f32>(self_groups.group1_.zxyw.xyz, self_.e41_))
-    );
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(right_dual.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * anti_wedge_groups.group0_ * vec4<f32>(-1.0), 
+        /* e41, e42, e43 */ (vec4<f32>(other.e321_ * -1.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * vec4<f32>((self_.e41_ * other.e321_) + (self_.e31_ * other.e412_) - (self_.e12_ * other.e431_), (self_.e42_ * other.e321_) + (self_.e12_ * other.e423_) - (self_.e23_ * other.e412_), (self_.e43_ * other.e321_) + (self_.e23_ * other.e431_) - (self_.e31_ * other.e423_), -(self_.e41_ * other.e423_) - (self_.e42_ * other.e431_) - (self_.e43_ * other.e412_)) * vec4<f32>(-1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
 fn motor_rejectViaOriginFrom_dualNum(self_: Motor, other: DualNum) -> AntiScalar {
-    let self_groups = motor_grouped(self_);
-    let other_groups = dualNum_grouped(other);
-    let anti_wedge: Motor = motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(other.e1234_) * self_groups.group0_, 
-        /* e23, e31, e12, scalar */ vec4<f32>(self_.e23_, self_.e31_, self_.e12_, 1.0) * vec4<f32>(other_groups.group0_.yyzw.xy, other.e1234_, (other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar))
-    ));
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn motor_rejectViaOriginFrom_flector(self_: Motor, other: Flector) -> Motor {
     let self_groups = motor_grouped(self_);
@@ -17437,9 +16068,8 @@ fn motor_rejectViaOriginFrom_horizon(self_: Motor, other: Horizon) -> Motor {
         /* e423, e431, e412, e321 */ vec4<f32>(vec4<f32>(0.0).xyz, other.e321_ * self_.e1234_)
     );
     let anti_wedge: Flector = flector_degroup(anti_wedge_groups);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_dual.e4_) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
@@ -17513,9 +16143,8 @@ fn motor_rejectViaOriginFrom_plane(self_: Motor, other: Plane) -> Motor {
         /* e423, e431, e412, e321 */ vec4<f32>(self_.e1234_) * other_groups.group0_
     );
     let anti_wedge: Flector = flector_degroup(anti_wedge_groups);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
     return motor_degroup(MotorGroups(
-        /* e41, e42, e43, e1234 */ vec4<f32>(right_dual.e4_) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
+        /* e41, e42, e43, e1234 */ vec4<f32>(other.e321_ * -1.0) * vec4<f32>(anti_wedge_groups.group0_.xyz, anti_wedge.e321_) * vec4<f32>(-1.0), 
         /* e23, e31, e12, scalar */ vec4<f32>(0.0)
     ));
 }
@@ -17530,21 +16159,10 @@ fn motor_rejectViaOriginFrom_point(self_: Motor, other: Point) -> AntiScalar {
     return AntiScalar((right_dual.e423_ * anti_wedge.e1_) + (right_dual.e431_ * anti_wedge.e2_) + (right_dual.e412_ * anti_wedge.e3_) + (right_dual.e321_ * anti_wedge.e4_));
 }
 fn motor_rejectViaOriginFrom_scalar(self_: Motor, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn multiVector_rejectViaOriginFrom_dualNum(self_: MultiVector, other: DualNum) -> AntiScalar {
-    let self_groups = multiVector_grouped(self_);
-    let anti_wedge: MultiVector = multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>((other.scalar * self_.e1234_) + (other.e1234_ * self_.scalar), other.e1234_ * self_.e1234_, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_) * self_groups.group1_, 
-        /* e41, e42, e43 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group2_, 
-        /* e23, e31, e12 */ (vec4<f32>(other.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group3_, 
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_) * self_groups.group4_
-    ));
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar((pow(other.scalar, 2) * self_.e1234_) + (other.scalar * other.e1234_ * self_.scalar));
 }
 fn multiVector_rejectViaOriginFrom_flector(self_: MultiVector, other: Flector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
@@ -17707,9 +16325,7 @@ fn multiVector_rejectViaOriginFrom_point(self_: MultiVector, other: Point) -> Mu
     ));
 }
 fn multiVector_rejectViaOriginFrom_scalar(self_: MultiVector, other: Scalar) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(self_.e1234_ * other.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(self_.e1234_ * pow(other.scalar, 2));
 }
 fn origin_rejectViaOriginFrom_flector(self_: Origin, other: Flector) -> Flector {
     let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
@@ -17723,9 +16339,7 @@ fn origin_rejectViaOriginFrom_flector(self_: Origin, other: Flector) -> Flector 
     ));
 }
 fn origin_rejectViaOriginFrom_horizon(self_: Origin, other: Horizon) -> Origin {
-    let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_dual.e4_ * anti_wedge.scalar);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn origin_rejectViaOriginFrom_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
@@ -17767,9 +16381,7 @@ fn origin_rejectViaOriginFrom_multiVector(self_: Origin, other: MultiVector) -> 
     ));
 }
 fn origin_rejectViaOriginFrom_plane(self_: Origin, other: Plane) -> Origin {
-    let anti_wedge: Scalar = Scalar(self_.e4_ * other.e321_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_dual.e4_ * anti_wedge.scalar);
+    return Origin(self_.e4_ * pow(other.e321_, 2) * -1.0);
 }
 fn plane_rejectViaOriginFrom_flector(self_: Plane, other: Flector) -> Flector {
     let self_groups = plane_grouped(self_);
@@ -17790,14 +16402,9 @@ fn plane_rejectViaOriginFrom_flector(self_: Plane, other: Flector) -> Flector {
     ));
 }
 fn plane_rejectViaOriginFrom_horizon(self_: Plane, other: Horizon) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ vec4<f32>(0.0), 
-        /* e23, e31, e12 */ (vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_
-    );
     let right_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(vec4<f32>(other.e321_ * self_.e423_, other.e321_ * self_.e431_, other.e321_ * self_.e412_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_rejectViaOriginFrom_line(self_: Plane, other: Line) -> Plane {
@@ -17860,24 +16467,15 @@ fn plane_rejectViaOriginFrom_multiVector(self_: Plane, other: MultiVector) -> Mu
     ));
 }
 fn plane_rejectViaOriginFrom_plane(self_: Plane, other: Plane) -> Plane {
-    let self_groups = plane_grouped(self_);
-    let other_groups = plane_grouped(other);
-    let anti_wedge_groups: LineGroups = LineGroups(
-        /* e41, e42, e43 */ (other_groups.group0_.yzxw * self_groups.group0_.zxyw) - (other_groups.group0_.zxyw * self_groups.group0_.yzxw), 
-        /* e23, e31, e12 */ ((vec4<f32>(other.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_) - ((vec4<f32>(self_.e321_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * other_groups.group0_)
-    );
     let right_dual: Origin = Origin(other.e321_ * -1.0);
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(anti_wedge_groups.group1_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(right_dual.e4_, right_dual.e4_, right_dual.e4_, 0.0) * vec4<f32>(vec4<f32>((other.e321_ * self_.e423_) - (other.e423_ * self_.e321_), (other.e321_ * self_.e431_) - (other.e431_ * self_.e321_), (other.e321_ * self_.e412_) - (other.e412_ * self_.e321_), 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn plane_rejectViaOriginFrom_point(self_: Plane, other: Point) -> Plane {
     let anti_wedge: Scalar = Scalar(-(self_.e423_ * other.e1_) - (self_.e431_ * other.e2_) - (self_.e412_ * other.e3_) - (self_.e321_ * other.e4_));
-    let right_dual_groups: PlaneGroups = PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0)
-    );
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(right_dual_groups.group0_.xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
+        /* e423, e431, e412, e321 */ vec4<f32>(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * vec4<f32>(vec4<f32>(other.e1_, other.e2_, other.e3_, 0.0).xyz, 0.0) * vec4<f32>(1.0, 1.0, 1.0, 0.0)
     ));
 }
 fn point_rejectViaOriginFrom_flector(self_: Point, other: Flector) -> Flector {
@@ -17892,9 +16490,7 @@ fn point_rejectViaOriginFrom_flector(self_: Point, other: Flector) -> Flector {
     ));
 }
 fn point_rejectViaOriginFrom_horizon(self_: Point, other: Horizon) -> Origin {
-    let anti_wedge: Scalar = Scalar(other.e321_ * self_.e4_);
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_dual.e4_ * anti_wedge.scalar);
+    return Origin(pow(other.e321_, 2) * self_.e4_ * -1.0);
 }
 fn point_rejectViaOriginFrom_motor(self_: Point, other: Motor) -> Flector {
     let self_groups = point_grouped(self_);
@@ -17941,14 +16537,10 @@ fn point_rejectViaOriginFrom_multiVector(self_: Point, other: MultiVector) -> Mu
     ));
 }
 fn point_rejectViaOriginFrom_plane(self_: Point, other: Plane) -> Origin {
-    let anti_wedge: Scalar = Scalar((other.e423_ * self_.e1_) + (other.e431_ * self_.e2_) + (other.e412_ * self_.e3_) + (other.e321_ * self_.e4_));
-    let right_dual: Origin = Origin(other.e321_ * -1.0);
-    return Origin(right_dual.e4_ * anti_wedge.scalar);
+    return Origin(-(pow(other.e321_, 2) * self_.e4_) - (other.e423_ * other.e321_ * self_.e1_) - (other.e431_ * other.e321_ * self_.e2_) - (other.e412_ * other.e321_ * self_.e3_));
 }
 fn scalar_rejectViaOriginFrom_dualNum(self_: Scalar, other: DualNum) -> AntiScalar {
-    let anti_wedge: Scalar = Scalar(other.e1234_ * self_.scalar);
-    let right_dual: AntiScalar = AntiScalar(other.scalar);
-    return AntiScalar(right_dual.e1234_ * anti_wedge.scalar);
+    return AntiScalar(other.scalar * other.e1234_ * self_.scalar);
 }
 fn scalar_rejectViaOriginFrom_motor(self_: Scalar, other: Motor) -> Motor {
     let other_groups = motor_grouped(other);
@@ -20224,13 +18816,8 @@ fn scalar_sub_scalar(self_: Scalar, other: Scalar) -> Scalar {
     return Scalar(self_.scalar - other.scalar);
 }
 fn flector_support(self_: Flector) -> Line {
-    let right_anti_dual_groups: FlectorGroups = FlectorGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
-    );
-    let self_2: Origin = Origin(1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(self_2.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group0_, 
+        /* e41, e42, e43 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -20241,17 +18828,8 @@ fn motor_support(self_: Motor) -> Scalar {
     return Scalar(0.0);
 }
 fn multiVector_support(self_: MultiVector) -> Line {
-    let self_groups = multiVector_grouped(self_);
-    let right_anti_dual_groups: MultiVectorGroups = MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(0.0, self_.scalar, 0.0, 0.0), 
-        /* e1, e2, e3, e4 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
-        /* e41, e42, e43 */ self_groups.group3_ * vec4<f32>(-1.0), 
-        /* e23, e31, e12 */ vec4<f32>(0.0), 
-        /* e423, e431, e412, e321 */ vec4<f32>(self_.e1_, self_.e2_, self_.e3_, 0.0)
-    );
-    let self_2: Origin = Origin(1.0);
     return line_degroup(LineGroups(
-        /* e41, e42, e43 */ (vec4<f32>(self_2.e4_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * right_anti_dual_groups.group1_, 
+        /* e41, e42, e43 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
@@ -20314,27 +18892,20 @@ fn scalar_unit() -> Scalar {
 }
 fn antiScalar_unitize(self_: AntiScalar) -> AntiScalar {
     let weight_norm: AntiScalar = antiScalar_antiSquareRoot(antiScalar_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
-    return AntiScalar(geometric_anti_product.e1234_ * self_.e1234_);
+    let other: AntiScalar = AntiScalar(pow(weight_norm.e1234_, -2));
+    return AntiScalar(other.e1234_ * self_.e1234_ * weight_norm.e1234_);
 }
 fn dualNum_unitize(self_: DualNum) -> DualNum {
     let self_groups = dualNum_grouped(self_);
     let weight_norm: AntiScalar = antiScalar_antiSquareRoot(dualNum_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let other: AntiScalar = AntiScalar(pow(weight_norm.e1234_, -2));
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
+        /* scalar, e1234 */ (vec4<f32>(other.e1234_ * weight_norm.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_
     ));
 }
 fn flector_unitize(self_: Flector) -> Flector {
     let self_groups = flector_grouped(self_);
-    let weight_norm: AntiScalar = antiScalar_antiSquareRoot(flector_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(antiScalar_antiSquareRoot(flector_flatWeightNormSquared(self_)).e1234_));
     return flector_degroup(FlectorGroups(
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
         /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_
@@ -20342,10 +18913,7 @@ fn flector_unitize(self_: Flector) -> Flector {
 }
 fn line_unitize(self_: Line) -> Line {
     let self_groups = line_grouped(self_);
-    let weight_norm: AntiScalar = antiScalar_antiSquareRoot(line_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(antiScalar_antiSquareRoot(line_flatWeightNormSquared(self_)).e1234_));
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group0_, 
         /* e23, e31, e12 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) * self_groups.group1_
@@ -20353,10 +18921,7 @@ fn line_unitize(self_: Line) -> Line {
 }
 fn motor_unitize(self_: Motor) -> Motor {
     let self_groups = motor_grouped(self_);
-    let weight_norm: AntiScalar = antiScalar_antiSquareRoot(motor_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(antiScalar_antiSquareRoot(motor_flatWeightNormSquared(self_)).e1234_));
     return motor_degroup(MotorGroups(
         /* e41, e42, e43, e1234 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_, 
         /* e23, e31, e12, scalar */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_
@@ -20364,10 +18929,7 @@ fn motor_unitize(self_: Motor) -> Motor {
 }
 fn multiVector_unitize(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);
-    let weight_norm: AntiScalar = antiScalar_antiSquareRoot(multiVector_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let geometric_anti_product: AntiScalar = AntiScalar(1.0/(antiScalar_antiSquareRoot(multiVector_flatWeightNormSquared(self_)).e1234_));
     return multiVector_degroup(MultiVectorGroups(
         /* scalar, e1234 */ (vec4<f32>(geometric_anti_product.e1234_) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) * self_groups.group0_, 
         /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group1_, 
@@ -20378,29 +18940,23 @@ fn multiVector_unitize(self_: MultiVector) -> MultiVector {
 }
 fn origin_unitize(self_: Origin) -> Origin {
     let weight_norm: AntiScalar = antiScalar_antiSquareRoot(origin_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
-    return Origin(geometric_anti_product.e1234_ * self_.e4_);
+    let other: AntiScalar = AntiScalar(pow(weight_norm.e1234_, -2));
+    return Origin(other.e1234_ * weight_norm.e1234_ * self_.e4_);
 }
 fn plane_unitize(self_: Plane) -> Plane {
     let self_groups = plane_grouped(self_);
     let weight_norm: AntiScalar = antiScalar_antiSquareRoot(plane_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let other: AntiScalar = AntiScalar(pow(weight_norm.e1234_, -2));
     return plane_degroup(PlaneGroups(
-        /* e423, e431, e412, e321 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_
+        /* e423, e431, e412, e321 */ vec4<f32>(other.e1234_ * weight_norm.e1234_) * self_groups.group0_
     ));
 }
 fn point_unitize(self_: Point) -> Point {
     let self_groups = point_grouped(self_);
     let weight_norm: AntiScalar = antiScalar_antiSquareRoot(point_flatWeightNormSquared(self_));
-    let anti_dot_product: AntiScalar = AntiScalar(pow(weight_norm.e1234_, 2));
-    let other: AntiScalar = AntiScalar(1.0/(anti_dot_product.e1234_));
-    let geometric_anti_product: AntiScalar = AntiScalar(other.e1234_ * weight_norm.e1234_);
+    let other: AntiScalar = AntiScalar(pow(weight_norm.e1234_, -2));
     return point_degroup(PointGroups(
-        /* e1, e2, e3, e4 */ vec4<f32>(geometric_anti_product.e1234_) * self_groups.group0_
+        /* e1, e2, e3, e4 */ vec4<f32>(other.e1234_ * weight_norm.e1234_) * self_groups.group0_
     ));
 }
 fn antiScalar_wedge_dualNum(self_: AntiScalar, other: DualNum) -> AntiScalar {
@@ -22625,42 +21181,32 @@ fn point_flatWeightNorm(self_: Point) -> AntiScalar {
 }
 fn flector_normSquared(self_: Flector) -> DualNum {
     let self_groups = flector_grouped(self_);
-    let self_2: Scalar = flector_flatBulkNormSquared(self_);
-    let other: AntiScalar = flector_flatWeightNormSquared(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(flector_flatBulkNormSquared(self_).scalar, flector_flatWeightNormSquared(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn line_normSquared(self_: Line) -> DualNum {
     let self_groups = line_grouped(self_);
-    let self_2: Scalar = line_flatBulkNormSquared(self_);
-    let other: AntiScalar = line_flatWeightNormSquared(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(line_flatBulkNormSquared(self_).scalar, line_flatWeightNormSquared(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn motor_normSquared(self_: Motor) -> DualNum {
     let self_groups = motor_grouped(self_);
-    let self_2: Scalar = motor_flatBulkNormSquared(self_);
-    let other: AntiScalar = motor_flatWeightNormSquared(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(motor_flatBulkNormSquared(self_).scalar, motor_flatWeightNormSquared(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn multiVector_normSquared(self_: MultiVector) -> DualNum {
     let self_groups = multiVector_grouped(self_);
-    let self_2: Scalar = multiVector_flatBulkNormSquared(self_);
-    let other: AntiScalar = multiVector_flatWeightNormSquared(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(multiVector_flatBulkNormSquared(self_).scalar, multiVector_flatWeightNormSquared(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn point_normSquared(self_: Point) -> DualNum {
     let self_groups = point_grouped(self_);
-    let self_2: Scalar = point_flatBulkNormSquared(self_);
-    let other: AntiScalar = point_flatWeightNormSquared(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(point_flatBulkNormSquared(self_).scalar, point_flatWeightNormSquared(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn dualNum_not(self_: DualNum) -> AntiScalar {
@@ -22775,41 +21321,31 @@ fn point_flatBulkNorm(self_: Point) -> Scalar {
 }
 fn flector_norm(self_: Flector) -> DualNum {
     let self_groups = flector_grouped(self_);
-    let self_2: Scalar = flector_flatBulkNorm(self_);
-    let other: AntiScalar = flector_flatWeightNorm(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(flector_flatBulkNorm(self_).scalar, flector_flatWeightNorm(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn line_norm(self_: Line) -> DualNum {
     let self_groups = line_grouped(self_);
-    let self_2: Scalar = line_flatBulkNorm(self_);
-    let other: AntiScalar = line_flatWeightNorm(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(line_flatBulkNorm(self_).scalar, line_flatWeightNorm(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn motor_norm(self_: Motor) -> DualNum {
     let self_groups = motor_grouped(self_);
-    let self_2: Scalar = motor_flatBulkNorm(self_);
-    let other: AntiScalar = motor_flatWeightNorm(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(motor_flatBulkNorm(self_).scalar, motor_flatWeightNorm(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn multiVector_norm(self_: MultiVector) -> DualNum {
     let self_groups = multiVector_grouped(self_);
-    let self_2: Scalar = multiVector_flatBulkNorm(self_);
-    let other: AntiScalar = multiVector_flatWeightNorm(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(multiVector_flatBulkNorm(self_).scalar, multiVector_flatWeightNorm(self_).e1234_, 0.0, 0.0)
     ));
 }
 fn point_norm(self_: Point) -> DualNum {
     let self_groups = point_grouped(self_);
-    let self_2: Scalar = point_flatBulkNorm(self_);
-    let other: AntiScalar = point_flatWeightNorm(self_);
     return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_2.scalar, other.e1234_, 0.0, 0.0)
+        /* scalar, e1234 */ vec4<f32>(point_flatBulkNorm(self_).scalar, point_flatWeightNorm(self_).e1234_, 0.0, 0.0)
     ));
 }

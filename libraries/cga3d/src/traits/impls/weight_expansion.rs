@@ -16,7 +16,7 @@
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         5      22       0
-//  Average:        11      29       0
+//  Average:        11      28       0
 //  Maximum:       211     265       0
 impl std::ops::Div<weight_expansion> for AntiCircleRotor {
     type Output = weight_expansion_partial<AntiCircleRotor>;
@@ -265,13 +265,18 @@ impl WeightExpansion<AntiMotor> for AntiCircleRotor {
 impl WeightExpansion<AntiPlane> for AntiCircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiScalar> for AntiCircleRotor {
@@ -832,8 +837,7 @@ impl WeightExpansion<Scalar> for AntiCircleRotor {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for AntiCircleRotor {
@@ -1999,20 +2003,24 @@ impl WeightExpansion<AntiDualNum> for AntiDualNum {
     // no simd        0        2        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * other.group0());
     }
 }
 impl WeightExpansion<AntiFlatPoint> for AntiDualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiFlector> for AntiDualNum {
@@ -2084,13 +2092,18 @@ impl WeightExpansion<AntiMotor> for AntiDualNum {
 impl WeightExpansion<AntiPlane> for AntiDualNum {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiScalar> for AntiDualNum {
@@ -2104,8 +2117,7 @@ impl WeightExpansion<AntiScalar> for AntiDualNum {
     //  no simd        0        3        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Circle> for AntiDualNum {
@@ -2251,13 +2263,18 @@ impl WeightExpansion<DualNum> for AntiDualNum {
 impl WeightExpansion<FlatPoint> for AntiDualNum {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl WeightExpansion<Flector> for AntiDualNum {
@@ -2398,13 +2415,18 @@ impl WeightExpansion<MultiVector> for AntiDualNum {
 impl WeightExpansion<Plane> for AntiDualNum {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn weight_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
     }
 }
 impl WeightExpansion<RoundPoint> for AntiDualNum {
@@ -2439,8 +2461,7 @@ impl WeightExpansion<Scalar> for AntiDualNum {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for AntiDualNum {
@@ -2587,43 +2608,27 @@ impl WeightExpansion<AntiDualNum> for AntiFlatPoint {
     //  no simd        0        3        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * right_anti_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e3215] * self[e321], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl WeightExpansion<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn weight_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ self[e321] * right_anti_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e321] * self[e321]);
     }
 }
 impl WeightExpansion<AntiFlector> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn weight_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Flector::from_groups(
-            // e15, e25, e35, e45
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e321] * right_anti_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ self[e321] * other[e321]);
     }
 }
 impl WeightExpansion<AntiMotor> for AntiFlatPoint {
@@ -2632,19 +2637,12 @@ impl WeightExpansion<AntiMotor> for AntiFlatPoint {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       11        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn weight_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * right_anti_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e321] * other[e3215], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl WeightExpansion<AntiScalar> for AntiFlatPoint {
@@ -2658,8 +2656,7 @@ impl WeightExpansion<AntiScalar> for AntiFlatPoint {
     //  no simd        0        5        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Circle> for AntiFlatPoint {
@@ -2759,15 +2756,14 @@ impl WeightExpansion<DualNum> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Flector> for AntiFlatPoint {
@@ -2796,18 +2792,15 @@ impl WeightExpansion<Flector> for AntiFlatPoint {
 impl WeightExpansion<Motor> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<MultiVector> for AntiFlatPoint {
@@ -4713,13 +4706,18 @@ impl WeightExpansion<AntiMotor> for AntiMotor {
 impl WeightExpansion<AntiPlane> for AntiMotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiScalar> for AntiMotor {
@@ -4953,13 +4951,18 @@ impl WeightExpansion<DualNum> for AntiMotor {
 impl WeightExpansion<FlatPoint> for AntiMotor {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl WeightExpansion<Flector> for AntiMotor {
@@ -5206,8 +5209,7 @@ impl WeightExpansion<Scalar> for AntiMotor {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for AntiMotor {
@@ -5589,8 +5591,7 @@ impl WeightExpansion<AntiScalar> for AntiPlane {
     //  no simd        0        5        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Circle> for AntiPlane {
@@ -5750,15 +5751,14 @@ impl WeightExpansion<DualNum> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<FlatPoint> for AntiPlane {
@@ -6119,129 +6119,57 @@ impl WeightExpansion<AntiScalar> for AntiScalar {
     // f32        0        2        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * -1.0);
     }
 }
 impl WeightExpansion<CircleRotor> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl WeightExpansion<DualNum> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl WeightExpansion<Motor> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl WeightExpansion<MultiVector> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       23        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = MultiVector::from_groups(
-            // scalar, e12345
-            other.group0().yx() * Simd32x2::from([-1.0, 1.0]),
-            // e1, e2, e3, e4
-            other.group9().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
-            // e15, e25, e35, e45
-            other.group8().with_w(other[e321] * -1.0),
-            // e41, e42, e43
-            other.group7(),
-            // e23, e31, e12
-            other.group6().xyz(),
-            // e415, e425, e435, e321
-            other.group5().with_w(other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e423, e431, e412
-            other.group4() * Simd32x3::from(-1.0),
-            // e235, e315, e125
-            other.group3().xyz() * Simd32x3::from(-1.0),
-            // e4235, e4315, e4125, e3215
-            other.group1().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl WeightExpansion<VersorEven> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       17        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl std::ops::Div<weight_expansion> for Circle {
@@ -6294,8 +6222,7 @@ impl WeightExpansion<AntiDualNum> for Circle {
     // no simd        0        4        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl WeightExpansion<AntiFlatPoint> for Circle {
@@ -6343,17 +6270,11 @@ impl WeightExpansion<AntiMotor> for Circle {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn weight_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl WeightExpansion<AntiScalar> for Circle {
@@ -6870,8 +6791,7 @@ impl WeightExpansion<AntiDualNum> for CircleRotor {
     // no simd        0        4        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl WeightExpansion<AntiFlatPoint> for CircleRotor {
@@ -6919,17 +6839,11 @@ impl WeightExpansion<AntiMotor> for CircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn weight_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
     }
 }
 impl WeightExpansion<AntiScalar> for CircleRotor {
@@ -9127,8 +9041,7 @@ impl WeightExpansion<AntiScalar> for DualNum {
     //  no simd        0        3        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Circle> for DualNum {
@@ -9239,13 +9152,15 @@ impl WeightExpansion<DipoleInversion> for DualNum {
 impl WeightExpansion<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<FlatPoint> for DualNum {
@@ -9254,14 +9169,12 @@ impl WeightExpansion<FlatPoint> for DualNum {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_anti_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e5] * other[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl WeightExpansion<Flector> for DualNum {
@@ -9297,10 +9210,9 @@ impl WeightExpansion<Line> for DualNum {
     // no simd        0       12        0
     fn weight_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_anti_dual.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -9395,53 +9307,48 @@ impl WeightExpansion<MultiVector> for DualNum {
 impl WeightExpansion<Plane> for DualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn weight_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_anti_dual.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]).xyz().with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
 }
 impl WeightExpansion<RoundPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e5] * right_anti_dual[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
     }
 }
 impl WeightExpansion<Sphere> for DualNum {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn weight_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            other.group0().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[e5]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e1234]]) * Simd32x4::from(-1.0),
         );
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e5]) * right_anti_dual.group0() * Simd32x4::from(-1.0));
     }
 }
 impl WeightExpansion<VersorEven> for DualNum {
@@ -9575,8 +9482,7 @@ impl WeightExpansion<AntiScalar> for FlatPoint {
     //  no simd        0        5        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Circle> for FlatPoint {
@@ -9706,30 +9612,24 @@ impl WeightExpansion<DualNum> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<FlatPoint> for FlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e321] * self[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e45] * self[e45] * -1.0);
     }
 }
 impl WeightExpansion<Flector> for FlatPoint {
@@ -10226,16 +10126,11 @@ impl WeightExpansion<DualNum> for Flector {
 impl WeightExpansion<FlatPoint> for Flector {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e321] * self[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other[e45] * self[e45] * -1.0);
     }
 }
 impl WeightExpansion<Flector> for Flector {
@@ -11220,14 +11115,12 @@ impl WeightExpansion<FlatPoint> for Motor {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_anti_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e45] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl WeightExpansion<Flector> for Motor {
@@ -11414,21 +11307,11 @@ impl WeightExpansion<Plane> for Motor {
 impl WeightExpansion<RoundPoint> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn weight_expansion(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        return AntiScalar::from_groups(/* e12345 */ self[e5] * right_anti_dual[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
     }
 }
 impl WeightExpansion<Sphere> for Motor {
@@ -12897,8 +12780,7 @@ impl WeightExpansion<Scalar> for MultiVector {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[scalar] * other[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for MultiVector {
@@ -13161,27 +13043,21 @@ impl WeightExpansion<AntiScalar> for Plane {
     //  no simd        0        5        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<CircleRotor> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<DipoleInversion> for Plane {
@@ -13216,15 +13092,14 @@ impl WeightExpansion<DualNum> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<Flector> for Plane {
@@ -13253,18 +13128,15 @@ impl WeightExpansion<Flector> for Plane {
 impl WeightExpansion<Motor> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<MultiVector> for Plane {
@@ -13377,22 +13249,15 @@ impl WeightExpansion<Sphere> for Plane {
 impl WeightExpansion<VersorEven> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        5        0
-    // no simd        0       20        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
     }
 }
 impl WeightExpansion<VersorOdd> for Plane {
@@ -13514,8 +13379,7 @@ impl WeightExpansion<AntiDualNum> for RoundPoint {
     // no simd        0        4        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[e5]) * self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e3215]) * self.group0());
     }
 }
 impl WeightExpansion<AntiFlatPoint> for RoundPoint {
@@ -14296,20 +14160,24 @@ impl WeightExpansion<AntiDualNum> for Scalar {
     // no simd        0        2        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * other.group0());
     }
 }
 impl WeightExpansion<AntiFlatPoint> for Scalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiFlector> for Scalar {
@@ -14381,13 +14249,18 @@ impl WeightExpansion<AntiMotor> for Scalar {
 impl WeightExpansion<AntiPlane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiScalar> for Scalar {
@@ -14397,8 +14270,7 @@ impl WeightExpansion<AntiScalar> for Scalar {
     // f32        0        2        0
     fn weight_expansion(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Scalar::from_groups(/* scalar */ right_anti_dual[scalar] * self[scalar]);
+        return Scalar::from_groups(/* scalar */ other[e12345] * self[scalar] * -1.0);
     }
 }
 impl WeightExpansion<Circle> for Scalar {
@@ -14524,25 +14396,32 @@ impl WeightExpansion<DipoleInversion> for Scalar {
 impl WeightExpansion<DualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn weight_expansion(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar]) * Simd32x2::from([other[e5] * -1.0, other[e12345] * -1.0]));
     }
 }
 impl WeightExpansion<FlatPoint> for Scalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn weight_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl WeightExpansion<Flector> for Scalar {
@@ -14672,13 +14551,18 @@ impl WeightExpansion<MultiVector> for Scalar {
 impl WeightExpansion<Plane> for Scalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn weight_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
     }
 }
 impl WeightExpansion<RoundPoint> for Scalar {
@@ -14713,8 +14597,7 @@ impl WeightExpansion<Scalar> for Scalar {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[scalar] * self[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for Scalar {
@@ -14815,28 +14698,17 @@ impl WeightExpansion<AntiDualNum> for Sphere {
     // f32        0        1        0
     fn weight_expansion(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e5] * self[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ other[e3215] * self[e1234]);
     }
 }
 impl WeightExpansion<AntiMotor> for Sphere {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn weight_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e5] * self[e1234]);
+        return AntiScalar::from_groups(/* e12345 */ other[e3215] * self[e1234]);
     }
 }
 impl WeightExpansion<AntiScalar> for Sphere {
@@ -16361,13 +16233,18 @@ impl WeightExpansion<AntiMotor> for VersorOdd {
 impl WeightExpansion<AntiPlane> for VersorOdd {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn weight_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl WeightExpansion<AntiScalar> for VersorOdd {
@@ -16949,8 +16826,7 @@ impl WeightExpansion<Scalar> for VersorOdd {
     // f32        0        1        0
     fn weight_expansion(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ other[scalar] * self[scalar]);
     }
 }
 impl WeightExpansion<Sphere> for VersorOdd {

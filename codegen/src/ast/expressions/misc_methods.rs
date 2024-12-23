@@ -32,6 +32,18 @@ impl AnyExpression {
             AnyExpression::Class(e) => e.deep_inline_variables(),
         };
     }
+
+    pub(crate) fn maybe_variable(&self) -> Option<&RawVariableInvocation> {
+        match self {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        }
+    }
 }
 
 /// This helps unify Variable<MultiVector> and MultiVectorExpr
@@ -195,7 +207,7 @@ impl IntExpr {
             IntExpr::TraitInvoke10ToInt(_, _) => false,
         };
         if result {
-            self.simplify_nuanced(true, false);
+            self.simplify_nuanced(true, false, false);
         }
         result
     }
@@ -252,7 +264,7 @@ impl FloatExpr {
             FloatExpr::FromInt(a) => a.deep_inline_variables(),
         };
         if result {
-            self.simplify_nuanced(true, false, true, false);
+            self.simplify_nuanced(true, false, true, false, false);
         }
         result
     }
@@ -303,7 +315,7 @@ impl Vec2Expr {
             }
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }
@@ -360,7 +372,7 @@ impl Vec3Expr {
             }
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }
@@ -424,7 +436,7 @@ impl Vec4Expr {
             }
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }
@@ -444,7 +456,7 @@ impl MultiVectorGroupExpr {
             MultiVectorGroupExpr::Vec4(v) => v.deep_inline_variables(),
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }
@@ -482,7 +494,7 @@ impl MultiVectorExpr {
             MultiVectorVia::TraitInvoke12fToClass(_, _, _) => false,
         };
         if result {
-            self.simplify_nuanced(true, false, false);
+            self.simplify_nuanced(true, false, false, false);
         }
         result
     }

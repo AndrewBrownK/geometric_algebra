@@ -2522,30 +2522,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2591,6 +2567,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         return ti;
     }
 
+    // TODO it looks like single-use variables are not getting inlined perfectly, according to...
+    //  - impl AntiSupport for Flector
+    //  - impl Unitize for Circle
     fn into_trait11(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
         let lookup = TraitOperationsLookup {
             traits10: &self.traits10_dependencies,
@@ -2606,33 +2585,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            // TODO it looks like single-use variables are not getting inlined perfectly, according to...
-            //  - impl AntiSupport for Flector
-            //  - impl Unitize for Circle
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2646,7 +2598,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                     if let Some(v) = &vd.expr {
                         let mut expr = v.write();
                         expr.final_simplify();
-                        // TODO should this be async, so we can get infallible trait lookups?
                         statistics += expr.count_operations(&lookup);
                     }
                 }
@@ -2694,30 +2645,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2778,30 +2705,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2862,30 +2765,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2946,30 +2825,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
         return_expr.final_simplify();
         statistics += return_expr.count_operations(&lookup);
-        let maybe_variable = match &return_expr {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        };
-        if let Some(variable) = maybe_variable {
-            let decl = &variable.decl;
-            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
-                if let Some(lock) = decl.expr.as_ref() {
-                    let guard = lock.read();
-                    let inlined_return_expr = guard.deref().clone();
-                    drop(guard);
-                    return_expr = inlined_return_expr;
-                    return_expr.final_simplify();
-                    statistics += return_expr.count_operations(&lookup);
-                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
-                    // so it is not included in the 'lines' Vec a few lines of code down from here.
-                }
-            }
-        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();

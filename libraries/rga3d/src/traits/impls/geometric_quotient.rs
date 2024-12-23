@@ -8,15 +8,15 @@
 // Total Implementations: 99
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
-//   Median:         3       6       1
-//  Average:         8      13       1
+//  Minimum:         0       2       0
+//   Median:         3       6       0
+//  Average:         8      13       0
 //  Maximum:        88      97       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
-//   Median:         3      18       1
-//  Average:        14      27       1
+//  Minimum:         0       2       0
+//   Median:         3      17       0
+//  Average:        14      27       0
 //  Maximum:       188     208       1
 impl std::ops::Div<geometric_quotient> for AntiScalar {
     type Output = geometric_quotient_partial<AntiScalar>;
@@ -27,36 +27,29 @@ impl std::ops::Div<geometric_quotient> for AntiScalar {
 impl GeometricQuotient<DualNum> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        3        1
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * geometric_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[scalar] * other[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for AntiScalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        2        1
+    //      f32        3        2        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        3        6        1
-    //  no simd        3       18        1
+    // yes simd        3        6        0
+    //  no simd        3       18        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -75,37 +68,28 @@ impl GeometricQuotient<Horizon> for AntiScalar {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        1
+    // f32        0        4        0
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
-        return Origin::from_groups(/* e4 */ self[e1234] * geometric_product[e321] * -1.0);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return Origin::from_groups(/* e4 */ self[e1234] * other[e321] * other[scalar] * -1.0);
     }
 }
 impl GeometricQuotient<Line> for AntiScalar {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
-    //    simd3        0        3        0
+    //      f32        2        3        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        2        3        1
-    //  no simd        2        9        1
+    // yes simd        2        4        0
+    //  no simd        2        6        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Line::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(other[scalar]) * other.group0(),
-            // e23, e31, e12
-            Simd32x3::from(other[scalar]) * other.group1(),
-        );
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         return Line::from_groups(
             // e41, e42, e43
-            Simd32x3::from(self[e1234]) * geometric_product.group1(),
+            Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23] * other[scalar], other[e31] * other[scalar], other[e12] * other[scalar]]),
             // e23, e31, e12
             Simd32x3::from(0.0),
         );
@@ -115,27 +99,20 @@ impl GeometricQuotient<Motor> for AntiScalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
-    //    simd4        0        3        0
+    //      f32        3        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        3        1
-    //  no simd        3       12        1
+    // yes simd        3        5        0
+    //  no simd        3        8        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Motor::from_groups(
-            // e41, e42, e43, e1234
-            Simd32x4::from(other[scalar]) * other.group0(),
-            // e23, e31, e12, scalar
-            Simd32x4::from(other[scalar]) * other.group1(),
-        );
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from(self[e1234]) * geometric_product.group1(),
+            Simd32x4::from(self[e1234]) * Simd32x4::from([other[e23] * other[scalar], other[e31] * other[scalar], other[e12] * other[scalar], other[scalar] * other[scalar]]),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );
@@ -145,16 +122,16 @@ impl GeometricQuotient<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        3        1
+    //      f32        7        3        0
     //    simd2        0        2        0
     //    simd3        0        3        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        7       12        1
-    //  no simd        7       32        1
+    // yes simd        7       12        0
+    //  no simd        7       32        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -162,7 +139,6 @@ impl GeometricQuotient<MultiVector> for AntiScalar {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -192,37 +168,33 @@ impl GeometricQuotient<MultiVector> for AntiScalar {
 impl GeometricQuotient<Plane> for AntiScalar {
     type Output = Origin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        1
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        1
-    //  no simd        0        7        1
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
-        return Origin::from_groups(/* e4 */ self[e1234] * geometric_product[e321] * -1.0);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return Origin::from_groups(/* e4 */ self[e1234] * other[e321] * other[scalar] * -1.0);
     }
 }
 impl GeometricQuotient<Point> for AntiScalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
-    //    simd4        0        3        0
+    //      f32        2        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        2        3        1
-    //  no simd        2       12        1
+    // yes simd        2        6        0
+    //  no simd        2       12        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
         return Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 0.0]) * geometric_product.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            Simd32x4::from([self[e1234], self[e1234], self[e1234], 0.0])
+                * Simd32x4::from([other[e1] * other[scalar], other[e2] * other[scalar], other[e3] * other[scalar], other[e4] * other[scalar]])
+                    .xyz()
+                    .with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
 }
@@ -230,13 +202,11 @@ impl GeometricQuotient<Scalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        2        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return AntiScalar::from_groups(/* e1234 */ self[e1234] * geometric_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[scalar] * other[scalar]);
     }
 }
 impl std::ops::Div<geometric_quotient> for DualNum {
@@ -249,16 +219,14 @@ impl GeometricQuotient<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        3        1
+    //      f32        1        3        0
     //    simd2        0        1        0
     // Totals...
-    // yes simd        1        4        1
-    //  no simd        1        5        1
+    // yes simd        1        4        0
+    //  no simd        1        5        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([
             geometric_product[scalar] * self[scalar],
             (geometric_product[scalar] * self[e1234]) + (geometric_product[e1234] * self[scalar]),
@@ -269,19 +237,18 @@ impl GeometricQuotient<Flector> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        3        1
+    //      f32        4        3        0
     //    simd3        1        2        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        5        8        1
-    //  no simd        7       21        1
+    // yes simd        5        8        0
+    //  no simd        7       21        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -305,12 +272,10 @@ impl GeometricQuotient<Horizon> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        5        1
+    // f32        0        4        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e1234] * geometric_product[e321] * -1.0),
@@ -323,15 +288,14 @@ impl GeometricQuotient<Line> for DualNum {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd3        1        5        0
     // Totals...
-    // yes simd        3        5        1
-    //  no simd        5       15        1
+    // yes simd        3        5        0
+    //  no simd        5       15        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -350,18 +314,17 @@ impl GeometricQuotient<Motor> for DualNum {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        1        5        0
     // Totals...
-    // yes simd        4        5        1
-    //  no simd        7       20        1
+    // yes simd        4        5        0
+    //  no simd        7       20        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -380,16 +343,16 @@ impl GeometricQuotient<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9        6        1
+    //      f32        9        6        0
     //    simd2        0        1        0
     //    simd3        2        7        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd       11       17        1
-    //  no simd       15       41        1
+    // yes simd       11       17        0
+    //  no simd       15       41        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -397,7 +360,6 @@ impl GeometricQuotient<MultiVector> for DualNum {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -436,16 +398,14 @@ impl GeometricQuotient<Plane> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        3        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       11        1
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e1234] * geometric_product[e321] * -1.0),
@@ -458,16 +418,17 @@ impl GeometricQuotient<Point> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd4        0        5        0
     // Totals...
-    // yes simd        2        5        1
-    //  no simd        2       20        1
+    // yes simd        2        5        0
+    //  no simd        2       20        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[scalar]) * geometric_product.group0(),
@@ -480,17 +441,15 @@ impl GeometricQuotient<Scalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        3        1
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(geometric_product[scalar]) * self.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar] * other[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<geometric_quotient> for Flector {
@@ -503,18 +462,16 @@ impl GeometricQuotient<DualNum> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        3        1
+    //      f32        1        3        0
     //    simd2        0        1        0
     //    simd3        1        2        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        4       15        1
+    // yes simd        2        7        0
+    //  no simd        4       15        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self[e1], self[e2], self[e3], 1.0])
@@ -532,18 +489,17 @@ impl GeometricQuotient<Flector> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        8        1
+    //      f32        7        8        0
     //    simd4        9       12        0
     // Totals...
-    // yes simd       16       20        1
-    //  no simd       43       56        1
+    // yes simd       16       20        0
+    //  no simd       43       56        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -575,16 +531,14 @@ impl GeometricQuotient<Horizon> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        1        1
     //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       14        1
+    // yes simd        0        4        1
+    //  no simd        0       13        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(geometric_product[e321]) * self.group1().xyz().with_w(self[e4]),
@@ -597,16 +551,15 @@ impl GeometricQuotient<Line> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       26        1
+    //      f32       18       26        0
     //    simd3        0        3        0
     //    simd4        3        2        0
     // Totals...
-    // yes simd       21       31        1
-    //  no simd       30       43        1
+    // yes simd       21       31        0
+    //  no simd       30       43        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -640,19 +593,18 @@ impl GeometricQuotient<Motor> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       27        1
+    //      f32       19       27        0
     //    simd3        0        2        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       25       35        1
-    //  no simd       43       57        1
+    // yes simd       25       35        0
+    //  no simd       43       57        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -701,16 +653,16 @@ impl GeometricQuotient<MultiVector> for Flector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       30        1
+    //      f32       26       30        0
     //    simd2        4        5        0
     //    simd3       10       15        0
     //    simd4        6        7        0
     // Totals...
-    // yes simd       46       57        1
-    //  no simd       88      113        1
+    // yes simd       46       57        0
+    //  no simd       88      113        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -718,7 +670,6 @@ impl GeometricQuotient<MultiVector> for Flector {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -795,16 +746,14 @@ impl GeometricQuotient<Plane> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        9        1
+    //      f32        4        9        0
     //    simd4        2        5        0
     // Totals...
-    // yes simd        6       14        1
-    //  no simd       12       29        1
+    // yes simd        6       14        0
+    //  no simd       12       29        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
@@ -823,16 +772,17 @@ impl GeometricQuotient<Point> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       16        1
+    //      f32       10       16        0
     //    simd4        3        4        0
     // Totals...
-    // yes simd       13       20        1
-    //  no simd       22       32        1
+    // yes simd       13       20        0
+    //  no simd       22       32        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
@@ -856,16 +806,14 @@ impl GeometricQuotient<Scalar> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        0        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        9        1
+    // yes simd        0        2        1
+    //  no simd        0        8        1
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ 1.0 / other[scalar]);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(geometric_product[scalar]) * self.group0(),
@@ -884,16 +832,14 @@ impl GeometricQuotient<DualNum> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        2        0
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        4        1
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(geometric_product[e1234] * self[e321]),
@@ -906,18 +852,17 @@ impl GeometricQuotient<Flector> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        6        0
     // Totals...
-    // yes simd        3        6        1
-    //  no simd        3       24        1
+    // yes simd        3        6        0
+    //  no simd        3       24        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -936,29 +881,26 @@ impl GeometricQuotient<Horizon> for Horizon {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        1
+    // f32        0        4        0
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
-        return Scalar::from_groups(/* scalar */ geometric_product[e321] * self[e321] * -1.0);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return Scalar::from_groups(/* scalar */ other[e321] * self[e321] * other[scalar] * -1.0);
     }
 }
 impl GeometricQuotient<Line> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd3        0        2        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2       22        1
+    // yes simd        2        6        0
+    //  no simd        2       22        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -977,18 +919,17 @@ impl GeometricQuotient<Motor> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        3        4        1
-    //  no simd        3       16        1
+    // yes simd        3        4        0
+    //  no simd        3       16        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1007,16 +948,16 @@ impl GeometricQuotient<MultiVector> for Horizon {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        0        1
+    //      f32        7        0        0
     //    simd2        0        3        0
     //    simd3        0        6        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        7       13        1
-    //  no simd        7       40        1
+    // yes simd        7       13        0
+    //  no simd        7       40        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -1024,7 +965,6 @@ impl GeometricQuotient<MultiVector> for Horizon {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -1055,16 +995,14 @@ impl GeometricQuotient<Plane> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        3        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        0        6        1
-    //  no simd        0       15        1
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * geometric_product.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
@@ -1077,16 +1015,17 @@ impl GeometricQuotient<Point> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        2        1
+    //      f32        2        2        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        2        5        1
-    //  no simd        2       14        1
+    // yes simd        2        5        0
+    //  no simd        2       14        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(self[e321] * geometric_product[e4] * -1.0),
@@ -1099,13 +1038,11 @@ impl GeometricQuotient<Scalar> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        2        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return Horizon::from_groups(/* e321 */ self[e321] * geometric_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Horizon::from_groups(/* e321 */ self[e321] * other[scalar] * other[scalar]);
     }
 }
 impl std::ops::Div<geometric_quotient> for Line {
@@ -1118,17 +1055,14 @@ impl GeometricQuotient<DualNum> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        0        1
     //    simd2        0        1        0
     //    simd3        1        3        0
     // Totals...
-    // yes simd        1        4        1
-    //  no simd        3       11        1
+    // yes simd        1        4        0
+    //  no simd        3       11        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(geometric_product[scalar]) * self.group0()) + (Simd32x3::from(geometric_product[e1234]) * self.group1()),
@@ -1141,19 +1075,18 @@ impl GeometricQuotient<Flector> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       14        1
+    //      f32       11       14        0
     //    simd3        0        2        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       17       22        1
-    //  no simd       35       44        1
+    // yes simd       17       22        0
+    //  no simd       35       44        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1182,16 +1115,14 @@ impl GeometricQuotient<Horizon> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        1        1
     //    simd4        0        4        0
     // Totals...
-    // yes simd        0        6        1
-    //  no simd        0       18        1
+    // yes simd        0        5        1
+    //  no simd        0       17        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([geometric_product[e321], geometric_product[e321], geometric_product[e321], 0.0]) * self.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
@@ -1204,16 +1135,15 @@ impl GeometricQuotient<Line> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       18        1
+    //      f32        9       18        0
     //    simd3        0        5        0
     //    simd4        3        0        0
     // Totals...
-    // yes simd       12       23        1
-    //  no simd       21       33        1
+    // yes simd       12       23        0
+    //  no simd       21       33        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -1243,19 +1173,18 @@ impl GeometricQuotient<Motor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       25        1
+    //      f32       19       25        0
     //    simd3        0        1        0
     //    simd4        3        4        0
     // Totals...
-    // yes simd       22       30        1
-    //  no simd       31       44        1
+    // yes simd       22       30        0
+    //  no simd       31       44        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1285,16 +1214,16 @@ impl GeometricQuotient<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       17        1
+    //      f32       17       17        0
     //    simd2        3        4        0
     //    simd3        7       13        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       33       40        1
-    //  no simd       68       88        1
+    // yes simd       33       40        0
+    //  no simd       68       88        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -1302,7 +1231,6 @@ impl GeometricQuotient<MultiVector> for Line {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -1352,17 +1280,15 @@ impl GeometricQuotient<Plane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        4        1
+    //      f32        2        4        0
     //    simd3        0        3        0
     //    simd4        2        2        0
     // Totals...
-    // yes simd        4        9        1
-    //  no simd       10       21        1
+    // yes simd        4        9        0
+    //  no simd       10       21        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([geometric_product[e321], geometric_product[e321], geometric_product[e321], 1.0])
@@ -1380,16 +1306,17 @@ impl GeometricQuotient<Point> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       16        1
+    //      f32        7       16        0
     //    simd4        2        3        0
     // Totals...
-    // yes simd        9       19        1
-    //  no simd       15       28        1
+    // yes simd        9       19        0
+    //  no simd       15       28        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
@@ -1412,16 +1339,14 @@ impl GeometricQuotient<Scalar> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        0        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        7        1
+    // yes simd        0        2        1
+    //  no simd        0        6        1
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ 1.0 / other[scalar]);
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(geometric_product[scalar]) * self.group0(),
@@ -1440,17 +1365,14 @@ impl GeometricQuotient<DualNum> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        0        1
     //    simd2        0        1        0
     //    simd4        1        3        0
     // Totals...
-    // yes simd        1        4        1
-    //  no simd        4       14        1
+    // yes simd        1        4        0
+    //  no simd        4       14        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(geometric_product[scalar]) * self.group0()) + (Simd32x4::from(geometric_product[e1234]) * self.group1()),
@@ -1463,19 +1385,18 @@ impl GeometricQuotient<Flector> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       18        1
+    //      f32       15       18        0
     //    simd3        0        2        0
     //    simd4        8        8        0
     // Totals...
-    // yes simd       23       28        1
-    //  no simd       47       56        1
+    // yes simd       23       28        0
+    //  no simd       47       56        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1511,16 +1432,14 @@ impl GeometricQuotient<Horizon> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        1        1
     //    simd4        0        4        0
     // Totals...
-    // yes simd        0        6        1
-    //  no simd        0       18        1
+    // yes simd        0        5        1
+    //  no simd        0       17        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(geometric_product[e321]) * self.group1().xyz().with_w(self[e1234]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
@@ -1533,16 +1452,15 @@ impl GeometricQuotient<Line> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       25        1
+    //      f32       18       25        0
     //    simd3        0        3        0
     //    simd4        3        2        0
     // Totals...
-    // yes simd       21       30        1
-    //  no simd       30       42        1
+    // yes simd       21       30        0
+    //  no simd       30       42        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -1572,19 +1490,18 @@ impl GeometricQuotient<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       26        1
+    //      f32       19       26        0
     //    simd3        0        2        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       25       34        1
-    //  no simd       43       56        1
+    // yes simd       25       34        0
+    //  no simd       43       56        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1617,16 +1534,16 @@ impl GeometricQuotient<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       22        1
+    //      f32       22       22        0
     //    simd2        4        5        0
     //    simd3       10       16        0
     //    simd4        8        8        0
     // Totals...
-    // yes simd       44       51        1
-    //  no simd       92      112        1
+    // yes simd       44       51        0
+    //  no simd       92      112        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -1634,7 +1551,6 @@ impl GeometricQuotient<MultiVector> for Motor {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -1695,17 +1611,15 @@ impl GeometricQuotient<Plane> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        6        1
+    //      f32        3        6        0
     //    simd3        3        4        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        6       12        1
-    //  no simd       12       26        1
+    // yes simd        6       12        0
+    //  no simd       12       26        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([geometric_product[e321], geometric_product[e321], geometric_product[e321], 1.0])
@@ -1727,16 +1641,17 @@ impl GeometricQuotient<Point> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       16        1
+    //      f32        6       16        0
     //    simd4        4        5        0
     // Totals...
-    // yes simd       10       21        1
-    //  no simd       22       36        1
+    // yes simd       10       21        0
+    //  no simd       22       36        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
@@ -1761,16 +1676,14 @@ impl GeometricQuotient<Scalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        0        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        9        1
+    // yes simd        0        2        1
+    //  no simd        0        8        1
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ 1.0 / other[scalar]);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(geometric_product[scalar]) * self.group0(),
@@ -1789,18 +1702,16 @@ impl GeometricQuotient<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        1
+    //      f32        2        6        0
     //    simd2        0        1        0
     //    simd3        2        5        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        4       13        1
-    //  no simd        8       27        1
+    // yes simd        4       13        0
+    //  no simd        8       27        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -1827,20 +1738,19 @@ impl GeometricQuotient<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       21        1
+    //      f32       18       21        0
     //    simd2        4        4        0
     //    simd3       10       13        0
     //    simd4        8        9        0
     // Totals...
-    // yes simd       40       47        1
-    //  no simd       88      104        1
+    // yes simd       40       47        0
+    //  no simd       88      104        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -1895,18 +1805,16 @@ impl GeometricQuotient<Horizon> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        1        1
     //    simd2        0        2        0
     //    simd3        0        3        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        0       11        1
-    //  no simd        0       31        1
+    // yes simd        0       10        1
+    //  no simd        0       30        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(geometric_product[e321]) * Simd32x2::from([self[e321], self[e4]]) * Simd32x2::from([-1.0, 1.0]),
@@ -1925,17 +1833,16 @@ impl GeometricQuotient<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       29        1
+    //      f32       20       29        0
     //    simd2        3        3        0
     //    simd3        7       12        0
     //    simd4        3        2        0
     // Totals...
-    // yes simd       33       46        1
-    //  no simd       59       79        1
+    // yes simd       33       46        0
+    //  no simd       59       79        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -1984,20 +1891,19 @@ impl GeometricQuotient<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       29        1
+    //      f32       22       29        0
     //    simd2        4        4        0
     //    simd3       10       12        0
     //    simd4        6        8        0
     // Totals...
-    // yes simd       42       53        1
-    //  no simd       84      105        1
+    // yes simd       42       53        0
+    //  no simd       84      105        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2068,16 +1974,16 @@ impl GeometricQuotient<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       44        1
+    //      f32       42       44        0
     //    simd2        8        9        0
     //    simd3       22       30        0
     //    simd4       16       14        0
     // Totals...
-    // yes simd       88       97        1
-    //  no simd      188      208        1
+    // yes simd       88       97        0
+    //  no simd      188      208        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -2085,7 +1991,6 @@ impl GeometricQuotient<MultiVector> for MultiVector {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -2204,18 +2109,16 @@ impl GeometricQuotient<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       11        1
+    //      f32        6       11        0
     //    simd2        0        1        0
     //    simd3        6       10        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       12       24        1
-    //  no simd       24       51        1
+    // yes simd       12       24        0
+    //  no simd       24       51        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -2248,17 +2151,18 @@ impl GeometricQuotient<Point> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       23        1
+    //      f32       11       23        0
     //    simd3        5        7        0
     //    simd4        4        5        0
     // Totals...
-    // yes simd       20       35        1
-    //  no simd       42       64        1
+    // yes simd       20       35        0
+    //  no simd       42       64        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -2296,18 +2200,16 @@ impl GeometricQuotient<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        0        1
     //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        6        1
-    //  no simd        0       17        1
+    // yes simd        0        5        1
+    //  no simd        0       16        1
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ 1.0 / other[scalar]);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(geometric_product[scalar]) * self.group0(),
@@ -2331,36 +2233,29 @@ impl std::ops::Div<geometric_quotient> for Origin {
 impl GeometricQuotient<DualNum> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        3        1
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
-        return Origin::from_groups(/* e4 */ geometric_product[scalar] * self[e4]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Origin::from_groups(/* e4 */ other[scalar] * self[e4] * other[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for Origin {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        3        3        1
-    //  no simd        3       12        1
+    // yes simd        3        3        0
+    //  no simd        3       12        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2379,38 +2274,30 @@ impl GeometricQuotient<Horizon> for Origin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        1
+    // f32        0        3        0
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
-        return AntiScalar::from_groups(/* e1234 */ geometric_product[e321] * self[e4]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ other[e321] * self[e4] * other[scalar]);
     }
 }
 impl GeometricQuotient<Line> for Origin {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
-    //    simd3        0        2        0
+    //      f32        2        3        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        2        4        1
-    //  no simd        2       14        1
+    // yes simd        2        5        0
+    //  no simd        2       11        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Line::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(other[scalar]) * other.group0(),
-            // e23, e31, e12
-            Simd32x3::from(other[scalar]) * other.group1(),
-        );
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         return Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * geometric_product.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            Simd32x4::from([self[e4], self[e4], self[e4], 0.0])
+                * Simd32x3::from([other[e23] * other[scalar], other[e31] * other[scalar], other[e12] * other[scalar]]).with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -2418,18 +2305,17 @@ impl GeometricQuotient<Motor> for Origin {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        1
+    //      f32        3        1        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        3        5        1
-    //  no simd        3       17        1
+    // yes simd        3        5        0
+    //  no simd        3       17        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2448,16 +2334,16 @@ impl GeometricQuotient<MultiVector> for Origin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        2        1
+    //      f32        7        2        0
     //    simd2        0        2        0
     //    simd3        0        3        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        7       11        1
-    //  no simd        7       31        1
+    // yes simd        7       11        0
+    //  no simd        7       31        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -2465,7 +2351,6 @@ impl GeometricQuotient<MultiVector> for Origin {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -2495,38 +2380,29 @@ impl GeometricQuotient<MultiVector> for Origin {
 impl GeometricQuotient<Plane> for Origin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        1
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        6        1
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
-        return AntiScalar::from_groups(/* e1234 */ self[e4] * geometric_product[e321]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return AntiScalar::from_groups(/* e1234 */ self[e4] * other[e321] * other[scalar]);
     }
 }
 impl GeometricQuotient<Point> for Origin {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        4        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        2        1
-    //  no simd        2        7        1
+    // yes simd        2        5        0
+    //  no simd        2        7        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
         return Line::from_groups(
             // e41, e42, e43
-            Simd32x3::from(self[e4]) * geometric_product.group0().xyz(),
+            Simd32x3::from(self[e4]) * Simd32x4::from([other[e1] * other[scalar], other[e2] * other[scalar], other[e3] * other[scalar], other[e4] * other[scalar]]).xyz(),
             // e23, e31, e12
             Simd32x3::from(0.0),
         );
@@ -2536,13 +2412,11 @@ impl GeometricQuotient<Scalar> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        2        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return Origin::from_groups(/* e4 */ self[e4] * geometric_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Origin::from_groups(/* e4 */ self[e4] * other[scalar] * other[scalar]);
     }
 }
 impl std::ops::Div<geometric_quotient> for Plane {
@@ -2555,17 +2429,15 @@ impl GeometricQuotient<DualNum> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        7        1
+    // yes simd        0        3        0
+    //  no simd        0        7        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(geometric_product[e1234] * self[e321]),
@@ -2578,18 +2450,17 @@ impl GeometricQuotient<Flector> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        8        1
+    //      f32        7        8        0
     //    simd4        2        6        0
     // Totals...
-    // yes simd        9       14        1
-    //  no simd       15       32        1
+    // yes simd        9       14        0
+    //  no simd       15       32        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2614,16 +2485,14 @@ impl GeometricQuotient<Horizon> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        1
+    //      f32        0        3        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        6        1
-    //  no simd        0       12        1
+    // yes simd        0        5        1
+    //  no simd        0       11        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([geometric_product[e321], geometric_product[e321], geometric_product[e321], 0.0])
@@ -2638,16 +2507,15 @@ impl GeometricQuotient<Line> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        3        1
+    //      f32        4        3        0
     //    simd3        0        5        0
     //    simd4        2        1        0
     // Totals...
-    // yes simd        6        9        1
-    //  no simd       12       22        1
+    // yes simd        6        9        0
+    //  no simd       12       22        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -2670,19 +2538,18 @@ impl GeometricQuotient<Motor> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        5        1
+    //      f32        6        5        0
     //    simd3        3        4        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        9       12        1
-    //  no simd       15       29        1
+    // yes simd        9       12        0
+    //  no simd       15       29        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2708,16 +2575,16 @@ impl GeometricQuotient<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       10        1
+    //      f32       13       10        0
     //    simd2        0        2        0
     //    simd3        6       12        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd       19       27        1
-    //  no simd       31       62        1
+    // yes simd       19       27        0
+    //  no simd       31       62        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -2725,7 +2592,6 @@ impl GeometricQuotient<MultiVector> for Plane {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -2768,17 +2634,15 @@ impl GeometricQuotient<Plane> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        3        0
     //    simd3        1        2        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        1        6        1
-    //  no simd        3       13        1
+    // yes simd        1        6        0
+    //  no simd        3       13        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Motor::from_groups(
             // e41, e42, e43, e1234
             ((Simd32x3::from(geometric_product[e321]) * self.group0().xyz()) - (Simd32x3::from(self[e321]) * geometric_product.group0().xyz())).with_w(0.0),
@@ -2791,16 +2655,17 @@ impl GeometricQuotient<Point> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        6        1
+    //      f32        4        6        0
     //    simd4        1        5        0
     // Totals...
-    // yes simd        5       11        1
-    //  no simd        8       26        1
+    // yes simd        5       11        0
+    //  no simd        8       26        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
@@ -2818,17 +2683,15 @@ impl GeometricQuotient<Scalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        5        1
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(geometric_product[scalar]) * self.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar] * other[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<geometric_quotient> for Point {
@@ -2841,17 +2704,14 @@ impl GeometricQuotient<DualNum> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        0        1
     //    simd2        0        1        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       18        1
+    // yes simd        0        5        0
+    //  no simd        0       18        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
+        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(other[scalar], -2)) * other.group0());
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(geometric_product[scalar]) * self.group0(),
@@ -2867,18 +2727,17 @@ impl GeometricQuotient<Flector> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        1
+    //      f32       11       16        0
     //    simd4        3        5        0
     // Totals...
-    // yes simd       14       21        1
-    //  no simd       23       36        1
+    // yes simd       14       21        0
+    //  no simd       23       36        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -2908,16 +2767,14 @@ impl GeometricQuotient<Horizon> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        2        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        1
-    //  no simd        0       11        1
+    // yes simd        0        4        1
+    //  no simd        0       10        1
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
+        let geometric_product = Horizon::from_groups(/* e321 */ 1.0 / other[e321] * -1.0);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(geometric_product[e321] * self[e4]),
@@ -2932,16 +2789,15 @@ impl GeometricQuotient<Line> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       13        1
+    //      f32        7       13        0
     //    simd3        0        2        0
     //    simd4        2        2        0
     // Totals...
-    // yes simd        9       17        1
-    //  no simd       15       27        1
+    // yes simd        9       17        0
+    //  no simd       15       27        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -2970,18 +2826,17 @@ impl GeometricQuotient<Motor> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        1
+    //      f32       11       16        0
     //    simd4        3        5        0
     // Totals...
-    // yes simd       14       21        1
-    //  no simd       23       36        1
+    // yes simd       14       21        0
+    //  no simd       23       36        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -3011,16 +2866,16 @@ impl GeometricQuotient<MultiVector> for Point {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       17        1
+    //      f32       15       17        0
     //    simd2        3        4        0
     //    simd3        5        9        0
     //    simd4        3        5        0
     // Totals...
-    // yes simd       26       35        1
-    //  no simd       48       72        1
+    // yes simd       26       35        0
+    //  no simd       48       72        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -3028,7 +2883,6 @@ impl GeometricQuotient<MultiVector> for Point {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -3077,16 +2931,14 @@ impl GeometricQuotient<Plane> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2       10        1
+    //      f32        2       10        0
     //    simd4        1        5        0
     // Totals...
-    // yes simd        3       15        1
-    //  no simd        6       30        1
+    // yes simd        3       15        0
+    //  no simd        6       30        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(f32::powi(other[e321], -2) * -1.0) * other.group0());
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
@@ -3104,17 +2956,18 @@ impl GeometricQuotient<Point> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        8        1
+    //      f32        3        8        0
     //    simd3        1        2        0
     //    simd4        1        2        0
     // Totals...
-    // yes simd        5       12        1
-    //  no simd       10       22        1
+    // yes simd        5       12        0
+    //  no simd       10       22        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
+        let geometric_product = Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)) * other.group0(),
+        );
         return Motor::from_groups(
             // e41, e42, e43, e1234
             ((Simd32x3::from(self[e4]) * geometric_product.group0().xyz()) - (Simd32x3::from(geometric_product[e4]) * self.group0().xyz())).with_w(0.0),
@@ -3132,17 +2985,15 @@ impl GeometricQuotient<Scalar> for Point {
     type Output = Point;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        5        1
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(geometric_product[scalar]) * self.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar] * other[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<geometric_quotient> for Scalar {
@@ -3155,35 +3006,35 @@ impl GeometricQuotient<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        0        1
-    //    simd2        0        2        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        4        1
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn geometric_quotient(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * other.group0());
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(self[scalar]) * geometric_product.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return DualNum::from_groups(
+            // scalar, e1234
+            Simd32x2::from(self[scalar]) * Simd32x2::from([other[scalar] * other[scalar], other[e1234] * other[scalar]]),
+        );
     }
 }
 impl GeometricQuotient<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        3        4        1
-    //  no simd        3       16        1
+    // yes simd        3        4        0
+    //  no simd        3       16        0
     fn geometric_quotient(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2) - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -3202,28 +3053,25 @@ impl GeometricQuotient<Horizon> for Scalar {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        1
+    // f32        0        3        0
     fn geometric_quotient(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Horizon::from_groups(/* e321 */ other[e321] * other[scalar]);
-        return Horizon::from_groups(/* e321 */ geometric_product[e321] * self[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return Horizon::from_groups(/* e321 */ other[e321] * other[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd3        0        4        0
     // Totals...
-    // yes simd        2        4        1
-    //  no simd        2       12        1
+    // yes simd        2        4        0
+    //  no simd        2       12        0
     fn geometric_quotient(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
+        let other = Scalar::from_groups(/* scalar */ -f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2));
         let geometric_product = Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * other.group0(),
@@ -3242,18 +3090,17 @@ impl GeometricQuotient<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        3        4        1
-    //  no simd        3       16        1
+    // yes simd        3        4        0
+    //  no simd        3       16        0
     fn geometric_quotient(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) - f32::powi(other[e23], 2) - f32::powi(other[e31], 2) - f32::powi(other[e12], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[scalar]) * other.group0(),
@@ -3272,16 +3119,16 @@ impl GeometricQuotient<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        0        1
+    //      f32        7        0        0
     //    simd2        0        2        0
     //    simd3        0        4        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        7       10        1
-    //  no simd        7       32        1
+    // yes simd        7       10        0
+    //  no simd        7       32        0
     fn geometric_quotient(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(
+        let other = Scalar::from_groups(
             // scalar
             f32::powi(other[scalar], 2) + f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2)
                 - f32::powi(other[e23], 2)
@@ -3289,7 +3136,6 @@ impl GeometricQuotient<MultiVector> for Scalar {
                 - f32::powi(other[e12], 2)
                 - f32::powi(other[e321], 2),
         );
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[scalar]) * other.group0(),
@@ -3320,46 +3166,46 @@ impl GeometricQuotient<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        9        1
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn geometric_quotient(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * other.group0());
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[scalar]) * geometric_product.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e321], -2) * -1.0);
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e423] * other[scalar], other[e431] * other[scalar], other[e412] * other[scalar], other[e321] * other[scalar]]),
+        );
     }
 }
 impl GeometricQuotient<Point> for Scalar {
     type Output = Point;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        2        1
-    //  no simd        2        8        1
+    // yes simd        2        5        0
+    //  no simd        2        8        0
     fn geometric_quotient(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * other.group0());
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[scalar]) * geometric_product.group0());
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[e1], 2) + f32::powi(other[e2], 2) + f32::powi(other[e3], 2));
+        return Point::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1] * other[scalar], other[e2] * other[scalar], other[e3] * other[scalar], other[e4] * other[scalar]]),
+        );
     }
 }
 impl GeometricQuotient<Scalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        2        0
     fn geometric_quotient(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let dot_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
-        let other = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ other[scalar] * other[scalar]);
-        return Scalar::from_groups(/* scalar */ geometric_product[scalar] * self[scalar]);
+        let other = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], -2));
+        return Scalar::from_groups(/* scalar */ other[scalar] * other[scalar] * self[scalar]);
     }
 }

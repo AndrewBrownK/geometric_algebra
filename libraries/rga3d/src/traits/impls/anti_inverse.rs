@@ -8,15 +8,15 @@
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
-//   Median:         2       2       1
-//  Average:         1       2       1
+//  Minimum:         0       0       0
+//   Median:         2       2       0
+//  Average:         1       1       0
 //  Maximum:         7       5       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
-//   Median:         2       5       1
-//  Average:         1       5       1
+//  Minimum:         0       0       0
+//   Median:         2       5       0
+//  Average:         1       5       0
 //  Maximum:         7      16       1
 impl std::ops::Div<anti_inverse> for AntiScalar {
     type Output = AntiScalar;
@@ -32,12 +32,10 @@ impl std::ops::DivAssign<anti_inverse> for AntiScalar {
 impl AntiInverse for AntiScalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        1
+    // f32        0        0        1
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        return AntiScalar::from_groups(/* e1234 */ other[e1234] * self[e1234]);
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / self[e1234]);
     }
 }
 impl std::ops::Div<anti_inverse> for DualNum {
@@ -53,17 +51,12 @@ impl std::ops::DivAssign<anti_inverse> for DualNum {
 }
 impl AntiInverse for DualNum {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        0        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        1        1
-    //  no simd        0        2        1
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[e1234]) * self.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(f32::powi(self[e1234], -2)) * self.group0());
     }
 }
 impl std::ops::Div<anti_inverse> for Flector {
@@ -80,15 +73,14 @@ impl std::ops::DivAssign<anti_inverse> for Flector {
 impl AntiInverse for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        2        1
-    //  no simd        3        8        1
+    // yes simd        3        2        0
+    //  no simd        3        8        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2) - f32::powi(self[e4], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2) - f32::powi(self[e4], 2));
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[e1234]) * self.group0(),
@@ -111,15 +103,14 @@ impl std::ops::DivAssign<anti_inverse> for Line {
 impl AntiInverse for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        2        1
-    //  no simd        2        6        1
+    // yes simd        2        2        0
+    //  no simd        2        6        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ -f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
+        let other = AntiScalar::from_groups(/* e1234 */ -f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e1234]) * self.group0(),
@@ -142,15 +133,14 @@ impl std::ops::DivAssign<anti_inverse> for Motor {
 impl AntiInverse for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        1
+    //      f32        3        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        2        1
-    //  no simd        3        8        1
+    // yes simd        3        2        0
+    //  no simd        3        8        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2) - f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2) - f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(other[e1234]) * self.group0(),
@@ -173,16 +163,16 @@ impl std::ops::DivAssign<anti_inverse> for MultiVector {
 impl AntiInverse for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        0        1
+    //      f32        7        0        0
     //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        7        5        1
-    //  no simd        7       16        1
+    // yes simd        7        5        0
+    //  no simd        7       16        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(
+        let other = AntiScalar::from_groups(
             // e1234
             f32::powi(self[e1234], 2) + f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2)
                 - f32::powi(self[e4], 2)
@@ -190,7 +180,6 @@ impl AntiInverse for MultiVector {
                 - f32::powi(self[e42], 2)
                 - f32::powi(self[e43], 2),
         );
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(other[e1234]) * self.group0(),
@@ -219,12 +208,10 @@ impl std::ops::DivAssign<anti_inverse> for Origin {
 impl AntiInverse for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        1        1
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) * -1.0);
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        return Origin::from_groups(/* e4 */ other[e1234] * self[e4]);
+        return Origin::from_groups(/* e4 */ 1.0 / self[e4] * -1.0);
     }
 }
 impl std::ops::Div<anti_inverse> for Plane {
@@ -241,16 +228,17 @@ impl std::ops::DivAssign<anti_inverse> for Plane {
 impl AntiInverse for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        1
+    //      f32        2        0        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        1        1
-    //  no simd        2        4        1
+    // yes simd        2        1        0
+    //  no simd        2        4        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e1234]) * self.group0());
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from(f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2)) * self.group0(),
+        );
     }
 }
 impl std::ops::Div<anti_inverse> for Point {
@@ -267,15 +255,13 @@ impl std::ops::DivAssign<anti_inverse> for Point {
 impl AntiInverse for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        1
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        2        1
-    //  no simd        0        5        1
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn anti_inverse(self) -> Self {
         use crate::elements::*;
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) * -1.0);
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e1234]) * self.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(f32::powi(self[e4], -2) * -1.0) * self.group0());
     }
 }

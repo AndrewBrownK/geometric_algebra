@@ -358,15 +358,17 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiCircleRotor {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
         return Scalar::from_groups(/* scalar */ (other[e1] * wedge[e4235]) + (other[e2] * wedge[e4315]) + (other[e3] * wedge[e4125]));
     }
 }
@@ -1270,8 +1272,7 @@ impl ProjectOrthogonallyOnto<Scalar> for AntiCircleRotor {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ self[scalar] * right_anti_dual[e12345] * other[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for AntiCircleRotor {
@@ -1829,11 +1830,11 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiDipoleInversion {
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (self[e4] * right_anti_dual[e3215]) + (self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((self[e4] * right_anti_dual[e3215]) + (self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125]))
+                * other.group0(),
         );
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiScalar> for AntiDipoleInversion {
@@ -3029,30 +3030,31 @@ impl ProjectOrthogonallyOnto<AntiDipoleInversion> for AntiDualNum {
 impl ProjectOrthogonallyOnto<AntiDualNum> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(wedge[e12345]) * other.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar] * right_anti_dual[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlatPoint> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
-        return Scalar::from_groups(/* scalar */ other[e321] * wedge[e45] * -1.0);
+        return Scalar::from_groups(/* scalar */ self[scalar] * other[e321] * right_anti_dual[e45] * -1.0);
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlector> for AntiDualNum {
@@ -3158,15 +3160,17 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
         return Scalar::from_groups(/* scalar */ (other[e1] * wedge[e4235]) + (other[e2] * wedge[e4315]) + (other[e3] * wedge[e4125]));
     }
 }
@@ -3174,16 +3178,18 @@ impl ProjectOrthogonallyOnto<AntiScalar> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        4        0
     //  no simd        0        5        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345]) * wedge.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(other[e12345]) * Simd32x2::from([self[e3215] * right_anti_dual[scalar], self[scalar] * right_anti_dual[scalar]]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for AntiDualNum {
@@ -3415,27 +3421,29 @@ impl ProjectOrthogonallyOnto<DualNum> for AntiDualNum {
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
-            (right_anti_dual[e3215] * self[scalar]) + (right_anti_dual[scalar] * self[e3215]),
-            right_anti_dual[scalar] * self[scalar],
-        ]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345]) * wedge.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(other[e12345])
+                * Simd32x2::from([
+                    (right_anti_dual[e3215] * self[scalar]) + (right_anti_dual[scalar] * self[e3215]),
+                    right_anti_dual[scalar] * self[scalar],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<FlatPoint> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
-        return Scalar::from_groups(/* scalar */ wedge[e321] * other[e45] * -1.0);
+        return Scalar::from_groups(/* scalar */ self[scalar] * right_anti_dual[e321] * other[e45] * -1.0);
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for AntiDualNum {
@@ -3723,15 +3731,17 @@ impl ProjectOrthogonallyOnto<Plane> for AntiDualNum {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
+    // yes simd        2        7        0
+    //  no simd        2       10        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
         return Scalar::from_groups(/* scalar */ (wedge[e1] * other[e4235]) + (wedge[e2] * other[e4315]) + (wedge[e3] * other[e4125]));
     }
 }
@@ -3772,8 +3782,7 @@ impl ProjectOrthogonallyOnto<Scalar> for AntiDualNum {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ self[scalar] * right_anti_dual[e12345] * other[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for AntiDualNum {
@@ -4019,8 +4028,7 @@ impl ProjectOrthogonallyOnto<AntiFlatPoint> for AntiFlatPoint {
     fn project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e321] * right_anti_dual[e45] * -1.0);
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(wedge[e12345]) * other.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[e321] * right_anti_dual[e45] * -1.0) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlector> for AntiFlatPoint {
@@ -4028,19 +4036,13 @@ impl ProjectOrthogonallyOnto<AntiFlector> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       18        0
+    // yes simd        0        5        0
+    //  no simd        0       14        0
     fn project_orthogonally_onto(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Flector::from_groups(
-            // e15, e25, e35, e45
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e321] * right_anti_dual[e45] * -1.0);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[3] * self[e321] * -1.0);
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from(wedge[e12345]) * other.group0(),
@@ -4053,16 +4055,24 @@ impl ProjectOrthogonallyOnto<AntiScalar> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    self[e235] * right_anti_dual[scalar],
+                    self[e315] * right_anti_dual[scalar],
+                    self[e125] * right_anti_dual[scalar],
+                    self[e321] * right_anti_dual[scalar],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for AntiFlatPoint {
@@ -4219,16 +4229,25 @@ impl ProjectOrthogonallyOnto<DualNum> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        4        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0       10        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    right_anti_dual[scalar] * self[e235],
+                    right_anti_dual[scalar] * self[e315],
+                    right_anti_dual[scalar] * self[e125],
+                    right_anti_dual[scalar] * self[e321],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for AntiFlatPoint {
@@ -4264,20 +4283,14 @@ impl ProjectOrthogonallyOnto<Motor> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        5        0
+    //      f32        2        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        2        8        0
-    //  no simd        2       23        0
+    // yes simd        2        7        0
+    //  no simd        2       16        0
     fn project_orthogonally_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from(other[e12345]) * wedge.group0(),
@@ -4961,11 +4974,10 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiFlector {
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125])) * other.group0(),
         );
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiScalar> for AntiFlector {
@@ -5268,20 +5280,25 @@ impl ProjectOrthogonallyOnto<FlatPoint> for AntiFlector {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        0
+    //      f32        3        8        0
     //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        3        7        0
-    //  no simd        3       11        0
+    // yes simd        3       10        0
+    //  no simd        3       14        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
-            -(right_anti_dual[e235] * self[e1]) - (right_anti_dual[e315] * self[e2]) - (right_anti_dual[e125] * self[e3]) - (right_anti_dual[e321] * self[e5]),
-            0.0,
-        ]));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([wedge[e3215] * other[e45], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                -(right_anti_dual[e235] * self[e1] * other[e45])
+                    - (right_anti_dual[e315] * self[e2] * other[e45])
+                    - (right_anti_dual[e125] * self[e3] * other[e45])
+                    - (right_anti_dual[e321] * self[e5] * other[e45]),
+                1.0,
+            ]) * Simd32x2::from([1.0, 0.0]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for AntiFlector {
@@ -7231,15 +7248,17 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiMotor {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
         return Scalar::from_groups(/* scalar */ (other[e1] * wedge[e4235]) + (other[e2] * wedge[e4315]) + (other[e3] * wedge[e4125]));
     }
 }
@@ -7598,16 +7617,15 @@ impl ProjectOrthogonallyOnto<FlatPoint> for AntiMotor {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
-        return Scalar::from_groups(/* scalar */ wedge[e321] * other[e45] * -1.0);
+        return Scalar::from_groups(/* scalar */ right_anti_dual[e321] * self[scalar] * other[e45] * -1.0);
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for AntiMotor {
@@ -8012,8 +8030,7 @@ impl ProjectOrthogonallyOnto<Scalar> for AntiMotor {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[scalar] * right_anti_dual[e12345]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ self[scalar] * right_anti_dual[e12345] * other[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for AntiMotor {
@@ -8370,21 +8387,12 @@ impl ProjectOrthogonallyOnto<AntiDualNum> for AntiPlane {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       15        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            right_anti_dual.group0().xx().with_zw(right_anti_dual[e5], 0.0)
-                * Simd32x3::from(1.0).with_w(0.0)
-                * self.group0().xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e3215] * wedge[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e3215] * 0.0, 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlatPoint> for AntiPlane {
@@ -8543,27 +8551,34 @@ impl ProjectOrthogonallyOnto<AntiPlane> for AntiPlane {
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((self[e1] * right_anti_dual[e4235]) + (self[e2] * right_anti_dual[e4315]) + (self[e3] * right_anti_dual[e4125])) * other.group0(),
         );
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiScalar> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    self[e1] * right_anti_dual[scalar],
+                    self[e2] * right_anti_dual[scalar],
+                    self[e3] * right_anti_dual[scalar],
+                    self[e5] * right_anti_dual[scalar],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for AntiPlane {
@@ -8801,36 +8816,50 @@ impl ProjectOrthogonallyOnto<DualNum> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        4        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0       10        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    right_anti_dual[scalar] * self[e1],
+                    right_anti_dual[scalar] * self[e2],
+                    right_anti_dual[scalar] * self[e3],
+                    right_anti_dual[scalar] * self[e5],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<FlatPoint> for AntiPlane {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        0
+    //      f32        3        8        0
     //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        3        7        0
-    //  no simd        3       11        0
+    // yes simd        3       10        0
+    //  no simd        3       14        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([
-            -(right_anti_dual[e235] * self[e1]) - (right_anti_dual[e315] * self[e2]) - (right_anti_dual[e125] * self[e3]) - (right_anti_dual[e321] * self[e5]),
-            0.0,
-        ]));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([wedge[e3215] * other[e45], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                -(right_anti_dual[e235] * self[e1] * other[e45])
+                    - (right_anti_dual[e315] * self[e2] * other[e45])
+                    - (right_anti_dual[e125] * self[e3] * other[e45])
+                    - (right_anti_dual[e321] * self[e5] * other[e45]),
+                1.0,
+            ]) * Simd32x2::from([1.0, 0.0]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for AntiPlane {
@@ -9388,8 +9417,7 @@ impl ProjectOrthogonallyOnto<AntiScalar> for AntiScalar {
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ other[e12345] * wedge[e12345]);
+        return AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345] * right_anti_dual[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<CircleRotor> for AntiScalar {
@@ -9398,21 +9426,13 @@ impl ProjectOrthogonallyOnto<CircleRotor> for AntiScalar {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       20        0
+    // yes simd        0        5        0
+    //  no simd        0       16        0
     fn project_orthogonally_onto(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[3] * self[e12345]);
         return CircleRotor::from_groups(
             // e423, e431, e412
             Simd32x3::from(wedge[e12345]) * other.group0(),
@@ -9435,8 +9455,7 @@ impl ProjectOrthogonallyOnto<DualNum> for AntiScalar {
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(wedge[e12345]) * other.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_anti_dual[scalar] * self[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
@@ -9444,19 +9463,13 @@ impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       17        0
+    // yes simd        0        4        0
+    //  no simd        0       13        0
     fn project_orthogonally_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[scalar] * self[e12345]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[3] * self[e12345]);
         return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from(wedge[e12345]) * other.group0(),
@@ -9469,40 +9482,16 @@ impl ProjectOrthogonallyOnto<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        5        0
+    //      f32        0        3        0
     //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        7        0
+    //    simd3        0        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       55        0
+    // yes simd        0       13        0
+    //  no simd        0       35        0
     fn project_orthogonally_onto(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = MultiVector::from_groups(
-            // scalar, e12345
-            other.group0().yx() * Simd32x2::from([-1.0, 1.0]),
-            // e1, e2, e3, e4
-            other.group9().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
-            // e15, e25, e35, e45
-            other.group8().with_w(other[e321] * -1.0),
-            // e41, e42, e43
-            other.group7(),
-            // e23, e31, e12
-            other.group6().xyz(),
-            // e415, e425, e435, e321
-            other.group5().with_w(other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e423, e431, e412
-            other.group4() * Simd32x3::from(-1.0),
-            // e235, e315, e125
-            other.group3().xyz() * Simd32x3::from(-1.0),
-            // e4235, e4315, e4125, e3215
-            other.group1().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group0().yx() * Simd32x2::from([-1.0, 1.0]))[0] * self[e12345]);
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(wedge[e12345]) * other.group0(),
@@ -9534,23 +9523,13 @@ impl ProjectOrthogonallyOnto<VersorEven> for AntiScalar {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        8        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       33        0
+    // yes simd        0        6        0
+    //  no simd        0       21        0
     fn project_orthogonally_onto(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e12345] * right_anti_dual[scalar]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))[3] * self[e12345]);
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(wedge[e12345]) * other.group0(),
@@ -9619,16 +9598,28 @@ impl ProjectOrthogonallyOnto<AntiDipoleInversion> for Circle {
 impl ProjectOrthogonallyOnto<AntiDualNum> for Circle {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       16        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            other.group0().xx().with_zw(other[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * wedge.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            other.group0().xx().with_zw(other[e3215], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([
+                    self[e423] * right_anti_dual[e5],
+                    self[e431] * right_anti_dual[e5],
+                    self[e412] * right_anti_dual[e5],
+                    self[e321] * right_anti_dual[e5],
+                ])
+                .xyz()
+                .with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
 }
@@ -9644,11 +9635,11 @@ impl ProjectOrthogonallyOnto<AntiFlatPoint> for Circle {
     fn project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            -(self[e423] * right_anti_dual[e15]) - (self[e431] * right_anti_dual[e25]) - (self[e412] * right_anti_dual[e35]) - (self[e321] * right_anti_dual[e45]),
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(-(self[e423] * right_anti_dual[e15]) - (self[e431] * right_anti_dual[e25]) - (self[e412] * right_anti_dual[e35]) - (self[e321] * right_anti_dual[e45]))
+                * other.group0(),
         );
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlector> for Circle {
@@ -9685,19 +9676,13 @@ impl ProjectOrthogonallyOnto<AntiMotor> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        8        0
-    //    simd4        1        7        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd        2       15        0
-    //  no simd        5       36        0
+    // yes simd        2       13        0
+    //  no simd        5       28        0
     fn project_orthogonally_onto(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x3::from(1.0).with_w(0.0) * other.group1().www().with_w(0.0) * wedge.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
@@ -10534,16 +10519,28 @@ impl ProjectOrthogonallyOnto<AntiDipoleInversion> for CircleRotor {
 impl ProjectOrthogonallyOnto<AntiDualNum> for CircleRotor {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       16        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            other.group0().xx().with_zw(other[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * wedge.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            other.group0().xx().with_zw(other[e3215], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([
+                    self[e423] * right_anti_dual[e5],
+                    self[e431] * right_anti_dual[e5],
+                    self[e412] * right_anti_dual[e5],
+                    self[e321] * right_anti_dual[e5],
+                ])
+                .xyz()
+                .with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
 }
@@ -10559,11 +10556,11 @@ impl ProjectOrthogonallyOnto<AntiFlatPoint> for CircleRotor {
     fn project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            -(self[e423] * right_anti_dual[e15]) - (self[e431] * right_anti_dual[e25]) - (self[e412] * right_anti_dual[e35]) - (self[e321] * right_anti_dual[e45]),
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(-(self[e423] * right_anti_dual[e15]) - (self[e431] * right_anti_dual[e25]) - (self[e412] * right_anti_dual[e35]) - (self[e321] * right_anti_dual[e45]))
+                * other.group0(),
         );
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlector> for CircleRotor {
@@ -10600,19 +10597,13 @@ impl ProjectOrthogonallyOnto<AntiMotor> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        8        0
-    //    simd4        1        7        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd        2       15        0
-    //  no simd        5       36        0
+    // yes simd        2       13        0
+    //  no simd        5       28        0
     fn project_orthogonally_onto(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[e5]) * self.group0().with_w(self[e321]));
+        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e321]));
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x3::from(1.0).with_w(0.0) * other.group1().www().with_w(0.0) * wedge.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
@@ -11512,23 +11503,20 @@ impl ProjectOrthogonallyOnto<AntiDualNum> for Dipole {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd3        0        2        0
+    //      f32        0        3        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = Line::from_groups(
-            // e415, e425, e435
-            Simd32x3::from(right_anti_dual[e5]) * self.group0(),
-            // e235, e315, e125
-            Simd32x3::from(right_anti_dual[e5]) * self.group1().xyz(),
-        );
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            other.group0().xx().with_zw(other[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * wedge.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            other.group0().xx().with_zw(other[e3215], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x3::from([self[e41] * right_anti_dual[e5], self[e42] * right_anti_dual[e5], self[e43] * right_anti_dual[e5]]).with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -12005,11 +11993,11 @@ impl ProjectOrthogonallyOnto<FlatPoint> for Dipole {
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            -(right_anti_dual[e235] * self[e41]) - (right_anti_dual[e315] * self[e42]) - (right_anti_dual[e125] * self[e43]) - (right_anti_dual[e321] * self[e45]),
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(-(right_anti_dual[e235] * self[e41]) - (right_anti_dual[e315] * self[e42]) - (right_anti_dual[e125] * self[e43]) - (right_anti_dual[e321] * self[e45]))
+                * other.group0(),
         );
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Dipole {
@@ -13263,11 +13251,11 @@ impl ProjectOrthogonallyOnto<FlatPoint> for DipoleInversion {
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            -(right_anti_dual[e235] * self[e41]) - (right_anti_dual[e315] * self[e42]) - (right_anti_dual[e125] * self[e43]) - (right_anti_dual[e321] * self[e45]),
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(-(right_anti_dual[e235] * self[e41]) - (right_anti_dual[e315] * self[e42]) - (right_anti_dual[e125] * self[e43]) - (right_anti_dual[e321] * self[e45]))
+                * other.group0(),
         );
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for DipoleInversion {
@@ -14026,16 +14014,18 @@ impl ProjectOrthogonallyOnto<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        4        0
     //  no simd        0        5        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345]) * wedge.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(other[e12345]) * Simd32x2::from([self[e5] * right_anti_dual[scalar], self[e12345] * right_anti_dual[scalar]]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for DualNum {
@@ -14222,15 +14212,14 @@ impl ProjectOrthogonallyOnto<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        3        0
-    //    simd2        0        2        0
+    //      f32        1        4        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        1        5        0
-    //  no simd        1        7        0
+    //  no simd        1        6        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_anti_dual[scalar]) * self.group0());
+        let wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345] * -1.0) * self.group0());
         return DualNum::from_groups(
             // e5, e12345
             Simd32x2::from([(other[e5] * wedge[e12345]) + (other[e12345] * wedge[e5]), other[e12345] * wedge[e12345]]),
@@ -14241,17 +14230,19 @@ impl ProjectOrthogonallyOnto<FlatPoint> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_anti_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([wedge[e3215] * other[e45], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([right_anti_dual[e321] * self[e5] * other[e45] * -1.0, 1.0]) * Simd32x2::from([1.0, 0.0]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for DualNum {
@@ -14304,10 +14295,9 @@ impl ProjectOrthogonallyOnto<Line> for DualNum {
     //  no simd        2       19        0
     fn project_orthogonally_onto(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         let wedge = AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_anti_dual.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
@@ -14540,17 +14530,19 @@ impl ProjectOrthogonallyOnto<Plane> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        4        0
+    //      f32        3        7        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       20        0
+    // yes simd        3       10        0
+    //  no simd        3       19        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let wedge = FlatPoint::from_groups(
             // e15, e25, e35, e45
-            self.group0().xx().with_zw(self[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_anti_dual.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            self.group0().xx().with_zw(self[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]).xyz().with_w(0.0)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
             -(wedge[e15] * other[e4235]) - (wedge[e25] * other[e4315]) - (wedge[e35] * other[e4125]) - (wedge[e45] * other[e3215]),
@@ -14563,19 +14555,13 @@ impl ProjectOrthogonallyOnto<RoundPoint> for DualNum {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        3        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       11        0
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e5] * right_anti_dual[e1234]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(wedge[e12345]) * other.group0(), /* e5 */ wedge[e12345] * other[e5]);
     }
 }
@@ -14583,20 +14569,17 @@ impl ProjectOrthogonallyOnto<Sphere> for DualNum {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        4        0
+    //      f32        3        7        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       20        0
+    // yes simd        3       10        0
+    //  no simd        3       19        0
     fn project_orthogonally_onto(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            other.group0().xyz().with_w(other[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e5
-            other[e3215],
+        let wedge = FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(self[e5]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e1234]]) * Simd32x4::from(-1.0),
         );
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e5]) * right_anti_dual.group0() * Simd32x4::from(-1.0));
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(other[e1234]) * wedge.group0(),
@@ -14803,16 +14786,24 @@ impl ProjectOrthogonallyOnto<AntiScalar> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    self[e15] * right_anti_dual[scalar],
+                    self[e25] * right_anti_dual[scalar],
+                    self[e35] * right_anti_dual[scalar],
+                    self[e45] * right_anti_dual[scalar],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for FlatPoint {
@@ -15011,16 +15002,25 @@ impl ProjectOrthogonallyOnto<DualNum> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        4        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0       10        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    right_anti_dual[scalar] * self[e15],
+                    right_anti_dual[scalar] * self[e25],
+                    right_anti_dual[scalar] * self[e35],
+                    right_anti_dual[scalar] * self[e45],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<FlatPoint> for FlatPoint {
@@ -15035,8 +15035,7 @@ impl ProjectOrthogonallyOnto<FlatPoint> for FlatPoint {
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e321] * self[e45] * -1.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(wedge[e12345]) * other.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[e321] * self[e45] * -1.0) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for FlatPoint {
@@ -15868,8 +15867,7 @@ impl ProjectOrthogonallyOnto<FlatPoint> for Flector {
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e321] * self[e45] * -1.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(wedge[e12345]) * other.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[e321] * self[e45] * -1.0) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Flector {
@@ -17485,17 +17483,19 @@ impl ProjectOrthogonallyOnto<FlatPoint> for Motor {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_anti_dual[e321] * self[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([wedge[e3215] * other[e45], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([right_anti_dual[e321] * other[e45] * self[e5] * -1.0, 1.0]) * Simd32x2::from([1.0, 0.0]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Motor {
@@ -17854,19 +17854,13 @@ impl ProjectOrthogonallyOnto<RoundPoint> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        3        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       11        0
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            other.group0().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e1234
-            other[e4] * -1.0,
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ self[e5] * right_anti_dual[e1234]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ self[e5] * other[e4] * -1.0);
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(wedge[e12345]) * other.group0(), /* e5 */ wedge[e12345] * other[e5]);
     }
 }
@@ -20270,8 +20264,7 @@ impl ProjectOrthogonallyOnto<Scalar> for MultiVector {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ right_anti_dual[e12345] * self[scalar] * other[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for MultiVector {
@@ -20690,39 +20683,39 @@ impl ProjectOrthogonallyOnto<AntiScalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    self[e4235] * right_anti_dual[scalar],
+                    self[e4315] * right_anti_dual[scalar],
+                    self[e4125] * right_anti_dual[scalar],
+                    self[e3215] * right_anti_dual[scalar],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<CircleRotor> for Plane {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        5        0
+    //      f32        1        6        0
     //    simd3        1        5        0
-    //    simd4        3        5        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd        5       15        0
-    //  no simd       16       40        0
+    // yes simd        5       14        0
+    //  no simd       16       33        0
     fn project_orthogonally_onto(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiCircleRotor::from_groups(
-            // e41, e42, e43
-            other.group0(),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, scalar
-            other.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
         return DipoleInversion::from_groups(
             // e41, e42, e43
             (other.group0().zxy() * wedge.group0().yzx()) - (other.group0().yzx() * wedge.group0().zxy()),
@@ -20783,16 +20776,25 @@ impl ProjectOrthogonallyOnto<DualNum> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        4        0
     //    simd2        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0       10        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345]) * wedge.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other[e12345])
+                * Simd32x4::from([
+                    right_anti_dual[scalar] * self[e4235],
+                    right_anti_dual[scalar] * self[e4315],
+                    right_anti_dual[scalar] * self[e4125],
+                    right_anti_dual[scalar] * self[e3215],
+                ]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Plane {
@@ -20828,20 +20830,14 @@ impl ProjectOrthogonallyOnto<Motor> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        5        0
+    //      f32        4        9        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        5       13        0
-    //  no simd        8       28        0
+    // yes simd        5       12        0
+    //  no simd        8       21        0
     fn project_orthogonally_onto(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e3215
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
         return Flector::from_groups(
             // e15, e25, e35, e45
             Simd32x4::from([
@@ -21049,11 +21045,10 @@ impl ProjectOrthogonallyOnto<Plane> for Plane {
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (right_anti_dual[e1] * self[e4235]) + (right_anti_dual[e2] * self[e4315]) + (right_anti_dual[e3] * self[e4125]),
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((right_anti_dual[e1] * self[e4235]) + (right_anti_dual[e2] * self[e4315]) + (right_anti_dual[e3] * self[e4125])) * other.group0(),
         );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for Plane {
@@ -21089,25 +21084,15 @@ impl ProjectOrthogonallyOnto<VersorEven> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       14        0
+    //      f32        3       15        0
     //    simd3        0        3        0
-    //    simd4        4        8        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd        7       25        0
-    //  no simd       19       55        0
+    // yes simd        7       22        0
+    //  no simd       19       40        0
     fn project_orthogonally_onto(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e23, e31, e12, e45
-            other.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e15, e25, e35, e1234
-            other.group2().xyz().with_w(other[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            // e4235, e4315, e4125, e3215
-            other.group3().xyz().with_w(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-        );
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_anti_dual[scalar]) * self.group0());
+        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
@@ -21294,17 +21279,15 @@ impl ProjectOrthogonallyOnto<AntiDualNum> for RoundPoint {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        7        0
+    //  no simd        0        4        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[e5]) * self.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e3215] * wedge[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e3215] * right_anti_dual[e5] * self[e4], 1.0]) * Simd32x2::from([-1.0, 0.0]));
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlatPoint> for RoundPoint {
@@ -21463,11 +21446,11 @@ impl ProjectOrthogonallyOnto<AntiPlane> for RoundPoint {
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (right_anti_dual[e4235] * self[e1]) + (right_anti_dual[e4315] * self[e2]) + (right_anti_dual[e4125] * self[e3]) + (right_anti_dual[e3215] * self[e4]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((right_anti_dual[e4235] * self[e1]) + (right_anti_dual[e4315] * self[e2]) + (right_anti_dual[e4125] * self[e3]) + (right_anti_dual[e3215] * self[e4]))
+                * other.group0(),
         );
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiScalar> for RoundPoint {
@@ -22507,30 +22490,31 @@ impl ProjectOrthogonallyOnto<AntiDipoleInversion> for Scalar {
 impl ProjectOrthogonallyOnto<AntiDualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(wedge[e12345]) * other.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_anti_dual[e12345] * self[scalar]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlatPoint> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
-        return Scalar::from_groups(/* scalar */ other[e321] * wedge[e45] * -1.0);
+        return Scalar::from_groups(/* scalar */ other[e321] * right_anti_dual[e45] * self[scalar] * -1.0);
     }
 }
 impl ProjectOrthogonallyOnto<AntiFlector> for Scalar {
@@ -22636,15 +22620,17 @@ impl ProjectOrthogonallyOnto<AntiPlane> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
         return Scalar::from_groups(/* scalar */ (other[e1] * wedge[e4235]) + (other[e2] * wedge[e4315]) + (other[e3] * wedge[e4125]));
     }
 }
@@ -22656,8 +22642,7 @@ impl ProjectOrthogonallyOnto<AntiScalar> for Scalar {
     fn project_orthogonally_onto(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        let wedge = Scalar::from_groups(/* scalar */ right_anti_dual[scalar] * self[scalar]);
-        return Scalar::from_groups(/* scalar */ other[e12345] * wedge[scalar]);
+        return Scalar::from_groups(/* scalar */ other[e12345] * right_anti_dual[scalar] * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Circle> for Scalar {
@@ -22861,30 +22846,34 @@ impl ProjectOrthogonallyOnto<DipoleInversion> for Scalar {
 impl ProjectOrthogonallyOnto<DualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        3        0
-    // no simd        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn project_orthogonally_onto(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        let wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[scalar]) * right_anti_dual.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345]) * wedge.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(other[e12345]) * Simd32x2::from([right_anti_dual[e3215] * self[scalar], right_anti_dual[scalar] * self[scalar]]),
+        );
     }
 }
 impl ProjectOrthogonallyOnto<FlatPoint> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn project_orthogonally_onto(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
-        return Scalar::from_groups(/* scalar */ wedge[e321] * other[e45] * -1.0);
+        return Scalar::from_groups(/* scalar */ right_anti_dual[e321] * other[e45] * self[scalar] * -1.0);
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Scalar {
@@ -23164,15 +23153,17 @@ impl ProjectOrthogonallyOnto<Plane> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
+    // yes simd        2        7        0
+    //  no simd        2       10        0
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
         return Scalar::from_groups(/* scalar */ (wedge[e1] * other[e4235]) + (wedge[e2] * other[e4315]) + (wedge[e3] * other[e4125]));
     }
 }
@@ -23213,8 +23204,7 @@ impl ProjectOrthogonallyOnto<Scalar> for Scalar {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ right_anti_dual[e12345] * other[scalar] * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for Scalar {
@@ -23398,8 +23388,7 @@ impl ProjectOrthogonallyOnto<AntiDualNum> for Sphere {
     fn project_orthogonally_onto(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e5] * self[e1234]);
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(wedge[e12345]) * other.group0());
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_anti_dual[e5] * self[e1234]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiMotor> for Sphere {
@@ -23407,19 +23396,13 @@ impl ProjectOrthogonallyOnto<AntiMotor> for Sphere {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       17        0
+    // yes simd        0        4        0
+    //  no simd        0       13        0
     fn project_orthogonally_onto(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Motor::from_groups(
-            // e415, e425, e435, e12345
-            other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            // e235, e315, e125, e5
-            other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-        );
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e5] * self[e1234]);
+        let wedge = AntiScalar::from_groups(/* e12345 */ (other.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))[3] * self[e1234]);
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from(wedge[e12345]) * other.group0(),
@@ -23836,11 +23819,11 @@ impl ProjectOrthogonallyOnto<Plane> for Sphere {
     fn project_orthogonally_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (right_anti_dual[e1] * self[e4235]) + (right_anti_dual[e2] * self[e4315]) + (right_anti_dual[e3] * self[e4125]) + (right_anti_dual[e5] * self[e1234]),
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((right_anti_dual[e1] * self[e4235]) + (right_anti_dual[e2] * self[e4315]) + (right_anti_dual[e3] * self[e4125]) + (right_anti_dual[e5] * self[e1234]))
+                * other.group0(),
         );
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for Sphere {
@@ -24291,11 +24274,11 @@ impl ProjectOrthogonallyOnto<AntiPlane> for VersorEven {
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = AntiScalar::from_groups(
-            // e12345
-            (right_anti_dual[e4235] * self[e1]) + (right_anti_dual[e4315] * self[e2]) + (right_anti_dual[e4125] * self[e3]) + (right_anti_dual[e3215] * self[e4]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((right_anti_dual[e4235] * self[e1]) + (right_anti_dual[e4315] * self[e2]) + (right_anti_dual[e4125] * self[e3]) + (right_anti_dual[e3215] * self[e4]))
+                * other.group0(),
         );
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(wedge[e12345]) * other.group0());
     }
 }
 impl ProjectOrthogonallyOnto<AntiScalar> for VersorEven {
@@ -25719,15 +25702,17 @@ impl ProjectOrthogonallyOnto<AntiPlane> for VersorOdd {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn project_orthogonally_onto(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        let wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * right_anti_dual.group0());
+        let wedge = Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
         return Scalar::from_groups(/* scalar */ (other[e1] * wedge[e4235]) + (other[e2] * wedge[e4315]) + (other[e3] * wedge[e4125]));
     }
 }
@@ -26656,8 +26641,7 @@ impl ProjectOrthogonallyOnto<Scalar> for VersorOdd {
     fn project_orthogonally_onto(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let right_anti_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        let wedge = AntiScalar::from_groups(/* e12345 */ right_anti_dual[e12345] * self[scalar]);
-        return Scalar::from_groups(/* scalar */ wedge[e12345] * other[scalar]);
+        return Scalar::from_groups(/* scalar */ right_anti_dual[e12345] * other[scalar] * self[scalar]);
     }
 }
 impl ProjectOrthogonallyOnto<Sphere> for VersorOdd {

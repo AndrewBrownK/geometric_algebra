@@ -8,13 +8,13 @@
 // Total Implementations: 499
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       0       0
 //   Median:         9      20       0
 //  Average:        19      33       0
 //  Maximum:       222     283       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       0
+//  Minimum:         0       0       0
 //   Median:        14      42       0
 //  Average:        35      64       0
 //  Maximum:       422     508       0
@@ -74,16 +74,23 @@ impl RejectViaOriginFrom<AntiDipoleInversion> for AntiCircleRotor {
 impl RejectViaOriginFrom<AntiDualNum> for AntiCircleRotor {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       16        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e45]));
         let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            right_dual.group0().xx().with_zw(right_dual[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * anti_wedge.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([self[e41] * other[e3215], self[e42] * other[e3215], self[e43] * other[e3215], self[e45] * other[e3215]])
+                    .xyz()
+                    .with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -91,19 +98,18 @@ impl RejectViaOriginFrom<AntiFlatPoint> for AntiCircleRotor {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        6        0
-    //  no simd        3       12        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            -(self[e41] * other[e235]) - (self[e42] * other[e315]) - (self[e43] * other[e125]) - (self[e45] * other[e321]),
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(-(self[e41] * other[e235]) - (self[e42] * other[e315]) - (self[e43] * other[e125]) - (self[e45] * other[e321]))
+                * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
         );
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<AntiFlector> for AntiCircleRotor {
@@ -1560,19 +1566,18 @@ impl RejectViaOriginFrom<FlatPoint> for AntiDipoleInversion {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        7        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
+    // yes simd        3        8        0
+    //  no simd        3       11        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            -(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45]),
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45]))
+                * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
         );
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiDipoleInversion {
@@ -2334,16 +2339,17 @@ impl RejectViaOriginFrom<AntiScalar> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        4        0
     //  no simd        0        5        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(right_dual[scalar]) * anti_wedge.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(other[e12345] * -1.0) * Simd32x2::from([self[e3215] * other[e12345], self[scalar] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Circle> for AntiDualNum {
@@ -2548,17 +2554,17 @@ impl RejectViaOriginFrom<FlatPoint> for AntiDualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        1        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       10        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e3215] * other[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * anti_wedge[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from([self[e3215] * f32::powi(other[e45], 2) * -1.0, 1.0]) * Simd32x2::from([-1.0, 0.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiDualNum {
@@ -3132,16 +3138,17 @@ impl RejectViaOriginFrom<AntiScalar> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([self[e235] * other[e12345], self[e315] * other[e12345], self[e125] * other[e12345], self[e321] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Circle> for AntiFlatPoint {
@@ -3345,32 +3352,34 @@ impl RejectViaOriginFrom<DualNum> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([self[e235] * other[e12345], self[e315] * other[e12345], self[e125] * other[e12345], self[e321] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<FlatPoint> for AntiFlatPoint {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * other[e45] * -1.0);
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[e321] * other[e45] * -1.0) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiFlatPoint {
@@ -4197,16 +4206,17 @@ impl RejectViaOriginFrom<FlatPoint> for AntiFlector {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e321] * other[e45] * -1.0);
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(self[e321] * other[e45] * -1.0) * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiFlector {
@@ -5825,17 +5835,17 @@ impl RejectViaOriginFrom<FlatPoint> for AntiMotor {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        1        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       10        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e3215] * other[e45], 1.0]) * Simd32x2::from([-1.0, 0.0]));
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * anti_wedge[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from([self[e3215] * f32::powi(other[e45], 2) * -1.0, 1.0]) * Simd32x2::from([-1.0, 0.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiMotor {
@@ -6392,16 +6402,17 @@ impl RejectViaOriginFrom<AntiScalar> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([self[e1] * other[e12345], self[e2] * other[e12345], self[e3] * other[e12345], self[e5] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<CircleRotor> for AntiPlane {
@@ -6485,16 +6496,17 @@ impl RejectViaOriginFrom<DualNum> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([self[e1] * other[e12345], self[e2] * other[e12345], self[e3] * other[e12345], self[e5] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiPlane {
@@ -6741,16 +6753,18 @@ impl RejectViaOriginFrom<Plane> for AntiPlane {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
+    // yes simd        2        7        0
+    //  no simd        2       10        0
     fn reject_via_origin_from(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ (self[e1] * other[e4235]) + (self[e2] * other[e4315]) + (self[e3] * other[e4125]));
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((self[e1] * other[e4235]) + (self[e2] * other[e4315]) + (self[e3] * other[e4125]))
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Sphere> for AntiPlane {
@@ -6988,30 +7002,25 @@ impl RejectViaOriginFrom<AntiDipoleInversion> for AntiScalar {
 impl RejectViaOriginFrom<AntiDualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[e12345]) * other.group0());
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(anti_wedge[scalar]) * right_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[scalar] * self[e12345]) * other.group0());
     }
 }
 impl RejectViaOriginFrom<AntiFlatPoint> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn reject_via_origin_from(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[e12345]) * other.group0());
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ anti_wedge[e321] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], 2) * self[e12345]);
     }
 }
 impl RejectViaOriginFrom<AntiFlector> for AntiScalar {
@@ -7138,12 +7147,10 @@ impl RejectViaOriginFrom<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiScalar::from_groups(/* e12345 */ other[e12345] * self[e12345]);
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return AntiScalar::from_groups(/* e12345 */ anti_wedge[e12345] * right_dual[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e12345], 2) * self[e12345] * -1.0);
     }
 }
 impl RejectViaOriginFrom<Circle> for AntiScalar {
@@ -7348,30 +7355,28 @@ impl RejectViaOriginFrom<DipoleInversion> for AntiScalar {
 impl RejectViaOriginFrom<DualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        3        0
-    // no simd        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        5        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(self[e12345]) * other.group0());
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar]) * anti_wedge.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(other[e12345] * -1.0) * Simd32x2::from([self[e12345] * other[e5], self[e12345] * other[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<FlatPoint> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e12345]) * other.group0());
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * anti_wedge[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[e45], 2) * -1.0);
     }
 }
 impl RejectViaOriginFrom<Flector> for AntiScalar {
@@ -7702,14 +7707,9 @@ impl RejectViaOriginFrom<RoundPoint> for AntiScalar {
 }
 impl RejectViaOriginFrom<Scalar> for AntiScalar {
     type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e12345] * other[scalar]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[scalar], 2));
     }
 }
 impl RejectViaOriginFrom<Sphere> for AntiScalar {
@@ -7997,23 +7997,20 @@ impl RejectViaOriginFrom<AntiDualNum> for Circle {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd3        0        2        0
+    //      f32        0        3        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiLine::from_groups(
-            // e23, e31, e12
-            Simd32x3::from(other[e3215]) * self.group0(),
-            // e15, e25, e35
-            Simd32x3::from(other[e3215]) * self.group1().xyz(),
-        );
         let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            right_dual.group0().xx().with_zw(right_dual[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * anti_wedge.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x3::from([other[e3215] * self[e423], other[e3215] * self[e431], other[e3215] * self[e412]]).with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -8485,19 +8482,18 @@ impl RejectViaOriginFrom<FlatPoint> for Circle {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        7        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
+    // yes simd        3        8        0
+    //  no simd        3       11        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            -(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45]),
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45]))
+                * Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, other[e45]]),
         );
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<Flector> for Circle {
@@ -10388,14 +10384,9 @@ impl RejectViaOriginFrom<RoundPoint> for CircleRotor {
 }
 impl RejectViaOriginFrom<Scalar> for CircleRotor {
     type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e12345] * other[scalar]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[scalar], 2));
     }
 }
 impl RejectViaOriginFrom<Sphere> for CircleRotor {
@@ -10687,16 +10678,23 @@ impl RejectViaOriginFrom<AntiDipoleInversion> for Dipole {
 impl RejectViaOriginFrom<AntiDualNum> for Dipole {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       16        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(other[e3215]) * self.group0().with_w(self[e45]));
         let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
-            right_dual.group0().xx().with_zw(right_dual[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * anti_wedge.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e5], 0.0)
+                * Simd32x3::from(1.0).with_w(0.0)
+                * Simd32x4::from([other[e3215] * self[e41], other[e3215] * self[e42], other[e3215] * self[e43], other[e3215] * self[e45]])
+                    .xyz()
+                    .with_w(0.0)
+                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -10704,19 +10702,18 @@ impl RejectViaOriginFrom<AntiFlatPoint> for Dipole {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        6        0
-    //  no simd        3       12        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            -(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45]),
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45]))
+                * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
         );
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<AntiFlector> for Dipole {
@@ -11864,19 +11861,18 @@ impl RejectViaOriginFrom<AntiPlane> for DipoleInversion {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        6        0
-    //  no simd        3       12        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]),
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]))
+                * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
         );
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<AntiScalar> for DipoleInversion {
@@ -13070,30 +13066,25 @@ impl RejectViaOriginFrom<AntiDipoleInversion> for DualNum {
 impl RejectViaOriginFrom<AntiDualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(self[e12345]) * other.group0());
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(anti_wedge[scalar]) * right_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[scalar] * self[e12345]) * other.group0());
     }
 }
 impl RejectViaOriginFrom<AntiFlatPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn reject_via_origin_from(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(self[e12345]) * other.group0());
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return AntiScalar::from_groups(/* e12345 */ anti_wedge[e321] * right_dual[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e321], 2) * self[e12345]);
     }
 }
 impl RejectViaOriginFrom<AntiFlector> for DualNum {
@@ -13220,16 +13211,17 @@ impl RejectViaOriginFrom<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        4        0
     //  no simd        0        5        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar]) * anti_wedge.group0());
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from(other[e12345] * -1.0) * Simd32x2::from([other[e12345] * self[e5], other[e12345] * self[e12345]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Circle> for DualNum {
@@ -13457,35 +13449,27 @@ impl RejectViaOriginFrom<DualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        3        0
-    //    simd2        0        2        0
+    //      f32        1        4        0
+    //    simd2        0        1        0
     // Totals...
     // yes simd        1        5        0
-    //  no simd        1        7        0
+    //  no simd        1        6        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(
+        return DualNum::from_groups(
             // e5, e12345
-            Simd32x2::from([(other[e5] * self[e12345]) + (other[e12345] * self[e5]), other[e12345] * self[e12345]]),
+            Simd32x2::from(other[e12345] * -1.0) * Simd32x2::from([(other[e5] * self[e12345]) + (other[e12345] * self[e5]), other[e12345] * self[e12345]]),
         );
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(right_dual[scalar]) * anti_wedge.group0());
     }
 }
 impl RejectViaOriginFrom<FlatPoint> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e12345]) * other.group0());
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * anti_wedge[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[e45], 2) * -1.0);
     }
 }
 impl RejectViaOriginFrom<Flector> for DualNum {
@@ -13816,14 +13800,9 @@ impl RejectViaOriginFrom<RoundPoint> for DualNum {
 }
 impl RejectViaOriginFrom<Scalar> for DualNum {
     type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e12345] * other[scalar]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[scalar], 2));
     }
 }
 impl RejectViaOriginFrom<Sphere> for DualNum {
@@ -14061,16 +14040,17 @@ impl RejectViaOriginFrom<AntiFlatPoint> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn reject_via_origin_from(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ other[e321] * self[e45] * -1.0);
-        let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(other[e321] * self[e45] * -1.0) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<AntiFlector> for FlatPoint {
@@ -14103,16 +14083,17 @@ impl RejectViaOriginFrom<AntiScalar> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([other[e12345] * self[e15], other[e12345] * self[e25], other[e12345] * self[e35], other[e12345] * self[e45]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Circle> for FlatPoint {
@@ -14265,16 +14246,17 @@ impl RejectViaOriginFrom<DualNum> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(other[e12345] * -1.0) * Simd32x4::from([other[e12345] * self[e15], other[e12345] * self[e25], other[e12345] * self[e35], other[e12345] * self[e45]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for FlatPoint {
@@ -14526,23 +14508,22 @@ impl RejectViaOriginFrom<Plane> for FlatPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        4        0
+    //      f32        3        7        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       20        0
+    // yes simd        3       10        0
+    //  no simd        3       19        0
     fn reject_via_origin_from(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
             (self[e15] * other[e4235]) + (self[e25] * other[e4315]) + (self[e35] * other[e4125]) + (self[e45] * other[e3215]),
             0.0,
         ]));
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
             anti_wedge.group0().xx().with_zw(anti_wedge[e5], 0.0)
                 * Simd32x3::from(1.0).with_w(0.0)
-                * right_dual.group0().xyz().with_w(0.0)
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]).xyz().with_w(0.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
     }
@@ -14992,16 +14973,17 @@ impl RejectViaOriginFrom<AntiPlane> for Flector {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn reject_via_origin_from(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]));
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125])) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<AntiScalar> for Flector {
@@ -15300,20 +15282,23 @@ impl RejectViaOriginFrom<FlatPoint> for Flector {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        0
+    //      f32        3        7        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        7        0
-    //  no simd        3       11        0
+    // yes simd        3        8        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
-            -(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]),
-            0.0,
-        ]));
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * anti_wedge[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from([
+                -(f32::powi(other[e45], 2) * self[e3215])
+                    - (other[e15] * other[e45] * self[e4235])
+                    - (other[e25] * other[e45] * self[e4315])
+                    - (other[e35] * other[e45] * self[e4125]),
+                1.0,
+            ]) * Simd32x2::from([-1.0, 0.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for Flector {
@@ -16452,10 +16437,9 @@ impl RejectViaOriginFrom<Line> for Line {
                 - (other[e125] * self[e435]),
             0.0,
         ]));
-        let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            anti_wedge.group0().xx().with_zw(anti_wedge[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            anti_wedge.group0().xx().with_zw(anti_wedge[e5], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -17604,17 +17588,11 @@ impl RejectViaOriginFrom<DualNum> for Motor {
 impl RejectViaOriginFrom<FlatPoint> for Motor {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e12345]) * other.group0());
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e321] * anti_wedge[e45] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[e45], 2) * self[e12345] * -1.0);
     }
 }
 impl RejectViaOriginFrom<Flector> for Motor {
@@ -18015,14 +17993,9 @@ impl RejectViaOriginFrom<RoundPoint> for Motor {
 }
 impl RejectViaOriginFrom<Scalar> for Motor {
     type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e12345] * other[scalar]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[scalar], 2));
     }
 }
 impl RejectViaOriginFrom<Sphere> for Motor {
@@ -20489,14 +20462,9 @@ impl RejectViaOriginFrom<RoundPoint> for MultiVector {
 }
 impl RejectViaOriginFrom<Scalar> for MultiVector {
     type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ self[e12345] * other[scalar]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ self[e12345] * f32::powi(other[scalar], 2));
     }
 }
 impl RejectViaOriginFrom<Sphere> for MultiVector {
@@ -21033,18 +21001,12 @@ impl RejectViaOriginFrom<AntiDualNum> for Plane {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       15        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            other.group0().xx().with_zw(other[e3215], 0.0) * Simd32x3::from(1.0).with_w(0.0) * self.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([anti_wedge[e321] * right_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e3215] * 0.0, 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl RejectViaOriginFrom<AntiFlatPoint> for Plane {
@@ -21195,32 +21157,35 @@ impl RejectViaOriginFrom<AntiPlane> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
+    //      f32        2        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2        8        0
     fn reject_via_origin_from(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]));
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125])) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<AntiScalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        6        0
     //  no simd        0        9        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other[e12345] * -1.0)
+                * Simd32x4::from([other[e12345] * self[e4235], other[e12345] * self[e4315], other[e12345] * self[e4125], other[e12345] * self[e3215]]),
+        );
     }
 }
 impl RejectViaOriginFrom<Circle> for Plane {
@@ -21456,36 +21421,41 @@ impl RejectViaOriginFrom<DualNum> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0       10        0
+    // yes simd        0        6        0
+    //  no simd        0        9        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345]) * self.group0());
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(right_dual[scalar]) * anti_wedge.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other[e12345] * -1.0)
+                * Simd32x4::from([other[e12345] * self[e4235], other[e12345] * self[e4315], other[e12345] * self[e4125], other[e12345] * self[e3215]]),
+        );
     }
 }
 impl RejectViaOriginFrom<FlatPoint> for Plane {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        0
+    //      f32        3        7        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        7        0
-    //  no simd        3       11        0
+    // yes simd        3        8        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
-            -(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]),
-            0.0,
-        ]));
-        let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([right_dual[e321] * anti_wedge[e5], 1.0]) * Simd32x2::from([-1.0, 0.0]));
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from([
+                -(f32::powi(other[e45], 2) * self[e3215])
+                    - (other[e15] * other[e45] * self[e4235])
+                    - (other[e25] * other[e45] * self[e4315])
+                    - (other[e35] * other[e45] * self[e4125]),
+                1.0,
+            ]) * Simd32x2::from([-1.0, 0.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<Flector> for Plane {
@@ -22048,9 +22018,7 @@ impl RejectViaOriginFrom<AntiDualNum> for RoundPoint {
     //  no simd        0        3        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ other[e3215] * self[e4]);
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(anti_wedge[scalar]) * right_dual.group0());
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(other[e3215] * self[e4]) * other.group0());
     }
 }
 impl RejectViaOriginFrom<AntiMotor> for RoundPoint {
@@ -22461,19 +22429,18 @@ impl RejectViaOriginFrom<Plane> for RoundPoint {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        7        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
+    // yes simd        3        8        0
+    //  no simd        3       11        0
     fn reject_via_origin_from(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            (other[e4235] * self[e1]) + (other[e4315] * self[e2]) + (other[e4125] * self[e3]) + (other[e3215] * self[e4]),
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            Simd32x4::from((other[e4235] * self[e1]) + (other[e4315] * self[e2]) + (other[e4125] * self[e3]) + (other[e3215] * self[e4]))
+                * Simd32x4::from([other[e4235] * -1.0, other[e4315] * -1.0, other[e4125] * -1.0, other[e3215]]),
         );
-        let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<Sphere> for RoundPoint {
@@ -22600,12 +22567,10 @@ impl RejectViaOriginFrom<AntiScalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        0
+    // f32        0        2        0
     fn reject_via_origin_from(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ other[e12345] * self[scalar]);
-        let right_dual = Scalar::from_groups(/* scalar */ other[e12345] * -1.0);
-        return Scalar::from_groups(/* scalar */ anti_wedge[scalar] * right_dual[scalar]);
+        return Scalar::from_groups(/* scalar */ f32::powi(other[e12345], 2) * self[scalar] * -1.0);
     }
 }
 impl RejectViaOriginFrom<CircleRotor> for Scalar {
@@ -22643,16 +22608,17 @@ impl RejectViaOriginFrom<DualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        2        0
+    //      f32        0        3        0
+    //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        4        0
     //  no simd        0        5        0
     fn reject_via_origin_from(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ other[e12345] * self[scalar]);
-        let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(anti_wedge[scalar]) * right_dual.group0());
+        return AntiDualNum::from_groups(
+            // e3215, scalar
+            Simd32x2::from(other[e12345] * self[scalar]) * Simd32x2::from([other[e5] * -1.0, other[e12345] * -1.0]),
+        );
     }
 }
 impl RejectViaOriginFrom<Motor> for Scalar {
@@ -22906,15 +22872,12 @@ impl RejectViaOriginFrom<AntiDualNum> for Sphere {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        7        0
+    // yes simd        0        2        0
+    //  no simd        0        3        0
     fn reject_via_origin_from(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e3215]) * self.group0().xyz().with_w(self[e1234]));
-        let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([anti_wedge[e321] * right_dual[e5], 1.0]) * Simd32x2::from([1.0, 0.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([f32::powi(other[e3215], 2) * self[e1234], 1.0]) * Simd32x2::from([1.0, 0.0]));
     }
 }
 impl RejectViaOriginFrom<AntiFlatPoint> for Sphere {
@@ -23068,19 +23031,18 @@ impl RejectViaOriginFrom<AntiPlane> for Sphere {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        6        0
-    //  no simd        3       12        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]),
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]))
+                * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
         );
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<AntiScalar> for Sphere {
@@ -25276,12 +25238,10 @@ impl RejectViaOriginFrom<Scalar> for VersorEven {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        0        1        0
     fn reject_via_origin_from(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(/* scalar */ other[scalar] * self[e12345]);
-        let right_dual = AntiScalar::from_groups(/* e12345 */ other[scalar]);
-        return AntiScalar::from_groups(/* e12345 */ right_dual[e12345] * anti_wedge[scalar]);
+        return AntiScalar::from_groups(/* e12345 */ f32::powi(other[scalar], 2) * self[e12345]);
     }
 }
 impl RejectViaOriginFrom<Sphere> for VersorEven {
@@ -25843,19 +25803,18 @@ impl RejectViaOriginFrom<AntiPlane> for VersorOdd {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
+    //      f32        3        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        6        0
-    //  no simd        3       12        0
+    //  no simd        3        9        0
     fn reject_via_origin_from(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let anti_wedge = Scalar::from_groups(
-            // scalar
-            (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]),
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]))
+                * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
         );
-        let right_dual = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_wedge[scalar]) * right_dual.group0());
     }
 }
 impl RejectViaOriginFrom<AntiScalar> for VersorOdd {

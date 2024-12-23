@@ -8,16 +8,16 @@
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       3       1
-//   Median:         2       5       1
-//  Average:         1       5       1
-//  Maximum:         7      14       1
+//  Minimum:         0       3       0
+//   Median:         2       5       0
+//  Average:         1       5       0
+//  Maximum:         7      13       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       3       1
-//   Median:         2       8       1
-//  Average:         1       9       1
-//  Maximum:         7      25       1
+//  Minimum:         0       3       0
+//   Median:         2       8       0
+//  Average:         1       9       0
+//  Maximum:         7      24       1
 impl std::ops::Div<unitize> for AntiScalar {
     type Output = AntiScalar;
     fn div(self, _rhs: unitize) -> Self::Output {
@@ -32,14 +32,12 @@ impl std::ops::DivAssign<unitize> for AntiScalar {
 impl Unitize for AntiScalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        3        1
+    // f32        0        3        0
     fn unitize(self) -> Self {
         use crate::elements::*;
         let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
-        return AntiScalar::from_groups(/* e1234 */ geometric_anti_product[e1234] * self[e1234]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], -2));
+        return AntiScalar::from_groups(/* e1234 */ other[e1234] * self[e1234] * weight_norm[e1234]);
     }
 }
 impl std::ops::Div<unitize> for DualNum {
@@ -56,18 +54,16 @@ impl std::ops::DivAssign<unitize> for DualNum {
 impl Unitize for DualNum {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        1
+    //      f32        0        2        0
     //    simd2        0        1        0
     // Totals...
-    // yes simd        0        3        1
-    //  no simd        0        4        1
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn unitize(self) -> Self {
         use crate::elements::*;
         let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(geometric_anti_product[e1234]) * self.group0());
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], -2));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[e1234] * weight_norm[e1234]) * self.group0());
     }
 }
 impl std::ops::Div<unitize> for Flector {
@@ -84,17 +80,14 @@ impl std::ops::DivAssign<unitize> for Flector {
 impl Unitize for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
+    //      f32        3        4        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        7        1
-    //  no simd        3       13        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn unitize(self) -> Self {
         use crate::elements::*;
-        let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
+        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ 1.0 / self.flat_weight_norm_squared().anti_square_root()[e1234]);
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(geometric_anti_product[e1234]) * self.group0(),
@@ -117,17 +110,14 @@ impl std::ops::DivAssign<unitize> for Line {
 impl Unitize for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        4        1
+    //      f32        2        3        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd        2        6        1
-    //  no simd        2       10        1
+    // yes simd        2        5        1
+    //  no simd        2        9        1
     fn unitize(self) -> Self {
         use crate::elements::*;
-        let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
+        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ 1.0 / self.flat_weight_norm_squared().anti_square_root()[e1234]);
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from(geometric_anti_product[e1234]) * self.group0(),
@@ -150,17 +140,14 @@ impl std::ops::DivAssign<unitize> for Motor {
 impl Unitize for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
+    //      f32        3        4        1
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        7        1
-    //  no simd        3       13        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn unitize(self) -> Self {
         use crate::elements::*;
-        let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
+        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ 1.0 / self.flat_weight_norm_squared().anti_square_root()[e1234]);
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(geometric_anti_product[e1234]) * self.group0(),
@@ -183,19 +170,16 @@ impl std::ops::DivAssign<unitize> for MultiVector {
 impl Unitize for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        9        1
+    //      f32        7        8        1
     //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        7       14        1
-    //  no simd        7       25        1
+    // yes simd        7       13        1
+    //  no simd        7       24        1
     fn unitize(self) -> Self {
         use crate::elements::*;
-        let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
+        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ 1.0 / self.flat_weight_norm_squared().anti_square_root()[e1234]);
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(geometric_anti_product[e1234]) * self.group0(),
@@ -224,14 +208,12 @@ impl std::ops::DivAssign<unitize> for Origin {
 impl Unitize for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        1
+    // f32        0        4        0
     fn unitize(self) -> Self {
         use crate::elements::*;
         let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
-        return Origin::from_groups(/* e4 */ geometric_anti_product[e1234] * self[e4]);
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], -2));
+        return Origin::from_groups(/* e4 */ other[e1234] * weight_norm[e1234] * self[e4]);
     }
 }
 impl std::ops::Div<unitize> for Plane {
@@ -248,18 +230,16 @@ impl std::ops::DivAssign<unitize> for Plane {
 impl Unitize for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        4        1
+    //      f32        2        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        2        5        1
-    //  no simd        2        8        1
+    // yes simd        2        5        0
+    //  no simd        2        8        0
     fn unitize(self) -> Self {
         use crate::elements::*;
         let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(geometric_anti_product[e1234]) * self.group0());
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], -2));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e1234] * weight_norm[e1234]) * self.group0());
     }
 }
 impl std::ops::Div<unitize> for Point {
@@ -276,17 +256,15 @@ impl std::ops::DivAssign<unitize> for Point {
 impl Unitize for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        1
+    //      f32        0        3        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        1
-    //  no simd        0        7        1
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn unitize(self) -> Self {
         use crate::elements::*;
         let weight_norm = self.flat_weight_norm_squared().anti_square_root();
-        let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], 2));
-        let other = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_dot_product[e1234]);
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ other[e1234] * weight_norm[e1234]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(geometric_anti_product[e1234]) * self.group0());
+        let other = AntiScalar::from_groups(/* e1234 */ f32::powi(weight_norm[e1234], -2));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e1234] * weight_norm[e1234]) * self.group0());
     }
 }

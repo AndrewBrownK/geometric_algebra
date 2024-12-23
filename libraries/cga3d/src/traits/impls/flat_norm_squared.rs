@@ -36,11 +36,9 @@ impl FlatNormSquared for AntiCircleRotor {
     //  no simd        8       17        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -81,11 +79,9 @@ impl FlatNormSquared for AntiDipoleInversion {
     //  no simd       25       52        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -125,11 +121,9 @@ impl FlatNormSquared for Circle {
     //  no simd        9       22        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -169,11 +163,9 @@ impl FlatNormSquared for CircleRotor {
     //  no simd       10       23        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -213,11 +205,9 @@ impl FlatNormSquared for Dipole {
     //  no simd        8       17        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -258,11 +248,9 @@ impl FlatNormSquared for DipoleInversion {
     //  no simd       15       27        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -302,11 +290,9 @@ impl FlatNormSquared for DualNum {
     //  no simd        0       10        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -346,11 +332,9 @@ impl FlatNormSquared for FlatPoint {
     //  no simd        8       17        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -391,11 +375,9 @@ impl FlatNormSquared for Flector {
     //  no simd       15       27        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -435,11 +417,9 @@ impl FlatNormSquared for Line {
     //  no simd        9       22        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -480,11 +460,9 @@ impl FlatNormSquared for Motor {
     //  no simd       26       53        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -530,11 +508,9 @@ impl FlatNormSquared for MultiVector {
     //  no simd      111      144        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -574,11 +550,9 @@ impl FlatNormSquared for Plane {
     //  no simd       17       25        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -618,11 +592,9 @@ impl FlatNormSquared for Sphere {
     //  no simd       17       25        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -663,11 +635,9 @@ impl FlatNormSquared for VersorEven {
     //  no simd       26       53        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -708,11 +678,9 @@ impl FlatNormSquared for VersorOdd {
     //  no simd       15       27        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
-        let self_2 = self.flat_bulk_norm_squared();
-        let other = self.flat_weight_norm_squared();
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self_2[scalar], other[e12345]]),
+            Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5

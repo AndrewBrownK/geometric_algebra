@@ -124,9 +124,7 @@ impl Support for AntiDualNum {
     // no simd        0        4        0
     fn support(self) -> Self::Output {
         use crate::elements::*;
-        let right_anti_dual = DualNum::from_groups(/* e5, e12345 */ self.group0());
-        let self_2 = RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(1.0), /* e5 */ 0.0);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(right_anti_dual[e5]) * self_2.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[e3215]) * Simd32x3::from(0.0).with_w(1.0));
     }
 }
 impl std::ops::Div<support> for AntiFlatPoint {
