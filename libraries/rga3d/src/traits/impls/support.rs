@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 5
+// Total Implementations: 2
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       0       0
-//  Average:         0       0       0
+//  Minimum:         0       1       0
+//   Median:         0       1       0
+//  Average:         0       1       0
 //  Maximum:         0       1       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       0       0
-//  Average:         0       0       0
+//  Minimum:         0       1       0
+//   Median:         0       1       0
+//  Average:         0       1       0
 //  Maximum:         0       1       0
 impl std::ops::Div<support> for Flector {
     type Output = Line;
@@ -25,11 +25,10 @@ impl std::ops::Div<support> for Flector {
     }
 }
 impl Support for Flector {
-    type Output = Line;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn support(self) -> Self::Output {
+    fn support(self) -> Line {
         use crate::elements::*;
         return Line::from_groups(
             // e41, e42, e43
@@ -37,30 +36,6 @@ impl Support for Flector {
             // e23, e31, e12
             Simd32x3::from(0.0),
         );
-    }
-}
-impl std::ops::Div<support> for Line {
-    type Output = Scalar;
-    fn div(self, _rhs: support) -> Self::Output {
-        self.support()
-    }
-}
-impl Support for Line {
-    type Output = Scalar;
-    fn support(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
-impl std::ops::Div<support> for Motor {
-    type Output = Scalar;
-    fn div(self, _rhs: support) -> Self::Output {
-        self.support()
-    }
-}
-impl Support for Motor {
-    type Output = Scalar;
-    fn support(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl std::ops::Div<support> for MultiVector {
@@ -70,11 +45,10 @@ impl std::ops::Div<support> for MultiVector {
     }
 }
 impl Support for MultiVector {
-    type Output = Line;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn support(self) -> Self::Output {
+    fn support(self) -> Line {
         use crate::elements::*;
         return Line::from_groups(
             // e41, e42, e43
@@ -82,17 +56,5 @@ impl Support for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
         );
-    }
-}
-impl std::ops::Div<support> for Point {
-    type Output = Scalar;
-    fn div(self, _rhs: support) -> Self::Output {
-        self.support()
-    }
-}
-impl Support for Point {
-    type Output = Scalar;
-    fn support(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }

@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 9
+// Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         5       7       0
+//  Minimum:         0       2       0
+//   Median:         7       9       0
+//  Average:         9      13       0
 //  Maximum:        30      37       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         9      12       0
+//  Minimum:         0       2       0
+//   Median:         7      12       0
+//  Average:        16      23       0
 //  Maximum:        62      74       0
 impl std::ops::Div<constraint_violation> for DualNum {
     type Output = AntiScalar;
@@ -60,18 +60,6 @@ impl ConstraintViolation for Flector {
                 - (reverse[e3] * self[e412])
                 - (reverse[e4] * self[e321]),
         );
-    }
-}
-impl std::ops::Div<constraint_violation> for Horizon {
-    type Output = Scalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
-        self.constraint_violation()
-    }
-}
-impl ConstraintViolation for Horizon {
-    type Output = Scalar;
-    fn constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl std::ops::Div<constraint_violation> for Line {
@@ -236,46 +224,5 @@ impl ConstraintViolation for MultiVector {
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
-    }
-}
-impl std::ops::Div<constraint_violation> for Plane {
-    type Output = Scalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
-        self.constraint_violation()
-    }
-}
-impl ConstraintViolation for Plane {
-    type Output = Scalar;
-    fn constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
-impl std::ops::Div<constraint_violation> for Point {
-    type Output = Scalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
-        self.constraint_violation()
-    }
-}
-impl ConstraintViolation for Point {
-    type Output = Scalar;
-    fn constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
-impl std::ops::Div<constraint_violation> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
-        self.constraint_violation()
-    }
-}
-impl std::ops::DivAssign<constraint_violation> for Scalar {
-    fn div_assign(&mut self, _rhs: constraint_violation) {
-        *self = self.constraint_violation()
-    }
-}
-impl ConstraintViolation for Scalar {
-    type Output = Scalar;
-    fn constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }

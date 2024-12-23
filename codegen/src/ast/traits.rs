@@ -165,7 +165,7 @@ pub trait TraitDef_1_Type_0_Args: TraitImpl_10 + ProvideTraitNames {
             let fresh_variable_scope = Arc::new(Mutex::new(HashMap::new()));
             let builder = TraitImplBuilder::new(ga, mvs, the_def_clone, registry, false, fresh_variable_scope, cycle_detector_clone);
             let trait_impl = t_self.general_implementation(builder, owner_clone.clone()).await?;
-            Some(trait_impl.into_trait10(owner_clone))
+            trait_impl.into_trait10(owner_clone)
         };
         let the_impl = builder.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner.clone());
@@ -321,7 +321,7 @@ pub trait TraitDef_1_Type_1_Arg: TraitImpl_11 + ProvideTraitNames {
                 decl: declare_self,
             };
             let trait_impl = t_self.general_implementation(builder, var_self).await?;
-            Some(trait_impl.into_trait11(owner_class_clone))
+            trait_impl.into_trait11(owner_class_clone)
         };
         let the_impl = builder.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -488,7 +488,7 @@ pub trait TraitDef_2_Types_1_Arg: TraitImpl_21 + ProvideTraitNames {
                 decl: declare_self,
             };
             let trait_impl = t_self.general_implementation(builder, var_self, other_class_clone.clone()).await?;
-            Some(trait_impl.into_trait21(owner_class_clone, other_class_clone.clone()))
+            trait_impl.into_trait21(owner_class_clone, other_class_clone.clone())
         };
         let the_impl = builder.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -665,7 +665,7 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
                 decl: declare_other,
             };
             let trait_impl = t_self.general_implementation(builder, var_self, var_other).await?;
-            Some(trait_impl.into_trait22(owner_class_clone.clone(), other_class_clone.clone()))
+            trait_impl.into_trait22(owner_class_clone.clone(), other_class_clone.clone())
         };
         let the_impl = builder.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -856,7 +856,7 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
                 decl: declare_other,
             };
             let trait_impl = t_self.general_implementation(builder, var_self, var_other).await?;
-            Some(trait_impl.into_trait12f(owner_class_clone.clone()))
+            trait_impl.into_trait12f(owner_class_clone.clone())
         };
         let the_impl = builder.registry.traits12f.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -1028,7 +1028,7 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
                 decl: declare_other,
             };
             let trait_impl = t_self.general_implementation(builder, var_self, var_other).await?;
-            Some(trait_impl.into_trait12i(owner_class_clone.clone()))
+            trait_impl.into_trait12i(owner_class_clone.clone())
         };
         let the_impl = builder.registry.traits12i.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -1703,7 +1703,7 @@ impl<T: TraitDef_1_Type_0_Args> Register10 for T {
                         let result = self.general_implementation(b, mv_a.clone()).await;
                         match result {
                             None => None,
-                            Some(result) => Some(result.into_trait10(mv_a)),
+                            Some(result) => result.into_trait10(mv_a),
                         }
                     })
                     .await;
@@ -1763,7 +1763,7 @@ impl<T: TraitDef_1_Type_1_Arg> Register11 for T {
                         let result = self.general_implementation(b, var_self).await;
                         match result {
                             None => None,
-                            Some(result) => Some(result.into_trait11(mv_a)),
+                            Some(result) => result.into_trait11(mv_a),
                         }
                     })
                     .await;
@@ -1827,7 +1827,7 @@ impl<T: TraitDef_2_Types_1_Arg> Register21 for T {
                             let result = self.general_implementation(b, var_self, mv_b.clone()).await;
                             match result {
                                 None => None,
-                                Some(result) => Some(result.into_trait21(mv_a, mv_b)),
+                                Some(result) => result.into_trait21(mv_a, mv_b),
                             }
                         })
                         .await;
@@ -1898,7 +1898,7 @@ impl<T: TraitDef_2_Types_2_Args> Register22 for T {
                             let result = self.general_implementation(b, var_self, var_other).await;
                             match result {
                                 None => None,
-                                Some(result) => Some(result.into_trait22(mv_a, mv_b)),
+                                Some(result) => result.into_trait22(mv_a, mv_b),
                             }
                         })
                         .await;
@@ -1967,7 +1967,7 @@ impl<T: TraitDef_1_Type_2_Args_f32> Register12f for T {
                         let result = self.general_implementation(b, var_self, var_other).await;
                         match result {
                             None => None,
-                            Some(result) => Some(result.into_trait12f(mv_a)),
+                            Some(result) => result.into_trait12f(mv_a),
                         }
                     })
                     .await;
@@ -2035,7 +2035,7 @@ impl<T: TraitDef_1_Type_2_Args_i32> Register12i for T {
                         let result = self.general_implementation(b, var_self, var_other).await;
                         match result {
                             None => None,
-                            Some(result) => Some(result.into_trait12i(mv_a)),
+                            Some(result) => result.into_trait12i(mv_a),
                         }
                     })
                     .await;
@@ -2512,399 +2512,46 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     }
 }
 
-// TODO DRY these into_traitXX methods
-
 impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, ExprType> {
-    fn into_trait10(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
-        let lookup = TraitOperationsLookup {
-            traits10: &self.traits10_dependencies,
-            traits11: &self.traits11_dependencies,
-            traits12i: &self.traits12i_dependencies,
-            traits12f: &self.traits12f_dependencies,
-            traits21: &self.traits21_dependencies,
-            traits22: &self.traits22_dependencies,
-        };
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        let mut lines = self.lines.into_inner();
-
-        loop {
-            // Scan through the lines in reverse, drop unused variables
-            return_expr.final_simplify();
-            let mut i = lines.len();
-            while i > 0 {
-                i -= 1;
-                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-                match vd.upgrade() {
-                    None => drop(lines.remove(i)),
-                    Some(vd) => {
-                        if let Some(v) = &vd.expr {
-                            let mut expr = v.write();
-                            expr.final_simplify();
-                        }
-                    }
-                }
-            }
-
-            if lines.iter().any(|it| it.needs_more_inlining()) {
-                continue
-            } else {
-                break
-            }
-        }
-
-        let mut statistics = VectoredOperationsTracker::zero();
-        statistics += return_expr.count_operations(&lookup);
-        for line in lines.iter() {
-            if let CommentOrVariableDeclaration::VarDec(vd) = line {
-                let Some(vd) = vd.upgrade() else { continue };
-                let Some(v) = &vd.expr else { continue };
-                statistics += v.read().count_operations(&lookup);
-            }
-        }
-
-        let ti = Arc::new(RawTraitImplementation {
-            definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
-            owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: false,
-            other_type_params: vec![],
-            other_var_params: vec![],
-            lines,
-            return_comment: self.return_comment,
-            return_expr,
-            specialized: self.specialized,
-            statistics,
-        });
-        let w = self.wanted_multi_vecs.into_inner();
-        for mv in w {
-            self.mvs.note_wanted(mv, ti.clone());
-        }
-        return ti;
+    fn into_trait10(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, false, vec![], vec![])
     }
 
     // TODO some interesting implementations have variables with more than one invocation,
     //  but the value behind the variable only has its whole destructured once. It would
     //  be interesting to inline these.
     //  - impl AntiSupport for Flector
-    fn into_trait11(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
-        let lookup = TraitOperationsLookup {
-            traits10: &self.traits10_dependencies,
-            traits11: &self.traits11_dependencies,
-            traits12i: &self.traits12i_dependencies,
-            traits12f: &self.traits12f_dependencies,
-            traits21: &self.traits21_dependencies,
-            traits22: &self.traits22_dependencies,
-        };
-
-        // This shouldn't be a problem because of type level state and function visibilities
-        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        let mut lines = self.lines.into_inner();
-
-        loop {
-            // Scan through the lines in reverse, drop unused variables
-            return_expr.final_simplify();
-            let mut i = lines.len();
-            while i > 0 {
-                i -= 1;
-                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-                match vd.upgrade() {
-                    None => drop(lines.remove(i)),
-                    Some(vd) => {
-                        if let Some(v) = &vd.expr {
-                            let mut expr = v.write();
-                            expr.final_simplify();
-                        }
-                    }
-                }
-            }
-
-            if lines.iter().any(|it| it.needs_more_inlining()) {
-                continue
-            } else {
-                break
-            }
-        }
-
-        let mut statistics = VectoredOperationsTracker::zero();
-        statistics += return_expr.count_operations(&lookup);
-        for line in lines.iter() {
-            if let CommentOrVariableDeclaration::VarDec(vd) = line {
-                let Some(vd) = vd.upgrade() else { continue };
-                let Some(v) = &vd.expr else { continue };
-                statistics += v.read().count_operations(&lookup);
-            }
-        }
-
-        let ti = Arc::new(RawTraitImplementation {
-            definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
-            owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: true,
-            other_type_params: vec![],
-            other_var_params: vec![],
-            lines,
-            return_comment: self.return_comment,
-            return_expr,
-            specialized: self.specialized,
-            statistics,
-        });
-        let w = self.wanted_multi_vecs.into_inner();
-        for mv in w {
-            self.mvs.note_wanted(mv, ti.clone());
-        }
-        return ti;
+    fn into_trait11(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, true, vec![], vec![])
     }
 
-    fn into_trait21(self, owner: MultiVector, other: MultiVector) -> Arc<RawTraitImplementation> {
-        let lookup = TraitOperationsLookup {
-            traits10: &self.traits10_dependencies,
-            traits11: &self.traits11_dependencies,
-            traits12i: &self.traits12i_dependencies,
-            traits12f: &self.traits12f_dependencies,
-            traits21: &self.traits21_dependencies,
-            traits22: &self.traits22_dependencies,
-        };
-
-        // This shouldn't be a problem because of type level state and function visibilities
-        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        let mut lines = self.lines.into_inner();
-
-        loop {
-            // Scan through the lines in reverse, drop unused variables
-            return_expr.final_simplify();
-            let mut i = lines.len();
-            while i > 0 {
-                i -= 1;
-                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-                match vd.upgrade() {
-                    None => drop(lines.remove(i)),
-                    Some(vd) => {
-                        if let Some(v) = &vd.expr {
-                            let mut expr = v.write();
-                            expr.final_simplify();
-                        }
-                    }
-                }
-            }
-
-            if lines.iter().any(|it| it.needs_more_inlining()) {
-                continue
-            } else {
-                break
-            }
-        }
-
-        let mut statistics = VectoredOperationsTracker::zero();
-        statistics += return_expr.count_operations(&lookup);
-        for line in lines.iter() {
-            if let CommentOrVariableDeclaration::VarDec(vd) = line {
-                let Some(vd) = vd.upgrade() else { continue };
-                let Some(v) = &vd.expr else { continue };
-                statistics += v.read().count_operations(&lookup);
-            }
-        }
-
-        let ti = Arc::new(RawTraitImplementation {
-            definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
-            owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: true,
-            other_type_params: vec![ExpressionType::Class(other)],
-            other_var_params: vec![],
-            lines,
-            return_comment: self.return_comment,
-            return_expr,
-            specialized: self.specialized,
-            statistics,
-        });
-        let w = self.wanted_multi_vecs.into_inner();
-        for mv in w {
-            self.mvs.note_wanted(mv, ti.clone());
-        }
-        return ti;
+    fn into_trait21(self, owner: MultiVector, other: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, true, vec![ExpressionType::Class(other.clone())], vec![])
     }
 
     // TODO impl ProjectOrthogonallyOnto<Line> for Origin
     //  maybe we should return Option from here so we don't get these null implementations
-    fn into_trait22(self, owner: MultiVector, other: MultiVector) -> Arc<RawTraitImplementation> {
-        let lookup = TraitOperationsLookup {
-            traits10: &self.traits10_dependencies,
-            traits11: &self.traits11_dependencies,
-            traits12i: &self.traits12i_dependencies,
-            traits12f: &self.traits12f_dependencies,
-            traits21: &self.traits21_dependencies,
-            traits22: &self.traits22_dependencies,
-        };
-
-        // This shouldn't be a problem because of type level state and function visibilities
-        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        let mut lines = self.lines.into_inner();
-
-
-        let instance = {
-            let n = self.trait_def.names.trait_key.final_name;
-            let owner = owner.name();
-            let other = other.name();
-            format!("{n}<{other}> for {owner}")
-        };
-
-        loop {
-            // Scan through the lines in reverse, drop unused variables
-            return_expr.final_simplify();
-            let mut i = lines.len();
-            while i > 0 {
-                i -= 1;
-                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-                match vd.upgrade() {
-                    None => drop(lines.remove(i)),
-                    Some(vd) => {
-                        if let Some(v) = &vd.expr {
-                            let mut expr = v.write();
-                            expr.final_simplify();
-                        }
-                    }
-                }
-            }
-
-            if lines.iter().any(|it| it.needs_more_inlining()) {
-                continue
-            } else {
-                break
-            }
-        }
-
-        let mut statistics = VectoredOperationsTracker::zero();
-        statistics += return_expr.count_operations(&lookup);
-        for line in lines.iter() {
-            if let CommentOrVariableDeclaration::VarDec(vd) = line {
-                let Some(vd) = vd.upgrade() else { continue };
-                let Some(v) = &vd.expr else { continue };
-                statistics += v.read().count_operations(&lookup);
-            }
-        }
-
-        let ti = Arc::new(RawTraitImplementation {
-            definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
-            owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: true,
-            other_type_params: vec![ExpressionType::Class(other.clone())],
-            other_var_params: vec![ExpressionType::Class(other)],
-            lines,
-            return_comment: self.return_comment,
-            return_expr,
-            specialized: self.specialized,
-            statistics,
-        });
-        let w = self.wanted_multi_vecs.into_inner();
-        for mv in w {
-            self.mvs.note_wanted(mv, ti.clone());
-        }
-        return ti;
+    fn into_trait22(self, owner: MultiVector, other: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, true, vec![ExpressionType::Class(other.clone())], vec![ExpressionType::Class(other)])
     }
 
-    fn into_trait12i(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
-        let lookup = TraitOperationsLookup {
-            traits10: &self.traits10_dependencies,
-            traits11: &self.traits11_dependencies,
-            traits12i: &self.traits12i_dependencies,
-            traits12f: &self.traits12f_dependencies,
-            traits21: &self.traits21_dependencies,
-            traits22: &self.traits22_dependencies,
-        };
-
-        // This shouldn't be a problem because of type level state and function visibilities
-        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
-        let mut lines = self.lines.into_inner();
-
-        loop {
-            // Scan through the lines in reverse, drop unused variables
-            return_expr.final_simplify();
-            let mut i = lines.len();
-            while i > 0 {
-                i -= 1;
-                let CommentOrVariableDeclaration::VarDec(vd) = &lines[i] else { continue };
-                match vd.upgrade() {
-                    None => drop(lines.remove(i)),
-                    Some(vd) => {
-                        if let Some(v) = &vd.expr {
-                            let mut expr = v.write();
-                            expr.final_simplify();
-                        }
-                    }
-                }
-            }
-
-            if lines.iter().any(|it| it.needs_more_inlining()) {
-                continue
-            } else {
-                break
-            }
-        }
-
-        let mut statistics = VectoredOperationsTracker::zero();
-        statistics += return_expr.count_operations(&lookup);
-        for line in lines.iter() {
-            if let CommentOrVariableDeclaration::VarDec(vd) = line {
-                let Some(vd) = vd.upgrade() else { continue };
-                let Some(v) = &vd.expr else { continue };
-                statistics += v.read().count_operations(&lookup);
-            }
-        }
-
-        let ti = Arc::new(RawTraitImplementation {
-            definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
-            owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: true,
-            other_type_params: vec![],
-            other_var_params: vec![ExpressionType::Int(Integer)],
-            lines,
-            return_comment: self.return_comment,
-            return_expr,
-            specialized: self.specialized,
-            statistics,
-        });
-        let w = self.wanted_multi_vecs.into_inner();
-        for mv in w {
-            self.mvs.note_wanted(mv, ti.clone());
-        }
-        return ti;
+    fn into_trait12i(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, true, vec![], vec![ExpressionType::Int(Integer)])
     }
 
-    fn into_trait12f(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
+    fn into_trait12f(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
+        self.into_trait_xx(owner, true, vec![], vec![ExpressionType::Float(Float)])
+    }
+
+    fn into_trait_xx(
+        self,
+        owner: MultiVector,
+        owner_is_param: bool,
+        other_type_params: Vec<TraitParam>,
+        other_var_params: Vec<TraitParam>
+    ) -> Option<Arc<RawTraitImplementation>> {
+
         let lookup = TraitOperationsLookup {
             traits10: &self.traits10_dependencies,
             traits11: &self.traits11_dependencies,
@@ -2943,6 +2590,25 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
+        if self.trait_def.names.trait_key.final_name != "Zero" {
+            // We do not implement traits that are statically guaranteed to return zero.
+            // We would rather say the trait is not implemented.
+            // Otherwise, you could implement almost any trait for almost any combination of classes.
+
+            // Sometimes expressions won't simplify all the way to zero until this very
+            // last step where we have inlined single use variables. So here we are.
+
+            // A few exceptions are...
+            // - The "Zero" trait
+            // - Traits like "Grade" or "AntiGrade" that return raw numerals instead of multivectors
+
+            if let AnyExpression::Class(v) = &return_expr {
+                if v.is_zero() {
+                    return None;
+                }
+            }
+        }
+
         let mut statistics = VectoredOperationsTracker::zero();
         statistics += return_expr.count_operations(&lookup);
         for line in lines.iter() {
@@ -2963,9 +2629,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
             owner: ExpressionType::Class(owner.clone()),
-            owner_is_param: true,
-            other_type_params: vec![],
-            other_var_params: vec![ExpressionType::Float(Float)],
+            owner_is_param,
+            other_type_params,
+            other_var_params,
             lines,
             return_comment: self.return_comment,
             return_expr,
@@ -2976,7 +2642,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         for mv in w {
             self.mvs.note_wanted(mv, ti.clone());
         }
-        return ti;
+        return Some(ti);
     }
 }
 

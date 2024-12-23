@@ -1372,9 +1372,6 @@ fn horizon_antiConstraintValid(self_: Horizon) -> Horizon {
 fn scalar_antiConstraintValid(self_: Scalar) -> Scalar {
     return self_;
 }
-fn antiScalar_antiConstraintViolation(self_: AntiScalar) -> Scalar {
-    return Scalar(0.0);
-}
 fn dualNum_antiConstraintViolation(self_: DualNum) -> Scalar {
     return Scalar(self_.scalar * self_.e1234_ * 2.0);
 }
@@ -1427,15 +1424,6 @@ fn multiVector_antiConstraintViolation(self_: MultiVector) -> MultiVector {
         /* e23, e31, e12 */ vec4<f32>(0.0), 
         /* e423, e431, e412, e321 */ geometric_anti_product_groups.group4_
     ));
-}
-fn origin_antiConstraintViolation(self_: Origin) -> Scalar {
-    return Scalar(0.0);
-}
-fn plane_antiConstraintViolation(self_: Plane) -> Scalar {
-    return Scalar(0.0);
-}
-fn point_antiConstraintViolation(self_: Point) -> Scalar {
-    return Scalar(0.0);
 }
 fn antiScalar_antiDotProduct_antiScalar(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
     return AntiScalar(other.e1234_ * self_.e1234_);
@@ -7101,9 +7089,6 @@ fn flector_constraintViolation(self_: Flector) -> AntiScalar {
     ));
     return AntiScalar((reverse.e423_ * self_.e1_) + (reverse.e431_ * self_.e2_) + (reverse.e412_ * self_.e3_) + (reverse.e321_ * self_.e4_) - (reverse.e1_ * self_.e423_) - (reverse.e2_ * self_.e431_) - (reverse.e3_ * self_.e412_) - (reverse.e4_ * self_.e321_));
 }
-fn horizon_constraintViolation(self_: Horizon) -> Scalar {
-    return Scalar(0.0);
-}
 fn line_constraintViolation(self_: Line) -> AntiScalar {
     let self_groups = line_grouped(self_);
     let reverse: Line = line_degroup(LineGroups(
@@ -7145,15 +7130,6 @@ fn multiVector_constraintViolation(self_: MultiVector) -> MultiVector {
         /* e23, e31, e12 */ vec4<f32>(0.0), 
         /* e423, e431, e412, e321 */ vec4<f32>(0.0)
     ));
-}
-fn plane_constraintViolation(self_: Plane) -> Scalar {
-    return Scalar(0.0);
-}
-fn point_constraintViolation(self_: Point) -> Scalar {
-    return Scalar(0.0);
-}
-fn scalar_constraintViolation(self_: Scalar) -> Scalar {
-    return Scalar(0.0);
 }
 fn dualNum_dotProduct_dualNum(self_: DualNum, other: DualNum) -> Scalar {
     return Scalar(other.scalar * self_.scalar);
@@ -13348,9 +13324,6 @@ fn origin_projectOrthogonallyOnto_flector(self_: Origin, other: Flector) -> Flec
         /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group1_
     ));
 }
-fn origin_projectOrthogonallyOnto_line(self_: Origin, other: Line) -> Scalar {
-    return Scalar(0.0);
-}
 fn origin_projectOrthogonallyOnto_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
     let right_anti_dual_groups: MotorGroups = MotorGroups(
@@ -14327,9 +14300,6 @@ fn origin_projectViaOriginOnto_flector(self_: Origin, other: Flector) -> Flector
         /* e1, e2, e3, e4 */ vec4<f32>((other.e412_ * wedge.e31_) + (other.e321_ * wedge.e41_), (other.e423_ * wedge.e12_) + (other.e321_ * wedge.e42_), (other.e431_ * wedge.e23_) + (other.e321_ * wedge.e43_), -(other.e431_ * wedge.e42_) - (other.e412_ * wedge.e43_)) + (vec4<f32>(wedge.e1234_) * other_groups.group0_) - (other_groups.group1_.yzxx * vec4<f32>(wedge_groups.group1_.zxyw.xyz, wedge.e41_)), 
         /* e423, e431, e412, e321 */ vec4<f32>(wedge.e1234_) * other_groups.group1_
     ));
-}
-fn origin_projectViaOriginOnto_line(self_: Origin, other: Line) -> Scalar {
-    return Scalar(0.0);
 }
 fn origin_projectViaOriginOnto_motor(self_: Origin, other: Motor) -> Flector {
     let other_groups = motor_grouped(other);
@@ -18764,20 +18734,11 @@ fn flector_support(self_: Flector) -> Line {
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
 }
-fn line_support(self_: Line) -> Scalar {
-    return Scalar(0.0);
-}
-fn motor_support(self_: Motor) -> Scalar {
-    return Scalar(0.0);
-}
 fn multiVector_support(self_: MultiVector) -> Line {
     return line_degroup(LineGroups(
         /* e41, e42, e43 */ vec4<f32>(vec4<f32>(0.0).xyz, self_.e321_ * -1.0), 
         /* e23, e31, e12 */ vec4<f32>(0.0)
     ));
-}
-fn point_support(self_: Point) -> Scalar {
-    return Scalar(0.0);
 }
 fn antiScalar_unit() -> AntiScalar {
     return AntiScalar(1.0);

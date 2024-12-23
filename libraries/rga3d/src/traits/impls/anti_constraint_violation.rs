@@ -5,31 +5,19 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 9
+// Total Implementations: 5
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         5       7       0
+//  Minimum:         0       2       0
+//   Median:         7       9       0
+//  Average:         9      13       0
 //  Maximum:        30      37       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         9      12       0
+//  Minimum:         0       2       0
+//   Median:         7      12       0
+//  Average:        16      23       0
 //  Maximum:        62      74       0
-impl std::ops::Div<anti_constraint_violation> for AntiScalar {
-    type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
-        self.anti_constraint_violation()
-    }
-}
-impl AntiConstraintViolation for AntiScalar {
-    type Output = Scalar;
-    fn anti_constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
 impl std::ops::Div<anti_constraint_violation> for DualNum {
     type Output = Scalar;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
@@ -236,41 +224,5 @@ impl AntiConstraintViolation for MultiVector {
             // e423, e431, e412, e321
             geometric_anti_product.group4(),
         );
-    }
-}
-impl std::ops::Div<anti_constraint_violation> for Origin {
-    type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
-        self.anti_constraint_violation()
-    }
-}
-impl AntiConstraintViolation for Origin {
-    type Output = Scalar;
-    fn anti_constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
-impl std::ops::Div<anti_constraint_violation> for Plane {
-    type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
-        self.anti_constraint_violation()
-    }
-}
-impl AntiConstraintViolation for Plane {
-    type Output = Scalar;
-    fn anti_constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
-    }
-}
-impl std::ops::Div<anti_constraint_violation> for Point {
-    type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
-        self.anti_constraint_violation()
-    }
-}
-impl AntiConstraintViolation for Point {
-    type Output = Scalar;
-    fn anti_constraint_violation(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }

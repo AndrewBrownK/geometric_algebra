@@ -44,6 +44,18 @@ impl AnyExpression {
             _ => None,
         }
     }
+
+    // /// Check if this expression is zero, assuming it is already simplified
+    // pub(crate) fn is_zero(&self) -> bool {
+    //     match self {
+    //         AnyExpression::Int(i) => i.is_zero(),
+    //         AnyExpression::Float(f) => f.is_zero(),
+    //         AnyExpression::Vec2(v) => v.is_zero(),
+    //         AnyExpression::Vec3(v) => v.is_zero(),
+    //         AnyExpression::Vec4(v) => v.is_zero(),
+    //         AnyExpression::Class(c) => c.is_zero(),
+    //     }
+    // }
 }
 
 
@@ -220,6 +232,14 @@ impl IntExpr {
         mem::swap(&mut x, self);
         x
     }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            IntExpr::Literal(0) => true,
+            _ => false,
+        }
+    }
 }
 
 impl FloatExpr {
@@ -275,6 +295,14 @@ impl FloatExpr {
         let mut x = FloatExpr::Literal(0.0);
         mem::swap(&mut x, self);
         x
+    }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            FloatExpr::Literal(0.0) => true,
+            _ => false,
+        }
     }
 }
 impl Vec2Expr {
@@ -370,6 +398,14 @@ impl Vec2Expr {
             Vec2Expr::SwizzleVec2(box mut v, x, y) => v.take_part_as_owned([x, y][idx as usize]),
             Vec2Expr::Truncate3to2(box mut v3) => v3.take_part_as_owned(idx),
             Vec2Expr::Truncate4to2(box mut v4) => v4.take_part_as_owned(idx),
+        }
+    }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            Vec2Expr::Gather1(f) => f.is_zero(),
+            _ => false,
         }
     }
 }
@@ -475,6 +511,14 @@ impl Vec3Expr {
                 2 => f,
                 _ => panic!("{idx} does not fit in Vec3 for take_part_as_owned")
             }
+        }
+    }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            Vec3Expr::Gather1(f) => f.is_zero(),
+            _ => false,
         }
     }
 }
@@ -594,6 +638,14 @@ impl Vec4Expr {
             }
         }
     }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            Vec4Expr::Gather1(f) => f.is_zero(),
+            _ => false,
+        }
+    }
 }
 impl MultiVectorGroupExpr {
     fn deep_inline_variables(&mut self) -> bool {
@@ -622,6 +674,16 @@ impl MultiVectorGroupExpr {
             MultiVectorGroupExpr::Vec2(mut v) => v.take_part_as_owned(idx),
             MultiVectorGroupExpr::Vec3(mut v) => v.take_part_as_owned(idx),
             MultiVectorGroupExpr::Vec4(mut v) => v.take_part_as_owned(idx),
+        }
+    }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    fn is_zero(&self) -> bool {
+        match self {
+            MultiVectorGroupExpr::JustFloat(f) => f.is_zero(),
+            MultiVectorGroupExpr::Vec2(v) => v.is_zero(),
+            MultiVectorGroupExpr::Vec3(v) => v.is_zero(),
+            MultiVectorGroupExpr::Vec4(v) => v.is_zero(),
         }
     }
 }
@@ -664,6 +726,14 @@ impl MultiVectorExpr {
         };
         mem::swap(&mut x, self);
         x
+    }
+
+    /// Check if this expression is zero, assuming it is already simplified
+    pub(crate) fn is_zero(&self) -> bool {
+        match self.expr.as_ref() {
+            MultiVectorVia::Construct(gs) => gs.iter().all(|it| it.is_zero()),
+            _ => false,
+        }
     }
 }
 

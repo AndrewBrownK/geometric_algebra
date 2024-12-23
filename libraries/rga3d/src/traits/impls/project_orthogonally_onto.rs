@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 73
+// Total Implementations: 72
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         5       9       0
+//  Minimum:         0       1       0
+//   Median:         5      10       0
 //  Average:        10      17       0
 //  Maximum:        76      98       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       0       0
-//   Median:         5      18       0
-//  Average:        17      32       0
+//  Minimum:         0       1       0
+//   Median:         6      19       0
+//  Average:        18      32       0
 //  Maximum:       130     166       0
 impl std::ops::Div<project_orthogonally_onto> for AntiScalar {
     type Output = project_orthogonally_onto_partial<AntiScalar>;
@@ -1869,12 +1869,6 @@ impl ProjectOrthogonallyOnto<Flector> for Origin {
             // e423, e431, e412, e321
             Simd32x4::from(wedge[e1234]) * other.group1(),
         );
-    }
-}
-impl ProjectOrthogonallyOnto<Line> for Origin {
-    type Output = Scalar;
-    fn project_orthogonally_onto(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ProjectOrthogonallyOnto<Motor> for Origin {
