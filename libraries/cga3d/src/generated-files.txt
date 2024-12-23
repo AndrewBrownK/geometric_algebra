@@ -159,6 +159,7 @@
 ./libraries/cga3d/src/traits/impls/square_root.rs
 ./libraries/cga3d/src/traits/impls/support.rs
 ./libraries/cga3d/src/traits/impls/unit.rs
+./libraries/cga3d/src/traits/impls/unitize.rs
 ./libraries/cga3d/src/traits/impls/unitized_center_norm.rs
 ./libraries/cga3d/src/traits/impls/unitized_center_norm_squared.rs
 ./libraries/cga3d/src/traits/impls/unitized_flat_norm.rs
@@ -194,6 +195,7 @@
 ./libraries/cga3d/src/traits/square_root.rs
 ./libraries/cga3d/src/traits/support.rs
 ./libraries/cga3d/src/traits/unit.rs
+./libraries/cga3d/src/traits/unitize.rs
 ./libraries/cga3d/src/traits/unitized_center_norm.rs
 ./libraries/cga3d/src/traits/unitized_center_norm_squared.rs
 ./libraries/cga3d/src/traits/unitized_flat_norm.rs

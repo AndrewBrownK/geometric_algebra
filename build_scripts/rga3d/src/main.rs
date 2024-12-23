@@ -56,21 +56,11 @@ fn main() {
         RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
         RejectViaOriginFrom AntiRejectViaHorizonFrom
         Support AntiSupport
-        |
         Bulk Weight
-        |
-        WeightNormSquared
-        BulkNormSquared
-        |
-        NormSquared
-        |
-        WeightNorm
-        BulkNorm
-        |
-        Norm
-        |
+        WeightNorm WeightNormSquared
+        BulkNorm BulkNormSquared
+        Norm NormSquared
         UnitizedNorm
-        |
         Unitize
     };
     codegen::operators! { repo, traits;

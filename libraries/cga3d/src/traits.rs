@@ -47,6 +47,7 @@ pub mod arity_1 {
     pub use crate::traits::round_weight_norm_squared::RoundWeightNormSquared;
     pub use crate::traits::square_root::SquareRoot;
     pub use crate::traits::support::Support;
+    pub use crate::traits::unitize::Unitize;
     pub use crate::traits::unitized_center_norm::UnitizedCenterNorm;
     pub use crate::traits::unitized_center_norm_squared::UnitizedCenterNormSquared;
     pub use crate::traits::unitized_flat_norm::UnitizedFlatNorm;
@@ -159,6 +160,7 @@ pub mod infix {
     pub use crate::traits::sandwich::sandwich_partial;
     pub use crate::traits::square_root::square_root;
     pub use crate::traits::support::support;
+    pub use crate::traits::unitize::unitize;
     pub use crate::traits::unitized_center_norm::unitized_center_norm;
     pub use crate::traits::unitized_center_norm_squared::unitized_center_norm_squared;
     pub use crate::traits::unitized_flat_norm::unitized_flat_norm;
@@ -302,6 +304,8 @@ mod support;
 pub use support::Support;
 mod unit;
 pub use unit::Unit;
+mod unitize;
+pub use unitize::Unitize;
 mod unitized_center_norm;
 pub use unitized_center_norm::UnitizedCenterNorm;
 mod unitized_center_norm_squared;
