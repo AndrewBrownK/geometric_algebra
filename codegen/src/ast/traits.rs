@@ -724,7 +724,6 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
             builder.cycle_detector.clone(),
         );
         let owner = inner_builder.coerce_variable("self", owner);
-        // TODO this seems to not work right as seen on impl GeometricAntiQuotient<DualNum> for AntiScalar
         let other = inner_builder.coerce_variable("other", other);
         let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
@@ -813,7 +812,6 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.expression_type();
         let owner_param = owner;
-        let other_class = other.expression_type();
         let other_param = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), None);
         if builder.cycle_detector.contains(&cycle_detector_key) {
@@ -833,7 +831,6 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        // let other_class_clone = other_class.clone();
         let registry = builder.registry.clone();
         let cycle_detector_clone = builder.cycle_detector.clone();
         let ga = builder.ga.clone();
@@ -985,7 +982,6 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.expression_type();
         let owner_param = owner;
-        let other_class = other.expression_type();
         let other_param = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), None);
         if builder.cycle_detector.contains(&cycle_detector_key) {
@@ -1005,7 +1001,6 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        // let other_class_clone = other_class.clone();
         let registry = builder.registry.clone();
         let cycle_detector_clone = builder.cycle_detector.clone();
         let ga = builder.ga.clone();
@@ -1151,16 +1146,7 @@ where
 
 pub(crate) struct RawTraitImplementation {
     pub(crate) definition: Arc<RawTraitDefinition>,
-    pub(crate) multivector_dependencies: HashSet<MultiVector>,
-    pub(crate) traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    pub(crate) traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    pub(crate) traits12f_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    pub(crate) traits12i_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    pub(crate) traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
-    pub(crate) traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
-
     pub(crate) owner: TraitParam,
-    pub(crate) owner_is_param: bool,
     pub(crate) other_type_params: Vec<TraitParam>,
     pub(crate) other_var_params: Vec<TraitParam>,
     pub(crate) lines: Vec<CommentOrVariableDeclaration>,
@@ -2515,7 +2501,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
 impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, ExprType> {
 
     fn into_trait10(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, false, vec![], vec![])
+        self.into_trait_xx(owner, vec![], vec![])
     }
 
     // TODO some interesting implementations have variables with more than one invocation,
@@ -2523,31 +2509,28 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     //  be interesting to inline these.
     //  - impl AntiSupport for Flector
     fn into_trait11(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, true, vec![], vec![])
+        self.into_trait_xx(owner, vec![], vec![])
     }
 
     fn into_trait21(self, owner: MultiVector, other: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, true, vec![ExpressionType::Class(other.clone())], vec![])
+        self.into_trait_xx(owner, vec![ExpressionType::Class(other.clone())], vec![])
     }
 
-    // TODO impl ProjectOrthogonallyOnto<Line> for Origin
-    //  maybe we should return Option from here so we don't get these null implementations
     fn into_trait22(self, owner: MultiVector, other: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, true, vec![ExpressionType::Class(other.clone())], vec![ExpressionType::Class(other)])
+        self.into_trait_xx(owner, vec![ExpressionType::Class(other.clone())], vec![ExpressionType::Class(other)])
     }
 
     fn into_trait12i(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, true, vec![], vec![ExpressionType::Int(Integer)])
+        self.into_trait_xx(owner, vec![], vec![ExpressionType::Int(Integer)])
     }
 
     fn into_trait12f(self, owner: MultiVector) -> Option<Arc<RawTraitImplementation>> {
-        self.into_trait_xx(owner, true, vec![], vec![ExpressionType::Float(Float)])
+        self.into_trait_xx(owner, vec![], vec![ExpressionType::Float(Float)])
     }
 
     fn into_trait_xx(
         self,
         owner: MultiVector,
-        owner_is_param: bool,
         other_type_params: Vec<TraitParam>,
         other_var_params: Vec<TraitParam>
     ) -> Option<Arc<RawTraitImplementation>> {
@@ -2621,15 +2604,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
 
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies.into_inner(),
-            traits10_dependencies: self.traits10_dependencies,
-            traits11_dependencies: self.traits11_dependencies,
-            traits12i_dependencies: self.traits12i_dependencies,
-            traits12f_dependencies: self.traits12f_dependencies,
-            traits21_dependencies: self.traits21_dependencies,
-            traits22_dependencies: self.traits22_dependencies,
             owner: ExpressionType::Class(owner.clone()),
-            owner_is_param,
             other_type_params,
             other_var_params,
             lines,

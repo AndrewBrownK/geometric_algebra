@@ -1,6 +1,6 @@
 use crate::algebra::basis::BasisElement;
 use crate::ast::impls::Elaborated;
-use crate::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11};
+use crate::ast::traits::{NameTrait};
 use impls::*;
 
 pub const fn conformal_conjugate(infinity: BasisElement) -> Elaborated<ConformalConjugateImpl> {

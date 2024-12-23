@@ -1,16 +1,12 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 #![allow(non_upper_case_globals)]
 
-use async_trait::async_trait;
 use crate::algebra::basis::BasisElement;
 use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra::basis::grades::{AntiGrades, Grades};
-use crate::algebra::multivector::DynamicMultiVector;
 use crate::ast::datatype::MultiVector;
-use crate::ast::expressions::FloatExpr;
 use crate::ast::impls::{Elaborated, InlineOnly};
-use crate::ast::traits::{HasNotReturned, NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
-use crate::ast::Variable;
+use crate::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg};
 use crate::build_scripts::common_traits::impls::*;
 
 pub mod conformal;
@@ -499,7 +495,7 @@ pub mod impls {
     use crate::ast::expressions::{Expression, FloatExpr, IntExpr};
     use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
     use crate::ast::Variable;
-    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge, RightComplement, ConstraintViolation, AntiConstraintViolation};
+    use crate::build_scripts::common_traits::{AntiConstraintViolation, AntiDotProduct, AntiInverse, AntiReverse, AntiSquareRoot, AntiWedge, ConstraintViolation, DotProduct, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightComplement, RightDual, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
 
     #[macro_export]

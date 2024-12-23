@@ -556,7 +556,6 @@ pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static (
 pub struct Specialized_21<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
     &'static MultiVec<AntiScalar>,
-    &'static MultiVec<AntiScalar>,
     PhantomData<Output>,
     SpecializedImpl_21<AntiScalar, Output>,
 );
@@ -587,7 +586,7 @@ where
         b.mark_as_specialized_implementation();
         // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
-            let p0 = &self.4;
+            let p0 = &self.3;
             let p1: *const SpecializedImpl_21<AntiScalar, Output> = p0 as *const SpecializedImpl_21<AntiScalar, Output>;
             let p2: *const SpecializedImpl_21<AntiScalar2, Output> = p1.cast::<SpecializedImpl_21<AntiScalar2, Output>>();
             *(p2) as SpecializedImpl_21<AntiScalar2, Output>
@@ -611,7 +610,6 @@ pub trait Specialize_21: ProvideTraitNames + TraitImpl_21 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
-        other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output>;
 }
@@ -622,11 +620,10 @@ where
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
-        other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output> {
         let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
-        Specialized_21(trait_names, owner, other, PhantomData, the_impl)
+        Specialized_21(trait_names, owner, PhantomData, the_impl)
     }
 }
 pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static (dyn Fn(
@@ -639,7 +636,6 @@ pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static (
 #[derive(Clone, Copy)]
 pub struct Specialized_22<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
-    &'static MultiVec<AntiScalar>,
     &'static MultiVec<AntiScalar>,
     PhantomData<Output>,
     SpecializedImpl_22<AntiScalar, Output>,
@@ -671,7 +667,7 @@ where
         b.mark_as_specialized_implementation();
         // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
-            let p0 = &self.4;
+            let p0 = &self.3;
             let p1: *const SpecializedImpl_22<AntiScalar, Output> = p0 as *const SpecializedImpl_22<AntiScalar, Output>;
             let p2: *const SpecializedImpl_22<AntiScalar2, Output> = p1.cast::<SpecializedImpl_22<AntiScalar2, Output>>();
             *(p2) as SpecializedImpl_22<AntiScalar2, Output>
@@ -695,7 +691,6 @@ pub trait Specialize_22: ProvideTraitNames + TraitImpl_22 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
-        other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output>;
 }
@@ -706,11 +701,10 @@ where
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
-        other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output> {
         let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
-        Specialized_22(trait_names, owner, other, PhantomData, the_impl)
+        Specialized_22(trait_names, owner, PhantomData, the_impl)
     }
 }
 

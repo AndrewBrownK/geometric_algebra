@@ -490,6 +490,7 @@ postgres-types = "0.2.7""#
             let multi_progress = multi_progress.clone();
             let closed_types = closed_types.clone();
             join_set.spawn(async move {
+                let skip_dependencies = file_path.ends_with("constraint_valid.rs");
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
 
                 let qty_impls = impls.len() as u64;
@@ -508,16 +509,17 @@ postgres-types = "0.2.7""#
                 let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut deps_set = HashSet::new();
                 for dep in deps {
+                    if let Some(pb) = &pb {
+                        pb.inc(1);
+                    }
                     deps_set.insert(dep);
+                    if skip_dependencies { continue }
                     if self.prefer_fancy_infix {
                         let lsc = dep.as_lower_snake();
                         writeln!(&mut file, "use crate::traits::{lsc};")?;
                     } else {
                         let ucc = dep.as_upper_camel();
                         writeln!(&mut file, "use crate::traits::{ucc};")?;
-                    }
-                    if let Some(pb) = &pb {
-                        pb.inc(1);
                     }
                 }
                 sort_trait_impls(&mut impls, deps_set)?;

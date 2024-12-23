@@ -33,17 +33,17 @@ impl AnyExpression {
         };
     }
 
-    pub(crate) fn maybe_variable(&self) -> Option<&RawVariableInvocation> {
-        match self {
-            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
-            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
-            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
-            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
-            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
-            _ => None,
-        }
-    }
+    // pub(crate) fn maybe_variable(&self) -> Option<&RawVariableInvocation> {
+    //     match self {
+    //         AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+    //         AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+    //         AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+    //         AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+    //         AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+    //         AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+    //         _ => None,
+    //     }
+    // }
 
     // /// Check if this expression is zero, assuming it is already simplified
     // pub(crate) fn is_zero(&self) -> bool {
@@ -233,13 +233,13 @@ impl IntExpr {
         x
     }
 
-    /// Check if this expression is zero, assuming it is already simplified
-    fn is_zero(&self) -> bool {
-        match self {
-            IntExpr::Literal(0) => true,
-            _ => false,
-        }
-    }
+    // /// Check if this expression is zero, assuming it is already simplified
+    // fn is_zero(&self) -> bool {
+    //     match self {
+    //         IntExpr::Literal(0) => true,
+    //         _ => false,
+    //     }
+    // }
 }
 
 impl FloatExpr {

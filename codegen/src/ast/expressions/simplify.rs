@@ -1,53 +1,5 @@
 
-// TODO simplification todo list
-//  - impl Wedge<AntiFlectorOnOrigin> for AntiPlane
-//    might be interesting to extend Simd32x3 to Simd32x4
-//    should accept a float to fill in the slot
-//  - impl Wedge<RoundPoint> for AntiMotorAligningOrigin
-//    same as previous
-//  - impl Wedge<AntiFlector> for RoundPoint
-//    not sure if this can be improved, but it's sure tempting/interesting
-//  - impl Wedge<AntiMotorOnOrigin> for AntiFlectorAtInfinity
-//    there is a gather3 of float sum of products that would be great to simplify
-//  - impl Wedge<AntiSphereOnOrigin> for MultiVector
-//    another vec3 extend to vec4 situation
-//  - impl Wedge<AntiCircleOnOrigin> for AntiFlectorAtInfinity
-//    another vec3 extend to vec4 situation
-//  - impl GeometricAntiProduct<Line> for Flector
-//  - impl GeometricAntiProduct<MultiVector> for MultiVector
-//  - impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin
-//  - impl Wedge<Motor> for Motor
-//    maybe could use a machine level dot product for wide FloatExpr::Products?
 
-
-// TODO definitely want a particularly close scan of
-//  geometric_anti_product.rs `for Sphere`
-//  impl GeometricAntiProduct<FlatPoint> for Sphere
-// e415, e425, e435 */
-// (Simd32x3::from(-1)
-// Simd32x3::from([
-// ((self.group0()[0] * other.group0()[3]) + (self.group1()[0] * other.group0()[0])),
-// ((self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
-// ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[2])),
-// ])),
-
-/*
-wgsl
-horizon_add_motor -> TODO need truncating swizzles in rust, then can simplify this
-horizon_add_line
-plane_add_antiScalar
-fn horizon_geometricQuotient_scalar
-roundPoint_roundWeightNormSquared -> TODO use straight constructor when all literals, even if grouped
-   or better yet, look at operation statistics and always construct flat if no simd operations
- */
-
-/*
-impl Wedge<AntiSphereOnOrigin> for MultiVector {
-impl GeometricAntiProduct<Line> for Flector {
-impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin {
-
-
- */
 
 trait SortVecDespiteF32 {
     fn sort_with_f32(&mut self);
@@ -143,7 +95,6 @@ impl FloatExpr {
     }
 
     // TODO get rid of param 'distribute_and_flatten_arithmetic' because it seems to always be set true
-    // TODO impl ConstraintViolation for Plane should simplify to zero
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, distribute_and_flatten_arithmetic: bool, prefer_flat_access: bool, inline_single_use_vars: bool) {
         match self {
             FloatExpr::Variable(v) => {
@@ -2603,7 +2554,7 @@ impl MultiVectorExpr {
                     owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
                 }
             }
-            MultiVectorVia::TraitInvoke21ToClass(_t, owner, other) => {
+            MultiVectorVia::TraitInvoke21ToClass(_t, owner, _other) => {
                 if !insides_already_done {
                     owner.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access, inline_single_use_vars);
                 }
