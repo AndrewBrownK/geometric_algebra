@@ -93,6 +93,15 @@ fn main() {
         traits.clone(),
     );
 
+    let slang = codegen::Slang::new();
+    slang.write_src(
+        "libraries/rga3d/src",
+        "rga3d",
+        repo.clone(),
+        traits.clone()
+    );
+
+
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
     rust.write_crate(

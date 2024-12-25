@@ -42,6 +42,7 @@ const SIMD_SRC: &'static str = include_str!("simd.rs");
 
 pub use emit::rust::Rust;
 pub use emit::wgsl::Wgsl;
+pub use emit::slang::Slang;
 pub mod elements {
     pub use crate::algebra::basis::elements::*;
 }

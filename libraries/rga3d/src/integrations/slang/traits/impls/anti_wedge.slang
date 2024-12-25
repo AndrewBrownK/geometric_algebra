@@ -1,0 +1,1254 @@
+impl std::ops::Div<anti_wedge> for AntiScalar {
+    type Output = anti_wedge_partial<AntiScalar>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e1234 */other[e1234] * self[e1234]);
+    }
+}
+impl AntiWedge<DualNum> for AntiScalar {
+    type Output = DualNum;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd2        0        1        0
+// no simd        0        2        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return DualNum::from_groups(/* scalar, e1234 */float2(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Flector> for AntiScalar {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(self[e1234]) * other.group0(), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Horizon> for AntiScalar {
+    type Output = Horizon;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e321 */self[e1234] * other[e321]);
+    }
+}
+impl AntiWedge<Line> for AntiScalar {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        2        0
+// no simd        0        6        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(self[e1234]) * other.group0(), /* e23, e31, e12 */float3(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Motor> for AntiScalar {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(self[e1234]) * other.group0(), /* e23, e31, e12, scalar */float4(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//    simd2        0        1        0
+//    simd3        0        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        5        0
+//  no simd        0       16        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(self[e1234]) * other.group0(), /* e1, e2, e3, e4 */float4(self[e1234]) * other.group1(), /* e41, e42, e43 */float3(self[e1234]) * other.group2(), /* e23, e31, e12 */float3(self[e1234]) * other.group3(), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group4());
+    }
+}
+impl AntiWedge<Origin> for AntiScalar {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */self[e1234] * other[e4]);
+    }
+}
+impl AntiWedge<Plane> for AntiScalar {
+    type Output = Plane;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e423, e431, e412, e321 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Point> for AntiScalar {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Scalar> for AntiScalar {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e1234] * other[scalar]);
+    }
+}
+impl std::ops::Div<anti_wedge> for DualNum {
+    type Output = anti_wedge_partial<DualNum>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for DualNum {
+    type Output = DualNum;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd2        0        1        0
+// no simd        0        2        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return DualNum::from_groups(/* scalar, e1234 */float2(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<DualNum> for DualNum {
+    type Output = DualNum;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        1        3        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return DualNum::from_groups(/* scalar, e1234 */float2((other[scalar] * self[e1234]) + (other[e1234] * self[scalar]), other[e1234] * self[e1234]));
+    }
+}
+impl AntiWedge<Flector> for DualNum {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(self[e1234]) * other.group0(), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Horizon> for DualNum {
+    type Output = Horizon;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e321 */self[e1234] * other[e321]);
+    }
+}
+impl AntiWedge<Line> for DualNum {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        2        0
+// no simd        0        6        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(self[e1234]) * other.group0(), /* e23, e31, e12 */float3(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Motor> for DualNum {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        1        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        1        4        0
+//  no simd        1       10        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(self[e1234]) * other.group0(), /* e23, e31, e12, scalar */float4(other[e23], other[e31], other[e12], 1.0) * float4(self.group0().yy, self[e1234], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])));
+    }
+}
+impl AntiWedge<MultiVector> for DualNum {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        1        3        0
+//    simd3        0        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        1        7        0
+//  no simd        1       17        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((self[scalar] * other[e1234]) + (self[e1234] * other[scalar]), self[e1234] * other[e1234]), /* e1, e2, e3, e4 */float4(self[e1234]) * other.group1(), /* e41, e42, e43 */float3(self[e1234]) * other.group2(), /* e23, e31, e12 */float3(self[e1234]) * other.group3(), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group4());
+    }
+}
+impl AntiWedge<Origin> for DualNum {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */self[e1234] * other[e4]);
+    }
+}
+impl AntiWedge<Plane> for DualNum {
+    type Output = Plane;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e423, e431, e412, e321 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Point> for DualNum {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Scalar> for DualNum {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e1234] * other[scalar]);
+    }
+}
+impl std::ops::Div<anti_wedge> for Flector {
+    type Output = anti_wedge_partial<Flector>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Flector {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(other[e1234]) * self.group0(), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<DualNum> for Flector {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(other[e1234]) * self.group0(), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<Flector> for Flector {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        5        6        0
+//    simd3        1        2        0
+//    simd4        2        2        0
+// Totals...
+// yes simd        8       10        0
+//  no simd       16       20        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(((other.group1().yzx * self.group1().zxy) - (other.group1().zxy * self.group1().yzx)), 0.0), /* e23, e31, e12, scalar */(other.group1().wwwx * float4(self.group1().xyz, self[e1])) + float4(float3(0.0), (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321])) - (self.group1().wwwx * float4(other.group1().xyz, other[e1])));
+    }
+}
+impl AntiWedge<Horizon> for Flector {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(0.0), /* e23, e31, e12, scalar */float4(other[e321]) * float4(self.group1().xyz, self[e4]));
+    }
+}
+impl AntiWedge<Line> for Flector {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        5        9        0
+//  no simd        8       12        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4((self[e412] * other[e31]) + (self[e321] * other[e41]), (self[e423] * other[e12]) + (self[e321] * other[e42]), (self[e431] * other[e23]) + (self[e321] * other[e43]), -(self[e431] * other[e42]) - (self[e412] * other[e43])) - (self.group1().yzxx * float4(other.group1().zxy, other[e41])));
+    }
+}
+impl AntiWedge<Motor> for Flector {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        2        3        0
+// Totals...
+// yes simd        6       11        0
+//  no simd       12       20        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4((self[e412] * other[e31]) + (self[e321] * other[e41]), (self[e423] * other[e12]) + (self[e321] * other[e42]), (self[e431] * other[e23]) + (self[e321] * other[e43]), -(self[e431] * other[e42]) - (self[e412] * other[e43])) + (float4(other[e1234]) * self.group0()) - (self.group1().yzxx * float4(other.group1().zxy, other[e41])), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<MultiVector> for Flector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32       11       16        0
+//    simd3        2        4        0
+//    simd4        2        3        0
+// Totals...
+// yes simd       15       23        0
+//  no simd       25       40        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((self[e1] * other[e423]) + (self[e2] * other[e431]) + (self[e3] * other[e412]) + (self[e4] * other[e321]) - (self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]), 0.0), /* e1, e2, e3, e4 */float4((self[e412] * other[e31]) + (self[e321] * other[e41]), (self[e423] * other[e12]) + (self[e321] * other[e42]), (self[e431] * other[e23]) + (self[e321] * other[e43]), -(self[e431] * other[e42]) - (self[e412] * other[e43])) + (float4(other[e1234]) * self.group0()) - (self.group1().yzxx * float4(other.group3().zxy, other[e41])), /* e41, e42, e43 */(self.group1().zxy * other.group4().yzx) - (self.group1().yzx * other.group4().zxy), /* e23, e31, e12 */(float3(other[e321]) * self.group1().xyz) - (float3(self[e321]) * other.group4().xyz), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<Origin> for Flector {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        2        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e321] * other[e4] * -1.0);
+    }
+}
+impl AntiWedge<Plane> for Flector {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        2        9        0
+//    simd3        1        2        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        4       12        0
+//  no simd        9       19        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(((self.group1().zxy * other.group0().yzx) - (self.group1().yzx * other.group0().zxy)), 0.0), /* e23, e31, e12, scalar */float4(self[e321] * other[e423] * -1.0, self[e321] * other[e431] * -1.0, self[e321] * other[e412] * -1.0, (self[e2] * other[e431]) + (self[e3] * other[e412]) + (self[e4] * other[e321])) + (other.group0().wwwx * float4(self.group1().xyz, self[e1])));
+    }
+}
+impl AntiWedge<Point> for Flector {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        3        4        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */-(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]));
+    }
+}
+impl std::ops::Div<anti_wedge> for Horizon {
+    type Output = anti_wedge_partial<Horizon>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Horizon {
+    type Output = Horizon;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e321 */other[e1234] * self[e321]);
+    }
+}
+impl AntiWedge<DualNum> for Horizon {
+    type Output = Horizon;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e321 */other[e1234] * self[e321]);
+    }
+}
+impl AntiWedge<Flector> for Horizon {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(0.0), /* e23, e31, e12, scalar */float4(self[e321]) * float4(other.group1().xyz, other[e4]) * float4(-1.0));
+    }
+}
+impl AntiWedge<Line> for Horizon {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e321], self[e321], self[e321], 0.0) * float4(other.group0(), 0.0) * float4(1.0, 1.0, 1.0, 0.0));
+    }
+}
+impl AntiWedge<Motor> for Horizon {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        1        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        3        0
+//  no simd        0        9        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(self[e321], self[e321], self[e321], 0.0) * float4(other.group0().xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321] * other[e1234]));
+    }
+}
+impl AntiWedge<MultiVector> for Horizon {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        2        0
+//    simd2        0        1        0
+//    simd3        0        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        7        0
+//  no simd        0       18        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(self[e321] * other[e4], 1.0) * float2(-1.0, 0.0), /* e1, e2, e3, e4 */float4(self[e321], self[e321], self[e321], 0.0) * float4(other.group2(), 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(self[e321]) * other.group4().xyz * float3(-1.0), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321] * other[e1234]));
+    }
+}
+impl AntiWedge<Origin> for Horizon {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        2        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e321] * other[e4] * -1.0);
+    }
+}
+impl AntiWedge<Plane> for Horizon {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        2        0
+// no simd        0        6        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(self[e321]) * other.group0().xyz * float3(-1.0));
+    }
+}
+impl AntiWedge<Point> for Horizon {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        2        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e321] * other[e4] * -1.0);
+    }
+}
+impl std::ops::Div<anti_wedge> for Line {
+    type Output = anti_wedge_partial<Line>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Line {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        2        0
+// no simd        0        6        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(other[e1234]) * self.group0(), /* e23, e31, e12 */float3(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<DualNum> for Line {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        2        0
+// no simd        0        6        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(other[e1234]) * self.group0(), /* e23, e31, e12 */float3(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<Flector> for Line {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        5        9        0
+//  no simd        8       12        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4((other[e412] * self[e31]) + (other[e321] * self[e41]), (other[e423] * self[e12]) + (other[e321] * self[e42]), (other[e431] * self[e23]) + (other[e321] * self[e43]), -(other[e431] * self[e42]) - (other[e412] * self[e43])) - (other.group1().yzxx * float4(self.group1().zxy, self[e41])));
+    }
+}
+impl AntiWedge<Horizon> for Line {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(other[e321], other[e321], other[e321], 0.0) * float4(self.group0(), 0.0) * float4(1.0, 1.0, 1.0, 0.0));
+    }
+}
+impl AntiWedge<Line> for Line {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        5        6        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */-(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]));
+    }
+}
+impl AntiWedge<Motor> for Line {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        5        6        0
+//    simd4        0        4        0
+// Totals...
+// yes simd        5       10        0
+//  no simd        5       22        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(float3(1.0), 0.0) * float4(self.group0(), 0.0) * float4(other.group0().www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e23, e31, e12, scalar */float4(other[e1234], other[e1234], other[e1234], 1.0) * float4(self.group1(), -(self[e41] * other[e23]) - (self[e42] * other[e31]) - (self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43])));
+    }
+}
+impl AntiWedge<MultiVector> for Line {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        9       14        0
+//    simd3        0        2        0
+//    simd4        1        1        0
+// Totals...
+// yes simd       10       17        0
+//  no simd       13       24        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(-(self[e41] * other[e23]) - (self[e42] * other[e31]) - (self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]), 0.0), /* e1, e2, e3, e4 */float4((self[e41] * other[e321]) + (self[e31] * other[e412]), (self[e42] * other[e321]) + (self[e12] * other[e423]), (self[e43] * other[e321]) + (self[e23] * other[e431]), -(self[e42] * other[e431]) - (self[e43] * other[e412])) - (other.group4().yzxx * float4(self.group1().zxy, self[e41])), /* e41, e42, e43 */float3(other[e1234]) * self.group0(), /* e23, e31, e12 */float3(other[e1234]) * self.group1(), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Plane> for Line {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        5        9        0
+//  no simd        8       12        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4((self[e41] * other[e321]) + (self[e31] * other[e412]), (self[e42] * other[e321]) + (self[e12] * other[e423]), (self[e43] * other[e321]) + (self[e23] * other[e431]), -(self[e42] * other[e431]) - (self[e43] * other[e412])) - (other.group0().yzxx * float4(self.group1().zxy, self[e41])));
+    }
+}
+impl std::ops::Div<anti_wedge> for Motor {
+    type Output = anti_wedge_partial<Motor>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Motor {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        2        0
+// no simd        0        8        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(other[e1234]) * self.group0(), /* e23, e31, e12, scalar */float4(other[e1234]) * self.group1());
+    }
+}
+impl AntiWedge<DualNum> for Motor {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        1        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        1        4        0
+//  no simd        1       10        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(other[e1234]) * self.group0(), /* e23, e31, e12, scalar */float4(self[e23], self[e31], self[e12], 1.0) * float4(other.group0().yy, other[e1234], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])));
+    }
+}
+impl AntiWedge<Flector> for Motor {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        2        3        0
+// Totals...
+// yes simd        6       11        0
+//  no simd       12       20        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4((other[e412] * self[e31]) + (other[e321] * self[e41]), (other[e423] * self[e12]) + (other[e321] * self[e42]), (other[e431] * self[e23]) + (other[e321] * self[e43]), -(other[e431] * self[e42]) - (other[e412] * self[e43])) + (float4(self[e1234]) * other.group0()) - (other.group1().yzxx * float4(self.group1().zxy, self[e41])), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Horizon> for Motor {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        1        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        3        0
+//  no simd        0        9        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4(other[e321], other[e321], other[e321], 0.0) * float4(self.group0().xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e423, e431, e412, e321 */float4(float3(0.0), other[e321] * self[e1234]));
+    }
+}
+impl AntiWedge<Line> for Motor {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        5        6        0
+//    simd4        0        4        0
+// Totals...
+// yes simd        5       10        0
+//  no simd        5       22        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(float3(1.0), 0.0) * float4(other.group0(), 0.0) * float4(self.group0().www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e23, e31, e12, scalar */float4(self[e1234], self[e1234], self[e1234], 1.0) * float4(other.group1(), -(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43])));
+    }
+}
+impl AntiWedge<Motor> for Motor {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        5        7        0
+//    simd3        1        2        0
+//    simd4        2        2        0
+// Totals...
+// yes simd        8       11        0
+//  no simd       16       21        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(((float3(other[e1234]) * self.group0().xyz) + (float3(self[e1234]) * other.group0().xyz)), other[e1234] * self[e1234]), /* e23, e31, e12, scalar */(float4(other[e1234]) * self.group1()) + (float4(self[e1234]) * other.group1()) + float4(float3(0.0), -(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43])));
+    }
+}
+impl AntiWedge<MultiVector> for Motor {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32       11       17        0
+//    simd3        2        4        0
+//    simd4        2        3        0
+// Totals...
+// yes simd       15       24        0
+//  no simd       25       41        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((self[e1234] * other[scalar]) + (self[scalar] * other[e1234]) - (self[e41] * other[e23]) - (self[e42] * other[e31]) - (self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]), self[e1234] * other[e1234]), /* e1, e2, e3, e4 */float4((self[e1234] * other[e1]) + (self[e31] * other[e412]), (self[e1234] * other[e2]) + (self[e12] * other[e423]), (self[e1234] * other[e3]) + (self[e23] * other[e431]), -(self[e42] * other[e431]) - (self[e43] * other[e412])) + (self.group0() * float4(other.group4().www, other[e4])) - (other.group4().yzxx * float4(self.group1().zxy, self[e41])), /* e41, e42, e43 */(float3(self[e1234]) * other.group2()) + (float3(other[e1234]) * self.group0().xyz), /* e23, e31, e12 */(float3(self[e1234]) * other.group3()) + (float3(other[e1234]) * self.group1().xyz), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group4());
+    }
+}
+impl AntiWedge<Origin> for Motor {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */self[e1234] * other[e4]);
+    }
+}
+impl AntiWedge<Plane> for Motor {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        2        0
+// Totals...
+// yes simd        5       10        0
+//  no simd        8       16        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4((self[e41] * other[e321]) + (self[e31] * other[e412]), (self[e42] * other[e321]) + (self[e12] * other[e423]), (self[e43] * other[e321]) + (self[e23] * other[e431]), -(self[e42] * other[e431]) - (self[e43] * other[e412])) - (other.group0().yzxx * float4(self.group1().zxy, self[e41])), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Point> for Motor {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Scalar> for Motor {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e1234] * other[scalar]);
+    }
+}
+impl std::ops::Div<anti_wedge> for MultiVector {
+    type Output = anti_wedge_partial<MultiVector>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//    simd2        0        1        0
+//    simd3        0        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        5        0
+//  no simd        0       16        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(other[e1234]) * self.group0(), /* e1, e2, e3, e4 */float4(other[e1234]) * self.group1(), /* e41, e42, e43 */float3(other[e1234]) * self.group2(), /* e23, e31, e12 */float3(other[e1234]) * self.group3(), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group4());
+    }
+}
+impl AntiWedge<DualNum> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        1        3        0
+//    simd3        0        2        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        1        7        0
+//  no simd        1       17        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((other[scalar] * self[e1234]) + (other[e1234] * self[scalar]), other[e1234] * self[e1234]), /* e1, e2, e3, e4 */float4(other[e1234]) * self.group1(), /* e41, e42, e43 */float3(other[e1234]) * self.group2(), /* e23, e31, e12 */float3(other[e1234]) * self.group3(), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group4());
+    }
+}
+impl AntiWedge<Flector> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32       11       16        0
+//    simd3        2        4        0
+//    simd4        2        3        0
+// Totals...
+// yes simd       15       23        0
+//  no simd       25       40        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]) - (other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]), 0.0), /* e1, e2, e3, e4 */float4((other[e412] * self[e31]) + (other[e321] * self[e41]), (other[e423] * self[e12]) + (other[e321] * self[e42]), (other[e431] * self[e23]) + (other[e321] * self[e43]), -(other[e431] * self[e42]) - (other[e412] * self[e43])) + (float4(self[e1234]) * other.group0()) - (other.group1().yzxx * float4(self.group3().zxy, self[e41])), /* e41, e42, e43 */(other.group1().yzx * self.group4().zxy) - (other.group1().zxy * self.group4().yzx), /* e23, e31, e12 */(float3(other[e321]) * self.group4().xyz) - (float3(self[e321]) * other.group1().xyz), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group1());
+    }
+}
+impl AntiWedge<Horizon> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        2        0
+//    simd2        0        1        0
+//    simd3        0        1        0
+//    simd4        0        2        0
+// Totals...
+// yes simd        0        6        0
+//  no simd        0       15        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(other[e321] * self[e4], 1.0) * float2(1.0, 0.0), /* e1, e2, e3, e4 */float4(other[e321], other[e321], other[e321], 0.0) * float4(self.group2(), 0.0) * float4(1.0, 1.0, 1.0, 0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(other[e321]) * self.group4().xyz, /* e423, e431, e412, e321 */float4(float3(0.0), other[e321] * self[e1234]));
+    }
+}
+impl AntiWedge<Line> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        9       14        0
+//    simd3        0        2        0
+//    simd4        1        1        0
+// Totals...
+// yes simd       10       17        0
+//  no simd       13       24        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(-(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]), 0.0), /* e1, e2, e3, e4 */float4((other[e41] * self[e321]) + (other[e31] * self[e412]), (other[e42] * self[e321]) + (other[e12] * self[e423]), (other[e43] * self[e321]) + (other[e23] * self[e431]), -(other[e42] * self[e431]) - (other[e43] * self[e412])) - (self.group4().yzxx * float4(other.group1().zxy, other[e41])), /* e41, e42, e43 */float3(self[e1234]) * other.group0(), /* e23, e31, e12 */float3(self[e1234]) * other.group1(), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Motor> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32       11       17        0
+//    simd3        2        4        0
+//    simd4        2        3        0
+// Totals...
+// yes simd       15       24        0
+//  no simd       25       41        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((other[e1234] * self[scalar]) + (other[scalar] * self[e1234]) - (other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]), other[e1234] * self[e1234]), /* e1, e2, e3, e4 */float4((other[e1234] * self[e1]) + (other[e31] * self[e412]), (other[e1234] * self[e2]) + (other[e12] * self[e423]), (other[e1234] * self[e3]) + (other[e23] * self[e431]), -(other[e42] * self[e431]) - (other[e43] * self[e412])) + (other.group0() * float4(self.group4().www, self[e4])) - (self.group4().yzxx * float4(other.group1().zxy, other[e41])), /* e41, e42, e43 */(float3(other[e1234]) * self.group2()) + (float3(self[e1234]) * other.group0().xyz), /* e23, e31, e12 */(float3(other[e1234]) * self.group3()) + (float3(self[e1234]) * other.group1().xyz), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group4());
+    }
+}
+impl AntiWedge<MultiVector> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32       27       34        0
+//    simd3        6        9        0
+//    simd4        5        5        0
+// Totals...
+// yes simd       38       48        0
+//  no simd       65       81        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((other[scalar] * self[e1234]) + (other[e1234] * self[scalar]) + (other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]) - (other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]) - (other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]), other[e1234] * self[e1234]), /* e1, e2, e3, e4 */float4((other[e41] * self[e321]) + (other[e31] * self[e412]) + (other[e412] * self[e31]) + (other[e321] * self[e41]), (other[e42] * self[e321]) + (other[e12] * self[e423]) + (other[e423] * self[e12]) + (other[e321] * self[e42]), (other[e43] * self[e321]) + (other[e23] * self[e431]) + (other[e431] * self[e23]) + (other[e321] * self[e43]), -(other[e43] * self[e412]) - (other[e423] * self[e41]) - (other[e431] * self[e42]) - (other[e412] * self[e43])) + (float4(other[e1234]) * self.group1()) + (float4(self[e1234]) * other.group1()) - (self.group4().yzxx * float4(other.group3().zxy, other[e41])) - float4((self.group3().zxy * other.group4().yzx), other[e42] * self[e431]), /* e41, e42, e43 */(float3(other[e1234]) * self.group2()) + (float3(self[e1234]) * other.group2()) + (other.group4().yzx * self.group4().zxy) - (other.group4().zxy * self.group4().yzx), /* e23, e31, e12 */(float3(other[e1234]) * self.group3()) + (float3(other[e321]) * self.group4().xyz) + (float3(self[e1234]) * other.group3()) - (float3(self[e321]) * other.group4().xyz), /* e423, e431, e412, e321 */(float4(other[e1234]) * self.group4()) + (float4(self[e1234]) * other.group4()));
+    }
+}
+impl AntiWedge<Origin> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        2        0
+//    simd2        0        1        0
+// Totals...
+// yes simd        0        3        0
+//  no simd        0        4        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(self[e321] * other[e4], 1.0) * float2(-1.0, 0.0), /* e1, e2, e3, e4 */float4(float3(0.0), self[e1234] * other[e4]), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Plane> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        7       12        0
+//    simd3        2        4        0
+//    simd4        1        2        0
+// Totals...
+// yes simd       10       18        0
+//  no simd       17       32        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((self[e1] * other[e423]) + (self[e2] * other[e431]) + (self[e3] * other[e412]) + (self[e4] * other[e321]), 0.0), /* e1, e2, e3, e4 */float4((self[e41] * other[e321]) + (self[e31] * other[e412]), (self[e42] * other[e321]) + (self[e12] * other[e423]), (self[e43] * other[e321]) + (self[e23] * other[e431]), -(self[e42] * other[e431]) - (self[e43] * other[e412])) - (other.group0().yzxx * float4(self.group3().zxy, self[e41])), /* e41, e42, e43 */(self.group4().zxy * other.group0().yzx) - (self.group4().yzx * other.group0().zxy), /* e23, e31, e12 */(float3(other[e321]) * self.group4().xyz) - (float3(self[e321]) * other.group0().xyz), /* e423, e431, e412, e321 */float4(self[e1234]) * other.group0());
+    }
+}
+impl AntiWedge<Point> for MultiVector {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        3        4        0
+//    simd4        0        1        0
+// Totals...
+// yes simd        3        5        0
+//  no simd        3        8        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(-(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]), 0.0), /* e1, e2, e3, e4 */float4(self[e1234]) * other.group0(), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Scalar> for MultiVector {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e1234] * other[scalar]);
+    }
+}
+impl std::ops::Div<anti_wedge> for Origin {
+    type Output = anti_wedge_partial<Origin>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Origin {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */other[e1234] * self[e4]);
+    }
+}
+impl AntiWedge<DualNum> for Origin {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */other[e1234] * self[e4]);
+    }
+}
+impl AntiWedge<Flector> for Origin {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e321] * self[e4]);
+    }
+}
+impl AntiWedge<Horizon> for Origin {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e321] * self[e4]);
+    }
+}
+impl AntiWedge<Motor> for Origin {
+    type Output = Origin;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */other[e1234] * self[e4]);
+    }
+}
+impl AntiWedge<MultiVector> for Origin {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        0        2        0
+//    simd2        0        1        0
+// Totals...
+// yes simd        0        3        0
+//  no simd        0        4        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(other[e321] * self[e4], 1.0) * float2(1.0, 0.0), /* e1, e2, e3, e4 */float4(float3(0.0), other[e1234] * self[e4]), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Plane> for Origin {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */self[e4] * other[e321]);
+    }
+}
+impl std::ops::Div<anti_wedge> for Plane {
+    type Output = anti_wedge_partial<Plane>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Plane {
+    type Output = Plane;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e423, e431, e412, e321 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<DualNum> for Plane {
+    type Output = Plane;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e423, e431, e412, e321 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<Flector> for Plane {
+    type Output = Motor;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        2        6        0
+//    simd3        1        2        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        4        9        0
+//  no simd        9       16        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(((other.group1().yzx * self.group0().zxy) - (other.group1().zxy * self.group0().yzx)), 0.0), /* e23, e31, e12, scalar */float4(other[e321] * self[e423], other[e321] * self[e431], other[e321] * self[e412], -(other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321])) - (self.group0().wwwx * float4(other.group1().xyz, other[e1])));
+    }
+}
+impl AntiWedge<Horizon> for Plane {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        0        1        0
+// no simd        0        3        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(other[e321]) * self.group0().xyz);
+    }
+}
+impl AntiWedge<Line> for Plane {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        1        0
+// Totals...
+// yes simd        5        9        0
+//  no simd        8       12        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4((other[e41] * self[e321]) + (other[e31] * self[e412]), (other[e42] * self[e321]) + (other[e12] * self[e423]), (other[e43] * self[e321]) + (other[e23] * self[e431]), -(other[e42] * self[e431]) - (other[e43] * self[e412])) - (self.group0().yzxx * float4(other.group1().zxy, other[e41])));
+    }
+}
+impl AntiWedge<Motor> for Plane {
+    type Output = Flector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        4        8        0
+//    simd4        1        2        0
+// Totals...
+// yes simd        5       10        0
+//  no simd        8       16        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(/* e1, e2, e3, e4 */float4((other[e41] * self[e321]) + (other[e31] * self[e412]), (other[e42] * self[e321]) + (other[e12] * self[e423]), (other[e43] * self[e321]) + (other[e23] * self[e431]), -(other[e42] * self[e431]) - (other[e43] * self[e412])) - (self.group0().yzxx * float4(other.group1().zxy, other[e41])), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<MultiVector> for Plane {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        7       12        0
+//    simd3        2        4        0
+//    simd4        1        2        0
+// Totals...
+// yes simd       10       18        0
+//  no simd       17       32        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2(-(other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]), 0.0), /* e1, e2, e3, e4 */float4((other[e41] * self[e321]) + (other[e31] * self[e412]), (other[e42] * self[e321]) + (other[e12] * self[e423]), (other[e43] * self[e321]) + (other[e23] * self[e431]), -(other[e42] * self[e431]) - (other[e43] * self[e412])) - (self.group0().yzxx * float4(other.group3().zxy, other[e41])), /* e41, e42, e43 */(other.group4().yzx * self.group0().zxy) - (other.group4().zxy * self.group0().yzx), /* e23, e31, e12 */(float3(other[e321]) * self.group0().xyz) - (float3(self[e321]) * other.group4().xyz), /* e423, e431, e412, e321 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<Origin> for Plane {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        2        0
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e4] * self[e321] * -1.0);
+    }
+}
+impl AntiWedge<Plane> for Plane {
+    type Output = Line;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd3        2        4        0
+// no simd        6       12        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(/* e41, e42, e43 */(other.group0().yzx * self.group0().zxy) - (other.group0().zxy * self.group0().yzx), /* e23, e31, e12 */(float3(other[e321]) * self.group0().xyz) - (float3(self[e321]) * other.group0().xyz));
+    }
+}
+impl AntiWedge<Point> for Plane {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        3        4        0
+    fn anti_wedge(self, other: Point) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */-(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]));
+    }
+}
+impl std::ops::Div<anti_wedge> for Point {
+    type Output = anti_wedge_partial<Point>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Point {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<DualNum> for Point {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<Flector> for Point {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        3        4        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */(other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]));
+    }
+}
+impl AntiWedge<Horizon> for Point {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e321] * self[e4]);
+    }
+}
+impl AntiWedge<Motor> for Point {
+    type Output = Point;
+// Operative Statistics for this implementation:
+//          add/sub      mul      div
+//   simd4        0        1        0
+// no simd        0        4        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Point::from_groups(/* e1, e2, e3, e4 */float4(other[e1234]) * self.group0());
+    }
+}
+impl AntiWedge<MultiVector> for Point {
+    type Output = MultiVector;
+// Operative Statistics for this implementation:
+//           add/sub      mul      div
+//      f32        3        4        0
+//    simd4        0        1        0
+// Totals...
+// yes simd        3        5        0
+//  no simd        3        8        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(/* scalar, e1234 */float2((other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]), 0.0), /* e1, e2, e3, e4 */float4(other[e1234]) * self.group0(), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+    }
+}
+impl AntiWedge<Plane> for Point {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        3        4        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */(other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]));
+    }
+}
+impl std::ops::Div<anti_wedge> for Scalar {
+    type Output = anti_wedge_partial<Scalar>;
+    fn div(self, _rhs: anti_wedge) -> Self::Output {
+        anti_wedge_partial(self)
+    }
+}
+impl AntiWedge<AntiScalar> for Scalar {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e1234] * self[scalar]);
+    }
+}
+impl AntiWedge<DualNum> for Scalar {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e1234] * self[scalar]);
+    }
+}
+impl AntiWedge<Motor> for Scalar {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e1234] * self[scalar]);
+    }
+}
+impl AntiWedge<MultiVector> for Scalar {
+    type Output = Scalar;
+// Operative Statistics for this implementation:
+//      add/sub      mul      div
+// f32        0        1        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */other[e1234] * self[scalar]);
+    }
+}
