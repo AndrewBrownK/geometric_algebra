@@ -157,7 +157,6 @@ impl Slang {
         // });
 
         // data definitions
-        let mut data_mods: BTreeMap<String, Vec<&MultiVec<AntiScalar>>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
             let multi_vec = *multi_vec;
             let mv = MultiVector::from(multi_vec);
@@ -176,7 +175,7 @@ impl Slang {
                 writeln!(&mut file, "implementing {algebra_name};")?;
                 writeln!(&mut file, "using data::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
-                writeln!(&mut file, "__include ./impls/{lsc};")?;
+                writeln!(&mut file, "__include \"impls/{lsc}\";")?;
                 // tx3.send(file_path)?;
                 pb2.inc(1);
                 Ok(())
@@ -184,7 +183,6 @@ impl Slang {
         }
 
         // trait definitions
-        let mut trait_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
             if let TraitTypeConsensus::NoVotes = *td.output.read() {
@@ -194,8 +192,6 @@ impl Slang {
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
             let lsc = k.as_lower_snake();
-            let arity = td.arity.as_str().to_string();
-            trait_mods.entry(arity).and_modify(|v| v.push(td.clone())).or_insert(vec![td.clone()]);
             let folder_traits = folder_traits.clone();
             match n.as_str() {
                 "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
@@ -338,20 +334,11 @@ impl Slang {
             let file_path = src_folder2.join(Path::new("data.slang"));
             tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
-            for (the_mod, mvs) in data_mods {
-                writeln!(&mut file, "namespace {the_mod} {{")?;
-                for mv in mvs {
-                    let n = mv.name;
-                    let lsc = TraitKey::new(n).as_lower_snake();
-                    writeln!(&mut file, "__include data::{lsc};")?;
-                }
-                writeln!(&mut file, "}}")?;
-            }
+            writeln!(&mut file, "implementing {algebra_name};")?;
             for mv in mvs {
                 let n = mv.name;
                 let lsc = TraitKey::new(n).as_lower_snake();
-                writeln!(&mut file, "implementing {algebra_name};")?;
-                writeln!(&mut file, "import {lsc}::{n};")?;
+                writeln!(&mut file, "__include \"data/{lsc}\";")?;
             }
             // tx3.send(file_path)?;
             Ok(())
@@ -365,23 +352,7 @@ impl Slang {
             let file_path = src_folder2.join(Path::new("traits.slang"));
             tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
-            for (the_mod, ts) in trait_mods {
-                writeln!(&mut file, "implementing {algebra_name};")?;
-                for t in ts {
-                    if let TraitTypeConsensus::NoVotes = *t.output.read() {
-                        continue;
-                    }
-                    let n = t.names.trait_key;
-                    let lsc = n.as_lower_snake();
-                    let n = n.as_upper_camel();
-                    match n.as_str() {
-                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
-                        "Into" | "TryInto" => continue,
-                        _ => {}
-                    }
-                    writeln!(&mut file, "__include traits::{lsc}::{n};")?;
-                }
-            }
+            writeln!(&mut file, "implementing {algebra_name};")?;
             for td in defs.iter() {
                 if let TraitTypeConsensus::NoVotes = *td.output.read() {
                     continue;
@@ -395,7 +366,7 @@ impl Slang {
                     "Into" | "TryInto" => continue,
                     _ => {}
                 }
-                writeln!(&mut file, "__include {lsc};")?;
+                writeln!(&mut file, "__include \"traits/{lsc}\";")?;
             }
             // tx3.send(file_path)?;
             Ok(())
@@ -406,7 +377,8 @@ impl Slang {
         let tx2 = started_file.clone();
         // let tx3 = finished_file.clone();
         join_set.spawn(async move {
-            let file_path = src_folder2.join(Path::new("{algebra_name}.slang"));
+            let n = format!("{algebra_name}.slang");
+            let file_path = src_folder2.join(Path::new(n.as_str()));
             tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             writeln!(&mut file, "namespace data {{")?;
@@ -415,14 +387,6 @@ impl Slang {
             writeln!(&mut file, "namespace traits {{")?;
             writeln!(&mut file, "    __include traits;")?;
             writeln!(&mut file, "}}")?;
-            writeln!(&mut file, "namespace elements {{")?;
-            let mut els = multi_vecs.full_multi_vector().elements();
-            els.sort();
-            for el in els {
-                writeln!(&mut file, "    struct {el};")?;
-            }
-            writeln!(&mut file, "}}")?;
-            // tx3.send(file_path)?;
             Ok(())
         });
 
@@ -1602,28 +1566,7 @@ impl TryFrom<{other}> for {owner} {{
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
         let lcc = name.as_lower_camel();
-        write!(w, "\nstruct {ucc} {{\n    ")?;
-        for (i, g) in multi_vec.groups().into_iter().enumerate() {
-            if i > 0 {
-                write!(w, ",\n    ")?;
-            }
-            let g = g.into_vec();
-            for (i, el) in g.clone().into_iter().enumerate() {
-                if i > 0 {
-                    write!(w, ", ")?;
-                }
-                let suffix = if let Some(char) = format!("{el}").chars().last() {
-                    if char.is_numeric() {
-                        "_"
-                    } else { "" }
-                } else { "" };
-                write!(w, "{el}{suffix}: float")?;
-            }
-        }
-        writeln!(w, "\n}}")?;
-
-
-        writeln!(w, "struct {ucc}Groups {{")?;
+        writeln!(w, "public struct {ucc} {{")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 writeln!(w, ",")?;
@@ -1643,176 +1586,102 @@ impl TryFrom<{other}> for {owner} {{
                 3 => write!(w, ", 0")?,
                 _ => (),
             }
-            if l > 1 {
-                write!(w, "\n    group{i}_: float4")?;
-            } else {
-                write!(w, "\n    group{i}_: float4")?;
-            }
+            // TODO consider modifying visibility of groups in rust implementation
+            write!(w, "\n    internal group{i}: float4")?;
         }
         writeln!(w, "\n}}")?;
 
 
 
-        writeln!(w, "fn {lcc}_grouped(self_: {ucc}) -> {ucc}Groups {{")?;
-        write!(w, "    return {ucc}Groups(\n        ")?;
-        for (i, g) in multi_vec.groups().into_iter().enumerate() {
+        writeln!(w, "extension {ucc} {{")?;
+        for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
+            let g = g.into_vec();
+            for (inner_idx, el) in g.clone().into_iter().enumerate() {
+                // TODO consider nicer property access API in rust implementation
+                writeln!(w, "    public property {el}: float {{")?;
+                writeln!(w, "        get {{ return group{outer_idx}[{inner_idx}]; }}")?;
+                writeln!(w, "        set {{ group{outer_idx}[{inner_idx}] = newValue; }}")?;
+                writeln!(w, "    }}")?;
+            }
+        }
+
+        writeln!(w, "    public static func from_elements(")?;
+        for (i, el) in multi_vec.elements().into_iter().enumerate() {
             if i > 0 {
-                write!(w, ",\n        ")?;
+                write!(w, ", ")?;
+            } else {
+                write!(w, "        ")?;
+            }
+            write!(w, "{el}: float")?;
+        }
+        writeln!(w, "\n    ) -> {ucc} {{")?;
+        write!(w, "        return {ucc} {{ ")?;
+        for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
+            if outer_idx > 0 {
+                write!(w, ", ")?;
             }
             write!(w, "float4(")?;
-            let g = g.into_vec();
-            let l = g.len();
-            for (i, el) in g.clone().into_iter().enumerate() {
-                if i > 0 {
+            let mut count = 0;
+            for (inner_idx, el) in g.into_iter().enumerate() {
+                if inner_idx > 0 {
                     write!(w, ", ")?;
                 }
-                let suffix = if let Some(char) = format!("{el}").chars().last() {
-                    if char.is_numeric() {
-                        "_"
-                    } else { "" }
-                } else { "" };
-                write!(w, "self_.{el}{suffix}")?;
+                write!(w, "{el}")?;
+                count += 1;
             }
-            match l {
-                1 => write!(w, ", 0.0, 0.0, 0.0")?,
-                2 => write!(w, ", 0.0, 0.0")?,
-                3 => write!(w, ", 0.0")?,
-                _ => (),
+            while count < 4 {
+                write!(w, ", 0.0")?;
+                count += 1;
             }
             write!(w, ")")?;
         }
-        writeln!(w, "\n    );")?;
-        writeln!(w, "}}")?;
-
-
-        writeln!(w, "fn {lcc}_degroup(self_: {ucc}Groups) -> {ucc} {{")?;
-        write!(w, "    return {ucc}(\n        ")?;
+        writeln!(w, " }};")?;
+        writeln!(w, "    }}")?;
+        writeln!(w, "    internal static func from_groups(")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
-                write!(w, ",\n        ")?;
+                write!(w, ", ")?;
+            } else {
+                write!(w, "        ")?;
             }
-            let g = g.into_vec();
-            for (j, _) in g.clone().into_iter().enumerate() {
-                if j > 0 {
-                    write!(w, ", ")?;
-                }
-                let j = match j {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => unreachable!("simd vecs max length of 4")
-                };
-                write!(w, "self_.group{i}_.{j}")?;
-            }
+            write!(w, "g{i}: ")?;
+            self.write_type(w, g.expr_type())?;
         }
-        writeln!(w, "\n    );")?;
-        writeln!(w, "}}\n")?;
+        writeln!(w, "\n    ) -> {ucc} {{")?;
+        writeln!(w, "        return {ucc} {{")?;
+        for (i, _) in multi_vec.groups().into_iter().enumerate() {
+            if i > 0 {
+                write!(w, ", ")?;
+            } else {
+                write!(w, "            ")?;
+            }
+            write!(w, "group{i}: g{i}")?;
+        }
+        writeln!(w, "\n        }};\n    }}\n}}")?;
+
+
+        writeln!(w, "extension {ucc}: IComparable {{")?;
+        writeln!(w, "    bool lessThan(IComparable another) {{")?;
+        writeln!(w, "        {ucc} other = ({ucc})another;")?;
+        let len = multi_vec.groups().len();
+        for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
+            if outer_idx < len - 1 {
+                write!(w, "        if (this.group{outer_idx} != other.group{outer_idx})\n    ")?;
+            }
+            writeln!(w, "        return this.group{outer_idx}.lessThan(other.group{outer_idx});")?;
+        }
+        writeln!(w, "    }}")?;
+        writeln!(w, "    bool equals(IComparable another) {{")?;
+        writeln!(w, "        {ucc} other = ({ucc})another;")?;
+        write!(w, "        return ")?;
+        for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
+            if outer_idx > 0 {
+                write!(w, " && ")?;
+            }
+            write!(w, "this.group{outer_idx}.equals(other.group{outer_idx})")?;
+        }
+        writeln!(w, ";\n    }}")?;
         writeln!(w, "}}")?;
-
-
-
-
-
-        let els = multi_vec.elements();
-        let els_len = els.len();
-
-        writeln!(
-            w,
-            r#"
-impl {ucc} {{
-    pub const LEN: usize = {els_len};
-}}"#
-        )?;
-        writeln!(
-            w,
-            r#"
-impl PartialOrd for {ucc} {{
-fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {{
-    for i in 0..Self::LEN {{
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {{
-            std::cmp::Ordering::Equal => continue,
-            result => return Some(result),
-        }}
-    }}
-    Some(std::cmp::Ordering::Equal)
-}}
-}}
-impl Ord for {ucc} {{
-fn cmp(&self, other: &Self) -> std::cmp::Ordering {{
-    for i in 0..Self::LEN {{
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {{
-            std::cmp::Ordering::Equal => continue,
-            result => return result,
-        }}
-    }}
-    std::cmp::Ordering::Equal
-}}
-}}
-impl PartialEq for {ucc} {{
-fn eq(&self, other: &Self) -> bool {{
-    for i in 0..Self::LEN {{
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        if a != b {{
-            return false
-        }}
-    }}
-    true
-}}
-}}
-impl Eq for {ucc} {{}}
-impl std::hash::Hash for {ucc} {{
-fn hash<H: std::hash::Hasher>(&self, state: &mut H) {{
-    for i in 0..Self::LEN {{
-        self[i].to_bits().hash(state);
-    }}
-}}
-}}
-"#
-        )?;
-
-        for (i, el) in els.clone().into_iter().enumerate() {
-            writeln!(w, "extension {ucc} std::ops::Index<elements::{el}> for {ucc} {{")?;
-            writeln!(w, "    __subscript(_: elements::{el}) -> &Self::Output {{")?;
-            writeln!(w, "       this[{i}]")?;
-            writeln!(w, "    }}\n}}")?;
-        }
-        // for len in 1..(els_len+1) {
-        //     write!(w, "impl<")?;
-        //     for i in 0..len {
-        //         write!(w, "I{i}, ")?;
-        //     }
-        //     write!(w, "> std::ops::Index<(")?;
-        //     for i in 0..len {
-        //         write!(w, "I{i}, ")?;
-        //     }
-        //     writeln!(w, ")> for {ucc} where Self: std::ops::Index<I0, Output=f32>")?;
-        //     for i in 1..len {
-        //         write!(w, " + std::ops::Index<I{i}, Output=f32>")?;
-        //     }
-        //     writeln!(w, " {{")?;
-        //     writeln!(w, "    type Output = [f32; {len}];")?;
-        //     write!(w, "    fn index(&self, (")?;
-        //     for i in 0..len {
-        //         write!(w, "i{i}, ")?;
-        //     }
-        //     write!(w, "): (")?;
-        //     for i in 0..len {
-        //         write!(w, "I{i}, ")?;
-        //     }
-        //     writeln!(w, ")) -> &Self::Output {{")?;
-        //     write!(w, "       [")?;
-        //     for i in 0..len {
-        //         write!(w, "self[i{i}], ")?;
-        //     }
-        //     writeln!(w, "]")?;
-        //     writeln!(w, "    }}\n}}")?;
-        // }
 
         Ok(())
     }

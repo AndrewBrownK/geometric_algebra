@@ -2,81 +2,36 @@ implementing rga3d;
 using data::*;
 
 /// AntiScalar
-
-struct AntiScalar {
-    e1234_: float
-}
-struct AntiScalarGroups {
+public struct AntiScalar {
     // e1234, 0, 0, 0
-    group0_: float4
+    internal group0: float4
 }
-fn antiScalar_grouped(self_: AntiScalar) -> AntiScalarGroups {
-    return AntiScalarGroups(
-        float4(self_.e1234_, 0.0, 0.0, 0.0)
-    );
-}
-fn antiScalar_degroup(self_: AntiScalarGroups) -> AntiScalar {
-    return AntiScalar(
-        self_.group0_.x
-    );
-}
-
-}
-
-impl AntiScalar {
-    pub const LEN: usize = 1;
-}
-
-impl PartialOrd for AntiScalar {
-fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return Some(result),
-        }
+extension AntiScalar {
+    public property e1234: float {
+        get { return group0[0]; }
+        set { group0[0] = newValue; }
     }
-    Some(std::cmp::Ordering::Equal)
-}
-}
-impl Ord for AntiScalar {
-fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return result,
-        }
+    public static func from_elements(
+        e1234: float
+    ) -> AntiScalar {
+        return AntiScalar { float4(e1234, 0.0, 0.0, 0.0) };
     }
-    std::cmp::Ordering::Equal
-}
-}
-impl PartialEq for AntiScalar {
-fn eq(&self, other: &Self) -> bool {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        if a != b {
-            return false
-        }
-    }
-    true
-}
-}
-impl Eq for AntiScalar {}
-impl std::hash::Hash for AntiScalar {
-fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-    for i in 0..Self::LEN {
-        self[i].to_bits().hash(state);
+    internal static func from_groups(
+        g0: float
+    ) -> AntiScalar {
+        return AntiScalar {
+            group0: g0
+        };
     }
 }
-}
-
-extension AntiScalar std::ops::Index<elements::e1234> for AntiScalar {
-    __subscript(_: elements::e1234) -> &Self::Output {
-       this[0]
+extension AntiScalar: IComparable {
+    bool lessThan(IComparable another) {
+        AntiScalar other = (AntiScalar)another;
+        return this.group0.lessThan(other.group0);
+    }
+    bool equals(IComparable another) {
+        AntiScalar other = (AntiScalar)another;
+        return this.group0.equals(other.group0);
     }
 }
-__include ./impls/anti_scalar;
+__include "impls/anti_scalar";

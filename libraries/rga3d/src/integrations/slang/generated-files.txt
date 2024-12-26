@@ -21,6 +21,7 @@
 ./libraries/rga3d/src/integrations/slang/data/plane.slang
 ./libraries/rga3d/src/integrations/slang/data/point.slang
 ./libraries/rga3d/src/integrations/slang/data/scalar.slang
+./libraries/rga3d/src/integrations/slang/rga3d.slang
 ./libraries/rga3d/src/integrations/slang/traits.slang
 ./libraries/rga3d/src/integrations/slang/traits/anti_auto_morphism.rs
 ./libraries/rga3d/src/integrations/slang/traits/anti_constraint_valid.rs
@@ -148,4 +149,3 @@
 ./libraries/rga3d/src/integrations/slang/traits/weight_norm.rs
 ./libraries/rga3d/src/integrations/slang/traits/weight_norm_squared.rs
 ./libraries/rga3d/src/integrations/slang/traits/zero.rs
-./libraries/rga3d/src/integrations/slang/{algebra_name}.slang

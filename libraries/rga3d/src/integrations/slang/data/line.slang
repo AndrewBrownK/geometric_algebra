@@ -2,111 +2,60 @@ implementing rga3d;
 using data::*;
 
 /// Line
-
-struct Line {
-    e41_: float, e42_: float, e43_: float,
-    e23_: float, e31_: float, e12_: float
-}
-struct LineGroups {
+public struct Line {
     // e41, e42, e43, 0
-    group0_: float4,
+    internal group0: float4,
     // e23, e31, e12, 0
-    group1_: float4
+    internal group1: float4
 }
-fn line_grouped(self_: Line) -> LineGroups {
-    return LineGroups(
-        float4(self_.e41_, self_.e42_, self_.e43_, 0.0),
-        float4(self_.e23_, self_.e31_, self_.e12_, 0.0)
-    );
-}
-fn line_degroup(self_: LineGroups) -> Line {
-    return Line(
-        self_.group0_.x, self_.group0_.y, self_.group0_.z,
-        self_.group1_.x, self_.group1_.y, self_.group1_.z
-    );
-}
-
-}
-
-impl Line {
-    pub const LEN: usize = 6;
-}
-
-impl PartialOrd for Line {
-fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return Some(result),
-        }
+extension Line {
+    public property e41: float {
+        get { return group0[0]; }
+        set { group0[0] = newValue; }
     }
-    Some(std::cmp::Ordering::Equal)
-}
-}
-impl Ord for Line {
-fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return result,
-        }
+    public property e42: float {
+        get { return group0[1]; }
+        set { group0[1] = newValue; }
     }
-    std::cmp::Ordering::Equal
-}
-}
-impl PartialEq for Line {
-fn eq(&self, other: &Self) -> bool {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        if a != b {
-            return false
-        }
+    public property e43: float {
+        get { return group0[2]; }
+        set { group0[2] = newValue; }
     }
-    true
-}
-}
-impl Eq for Line {}
-impl std::hash::Hash for Line {
-fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-    for i in 0..Self::LEN {
-        self[i].to_bits().hash(state);
+    public property e23: float {
+        get { return group1[0]; }
+        set { group1[0] = newValue; }
+    }
+    public property e31: float {
+        get { return group1[1]; }
+        set { group1[1] = newValue; }
+    }
+    public property e12: float {
+        get { return group1[2]; }
+        set { group1[2] = newValue; }
+    }
+    public static func from_elements(
+        e41: float, e42: float, e43: float, e23: float, e31: float, e12: float
+    ) -> Line {
+        return Line { float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0) };
+    }
+    internal static func from_groups(
+        g0: float3, g1: float3
+    ) -> Line {
+        return Line {
+            group0: g0, group1: g1
+        };
     }
 }
-}
-
-extension Line std::ops::Index<elements::e41> for Line {
-    __subscript(_: elements::e41) -> &Self::Output {
-       this[0]
+extension Line: IComparable {
+    bool lessThan(IComparable another) {
+        Line other = (Line)another;
+        if (this.group0 != other.group0)
+            return this.group0.lessThan(other.group0);
+        return this.group1.lessThan(other.group1);
+    }
+    bool equals(IComparable another) {
+        Line other = (Line)another;
+        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
     }
 }
-extension Line std::ops::Index<elements::e42> for Line {
-    __subscript(_: elements::e42) -> &Self::Output {
-       this[1]
-    }
-}
-extension Line std::ops::Index<elements::e43> for Line {
-    __subscript(_: elements::e43) -> &Self::Output {
-       this[2]
-    }
-}
-extension Line std::ops::Index<elements::e23> for Line {
-    __subscript(_: elements::e23) -> &Self::Output {
-       this[3]
-    }
-}
-extension Line std::ops::Index<elements::e31> for Line {
-    __subscript(_: elements::e31) -> &Self::Output {
-       this[4]
-    }
-}
-extension Line std::ops::Index<elements::e12> for Line {
-    __subscript(_: elements::e12) -> &Self::Output {
-       this[5]
-    }
-}
-__include ./impls/line;
+__include "impls/line";

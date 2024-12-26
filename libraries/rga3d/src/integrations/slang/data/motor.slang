@@ -2,121 +2,68 @@ implementing rga3d;
 using data::*;
 
 /// Motor
-
-struct Motor {
-    e41_: float, e42_: float, e43_: float, e1234_: float,
-    e23_: float, e31_: float, e12_: float, scalar: float
-}
-struct MotorGroups {
+public struct Motor {
     // e41, e42, e43, e1234
-    group0_: float4,
+    internal group0: float4,
     // e23, e31, e12, scalar
-    group1_: float4
+    internal group1: float4
 }
-fn motor_grouped(self_: Motor) -> MotorGroups {
-    return MotorGroups(
-        float4(self_.e41_, self_.e42_, self_.e43_, self_.e1234_),
-        float4(self_.e23_, self_.e31_, self_.e12_, self_.scalar)
-    );
-}
-fn motor_degroup(self_: MotorGroups) -> Motor {
-    return Motor(
-        self_.group0_.x, self_.group0_.y, self_.group0_.z, self_.group0_.w,
-        self_.group1_.x, self_.group1_.y, self_.group1_.z, self_.group1_.w
-    );
-}
-
-}
-
-impl Motor {
-    pub const LEN: usize = 8;
-}
-
-impl PartialOrd for Motor {
-fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return Some(result),
-        }
+extension Motor {
+    public property e41: float {
+        get { return group0[0]; }
+        set { group0[0] = newValue; }
     }
-    Some(std::cmp::Ordering::Equal)
-}
-}
-impl Ord for Motor {
-fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        match a.cmp(&b) {
-            std::cmp::Ordering::Equal => continue,
-            result => return result,
-        }
+    public property e42: float {
+        get { return group0[1]; }
+        set { group0[1] = newValue; }
     }
-    std::cmp::Ordering::Equal
-}
-}
-impl PartialEq for Motor {
-fn eq(&self, other: &Self) -> bool {
-    for i in 0..Self::LEN {
-        let a = float_ord::FloatOrd(self[i]);
-        let b = float_ord::FloatOrd(other[i]);
-        if a != b {
-            return false
-        }
+    public property e43: float {
+        get { return group0[2]; }
+        set { group0[2] = newValue; }
     }
-    true
-}
-}
-impl Eq for Motor {}
-impl std::hash::Hash for Motor {
-fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-    for i in 0..Self::LEN {
-        self[i].to_bits().hash(state);
+    public property e1234: float {
+        get { return group0[3]; }
+        set { group0[3] = newValue; }
+    }
+    public property e23: float {
+        get { return group1[0]; }
+        set { group1[0] = newValue; }
+    }
+    public property e31: float {
+        get { return group1[1]; }
+        set { group1[1] = newValue; }
+    }
+    public property e12: float {
+        get { return group1[2]; }
+        set { group1[2] = newValue; }
+    }
+    public property scalar: float {
+        get { return group1[3]; }
+        set { group1[3] = newValue; }
+    }
+    public static func from_elements(
+        e41: float, e42: float, e43: float, e1234: float, e23: float, e31: float, e12: float, scalar: float
+    ) -> Motor {
+        return Motor { float4(e41, e42, e43, e1234), float4(e23, e31, e12, scalar) };
+    }
+    internal static func from_groups(
+        g0: float4, g1: float4
+    ) -> Motor {
+        return Motor {
+            group0: g0, group1: g1
+        };
     }
 }
-}
-
-extension Motor std::ops::Index<elements::e41> for Motor {
-    __subscript(_: elements::e41) -> &Self::Output {
-       this[0]
+extension Motor: IComparable {
+    bool lessThan(IComparable another) {
+        Motor other = (Motor)another;
+        if (this.group0 != other.group0)
+            return this.group0.lessThan(other.group0);
+        return this.group1.lessThan(other.group1);
+    }
+    bool equals(IComparable another) {
+        Motor other = (Motor)another;
+        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
     }
 }
-extension Motor std::ops::Index<elements::e42> for Motor {
-    __subscript(_: elements::e42) -> &Self::Output {
-       this[1]
-    }
-}
-extension Motor std::ops::Index<elements::e43> for Motor {
-    __subscript(_: elements::e43) -> &Self::Output {
-       this[2]
-    }
-}
-extension Motor std::ops::Index<elements::e1234> for Motor {
-    __subscript(_: elements::e1234) -> &Self::Output {
-       this[3]
-    }
-}
-extension Motor std::ops::Index<elements::e23> for Motor {
-    __subscript(_: elements::e23) -> &Self::Output {
-       this[4]
-    }
-}
-extension Motor std::ops::Index<elements::e31> for Motor {
-    __subscript(_: elements::e31) -> &Self::Output {
-       this[5]
-    }
-}
-extension Motor std::ops::Index<elements::e12> for Motor {
-    __subscript(_: elements::e12) -> &Self::Output {
-       this[6]
-    }
-}
-extension Motor std::ops::Index<elements::scalar> for Motor {
-    __subscript(_: elements::scalar) -> &Self::Output {
-       this[7]
-    }
-}
-__include ./impls/motor;
+__include "impls/motor";
