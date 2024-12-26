@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 45
+// Total Implementations: 38
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -193,88 +192,6 @@ impl std::ops::Add<Scalar> for Horizon {
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e321]),
         );
-    }
-}
-impl std::ops::BitXor<DualNum> for Horizon {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<DualNum> for Horizon {
-    fn bitxor_assign(&mut self, other: DualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Flector> for Horizon {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: Flector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for Horizon {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Motor> for Horizon {
-    fn bitxor_assign(&mut self, other: Motor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for Horizon {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Origin> for Horizon {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: Origin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Point> for Horizon {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: Point) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for Horizon {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for Horizon {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
     }
 }
 impl std::ops::Mul<AntiScalar> for Horizon {

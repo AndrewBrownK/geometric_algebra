@@ -1,200 +1,215 @@
-impl std::ops::Div<double_complement> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension AntiScalar {
+    func div(_rhs: double_complement) -> 
+AntiScalar {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for AntiScalar {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension AntiScalar {
+    func div=(const double_complement& _rhs) -> AntiScalar& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for AntiScalar {
-    fn double_complement(self) -> Self {
+extension AntiScalar: DoubleComplement {
+    func double_complement(self) -> AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension DualNum {
+    func div(_rhs: double_complement) -> 
+DualNum {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for DualNum {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension DualNum {
+    func div=(const double_complement& _rhs) -> DualNum& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for DualNum {
-    fn double_complement(self) -> Self {
+extension DualNum: DoubleComplement {
+    func double_complement(self) -> DualNum {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Flector {
+    func div(_rhs: double_complement) -> 
+Flector {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Flector {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Flector {
+    func div=(const double_complement& _rhs) -> Flector& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Flector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn double_complement(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0), /* e423, e431, e412, e321 */self.group1() * float4(-1.0));
+extension Flector: DoubleComplement {
+    func double_complement(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group1() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<double_complement> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Horizon {
+    func div(_rhs: double_complement) -> 
+Horizon {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Horizon {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Horizon {
+    func div=(const double_complement& _rhs) -> Horizon& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Horizon {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn double_complement(self) -> Self {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e321] * -1.0);
+extension Horizon: DoubleComplement {
+    func double_complement(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<double_complement> for Line {
-    type Output = Line;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Line {
+    func div(_rhs: double_complement) -> 
+Line {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Line {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Line {
+    func div=(const double_complement& _rhs) -> Line& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Line {
-    fn double_complement(self) -> Self {
+extension Line: DoubleComplement {
+    func double_complement(self) -> Line {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Motor {
+    func div(_rhs: double_complement) -> 
+Motor {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Motor {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Motor {
+    func div=(const double_complement& _rhs) -> Motor& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Motor {
-    fn double_complement(self) -> Self {
+extension Motor: DoubleComplement {
+    func double_complement(self) -> Motor {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension MultiVector {
+    func div(_rhs: double_complement) -> 
+MultiVector {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension MultiVector {
+    func div=(const double_complement& _rhs) -> MultiVector& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for MultiVector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn double_complement(self) -> Self {
-        return MultiVector::from_groups(/* scalar, e1234 */self.group0(), /* e1, e2, e3, e4 */self.group1() * float4(-1.0), /* e41, e42, e43 */self.group2(), /* e23, e31, e12 */self.group3(), /* e423, e431, e412, e321 */self.group4() * float4(-1.0));
+extension MultiVector: DoubleComplement {
+    func double_complement(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            self.group0(), 
+            /* e1, e2, e3, e4 */
+            self.group1() * float4(-1.0), 
+            /* e41, e42, e43 */
+            self.group2(), 
+            /* e23, e31, e12 */
+            self.group3(), 
+            /* e423, e431, e412, e321 */
+            self.group4() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<double_complement> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Origin {
+    func div(_rhs: double_complement) -> 
+Origin {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Origin {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Origin {
+    func div=(const double_complement& _rhs) -> Origin& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Origin {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn double_complement(self) -> Self {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e4] * -1.0);
+extension Origin: DoubleComplement {
+    func double_complement(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e4] * -1.0
+        );
     }
 }
-impl std::ops::Div<double_complement> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Plane {
+    func div(_rhs: double_complement) -> 
+Plane {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Plane {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Plane {
+    func div=(const double_complement& _rhs) -> Plane& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Plane {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn double_complement(self) -> Self {
-        return Plane::from_groups(/* e423, e431, e412, e321 */self.group0() * float4(-1.0));
+extension Plane: DoubleComplement {
+    func double_complement(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<double_complement> for Point {
-    type Output = Point;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Point {
+    func div(_rhs: double_complement) -> 
+Point {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Point {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Point {
+    func div=(const double_complement& _rhs) -> Point& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Point {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn double_complement(self) -> Self {
-        return Point::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0));
+extension Point: DoubleComplement {
+    func double_complement(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<double_complement> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: double_complement) -> Self::Output {
-        self.double_complement()
+extension Scalar {
+    func div(_rhs: double_complement) -> 
+Scalar {
+        this.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Scalar {
-    fn div_assign(&mut self, _rhs: double_complement) {
-        *self = self.double_complement()
+extension Scalar {
+    func div=(const double_complement& _rhs) -> Scalar& {
+        this = this.double_complement()
+        return *this;
     }
 }
-impl DoubleComplement for Scalar {
-    fn double_complement(self) -> Self {
+extension Scalar: DoubleComplement {
+    func double_complement(self) -> Scalar {
         return self;
     }
 }

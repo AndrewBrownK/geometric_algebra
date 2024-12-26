@@ -1,159 +1,164 @@
-impl std::ops::Div<right_dual> for DualNum {
-    type Output = AntiScalar;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension DualNum {
+    func div(_rhs: right_dual) -> 
+AntiScalar {
+        this.right_dual()
     }
 }
-impl RightDual for DualNum {
-    type Output = AntiScalar;
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[scalar]);
+extension DualNum: RightDual {
+    func right_dual(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[scalar]
+        );
     }
 }
-impl std::ops::Div<right_dual> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Flector {
+    func div(_rhs: right_dual) -> 
+Flector {
+        this.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Flector {
-    fn div_assign(&mut self, _rhs: right_dual) {
-        *self = self.right_dual()
+extension Flector {
+    func div=(const right_dual& _rhs) -> Flector& {
+        this = this.right_dual()
+        return *this;
     }
 }
-impl RightDual for Flector {
-    type Output = Flector;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */float4(float3(0.0), self[e321] * -1.0), /* e423, e431, e412, e321 */float4(self[e1], self[e2], self[e3], 0.0));
+extension Flector: RightDual {
+    func right_dual(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(float3(0.0), self[e321] * -1.0), 
+            /* e423, e431, e412, e321 */
+            float4(self[e1], self[e2], self[e3], 0.0)
+        );
     }
 }
-impl std::ops::Div<right_dual> for Horizon {
-    type Output = Origin;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Horizon {
+    func div(_rhs: right_dual) -> 
+Origin {
+        this.right_dual()
     }
 }
-impl RightDual for Horizon {
-    type Output = Origin;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e321] * -1.0);
+extension Horizon: RightDual {
+    func right_dual(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<right_dual> for Line {
-    type Output = Line;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Line {
+    func div(_rhs: right_dual) -> 
+Line {
+        this.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Line {
-    fn div_assign(&mut self, _rhs: right_dual) {
-        *self = self.right_dual()
+extension Line {
+    func div=(const right_dual& _rhs) -> Line& {
+        this = this.right_dual()
+        return *this;
     }
 }
-impl RightDual for Line {
-    type Output = Line;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd3        0        1        0
-// no simd        0        3        0
-    fn right_dual(self) -> Self::Output {
-        return Line::from_groups(/* e41, e42, e43 */self.group1() * float3(-1.0), /* e23, e31, e12 */float3(0.0));
+extension Line: RightDual {
+    func right_dual(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            self.group1() * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
+        );
     }
 }
-impl std::ops::Div<right_dual> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Motor {
+    func div(_rhs: right_dual) -> 
+Motor {
+        this.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Motor {
-    fn div_assign(&mut self, _rhs: right_dual) {
-        *self = self.right_dual()
+extension Motor {
+    func div=(const right_dual& _rhs) -> Motor& {
+        this = this.right_dual()
+        return *this;
     }
 }
-impl RightDual for Motor {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn right_dual(self) -> Self::Output {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */self.group1() * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */float4(0.0));
+extension Motor: RightDual {
+    func right_dual(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            self.group1() * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            float4(0.0)
+        );
     }
 }
-impl std::ops::Div<right_dual> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension MultiVector {
+    func div(_rhs: right_dual) -> 
+MultiVector {
+        this.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_dual) {
-        *self = self.right_dual()
+extension MultiVector {
+    func div=(const right_dual& _rhs) -> MultiVector& {
+        this = this.right_dual()
+        return *this;
     }
 }
-impl RightDual for MultiVector {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        1        0
-//    simd3        0        1        0
-// Totals...
-// yes simd        0        2        0
-//  no simd        0        4        0
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[scalar]), /* e1, e2, e3, e4 */float4(float3(0.0), self[e321] * -1.0), /* e41, e42, e43 */self.group3() * float3(-1.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(self[e1], self[e2], self[e3], 0.0));
+extension MultiVector: RightDual {
+    func right_dual(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[scalar]), 
+            /* e1, e2, e3, e4 */
+            float4(float3(0.0), self[e321] * -1.0), 
+            /* e41, e42, e43 */
+            self.group3() * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(self[e1], self[e2], self[e3], 0.0)
+        );
     }
 }
-impl std::ops::Div<right_dual> for Plane {
-    type Output = Origin;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Plane {
+    func div(_rhs: right_dual) -> 
+Origin {
+        this.right_dual()
     }
 }
-impl RightDual for Plane {
-    type Output = Origin;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e321] * -1.0);
+extension Plane: RightDual {
+    func right_dual(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<right_dual> for Point {
-    type Output = Plane;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Point {
+    func div(_rhs: right_dual) -> 
+Plane {
+        this.right_dual()
     }
 }
-impl RightDual for Point {
-    type Output = Plane;
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */float4(self[e1], self[e2], self[e3], 0.0));
+extension Point: RightDual {
+    func right_dual(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            float4(self[e1], self[e2], self[e3], 0.0)
+        );
     }
 }
-impl std::ops::Div<right_dual> for Scalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: right_dual) -> Self::Output {
-        self.right_dual()
+extension Scalar {
+    func div(_rhs: right_dual) -> 
+AntiScalar {
+        this.right_dual()
     }
 }
-impl RightDual for Scalar {
-    type Output = AntiScalar;
-    fn right_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[scalar]);
+extension Scalar: RightDual {
+    func right_dual(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[scalar]
+        );
     }
 }

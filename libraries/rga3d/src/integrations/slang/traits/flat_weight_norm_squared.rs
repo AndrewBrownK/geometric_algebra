@@ -2,14 +2,12 @@ using data::*;
 
 /// FlatWeightNormSquared
 /// Intermediate result to FlatWeightNorm.
-pub trait FlatWeightNormSquared {
-    fn flat_weight_norm_squared(self) -> AntiScalar;
+public interface FlatWeightNormSquared {
+    fn flat_weight_norm_squared() -> AntiScalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct flat_weight_norm_squared;
-impl<A: FlatWeightNormSquared> std::ops::Div<A> for flat_weight_norm_squared {
-    type Output = AntiScalar;
-    fn div(self, rhs: A) -> Self::Output {
+public struct flat_weight_norm_squared;
+extension flat_weight_norm_squared {    associatedtype Output = AntiScalar;
+    func operator/(rhs: A) -> Self::Output {
         rhs.flat_weight_norm_squared()
     }
 }

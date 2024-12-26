@@ -2,18 +2,15 @@ using data::*;
 
 /// AntiRejectViaHorizonFrom
 /// Counterpart to AntiProjectViaHorizonOnto.
-pub trait AntiRejectViaHorizonFrom<T> {
-    type Output;
-    fn anti_reject_via_horizon_from(self, other: T) -> Self::Output;
+public interface AntiRejectViaHorizonFrom<T> {
+    associatedtype Output;
+    fn anti_reject_via_horizon_from(other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_reject_via_horizon_from;
-#[allow(non_camel_case_types)]
-pub struct anti_reject_via_horizon_from_partial<A>(A);
-impl<A: AntiRejectViaHorizonFrom<B>, B> std::ops::Div<B> for anti_reject_via_horizon_from_partial<A> {
-    type Output = <A as AntiRejectViaHorizonFrom<B>>::Output;
-    fn div(self, rhs: B) -> Self::Output {
-        self.0.anti_reject_via_horizon_from(rhs)
+public struct anti_reject_via_horizon_from;
+public struct anti_reject_via_horizon_from_partial<A> { a: A }
+extension anti_reject_via_horizon_from_partial<A> {    associatedtype Output = <A as AntiRejectViaHorizonFrom<B>>::Output;
+    func operator/(rhs: B) -> Self::Output {
+        this.a.anti_reject_via_horizon_from(rhs)
     }
 }
 __include ./impls/anti_reject_via_horizon_from;

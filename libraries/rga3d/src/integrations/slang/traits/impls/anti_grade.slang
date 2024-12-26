@@ -1,35 +1,35 @@
-impl AntiGrade for AntiScalar {
-    fn anti_grade() -> uint {
+extension AntiScalar: AntiGrade {
+    func anti_grade() -> uint {
         return 0;
     }
 }
-impl AntiGrade for Horizon {
-    fn anti_grade() -> uint {
+extension Horizon: AntiGrade {
+    func anti_grade() -> uint {
         return 1;
     }
 }
-impl AntiGrade for Line {
-    fn anti_grade() -> uint {
+extension Line: AntiGrade {
+    func anti_grade() -> uint {
         return 2;
     }
 }
-impl AntiGrade for Origin {
-    fn anti_grade() -> uint {
+extension Origin: AntiGrade {
+    func anti_grade() -> uint {
         return 3;
     }
 }
-impl AntiGrade for Plane {
-    fn anti_grade() -> uint {
+extension Plane: AntiGrade {
+    func anti_grade() -> uint {
         return 1;
     }
 }
-impl AntiGrade for Point {
-    fn anti_grade() -> uint {
+extension Point: AntiGrade {
+    func anti_grade() -> uint {
         return 3;
     }
 }
-impl AntiGrade for Scalar {
-    fn anti_grade() -> uint {
+extension Scalar: AntiGrade {
+    func anti_grade() -> uint {
         return 4;
     }
 }

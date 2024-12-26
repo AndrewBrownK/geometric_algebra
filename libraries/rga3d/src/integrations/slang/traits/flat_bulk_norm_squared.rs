@@ -2,14 +2,12 @@ using data::*;
 
 /// FlatBulkNormSquared
 /// Intermediate result for FlatBulkNorm.
-pub trait FlatBulkNormSquared {
-    fn flat_bulk_norm_squared(self) -> Scalar;
+public interface FlatBulkNormSquared {
+    fn flat_bulk_norm_squared() -> Scalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct flat_bulk_norm_squared;
-impl<A: FlatBulkNormSquared> std::ops::Div<A> for flat_bulk_norm_squared {
-    type Output = Scalar;
-    fn div(self, rhs: A) -> Self::Output {
+public struct flat_bulk_norm_squared;
+extension flat_bulk_norm_squared {    associatedtype Output = Scalar;
+    func operator/(rhs: A) -> Self::Output {
         rhs.flat_bulk_norm_squared()
     }
 }

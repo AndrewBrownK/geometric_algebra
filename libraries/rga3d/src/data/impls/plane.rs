@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 45
+// Total Implementations: 38
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -183,91 +182,6 @@ impl std::ops::Add<Scalar> for Plane {
             // e423, e431, e412, e321
             self.group0(),
         );
-    }
-}
-impl std::ops::BitXor<DualNum> for Plane {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<DualNum> for Plane {
-    fn bitxor_assign(&mut self, other: DualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Flector> for Plane {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: Flector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for Plane {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Motor> for Plane {
-    fn bitxor_assign(&mut self, other: Motor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for Plane {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Origin> for Plane {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: Origin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Point> for Plane {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: Point) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for Plane {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for Plane {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
     }
 }
 

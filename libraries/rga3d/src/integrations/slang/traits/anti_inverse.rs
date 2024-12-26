@@ -2,14 +2,12 @@ using data::*;
 
 /// AntiInverse
 /// The inverse with respect to the geometric anti-product.
-pub trait AntiInverse {
-    fn anti_inverse(self) -> Self;
+public interface AntiInverse {
+    fn anti_inverse() -> AntiInverse;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_inverse;
-impl<A: AntiInverse> std::ops::Div<A> for anti_inverse {
-    type Output = A;
-    fn div(self, rhs: A) -> Self::Output {
+public struct anti_inverse;
+extension anti_inverse {    associatedtype Output = A;
+    func operator/(rhs: A) -> Self::Output {
         rhs.anti_inverse()
     }
 }

@@ -2,18 +2,15 @@ using data::*;
 
 /// AntiRejectOrthogonallyFrom
 /// Counterpart to AntiProjectOrthogonallyOnto.
-pub trait AntiRejectOrthogonallyFrom<T> {
-    type Output;
-    fn anti_reject_orthogonally_from(self, other: T) -> Self::Output;
+public interface AntiRejectOrthogonallyFrom<T> {
+    associatedtype Output;
+    fn anti_reject_orthogonally_from(other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_reject_orthogonally_from;
-#[allow(non_camel_case_types)]
-pub struct anti_reject_orthogonally_from_partial<A>(A);
-impl<A: AntiRejectOrthogonallyFrom<B>, B> std::ops::Div<B> for anti_reject_orthogonally_from_partial<A> {
-    type Output = <A as AntiRejectOrthogonallyFrom<B>>::Output;
-    fn div(self, rhs: B) -> Self::Output {
-        self.0.anti_reject_orthogonally_from(rhs)
+public struct anti_reject_orthogonally_from;
+public struct anti_reject_orthogonally_from_partial<A> { a: A }
+extension anti_reject_orthogonally_from_partial<A> {    associatedtype Output = <A as AntiRejectOrthogonallyFrom<B>>::Output;
+    func operator/(rhs: B) -> Self::Output {
+        this.a.anti_reject_orthogonally_from(rhs)
     }
 }
 __include ./impls/anti_reject_orthogonally_from;

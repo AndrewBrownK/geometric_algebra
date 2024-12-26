@@ -1,187 +1,198 @@
-impl std::ops::Div<right_complement> for AntiScalar {
-    type Output = Scalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension AntiScalar {
+    func div(_rhs: right_complement) -> 
+Scalar {
+        this.right_complement()
     }
 }
-impl RightComplement for AntiScalar {
-    type Output = Scalar;
-    fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */self[e1234]);
+extension AntiScalar: RightComplement {
+    func right_complement(self) -> Scalar {
+        return Scalar::from_groups(
+            /* scalar */
+            self[e1234]
+        );
     }
 }
-impl std::ops::Div<right_complement> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension DualNum {
+    func div(_rhs: right_complement) -> 
+DualNum {
+        this.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for DualNum {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+extension DualNum {
+    func div=(const right_complement& _rhs) -> DualNum& {
+        this = this.right_complement()
+        return *this;
     }
 }
-impl RightComplement for DualNum {
-    type Output = DualNum;
-    fn right_complement(self) -> Self::Output {
-        return DualNum::from_groups(/* scalar, e1234 */self.group0().yx);
+extension DualNum: RightComplement {
+    func right_complement(self) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            self.group0().yx
+        );
     }
 }
-impl std::ops::Div<right_complement> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Flector {
+    func div(_rhs: right_complement) -> 
+Flector {
+        this.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Flector {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+extension Flector {
+    func div=(const right_complement& _rhs) -> Flector& {
+        this = this.right_complement()
+        return *this;
     }
 }
-impl RightComplement for Flector {
-    type Output = Flector;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */self.group1() * float4(-1.0), /* e423, e431, e412, e321 */self.group0());
+extension Flector: RightComplement {
+    func right_complement(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group1() * float4(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group0()
+        );
     }
 }
-impl std::ops::Div<right_complement> for Horizon {
-    type Output = Origin;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Horizon {
+    func div(_rhs: right_complement) -> 
+Origin {
+        this.right_complement()
     }
 }
-impl RightComplement for Horizon {
-    type Output = Origin;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e321] * -1.0);
+extension Horizon: RightComplement {
+    func right_complement(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<right_complement> for Line {
-    type Output = Line;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Line {
+    func div(_rhs: right_complement) -> 
+Line {
+        this.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Line {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+extension Line {
+    func div=(const right_complement& _rhs) -> Line& {
+        this = this.right_complement()
+        return *this;
     }
 }
-impl RightComplement for Line {
-    type Output = Line;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd3        0        2        0
-// no simd        0        6        0
-    fn right_complement(self) -> Self::Output {
-        return Line::from_groups(/* e41, e42, e43 */self.group1() * float3(-1.0), /* e23, e31, e12 */self.group0() * float3(-1.0));
+extension Line: RightComplement {
+    func right_complement(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            self.group1() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group0() * float3(-1.0)
+        );
     }
 }
-impl std::ops::Div<right_complement> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Motor {
+    func div(_rhs: right_complement) -> 
+Motor {
+        this.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Motor {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+extension Motor {
+    func div=(const right_complement& _rhs) -> Motor& {
+        this = this.right_complement()
+        return *this;
     }
 }
-impl RightComplement for Motor {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn right_complement(self) -> Self::Output {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */self.group1() * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */self.group0() * float4(-1.0, -1.0, -1.0, 1.0));
+extension Motor: RightComplement {
+    func right_complement(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            self.group1() * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            self.group0() * float4(-1.0, -1.0, -1.0, 1.0)
+        );
     }
 }
-impl std::ops::Div<right_complement> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension MultiVector {
+    func div(_rhs: right_complement) -> 
+MultiVector {
+        this.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_complement) {
-        *self = self.right_complement()
+extension MultiVector {
+    func div=(const right_complement& _rhs) -> MultiVector& {
+        this = this.right_complement()
+        return *this;
     }
 }
-impl RightComplement for MultiVector {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//    simd3        0        2        0
-//    simd4        0        1        0
-// Totals...
-// yes simd        0        3        0
-//  no simd        0       10        0
-    fn right_complement(self) -> Self::Output {
-        return MultiVector::from_groups(/* scalar, e1234 */self.group0().yx, /* e1, e2, e3, e4 */self.group4() * float4(-1.0), /* e41, e42, e43 */self.group3() * float3(-1.0), /* e23, e31, e12 */self.group2() * float3(-1.0), /* e423, e431, e412, e321 */self.group1());
+extension MultiVector: RightComplement {
+    func right_complement(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            self.group0().yx, 
+            /* e1, e2, e3, e4 */
+            self.group4() * float4(-1.0), 
+            /* e41, e42, e43 */
+            self.group3() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group2() * float3(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<right_complement> for Origin {
-    type Output = Horizon;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Origin {
+    func div(_rhs: right_complement) -> 
+Horizon {
+        this.right_complement()
     }
 }
-impl RightComplement for Origin {
-    type Output = Horizon;
-    fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e4]);
+extension Origin: RightComplement {
+    func right_complement(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e4]
+        );
     }
 }
-impl std::ops::Div<right_complement> for Plane {
-    type Output = Point;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Plane {
+    func div(_rhs: right_complement) -> 
+Point {
+        this.right_complement()
     }
 }
-impl RightComplement for Plane {
-    type Output = Point;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn right_complement(self) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0));
+extension Plane: RightComplement {
+    func right_complement(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<right_complement> for Point {
-    type Output = Plane;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Point {
+    func div(_rhs: right_complement) -> 
+Plane {
+        this.right_complement()
     }
 }
-impl RightComplement for Point {
-    type Output = Plane;
-    fn right_complement(self) -> Self::Output {
-        return Plane::from_groups(/* e423, e431, e412, e321 */self.group0());
+extension Point: RightComplement {
+    func right_complement(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            self.group0()
+        );
     }
 }
-impl std::ops::Div<right_complement> for Scalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
-        self.right_complement()
+extension Scalar {
+    func div(_rhs: right_complement) -> 
+AntiScalar {
+        this.right_complement()
     }
 }
-impl RightComplement for Scalar {
-    type Output = AntiScalar;
-    fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[scalar]);
+extension Scalar: RightComplement {
+    func right_complement(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[scalar]
+        );
     }
 }

@@ -2,9 +2,8 @@ using data::*;
 
 /// Unit
 /// All elements set to one.
-pub trait Unit {
-    fn unit() -> Self;
+public interface Unit {
+    fn unit() -> Unit;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct unit;
+public struct unit;
 __include ./impls/unit;

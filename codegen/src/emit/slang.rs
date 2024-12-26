@@ -1332,14 +1332,14 @@ impl Slang {
                     if i > 0 {
                         write!(w, ", ")?;
                     }
-                    write!(w, "/* ")?;
+                    write!(w, "\n            /* ")?;
                     for (i, el) in groups[i].into_vec().into_iter().enumerate() {
                         if i > 0 {
                             write!(w, ", ")?;
                         }
                         write!(w, "{el}")?;
                     }
-                    write!(w, " */")?;
+                    write!(w, " */\n            ")?;
                     match g {
                         MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
                         MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
@@ -1347,7 +1347,7 @@ impl Slang {
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
-                write!(w, ")")?;
+                write!(w, "\n        )")?;
             }
             MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
                 let method = t.as_lower_snake();
@@ -1476,9 +1476,9 @@ impl From<{other}> for {owner} {{
             expr: None,
         });
         ret.substitute_variable(old_var, new_var);
-        writeln!(w, "        return ")?;
+        write!(w, "        return ")?;
         self.write_expression(w, &ret, true)?;
-        writeln!(w, "    }}\n}}")?;
+        writeln!(w, ";\n    }}\n}}")?;
         Ok(())
     }
 
@@ -1544,7 +1544,7 @@ impl TryFrom<{other}> for {owner} {{
         return Ok("#
         )?;
         self.write_expression(w, &ret, true)?;
-        writeln!(w, ")\n    }}\n}}")?;
+        writeln!(w, ");\n    }}\n}}")?;
         Ok(())
     }
 
@@ -1691,7 +1691,7 @@ impl TryFrom<{other}> for {owner} {{
         let lsc = def.names.trait_key.as_lower_snake();
         self.emit_comment(w, true, &def.documentation)?;
         // todo alias documentation
-        write!(w, "pub trait {ucc}")?;
+        write!(w, "public interface {ucc}")?;
         if let TraitArity::Two = def.arity {
             write!(w, "<T>")?;
         }
@@ -1704,18 +1704,18 @@ impl TryFrom<{other}> for {owner} {{
                 // self.write_type(w, et)?;
             }
             TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
-                writeln!(w, "    type Output;")?;
+                writeln!(w, "    associatedtype Output;")?;
             }
         }
         write!(w, "    fn {lsc}(")?;
         match def.arity {
             TraitArity::Zero => {}
-            TraitArity::One => write!(w, "self")?,
-            TraitArity::Two => write!(w, "self, other: T")?,
+            TraitArity::One => {},
+            TraitArity::Two => write!(w, "other: T")?,
         }
         write!(w, ") -> ")?;
         match *output_ty {
-            TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
+            TraitTypeConsensus::AlwaysSelf => write!(w, "{ucc}")?,
             TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
             TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
         }
@@ -1727,37 +1727,37 @@ impl TryFrom<{other}> for {owner} {{
         }
 
         if let Some(op) = &self.fancy_infix {
-            writeln!(w, "#[allow(non_camel_case_types, dead_code)]")?;
-            writeln!(w, "pub struct {lsc};")?;
+            writeln!(w, "public struct {lsc};")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "#[allow(non_camel_case_types)]")?;
-                writeln!(w, "pub struct {lsc}_partial<A>(A);")?;
+                writeln!(w, "public struct {lsc}_partial<A> {{ a: A }}")?;
             }
             let operator_name = op.rust_trait_name();
-            let operator_method = op.rust_trait_method();
+            let operator_method = op.slang_trait_method();
             if let TraitArity::Two = def.arity {
-                writeln!(w, "impl<A: {ucc}<B>, B> std::ops::{operator_name}<B> for {lsc}_partial<A> {{")?;
-                write!(w, "    type Output = ")?;
+                write!(w, "extension {lsc}_partial<A> {{")?;
+                // writeln!(w, "impl<A: {ucc}<B>, B> {operator_name}<B> for {lsc}_partial<A> {{")?;
+                write!(w, "    associatedtype Output = ")?;
                 match *output_ty {
                     TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
                     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
                     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}<B>>::Output")?,
                 }
                 writeln!(w, ";")?;
-                writeln!(w, "    fn {operator_method}(self, rhs: B) -> Self::Output {{")?;
-                writeln!(w, "        self.0.{lsc}(rhs)")?;
+                writeln!(w, "    func {operator_method}(rhs: B) -> Self::Output {{")?;
+                writeln!(w, "        this.a.{lsc}(rhs)")?;
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
-                write!(w, "    type Output = ")?;
+                write!(w, "extension {lsc} {{")?;
+                // writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
+                write!(w, "    associatedtype Output = ")?;
                 match *output_ty {
                     TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
                     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
                     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}>::Output")?,
                 }
                 writeln!(w, ";")?;
-                writeln!(w, "    fn {operator_method}(self, rhs: A) -> Self::Output {{")?;
+                writeln!(w, "    func {operator_method}(rhs: A) -> Self::Output {{")?;
                 writeln!(w, "        rhs.{lsc}()")?;
                 writeln!(w, "    }}\n}}")?;
             }
@@ -1783,16 +1783,13 @@ impl TryFrom<{other}> for {owner} {{
         let mut lsc = def.names.trait_key.as_lower_snake();
         let mut do_assign_impl = false;
         let mut is_op = false;
-        let mut module = "";
         if let Some(op) = op {
             if op.rust_trait_name() == ucc.as_str() {
                 is_op = true;
-                module = op.rust_mod();
-                lsc = op.rust_trait_method().to_string();
+                lsc = op.slang_trait_method().to_string();
                 do_assign_impl = def.arity == TraitArity::Two && *owner_ty == output_ty;
             }
         }
-        let module = module;
         let is_op = is_op;
         let lsc = lsc;
         let do_assign_impl = do_assign_impl;
@@ -1819,24 +1816,22 @@ impl TryFrom<{other}> for {owner} {{
                 if !is_op && !already_granted_infix.contains(n) {
                     already_granted_infix.insert(n);
                     if let TraitArity::Two = def.arity {
-                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
-                        writeln!(w, "    type Output = {lsc}_partial<{n}>;")?;
-                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                        writeln!(w, "        {lsc}_partial(self)")?;
+                        writeln!(w, "extension {n} {{")?;
+                        writeln!(w, "    func {operator_method}(_rhs: {lsc}) -> {lsc}_partial<{n}> {{")?;
+                        writeln!(w, "        {lsc}_partial(this)")?;
                         writeln!(w, "    }}\n}}")?;
                     }
                     if let TraitArity::One = def.arity {
-                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
-                        write!(w, "    type Output = ")?;
+                        writeln!(w, "extension {n} {{")?;
+                        writeln!(w, "    func {operator_method}(_rhs: {lsc}) -> ")?;
                         self.write_type(w, output_ty)?;
-                        writeln!(w, ";")?;
-                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                        writeln!(w, "        self.{lsc}()")?;
+                        writeln!(w, " {{\n        this.{lsc}()")?;
                         writeln!(w, "    }}\n}}")?;
                         if &output_ty == owner_ty {
-                            writeln!(w, "impl std::ops::{operator_name}Assign<{lsc}> for {n} {{")?;
-                            writeln!(w, "    fn {operator_method}_assign(&mut self, _rhs: {lsc}) {{")?;
-                            writeln!(w, "        *self = self.{lsc}()")?;
+                            writeln!(w, "extension {n} {{")?;
+                            writeln!(w, "    func {operator_method}=(const {lsc}& _rhs) -> {n}& {{")?;
+                            writeln!(w, "        this = this.{lsc}()")?;
+                            writeln!(w, "        return *this;")?;
                             writeln!(w, "    }}\n}}")?;
                         }
                     }
@@ -1845,105 +1840,105 @@ impl TryFrom<{other}> for {owner} {{
         }
 
         // todo alias documentation
-        write!(w, "impl {module}{ucc}")?;
+        write!(w, "extension ")?;
+        self.write_type(w, *owner_ty)?;
+        write!(w, ": {ucc}")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
             write!(w, "<")?;
             self.write_type(w, *var_param)?;
             write!(w, ">")?;
         }
-        write!(w, " for ")?;
-        self.write_type(w, *owner_ty)?;
         writeln!(w, " {{")?;
-        if let TraitTypeConsensus::Disagreement = output_kind.deref() {
-            write!(w, "    type Output = ")?;
-            self.write_type(w, output_ty)?;
-            writeln!(w, ";")?;
-        } else if is_op {
-            write!(w, "    type Output = ")?;
-            self.write_type(w, output_ty)?;
-            writeln!(w, ";")?;
-        }
+        // if let TraitTypeConsensus::Disagreement = output_kind.deref() {
+        //     write!(w, "    type Output = ")?;
+        //     self.write_type(w, output_ty)?;
+        //     writeln!(w, ";")?;
+        // } else if is_op {
+        //     write!(w, "    type Output = ")?;
+        //     self.write_type(w, output_ty)?;
+        //     writeln!(w, ";")?;
+        // }
 
-        {
-            let stats = &impls.statistics;
-            let ws = stats.with_simd();
-            let wos = stats.without_simd();
-            let mut qty_types = 0;
-            let mut has_simd = false;
-            if !stats.floats.is_zero() {
-                qty_types += 1;
-            }
-            if !stats.simd2.is_zero() {
-                qty_types += 1;
-                has_simd = true;
-            }
-            if !stats.simd3.is_zero() {
-                qty_types += 1;
-                has_simd = true;
-            }
-            if !stats.simd4.is_zero() {
-                qty_types += 1;
-                has_simd = true;
-            }
-            if !wos.is_zero() {
-                writeln!(w, "// Operative Statistics for this implementation:")?;
-                let space = if qty_types == 1 {
-                    if has_simd {
-                        "    "
-                    } else {
-                        ""
-                    }
-                } else {
-                    "     "
-                };
-                writeln!(w, "//{space}      add/sub      mul      div")?;
-            }
-            if !stats.floats.is_zero() {
-                let f_a = stats.floats.add_sub;
-                let f_m = stats.floats.mul;
-                let f_d = stats.floats.div;
-                let space = if qty_types > 1 { "     " } else { "" };
-                writeln!(w, "//{space} f32  {f_a:>7}  {f_m:>7}  {f_d:>7}")?;
-            }
-            if !stats.simd2.is_zero() {
-                let s2_a = stats.simd2.add_sub;
-                let s2_m = stats.simd2.mul;
-                let s2_d = stats.simd2.div;
-                let space = if qty_types > 1 { " " } else { "" };
-                writeln!(w, "//{space}   simd2  {s2_a:>7}  {s2_m:>7}  {s2_d:>7}")?;
-            }
-            if !stats.simd3.is_zero() {
-                let s3_a = stats.simd3.add_sub;
-                let s3_m = stats.simd3.mul;
-                let s3_d = stats.simd3.div;
-                let space = if qty_types > 1 { " " } else { "" };
-                writeln!(w, "//{space}   simd3  {s3_a:>7}  {s3_m:>7}  {s3_d:>7}")?;
-            }
-            if !stats.simd4.is_zero() {
-                let s4_a = stats.simd4.add_sub;
-                let s4_m = stats.simd4.mul;
-                let s4_d = stats.simd4.div;
-                let space = if qty_types > 1 { " " } else { "" };
-                writeln!(w, "//{space}   simd4  {s4_a:>7}  {s4_m:>7}  {s4_d:>7}")?;
-            }
-            if has_simd {
-                let y_a = ws.add_sub;
-                let y_m = ws.mul;
-                let y_d = ws.div;
-                let n_a = wos.add_sub;
-                let n_m = wos.mul;
-                let n_d = wos.div;
-                if qty_types > 1 {
-                    writeln!(w, "// Totals...")?;
-                    writeln!(w, "// yes simd  {y_a:>7}  {y_m:>7}  {y_d:>7}")?;
-                    writeln!(w, "//  no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
-                } else {
-                    writeln!(w, "// no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
-                }
-            }
-        }
+        // {
+        //     let stats = &impls.statistics;
+        //     let ws = stats.with_simd();
+        //     let wos = stats.without_simd();
+        //     let mut qty_types = 0;
+        //     let mut has_simd = false;
+        //     if !stats.floats.is_zero() {
+        //         qty_types += 1;
+        //     }
+        //     if !stats.simd2.is_zero() {
+        //         qty_types += 1;
+        //         has_simd = true;
+        //     }
+        //     if !stats.simd3.is_zero() {
+        //         qty_types += 1;
+        //         has_simd = true;
+        //     }
+        //     if !stats.simd4.is_zero() {
+        //         qty_types += 1;
+        //         has_simd = true;
+        //     }
+        //     if !wos.is_zero() {
+        //         writeln!(w, "// Operative Statistics for this implementation:")?;
+        //         let space = if qty_types == 1 {
+        //             if has_simd {
+        //                 "    "
+        //             } else {
+        //                 ""
+        //             }
+        //         } else {
+        //             "     "
+        //         };
+        //         writeln!(w, "//{space}      add/sub      mul      div")?;
+        //     }
+        //     if !stats.floats.is_zero() {
+        //         let f_a = stats.floats.add_sub;
+        //         let f_m = stats.floats.mul;
+        //         let f_d = stats.floats.div;
+        //         let space = if qty_types > 1 { "     " } else { "" };
+        //         writeln!(w, "//{space} f32  {f_a:>7}  {f_m:>7}  {f_d:>7}")?;
+        //     }
+        //     if !stats.simd2.is_zero() {
+        //         let s2_a = stats.simd2.add_sub;
+        //         let s2_m = stats.simd2.mul;
+        //         let s2_d = stats.simd2.div;
+        //         let space = if qty_types > 1 { " " } else { "" };
+        //         writeln!(w, "//{space}   simd2  {s2_a:>7}  {s2_m:>7}  {s2_d:>7}")?;
+        //     }
+        //     if !stats.simd3.is_zero() {
+        //         let s3_a = stats.simd3.add_sub;
+        //         let s3_m = stats.simd3.mul;
+        //         let s3_d = stats.simd3.div;
+        //         let space = if qty_types > 1 { " " } else { "" };
+        //         writeln!(w, "//{space}   simd3  {s3_a:>7}  {s3_m:>7}  {s3_d:>7}")?;
+        //     }
+        //     if !stats.simd4.is_zero() {
+        //         let s4_a = stats.simd4.add_sub;
+        //         let s4_m = stats.simd4.mul;
+        //         let s4_d = stats.simd4.div;
+        //         let space = if qty_types > 1 { " " } else { "" };
+        //         writeln!(w, "//{space}   simd4  {s4_a:>7}  {s4_m:>7}  {s4_d:>7}")?;
+        //     }
+        //     if has_simd {
+        //         let y_a = ws.add_sub;
+        //         let y_m = ws.mul;
+        //         let y_d = ws.div;
+        //         let n_a = wos.add_sub;
+        //         let n_m = wos.mul;
+        //         let n_d = wos.div;
+        //         if qty_types > 1 {
+        //             writeln!(w, "// Totals...")?;
+        //             writeln!(w, "// yes simd  {y_a:>7}  {y_m:>7}  {y_d:>7}")?;
+        //             writeln!(w, "//  no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
+        //         } else {
+        //             writeln!(w, "// no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
+        //         }
+        //     }
+        // }
 
-        write!(w, "    fn {lsc}(")?;
+        write!(w, "    func {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => write!(w, "self")?,
@@ -1954,23 +1949,8 @@ impl TryFrom<{other}> for {owner} {{
             _ => panic!("Arity 2 should always have other type"),
         }
         write!(w, ") -> ")?;
-        if is_op {
-            write!(w, "Self::Output")?
-        } else {
-            match output_kind.deref() {
-                TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
-                TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
-                TraitTypeConsensus::AllAgree(mv, _) => self.write_type(w, *mv)?,
-                TraitTypeConsensus::NoVotes => {
-                    // Currently, we have no use for traits that do not return values
-                    bail!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}");
-                }
-            }
-        }
+        self.write_type(w, output_ty)?;
         writeln!(w, " {{")?;
-        if impls.statistics.basis_element_struct_access {
-            writeln!(w, "        use crate::elements::*;")?;
-        }
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
@@ -1984,13 +1964,16 @@ impl TryFrom<{other}> for {owner} {{
                     }
                     let name = var_dec.name.0.to_string();
                     let no = var_dec.name.1;
+                    let expr = expr.read();
+                    let expr = expr.deref();
+                    self.write_type(w, expr.expression_type())?;
                     if no == 0 {
-                        write!(w, "let {name} = ")?;
+                        write!(w, " {name} = ")?;
                     } else {
                         let no = no + 1;
-                        write!(w, "let {name}_{no} = ")?;
+                        write!(w, " {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr.read().deref(), true)?;
+                    self.write_expression(w, expr, true)?;
                     writeln!(w, ";")?;
                 }
             }
@@ -2007,30 +1990,21 @@ impl TryFrom<{other}> for {owner} {{
             return Ok(());
         }
 
-        write!(w, "impl {module}{ucc}Assign")?;
-        if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
-            write!(w, "<")?;
-            self.write_type(w, *var_param)?;
-            write!(w, ">")?;
-        }
-        write!(w, " for ")?;
+        write!(w, "extension ")?;
         self.write_type(w, *owner_ty)?;
         writeln!(w, " {{")?;
-
-        write!(w, "    fn {lsc}_assign(")?;
+        write!(w, "    func {lsc}=(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
-            (TraitArity::One, _) => write!(w, "&mut self")?,
+            (TraitArity::One, _) => {},
             (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "&mut self, other: ")?;
+                write!(w, "const ")?;
                 self.write_type(w, *other_ty)?;
+                write!(w, "& other")?;
             }
             _ => panic!("Arity 2 should always have other type"),
         }
         writeln!(w, ") {{")?;
-        if impls.statistics.basis_element_struct_access {
-            writeln!(w, "        use crate::elements::*;")?;
-        }
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
@@ -2044,13 +2018,16 @@ impl TryFrom<{other}> for {owner} {{
                     }
                     let name = var_dec.name.0.to_string();
                     let no = var_dec.name.1;
+                    let expr = expr.read();
+                    let expr = expr.deref();
+                    self.write_type(w, expr.expression_type())?;
                     if no == 0 {
-                        write!(w, "let {name} = ")?;
+                        write!(w, " {name} = ")?;
                     } else {
                         let no = no + 1;
-                        write!(w, "let {name}_{no} = ")?;
+                        write!(w, " {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr.read().deref(), true)?;
+                    self.write_expression(w, expr, true)?;
                     writeln!(w, ";")?;
                 }
             }
@@ -2058,7 +2035,7 @@ impl TryFrom<{other}> for {owner} {{
         if let Some(c) = &impls.return_comment {
             self.emit_comment(w, false, c.to_string())?;
         }
-        write!(w, "        *self = ")?;
+        write!(w, "        *this = ")?;
         self.write_expression(w, &impls.return_expr, true)?;
         writeln!(w, ";")?;
         writeln!(w, "    }}\n}}")?;

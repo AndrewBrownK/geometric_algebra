@@ -2,15 +2,13 @@ using data::*;
 
 /// Bulk
 /// This characterizes the flat aspect's relationship with the origin.
-pub trait Bulk {
-    type Output;
-    fn bulk(self) -> Self::Output;
+public interface Bulk {
+    associatedtype Output;
+    fn bulk() -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct bulk;
-impl<A: Bulk> std::ops::Div<A> for bulk {
-    type Output = <A as Bulk>::Output;
-    fn div(self, rhs: A) -> Self::Output {
+public struct bulk;
+extension bulk {    associatedtype Output = <A as Bulk>::Output;
+    func operator/(rhs: A) -> Self::Output {
         rhs.bulk()
     }
 }

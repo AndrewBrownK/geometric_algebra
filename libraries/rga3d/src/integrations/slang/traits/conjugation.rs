@@ -2,14 +2,12 @@ using data::*;
 
 /// Conjugation
 /// This composes the reverse and grade involution (automorphism).
-pub trait Conjugation {
-    fn conjugation(self) -> Self;
+public interface Conjugation {
+    fn conjugation() -> Conjugation;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct conjugation;
-impl<A: Conjugation> std::ops::Div<A> for conjugation {
-    type Output = A;
-    fn div(self, rhs: A) -> Self::Output {
+public struct conjugation;
+extension conjugation {    associatedtype Output = A;
+    func operator/(rhs: A) -> Self::Output {
         rhs.conjugation()
     }
 }

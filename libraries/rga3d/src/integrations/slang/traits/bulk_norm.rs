@@ -2,14 +2,12 @@ using data::*;
 
 /// BulkNorm
 /// BulkNorm for flat aspect.
-pub trait BulkNorm {
-    fn bulk_norm(self) -> Scalar;
+public interface BulkNorm {
+    fn bulk_norm() -> Scalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct bulk_norm;
-impl<A: BulkNorm> std::ops::Div<A> for bulk_norm {
-    type Output = Scalar;
-    fn div(self, rhs: A) -> Self::Output {
+public struct bulk_norm;
+extension bulk_norm {    associatedtype Output = Scalar;
+    func operator/(rhs: A) -> Self::Output {
         rhs.bulk_norm()
     }
 }

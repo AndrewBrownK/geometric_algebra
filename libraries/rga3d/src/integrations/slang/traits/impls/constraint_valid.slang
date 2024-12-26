@@ -1,96 +1,102 @@
-impl std::ops::Div<constraint_valid> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension AntiScalar {
+    func div(_rhs: constraint_valid) -> 
+AntiScalar {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for AntiScalar {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension AntiScalar {
+    func div=(const constraint_valid& _rhs) -> AntiScalar& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for AntiScalar {
-    fn constraint_valid(self) -> Self {
+extension AntiScalar: ConstraintValid {
+    func constraint_valid(self) -> AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<constraint_valid> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension Horizon {
+    func div(_rhs: constraint_valid) -> 
+Horizon {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for Horizon {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension Horizon {
+    func div=(const constraint_valid& _rhs) -> Horizon& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for Horizon {
-    fn constraint_valid(self) -> Self {
+extension Horizon: ConstraintValid {
+    func constraint_valid(self) -> Horizon {
         return self;
     }
 }
-impl std::ops::Div<constraint_valid> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension Origin {
+    func div(_rhs: constraint_valid) -> 
+Origin {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for Origin {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension Origin {
+    func div=(const constraint_valid& _rhs) -> Origin& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for Origin {
-    fn constraint_valid(self) -> Self {
+extension Origin: ConstraintValid {
+    func constraint_valid(self) -> Origin {
         return self;
     }
 }
-impl std::ops::Div<constraint_valid> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension Plane {
+    func div(_rhs: constraint_valid) -> 
+Plane {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for Plane {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension Plane {
+    func div=(const constraint_valid& _rhs) -> Plane& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for Plane {
-    fn constraint_valid(self) -> Self {
+extension Plane: ConstraintValid {
+    func constraint_valid(self) -> Plane {
         return self;
     }
 }
-impl std::ops::Div<constraint_valid> for Point {
-    type Output = Point;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension Point {
+    func div(_rhs: constraint_valid) -> 
+Point {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for Point {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension Point {
+    func div=(const constraint_valid& _rhs) -> Point& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for Point {
-    fn constraint_valid(self) -> Self {
+extension Point: ConstraintValid {
+    func constraint_valid(self) -> Point {
         return self;
     }
 }
-impl std::ops::Div<constraint_valid> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: constraint_valid) -> Self::Output {
-        self.constraint_valid()
+extension Scalar {
+    func div(_rhs: constraint_valid) -> 
+Scalar {
+        this.constraint_valid()
     }
 }
-impl std::ops::DivAssign<constraint_valid> for Scalar {
-    fn div_assign(&mut self, _rhs: constraint_valid) {
-        *self = self.constraint_valid()
+extension Scalar {
+    func div=(const constraint_valid& _rhs) -> Scalar& {
+        this = this.constraint_valid()
+        return *this;
     }
 }
-impl ConstraintValid for Scalar {
-    fn constraint_valid(self) -> Self {
+extension Scalar: ConstraintValid {
+    func constraint_valid(self) -> Scalar {
         return self;
     }
 }

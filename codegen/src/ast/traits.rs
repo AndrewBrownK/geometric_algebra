@@ -1314,6 +1314,18 @@ impl UnaryOps {
             UnaryOps::Not => "!",
         }
     }
+    pub fn slang_trait_method(self) -> &'static str {
+        match self {
+            UnaryOps::Neg => "operator-",
+            UnaryOps::Not => "operator!",
+        }
+    }
+    pub fn slang_operator(self) -> &'static str {
+        match self {
+            UnaryOps::Neg => "-",
+            UnaryOps::Not => "!",
+        }
+    }
 }
 
 #[repr(u32)]
@@ -1379,6 +1391,34 @@ impl BinaryOps {
             BinaryOps::BitXor => "^",
         }
     }
+
+    pub fn slang_trait_method(self) -> &'static str {
+        match self {
+            BinaryOps::Add => "operator+",
+            BinaryOps::Sub => "operator-",
+            BinaryOps::Mul => "operator*",
+            BinaryOps::Div => "operator/",
+            BinaryOps::Shl => panic!("Shl operator not supported in slang"),
+            BinaryOps::Shr => panic!("Shr operator not supported in slang"),
+            BinaryOps::BitAnd => "operator&",
+            BinaryOps::BitOr => "operator|",
+            BinaryOps::BitXor => panic!("bitxor operator not supported in slang"),
+        }
+    }
+
+    pub fn slang_operator(self) -> &'static str {
+        match self {
+            BinaryOps::Add => "+",
+            BinaryOps::Sub => "-",
+            BinaryOps::Mul => "*",
+            BinaryOps::Div => "/",
+            BinaryOps::Shl => panic!("Shl operator not supported in slang"),
+            BinaryOps::Shr => panic!("Shr operator not supported in slang"),
+            BinaryOps::BitAnd => "&",
+            BinaryOps::BitOr => "|",
+            BinaryOps::BitXor => panic!("bitxor operator not supported in slang"),
+        }
+    }
 }
 #[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
@@ -1428,6 +1468,18 @@ impl Ops {
         match self {
             Ops::Unary(op) => op.rust_operator(),
             Ops::Binary(op) => op.rust_operator(),
+        }
+    }
+    pub fn slang_trait_method(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_trait_method(),
+            Ops::Binary(op) => op.slang_trait_method(),
+        }
+    }
+    pub fn slang_operator(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_operator(),
+            Ops::Binary(op) => op.slang_operator(),
         }
     }
 }

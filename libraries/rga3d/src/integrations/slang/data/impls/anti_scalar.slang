@@ -1,409 +1,361 @@
 using traits::GeometricProduct;
-using traits::Wedge;
-impl std::ops::Add<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        1        0        0
-    fn add(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */other[e1234] + self[e1234]);
+extension AntiScalar: Add<AntiScalar> {
+    func operator+(self, other: AntiScalar) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            other[e1234] + self[e1234]
+        );
     }
 }
-impl std::ops::AddAssign<AntiScalar> for AntiScalar {
-    fn add_assign(&mut self, other: AntiScalar) {
-        use crate::elements::*;
-        *self = AntiScalar::from_groups(/* e1234 */other[e1234] + self[e1234]);
+extension AntiScalar {
+    func operator+=(const AntiScalar& other) {
+        *this = AntiScalar::from_groups(
+            /* e1234 */
+            other[e1234] + self[e1234]
+        );
     }
 }
-impl std::ops::Add<DualNum> for AntiScalar {
-    type Output = DualNum;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd2        1        0        0
-// no simd        2        0        0
-    fn add(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]) + other.group0());
+extension AntiScalar: Add<DualNum> {
+    func operator+(self, other: DualNum) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]) + other.group0()
+        );
     }
 }
-impl std::ops::Add<Flector> for AntiScalar {
-    type Output = MultiVector;
-    fn add(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */other.group0(), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */other.group1());
+extension AntiScalar: Add<Flector> {
+    func operator+(self, other: Flector) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            other.group0(), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            other.group1()
+        );
     }
 }
-impl std::ops::Add<Horizon> for AntiScalar {
-    type Output = MultiVector;
-    fn add(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(float3(0.0), other[e321]));
+extension AntiScalar: Add<Horizon> {
+    func operator+(self, other: Horizon) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), other[e321])
+        );
     }
 }
-impl std::ops::Add<Line> for AntiScalar {
-    type Output = Motor;
-    fn add(self, other: Line) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(other.group0(), self[e1234]), /* e23, e31, e12, scalar */float4(other.group1(), 0.0));
+extension AntiScalar: Add<Line> {
+    func operator+(self, other: Line) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(other.group0(), self[e1234]), 
+            /* e23, e31, e12, scalar */
+            float4(other.group1(), 0.0)
+        );
     }
 }
-impl std::ops::Add<Motor> for AntiScalar {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        1        0        0
-// no simd        4        0        0
-    fn add(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(/* e41, e42, e43, e1234 */other.group0() + float4(float3(0.0), self[e1234]), /* e23, e31, e12, scalar */other.group1());
+extension AntiScalar: Add<Motor> {
+    func operator+(self, other: Motor) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            other.group0() + float4(float3(0.0), self[e1234]), 
+            /* e23, e31, e12, scalar */
+            other.group1()
+        );
     }
 }
-impl std::ops::Add<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd2        1        0        0
-// no simd        2        0        0
-    fn add(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]) + other.group0(), /* e1, e2, e3, e4 */other.group1(), /* e41, e42, e43 */other.group2(), /* e23, e31, e12 */other.group3(), /* e423, e431, e412, e321 */other.group4());
+extension AntiScalar: Add<MultiVector> {
+    func operator+(self, other: MultiVector) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]) + other.group0(), 
+            /* e1, e2, e3, e4 */
+            other.group1(), 
+            /* e41, e42, e43 */
+            other.group2(), 
+            /* e23, e31, e12 */
+            other.group3(), 
+            /* e423, e431, e412, e321 */
+            other.group4()
+        );
     }
 }
-impl std::ops::Add<Origin> for AntiScalar {
-    type Output = MultiVector;
-    fn add(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(float3(0.0), other[e4]), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+extension AntiScalar: Add<Origin> {
+    func operator+(self, other: Origin) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(float3(0.0), other[e4]), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(0.0)
+        );
     }
 }
-impl std::ops::Add<Plane> for AntiScalar {
-    type Output = MultiVector;
-    fn add(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */other.group0());
+extension AntiScalar: Add<Plane> {
+    func operator+(self, other: Plane) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            other.group0()
+        );
     }
 }
-impl std::ops::Add<Point> for AntiScalar {
-    type Output = MultiVector;
-    fn add(self, other: Point) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */other.group0(), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+extension AntiScalar: Add<Point> {
+    func operator+(self, other: Point) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            other.group0(), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(0.0)
+        );
     }
 }
-impl std::ops::Add<Scalar> for AntiScalar {
-    type Output = DualNum;
-    fn add(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */float2(other[scalar], self[e1234]));
+extension AntiScalar: Add<Scalar> {
+    func operator+(self, other: Scalar) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            float2(other[scalar], self[e1234])
+        );
     }
 }
-impl std::ops::BitXor<DualNum> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<DualNum> for AntiScalar {
-    fn bitxor_assign(&mut self, other: DualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Motor> for AntiScalar {
-    fn bitxor_assign(&mut self, other: Motor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MultiVector> for AntiScalar {
-    fn bitxor_assign(&mut self, other: MultiVector) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for AntiScalar {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::Mul<DualNum> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn mul(self, other: DualNum) -> Self::Output {
+extension AntiScalar: Mul<DualNum> {
+    func operator*(self, other: DualNum) -> AntiScalar {
         return self.geometric_product(other);
     }
 }
-impl std::ops::MulAssign<DualNum> for AntiScalar {
-    fn mul_assign(&mut self, other: DualNum) {
-        *self = self.geometric_product(other);
+extension AntiScalar {
+    func operator*=(const DualNum& other) {
+        *this = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Flector> for AntiScalar {
-    type Output = Flector;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        2        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        0        4        0
-//  no simd        0       10        0
-    fn mul(self, other: Flector) -> Self::Output {
+extension AntiScalar: Mul<Flector> {
+    func operator*(self, other: Flector) -> Flector {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Horizon> for AntiScalar {
-    type Output = Origin;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        2        0
-    fn mul(self, other: Horizon) -> Self::Output {
+extension AntiScalar: Mul<Horizon> {
+    func operator*(self, other: Horizon) -> Origin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Line> for AntiScalar {
-    type Output = Line;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd3        0        1        0
-// no simd        0        3        0
-    fn mul(self, other: Line) -> Self::Output {
+extension AntiScalar: Mul<Line> {
+    func operator*(self, other: Line) -> Line {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Motor> for AntiScalar {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn mul(self, other: Motor) -> Self::Output {
+extension AntiScalar: Mul<Motor> {
+    func operator*(self, other: Motor) -> Motor {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        3        0
-//    simd2        0        1        0
-//    simd3        0        1        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        0        7        0
-//  no simd        0       16        0
-    fn mul(self, other: MultiVector) -> Self::Output {
+extension AntiScalar: Mul<MultiVector> {
+    func operator*(self, other: MultiVector) -> MultiVector {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Plane> for AntiScalar {
-    type Output = Origin;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        2        0
-    fn mul(self, other: Plane) -> Self::Output {
+extension AntiScalar: Mul<Plane> {
+    func operator*(self, other: Plane) -> Origin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Point> for AntiScalar {
-    type Output = Plane;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn mul(self, other: Point) -> Self::Output {
+extension AntiScalar: Mul<Point> {
+    func operator*(self, other: Point) -> Plane {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn mul(self, other: Scalar) -> Self::Output {
+extension AntiScalar: Mul<Scalar> {
+    func operator*(self, other: Scalar) -> AntiScalar {
         return self.geometric_product(other);
     }
 }
-impl std::ops::MulAssign<Scalar> for AntiScalar {
-    fn mul_assign(&mut self, other: Scalar) {
-        *self = self.geometric_product(other);
+extension AntiScalar {
+    func operator*=(const Scalar& other) {
+        *this = self.geometric_product(other);
     }
 }
-impl std::ops::Neg for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn neg(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[e1234] * -1.0);
+extension AntiScalar: Neg {
+    func neg(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[e1234] * -1.0
+        );
     }
 }
-impl std::ops::Sub<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        1        0        0
-    fn sub(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[e1234] - other[e1234]);
+extension AntiScalar: Sub<AntiScalar> {
+    func operator-(self, other: AntiScalar) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[e1234] - other[e1234]
+        );
     }
 }
-impl std::ops::SubAssign<AntiScalar> for AntiScalar {
-    fn sub_assign(&mut self, other: AntiScalar) {
-        use crate::elements::*;
-        *self = AntiScalar::from_groups(/* e1234 */self[e1234] - other[e1234]);
+extension AntiScalar {
+    func operator-=(const AntiScalar& other) {
+        *this = AntiScalar::from_groups(
+            /* e1234 */
+            self[e1234] - other[e1234]
+        );
     }
 }
-impl std::ops::Sub<DualNum> for AntiScalar {
-    type Output = DualNum;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        1        0        0
-//    simd2        0        1        0
-// Totals...
-// yes simd        1        1        0
-//  no simd        1        2        0
-    fn sub(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */float2(other[scalar], self[e1234] - other[e1234]) * float2(-1.0, 1.0));
+extension AntiScalar: Sub<DualNum> {
+    func operator-(self, other: DualNum) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            float2(other[scalar], self[e1234] - other[e1234]) * float2(-1.0, 1.0)
+        );
     }
 }
-impl std::ops::Sub<Flector> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn sub(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */other.group0() * float4(-1.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */other.group1() * float4(-1.0));
+extension AntiScalar: Sub<Flector> {
+    func operator-(self, other: Flector) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            other.group0() * float4(-1.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            other.group1() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Sub<Horizon> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn sub(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(float3(0.0), other[e321] * -1.0));
+extension AntiScalar: Sub<Horizon> {
+    func operator-(self, other: Horizon) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), other[e321] * -1.0)
+        );
     }
 }
-impl std::ops::Sub<Line> for AntiScalar {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//    simd3        0        1        0
-//    simd4        0        1        0
-// Totals...
-// yes simd        0        2        0
-//  no simd        0        7        0
-    fn sub(self, other: Line) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(other.group0(), self[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */float4((other.group1() * float3(-1.0)), 0.0));
+extension AntiScalar: Sub<Line> {
+    func operator-(self, other: Line) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(other.group0(), self[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            float4((other.group1() * float3(-1.0)), 0.0)
+        );
     }
 }
-impl std::ops::Sub<Motor> for AntiScalar {
-    type Output = Motor;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        1        0        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        1        2        0
-//  no simd        1        8        0
-    fn sub(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(other.group0().xyz, self[e1234] - other[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */other.group1() * float4(-1.0));
+extension AntiScalar: Sub<Motor> {
+    func operator-(self, other: Motor) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(other.group0().xyz, self[e1234] - other[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            other.group1() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Sub<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        1        0        0
-//    simd2        0        1        0
-//    simd3        0        2        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        1        5        0
-//  no simd        1       16        0
-    fn sub(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(other[scalar], self[e1234] - other[e1234]) * float2(-1.0, 1.0), /* e1, e2, e3, e4 */other.group1() * float4(-1.0), /* e41, e42, e43 */other.group2() * float3(-1.0), /* e23, e31, e12 */other.group3() * float3(-1.0), /* e423, e431, e412, e321 */other.group4() * float4(-1.0));
+extension AntiScalar: Sub<MultiVector> {
+    func operator-(self, other: MultiVector) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(other[scalar], self[e1234] - other[e1234]) * float2(-1.0, 1.0), 
+            /* e1, e2, e3, e4 */
+            other.group1() * float4(-1.0), 
+            /* e41, e42, e43 */
+            other.group2() * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group3() * float3(-1.0), 
+            /* e423, e431, e412, e321 */
+            other.group4() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Sub<Origin> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn sub(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(float3(0.0), other[e4] * -1.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+extension AntiScalar: Sub<Origin> {
+    func operator-(self, other: Origin) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(float3(0.0), other[e4] * -1.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(0.0)
+        );
     }
 }
-impl std::ops::Sub<Plane> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn sub(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */float4(0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */other.group0() * float4(-1.0));
+extension AntiScalar: Sub<Plane> {
+    func operator-(self, other: Plane) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            other.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Sub<Point> for AntiScalar {
-    type Output = MultiVector;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn sub(self, other: Point) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(0.0, self[e1234]), /* e1, e2, e3, e4 */other.group0() * float4(-1.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */float3(0.0), /* e423, e431, e412, e321 */float4(0.0));
+extension AntiScalar: Sub<Point> {
+    func operator-(self, other: Point) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(0.0, self[e1234]), 
+            /* e1, e2, e3, e4 */
+            other.group0() * float4(-1.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
+            /* e423, e431, e412, e321 */
+            float4(0.0)
+        );
     }
 }
-impl std::ops::Sub<Scalar> for AntiScalar {
-    type Output = DualNum;
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd2        0        1        0
-// no simd        0        2        0
-    fn sub(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */float2(other[scalar], self[e1234]) * float2(-1.0, 1.0));
+extension AntiScalar: Sub<Scalar> {
+    func operator-(self, other: Scalar) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            float2(other[scalar], self[e1234]) * float2(-1.0, 1.0)
+        );
     }
 }
 
@@ -425,7 +377,10 @@ impl TryFrom<DualNum> for AntiScalar {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiScalar::from_groups(/* e1234 */dual_num[e1234]))
+        return Ok(AntiScalar::from_groups(
+            /* e1234 */
+            dual_num[e1234]
+        ));
     }
 }
 
@@ -489,7 +444,10 @@ impl TryFrom<Motor> for AntiScalar {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiScalar::from_groups(/* e1234 */motor[e1234]))
+        return Ok(AntiScalar::from_groups(
+            /* e1234 */
+            motor[e1234]
+        ));
     }
 }
 
@@ -609,6 +567,9 @@ impl TryFrom<MultiVector> for AntiScalar {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiScalar::from_groups(/* e1234 */multi_vector[e1234]))
+        return Ok(AntiScalar::from_groups(
+            /* e1234 */
+            multi_vector[e1234]
+        ));
     }
 }

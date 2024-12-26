@@ -2,14 +2,12 @@ using data::*;
 
 /// Inverse
 /// The inverse with respect to geometric product. Inverse(x) = x^-1.
-pub trait Inverse {
-    fn inverse(self) -> Self;
+public interface Inverse {
+    fn inverse() -> Inverse;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct inverse;
-impl<A: Inverse> std::ops::Div<A> for inverse {
-    type Output = A;
-    fn div(self, rhs: A) -> Self::Output {
+public struct inverse;
+extension inverse {    associatedtype Output = A;
+    func operator/(rhs: A) -> Self::Output {
         rhs.inverse()
     }
 }

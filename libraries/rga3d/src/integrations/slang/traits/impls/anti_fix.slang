@@ -1,80 +1,80 @@
-impl std::ops::Div<anti_fix> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
-        self.anti_fix()
+extension AntiScalar {
+    func div(_rhs: anti_fix) -> 
+AntiScalar {
+        this.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_fix) {
-        *self = self.anti_fix()
+extension AntiScalar {
+    func div=(const anti_fix& _rhs) -> AntiScalar& {
+        this = this.anti_fix()
+        return *this;
     }
 }
-impl AntiFix for AntiScalar {
-    fn anti_fix(self) -> Self {
-        return AntiScalar::from_groups(/* e1234 */1.0);
+extension AntiScalar: AntiFix {
+    func anti_fix(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            1.0
+        );
     }
 }
-impl std::ops::Div<anti_fix> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
-        self.anti_fix()
+extension Origin {
+    func div(_rhs: anti_fix) -> 
+Origin {
+        this.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Origin {
-    fn div_assign(&mut self, _rhs: anti_fix) {
-        *self = self.anti_fix()
+extension Origin {
+    func div=(const anti_fix& _rhs) -> Origin& {
+        this = this.anti_fix()
+        return *this;
     }
 }
-impl AntiFix for Origin {
-    fn anti_fix(self) -> Self {
-        return Origin::from_groups(/* e4 */1.0);
+extension Origin: AntiFix {
+    func anti_fix(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            1.0
+        );
     }
 }
-impl std::ops::Div<anti_fix> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
-        self.anti_fix()
+extension Plane {
+    func div(_rhs: anti_fix) -> 
+Plane {
+        this.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Plane {
-    fn div_assign(&mut self, _rhs: anti_fix) {
-        *self = self.anti_fix()
+extension Plane {
+    func div=(const anti_fix& _rhs) -> Plane& {
+        this = this.anti_fix()
+        return *this;
     }
 }
-impl AntiFix for Plane {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        2        0        0
-//    simd4        0        1        0
-// Totals...
-// yes simd        2        1        0
-//  no simd        2        4        0
-    fn anti_fix(self) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */float4(powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)) * self.group0());
+extension Plane: AntiFix {
+    func anti_fix(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            float4(powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)) * self.group0()
+        );
     }
 }
-impl std::ops::Div<anti_fix> for Point {
-    type Output = Point;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
-        self.anti_fix()
+extension Point {
+    func div(_rhs: anti_fix) -> 
+Point {
+        this.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Point {
-    fn div_assign(&mut self, _rhs: anti_fix) {
-        *self = self.anti_fix()
+extension Point {
+    func div=(const anti_fix& _rhs) -> Point& {
+        this = this.anti_fix()
+        return *this;
     }
 }
-impl AntiFix for Point {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        1        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        0        3        0
-//  no simd        0        9        0
-    fn anti_fix(self) -> Self {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */float4(powf((self.group0() * float4(-1.0))[3], -0.5) * powf(self[e4], -0.5) * -1.0) * self.group0());
+extension Point: AntiFix {
+    func anti_fix(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(powf((self.group0() * float4(-1.0))[3], -0.5) * powf(self[e4], -0.5) * -1.0) * self.group0()
+        );
     }
 }

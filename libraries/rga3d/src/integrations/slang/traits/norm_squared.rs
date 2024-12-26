@@ -2,14 +2,12 @@ using data::*;
 
 /// NormSquared
 /// Intermediate result to FlatNorm.
-pub trait NormSquared {
-    fn norm_squared(self) -> DualNum;
+public interface NormSquared {
+    fn norm_squared() -> DualNum;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct norm_squared;
-impl<A: NormSquared> std::ops::Div<A> for norm_squared {
-    type Output = DualNum;
-    fn div(self, rhs: A) -> Self::Output {
+public struct norm_squared;
+extension norm_squared {    associatedtype Output = DualNum;
+    func operator/(rhs: A) -> Self::Output {
         rhs.norm_squared()
     }
 }

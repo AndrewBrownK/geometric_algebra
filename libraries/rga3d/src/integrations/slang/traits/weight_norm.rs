@@ -2,14 +2,12 @@ using data::*;
 
 /// WeightNorm
 /// Weight Norm for flat aspect.
-pub trait WeightNorm {
-    fn weight_norm(self) -> AntiScalar;
+public interface WeightNorm {
+    fn weight_norm() -> AntiScalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct weight_norm;
-impl<A: WeightNorm> std::ops::Div<A> for weight_norm {
-    type Output = AntiScalar;
-    fn div(self, rhs: A) -> Self::Output {
+public struct weight_norm;
+extension weight_norm {    associatedtype Output = AntiScalar;
+    func operator/(rhs: A) -> Self::Output {
         rhs.weight_norm()
     }
 }

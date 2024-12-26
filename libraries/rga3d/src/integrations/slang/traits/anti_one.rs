@@ -2,9 +2,8 @@ using data::*;
 
 /// AntiOne
 /// The anti-scalar element set to one, and all other elements set to zero.
-pub trait AntiOne {
-    fn anti_one() -> Self;
+public interface AntiOne {
+    fn anti_one() -> AntiOne;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_one;
+public struct anti_one;
 __include ./impls/anti_one;

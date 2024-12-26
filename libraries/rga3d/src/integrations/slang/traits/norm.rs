@@ -2,14 +2,12 @@ using data::*;
 
 /// Norm
 /// Norm for flat aspect.
-pub trait Norm {
-    fn norm(self) -> DualNum;
+public interface Norm {
+    fn norm() -> DualNum;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct norm;
-impl<A: Norm> std::ops::Div<A> for norm {
-    type Output = DualNum;
-    fn div(self, rhs: A) -> Self::Output {
+public struct norm;
+extension norm {    associatedtype Output = DualNum;
+    func operator/(rhs: A) -> Self::Output {
         rhs.norm()
     }
 }

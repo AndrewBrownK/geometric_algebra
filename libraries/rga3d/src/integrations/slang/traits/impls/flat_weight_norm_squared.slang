@@ -1,142 +1,116 @@
 using traits::AntiDotProduct;
 using traits::FlatWeight;
-impl std::ops::Div<flat_weight_norm_squared> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension AntiScalar {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl std::ops::DivAssign<flat_weight_norm_squared> for AntiScalar {
-    fn div_assign(&mut self, _rhs: flat_weight_norm_squared) {
-        *self = self.flat_weight_norm_squared()
+extension AntiScalar {
+    func div=(const flat_weight_norm_squared& _rhs) -> AntiScalar& {
+        this = this.flat_weight_norm_squared()
+        return *this;
     }
 }
-impl FlatWeightNormSquared for AntiScalar {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension AntiScalar: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+AntiScalar flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for DualNum {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension DualNum {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for DualNum {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension DualNum: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+AntiScalar flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Flector {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Flector {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Flector {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        3        4        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Flector: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Flector flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Line {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Line {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Line {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        2        3        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Line: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Line flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Motor {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Motor {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Motor {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        3        4        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Motor: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Motor flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for MultiVector {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension MultiVector {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for MultiVector {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        7        8        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension MultiVector: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+MultiVector flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Origin {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Origin {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Origin {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Origin: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Origin flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Plane {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Plane {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Plane {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        2        3        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Plane: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Plane flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-impl std::ops::Div<flat_weight_norm_squared> for Point {
-    type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm_squared) -> Self::Output {
-        self.flat_weight_norm_squared()
+extension Point {
+    func div(_rhs: flat_weight_norm_squared) -> 
+AntiScalar {
+        this.flat_weight_norm_squared()
     }
 }
-impl FlatWeightNormSquared for Point {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn flat_weight_norm_squared(self) -> AntiScalar {
-let flat_weight = self.flat_weight();
+extension Point: FlatWeightNormSquared {
+    func flat_weight_norm_squared(self) -> AntiScalar {
+Origin flat_weight = self.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }

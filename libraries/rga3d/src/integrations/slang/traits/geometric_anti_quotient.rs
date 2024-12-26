@@ -2,18 +2,15 @@ using data::*;
 
 /// GeometricAntiQuotient
 /// AntiProduct of A with AntiInverse of B.
-pub trait GeometricAntiQuotient<T> {
-    type Output;
-    fn geometric_anti_quotient(self, other: T) -> Self::Output;
+public interface GeometricAntiQuotient<T> {
+    associatedtype Output;
+    fn geometric_anti_quotient(other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct geometric_anti_quotient;
-#[allow(non_camel_case_types)]
-pub struct geometric_anti_quotient_partial<A>(A);
-impl<A: GeometricAntiQuotient<B>, B> std::ops::Div<B> for geometric_anti_quotient_partial<A> {
-    type Output = <A as GeometricAntiQuotient<B>>::Output;
-    fn div(self, rhs: B) -> Self::Output {
-        self.0.geometric_anti_quotient(rhs)
+public struct geometric_anti_quotient;
+public struct geometric_anti_quotient_partial<A> { a: A }
+extension geometric_anti_quotient_partial<A> {    associatedtype Output = <A as GeometricAntiQuotient<B>>::Output;
+    func operator/(rhs: B) -> Self::Output {
+        this.a.geometric_anti_quotient(rhs)
     }
 }
 __include ./impls/geometric_anti_quotient;

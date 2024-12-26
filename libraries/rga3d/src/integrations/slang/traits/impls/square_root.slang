@@ -1,17 +1,20 @@
-impl std::ops::Div<square_root> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: square_root) -> Self::Output {
-        self.square_root()
+extension Scalar {
+    func div(_rhs: square_root) -> 
+Scalar {
+        this.square_root()
     }
 }
-impl std::ops::DivAssign<square_root> for Scalar {
-    fn div_assign(&mut self, _rhs: square_root) {
-        *self = self.square_root()
+extension Scalar {
+    func div=(const square_root& _rhs) -> Scalar& {
+        this = this.square_root()
+        return *this;
     }
 }
-impl SquareRoot for Scalar {
-    fn square_root(self) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */powf(self[scalar], 0.5));
+extension Scalar: SquareRoot {
+    func square_root(self) -> Scalar {
+        return Scalar::from_groups(
+            /* scalar */
+            powf(self[scalar], 0.5)
+        );
     }
 }

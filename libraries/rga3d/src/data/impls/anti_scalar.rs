@@ -1,5 +1,4 @@
 use crate::traits::GeometricProduct;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -7,7 +6,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 39
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -192,62 +191,6 @@ impl std::ops::Add<Scalar> for AntiScalar {
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([other[scalar], self[e1234]]));
-    }
-}
-impl std::ops::BitXor<DualNum> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<DualNum> for AntiScalar {
-    fn bitxor_assign(&mut self, other: DualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Motor> for AntiScalar {
-    fn bitxor_assign(&mut self, other: Motor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MultiVector> for AntiScalar {
-    fn bitxor_assign(&mut self, other: MultiVector) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for AntiScalar {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
     }
 }
 impl std::ops::Mul<DualNum> for AntiScalar {

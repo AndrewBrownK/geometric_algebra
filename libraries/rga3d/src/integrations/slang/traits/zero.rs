@@ -2,9 +2,8 @@ using data::*;
 
 /// Zero
 /// All elements set to zero.
-pub trait Zero {
-    fn zero() -> Self;
+public interface Zero {
+    fn zero() -> Zero;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct zero;
+public struct zero;
 __include ./impls/zero;

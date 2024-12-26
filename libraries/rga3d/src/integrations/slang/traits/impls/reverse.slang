@@ -1,203 +1,219 @@
-impl std::ops::Div<reverse> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension AntiScalar {
+    func div(_rhs: reverse) -> 
+AntiScalar {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for AntiScalar {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension AntiScalar {
+    func div=(const reverse& _rhs) -> AntiScalar& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for AntiScalar {
-    fn reverse(self) -> Self {
+extension AntiScalar: Reverse {
+    func reverse(self) -> AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<reverse> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension DualNum {
+    func div(_rhs: reverse) -> 
+DualNum {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for DualNum {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension DualNum {
+    func div=(const reverse& _rhs) -> DualNum& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for DualNum {
-    fn reverse(self) -> Self {
+extension DualNum: Reverse {
+    func reverse(self) -> DualNum {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Flector {
+    func div(_rhs: reverse) -> 
+Flector {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Flector {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Flector {
+    func div=(const reverse& _rhs) -> Flector& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Flector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn reverse(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */self.group0(), /* e423, e431, e412, e321 */self.group1() * float4(-1.0));
+extension Flector: Reverse {
+    func reverse(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0(), 
+            /* e423, e431, e412, e321 */
+            self.group1() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<reverse> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Horizon {
+    func div(_rhs: reverse) -> 
+Horizon {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Horizon {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Horizon {
+    func div=(const reverse& _rhs) -> Horizon& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Horizon {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn reverse(self) -> Self {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e321] * -1.0);
+extension Horizon: Reverse {
+    func reverse(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<reverse> for Line {
-    type Output = Line;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Line {
+    func div(_rhs: reverse) -> 
+Line {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Line {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Line {
+    func div=(const reverse& _rhs) -> Line& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Line {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd3        0        2        0
-// no simd        0        6        0
-    fn reverse(self) -> Self {
-        return Line::from_groups(/* e41, e42, e43 */self.group0() * float3(-1.0), /* e23, e31, e12 */self.group1() * float3(-1.0));
+extension Line: Reverse {
+    func reverse(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            self.group0() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group1() * float3(-1.0)
+        );
     }
 }
-impl std::ops::Div<reverse> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Motor {
+    func div(_rhs: reverse) -> 
+Motor {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Motor {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Motor {
+    func div=(const reverse& _rhs) -> Motor& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Motor {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn reverse(self) -> Self {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */self.group0() * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */self.group1() * float4(-1.0, -1.0, -1.0, 1.0));
+extension Motor: Reverse {
+    func reverse(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+        );
     }
 }
-impl std::ops::Div<reverse> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension MultiVector {
+    func div(_rhs: reverse) -> 
+MultiVector {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for MultiVector {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension MultiVector {
+    func div=(const reverse& _rhs) -> MultiVector& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for MultiVector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//    simd3        0        2        0
-//    simd4        0        1        0
-// Totals...
-// yes simd        0        3        0
-//  no simd        0       10        0
-    fn reverse(self) -> Self {
-        return MultiVector::from_groups(/* scalar, e1234 */self.group0(), /* e1, e2, e3, e4 */self.group1(), /* e41, e42, e43 */self.group2() * float3(-1.0), /* e23, e31, e12 */self.group3() * float3(-1.0), /* e423, e431, e412, e321 */self.group4() * float4(-1.0));
+extension MultiVector: Reverse {
+    func reverse(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            self.group0(), 
+            /* e1, e2, e3, e4 */
+            self.group1(), 
+            /* e41, e42, e43 */
+            self.group2() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group3() * float3(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group4() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<reverse> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Origin {
+    func div(_rhs: reverse) -> 
+Origin {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Origin {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Origin {
+    func div=(const reverse& _rhs) -> Origin& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Origin {
-    fn reverse(self) -> Self {
+extension Origin: Reverse {
+    func reverse(self) -> Origin {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Plane {
+    func div(_rhs: reverse) -> 
+Plane {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Plane {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Plane {
+    func div=(const reverse& _rhs) -> Plane& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Plane {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn reverse(self) -> Self {
-        return Plane::from_groups(/* e423, e431, e412, e321 */self.group0() * float4(-1.0));
+extension Plane: Reverse {
+    func reverse(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<reverse> for Point {
-    type Output = Point;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Point {
+    func div(_rhs: reverse) -> 
+Point {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Point {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Point {
+    func div=(const reverse& _rhs) -> Point& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Point {
-    fn reverse(self) -> Self {
+extension Point: Reverse {
+    func reverse(self) -> Point {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: reverse) -> Self::Output {
-        self.reverse()
+extension Scalar {
+    func div(_rhs: reverse) -> 
+Scalar {
+        this.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Scalar {
-    fn div_assign(&mut self, _rhs: reverse) {
-        *self = self.reverse()
+extension Scalar {
+    func div=(const reverse& _rhs) -> Scalar& {
+        this = this.reverse()
+        return *this;
     }
 }
-impl Reverse for Scalar {
-    fn reverse(self) -> Self {
+extension Scalar: Reverse {
+    func reverse(self) -> Scalar {
         return self;
     }
 }

@@ -1,148 +1,176 @@
-impl std::ops::Div<bulk> for DualNum {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension DualNum {
+    func div(_rhs: bulk) -> 
+Scalar {
+        this.bulk()
     }
 }
-impl Bulk for DualNum {
-    type Output = Scalar;
-    fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */self[scalar]);
+extension DualNum: Bulk {
+    func bulk(self) -> Scalar {
+        return Scalar::from_groups(
+            /* scalar */
+            self[scalar]
+        );
     }
 }
-impl std::ops::Div<bulk> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Flector {
+    func div(_rhs: bulk) -> 
+Flector {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Flector {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Flector {
+    func div=(const bulk& _rhs) -> Flector& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Flector {
-    type Output = Flector;
-    fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321]));
+extension Flector: Bulk {
+    func bulk(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), self[e321])
+        );
     }
 }
-impl std::ops::Div<bulk> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Horizon {
+    func div(_rhs: bulk) -> 
+Horizon {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Horizon {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Horizon {
+    func div=(const bulk& _rhs) -> Horizon& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Horizon {
-    type Output = Horizon;
-    fn bulk(self) -> Self::Output {
+extension Horizon: Bulk {
+    func bulk(self) -> Horizon {
         return self;
     }
 }
-impl std::ops::Div<bulk> for Line {
-    type Output = Line;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Line {
+    func div(_rhs: bulk) -> 
+Line {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Line {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Line {
+    func div=(const bulk& _rhs) -> Line& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Line {
-    type Output = Line;
-    fn bulk(self) -> Self::Output {
-        return Line::from_groups(/* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */self.group1());
+extension Line: Bulk {
+    func bulk(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<bulk> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Motor {
+    func div(_rhs: bulk) -> 
+Motor {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Motor {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Motor {
+    func div=(const bulk& _rhs) -> Motor& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Motor {
-    type Output = Motor;
-    fn bulk(self) -> Self::Output {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(0.0), /* e23, e31, e12, scalar */self.group1());
+extension Motor: Bulk {
+    func bulk(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(0.0), 
+            /* e23, e31, e12, scalar */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<bulk> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension MultiVector {
+    func div(_rhs: bulk) -> 
+MultiVector {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for MultiVector {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension MultiVector {
+    func div=(const bulk& _rhs) -> MultiVector& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for MultiVector {
-    type Output = MultiVector;
-    fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(self[scalar], 0.0), /* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */self.group3(), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321]));
+extension MultiVector: Bulk {
+    func bulk(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(self[scalar], 0.0), 
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            self.group3(), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), self[e321])
+        );
     }
 }
-impl std::ops::Div<bulk> for Plane {
-    type Output = Horizon;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Plane {
+    func div(_rhs: bulk) -> 
+Horizon {
+        this.bulk()
     }
 }
-impl Bulk for Plane {
-    type Output = Horizon;
-    fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e321]);
+extension Plane: Bulk {
+    func bulk(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e321]
+        );
     }
 }
-impl std::ops::Div<bulk> for Point {
-    type Output = Point;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Point {
+    func div(_rhs: bulk) -> 
+Point {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Point {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Point {
+    func div=(const bulk& _rhs) -> Point& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Point {
-    type Output = Point;
-    fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0));
+extension Point: Bulk {
+    func bulk(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0)
+        );
     }
 }
-impl std::ops::Div<bulk> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk) -> Self::Output {
-        self.bulk()
+extension Scalar {
+    func div(_rhs: bulk) -> 
+Scalar {
+        this.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Scalar {
-    fn div_assign(&mut self, _rhs: bulk) {
-        *self = self.bulk()
+extension Scalar {
+    func div=(const bulk& _rhs) -> Scalar& {
+        this = this.bulk()
+        return *this;
     }
 }
-impl Bulk for Scalar {
-    type Output = Scalar;
-    fn bulk(self) -> Self::Output {
+extension Scalar: Bulk {
+    func bulk(self) -> Scalar {
         return self;
     }
 }

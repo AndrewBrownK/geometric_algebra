@@ -1,148 +1,176 @@
-impl std::ops::Div<flat_bulk> for DualNum {
-    type Output = Scalar;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension DualNum {
+    func div(_rhs: flat_bulk) -> 
+Scalar {
+        this.flat_bulk()
     }
 }
-impl FlatBulk for DualNum {
-    type Output = Scalar;
-    fn flat_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */self[scalar]);
+extension DualNum: FlatBulk {
+    func flat_bulk(self) -> Scalar {
+        return Scalar::from_groups(
+            /* scalar */
+            self[scalar]
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Flector {
+    func div(_rhs: flat_bulk) -> 
+Flector {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Flector {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Flector {
+    func div=(const flat_bulk& _rhs) -> Flector& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Flector {
-    type Output = Flector;
-    fn flat_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321]));
+extension Flector: FlatBulk {
+    func flat_bulk(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), self[e321])
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Horizon {
+    func div(_rhs: flat_bulk) -> 
+Horizon {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Horizon {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Horizon {
+    func div=(const flat_bulk& _rhs) -> Horizon& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Horizon {
-    type Output = Horizon;
-    fn flat_bulk(self) -> Self::Output {
+extension Horizon: FlatBulk {
+    func flat_bulk(self) -> Horizon {
         return self;
     }
 }
-impl std::ops::Div<flat_bulk> for Line {
-    type Output = Line;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Line {
+    func div(_rhs: flat_bulk) -> 
+Line {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Line {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Line {
+    func div=(const flat_bulk& _rhs) -> Line& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Line {
-    type Output = Line;
-    fn flat_bulk(self) -> Self::Output {
-        return Line::from_groups(/* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */self.group1());
+extension Line: FlatBulk {
+    func flat_bulk(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Motor {
+    func div(_rhs: flat_bulk) -> 
+Motor {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Motor {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Motor {
+    func div=(const flat_bulk& _rhs) -> Motor& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Motor {
-    type Output = Motor;
-    fn flat_bulk(self) -> Self::Output {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(0.0), /* e23, e31, e12, scalar */self.group1());
+extension Motor: FlatBulk {
+    func flat_bulk(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(0.0), 
+            /* e23, e31, e12, scalar */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension MultiVector {
+    func div(_rhs: flat_bulk) -> 
+MultiVector {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for MultiVector {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension MultiVector {
+    func div=(const flat_bulk& _rhs) -> MultiVector& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for MultiVector {
-    type Output = MultiVector;
-    fn flat_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(/* scalar, e1234 */float2(self[scalar], 0.0), /* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0), /* e41, e42, e43 */float3(0.0), /* e23, e31, e12 */self.group3(), /* e423, e431, e412, e321 */float4(float3(0.0), self[e321]));
+extension MultiVector: FlatBulk {
+    func flat_bulk(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(self[scalar], 0.0), 
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            self.group3(), 
+            /* e423, e431, e412, e321 */
+            float4(float3(0.0), self[e321])
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Plane {
-    type Output = Horizon;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Plane {
+    func div(_rhs: flat_bulk) -> 
+Horizon {
+        this.flat_bulk()
     }
 }
-impl FlatBulk for Plane {
-    type Output = Horizon;
-    fn flat_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e321]);
+extension Plane: FlatBulk {
+    func flat_bulk(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e321]
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Point {
-    type Output = Point;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Point {
+    func div(_rhs: flat_bulk) -> 
+Point {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Point {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Point {
+    func div=(const flat_bulk& _rhs) -> Point& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Point {
-    type Output = Point;
-    fn flat_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */float4(self[e1], self[e2], self[e3], 0.0));
+extension Point: FlatBulk {
+    func flat_bulk(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(self[e1], self[e2], self[e3], 0.0)
+        );
     }
 }
-impl std::ops::Div<flat_bulk> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: flat_bulk) -> Self::Output {
-        self.flat_bulk()
+extension Scalar {
+    func div(_rhs: flat_bulk) -> 
+Scalar {
+        this.flat_bulk()
     }
 }
-impl std::ops::DivAssign<flat_bulk> for Scalar {
-    fn div_assign(&mut self, _rhs: flat_bulk) {
-        *self = self.flat_bulk()
+extension Scalar {
+    func div=(const flat_bulk& _rhs) -> Scalar& {
+        this = this.flat_bulk()
+        return *this;
     }
 }
-impl FlatBulk for Scalar {
-    type Output = Scalar;
-    fn flat_bulk(self) -> Self::Output {
+extension Scalar: FlatBulk {
+    func flat_bulk(self) -> Scalar {
         return self;
     }
 }

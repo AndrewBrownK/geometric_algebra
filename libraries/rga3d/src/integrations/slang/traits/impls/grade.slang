@@ -1,35 +1,35 @@
-impl Grade for AntiScalar {
-    fn grade() -> uint {
+extension AntiScalar: Grade {
+    func grade() -> uint {
         return 4;
     }
 }
-impl Grade for Horizon {
-    fn grade() -> uint {
+extension Horizon: Grade {
+    func grade() -> uint {
         return 3;
     }
 }
-impl Grade for Line {
-    fn grade() -> uint {
+extension Line: Grade {
+    func grade() -> uint {
         return 2;
     }
 }
-impl Grade for Origin {
-    fn grade() -> uint {
+extension Origin: Grade {
+    func grade() -> uint {
         return 1;
     }
 }
-impl Grade for Plane {
-    fn grade() -> uint {
+extension Plane: Grade {
+    func grade() -> uint {
         return 3;
     }
 }
-impl Grade for Point {
-    fn grade() -> uint {
+extension Point: Grade {
+    func grade() -> uint {
         return 1;
     }
 }
-impl Grade for Scalar {
-    fn grade() -> uint {
+extension Scalar: Grade {
+    func grade() -> uint {
         return 0;
     }
 }

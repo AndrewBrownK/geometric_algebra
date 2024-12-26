@@ -2,14 +2,12 @@ using data::*;
 
 /// AntiAutoMorphism
 /// Negate every BasisElement with an odd AntiGrade.
-pub trait AntiAutoMorphism {
-    fn anti_auto_morphism(self) -> Self;
+public interface AntiAutoMorphism {
+    fn anti_auto_morphism() -> AntiAutoMorphism;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_auto_morphism;
-impl<A: AntiAutoMorphism> std::ops::Div<A> for anti_auto_morphism {
-    type Output = A;
-    fn div(self, rhs: A) -> Self::Output {
+public struct anti_auto_morphism;
+extension anti_auto_morphism {    associatedtype Output = A;
+    func operator/(rhs: A) -> Self::Output {
         rhs.anti_auto_morphism()
     }
 }

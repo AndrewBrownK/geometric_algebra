@@ -1,203 +1,219 @@
-impl std::ops::Div<conjugation> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension AntiScalar {
+    func div(_rhs: conjugation) -> 
+AntiScalar {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for AntiScalar {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension AntiScalar {
+    func div=(const conjugation& _rhs) -> AntiScalar& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for AntiScalar {
-    fn conjugation(self) -> Self {
+extension AntiScalar: Conjugation {
+    func conjugation(self) -> AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension DualNum {
+    func div(_rhs: conjugation) -> 
+DualNum {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for DualNum {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension DualNum {
+    func div=(const conjugation& _rhs) -> DualNum& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for DualNum {
-    fn conjugation(self) -> Self {
+extension DualNum: Conjugation {
+    func conjugation(self) -> DualNum {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Flector {
+    func div(_rhs: conjugation) -> 
+Flector {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Flector {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Flector {
+    func div=(const conjugation& _rhs) -> Flector& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Flector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn conjugation(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0), /* e423, e431, e412, e321 */self.group1());
+extension Flector: Conjugation {
+    func conjugation(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group1()
+        );
     }
 }
-impl std::ops::Div<conjugation> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Horizon {
+    func div(_rhs: conjugation) -> 
+Horizon {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Horizon {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Horizon {
+    func div=(const conjugation& _rhs) -> Horizon& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Horizon {
-    fn conjugation(self) -> Self {
+extension Horizon: Conjugation {
+    func conjugation(self) -> Horizon {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Line {
-    type Output = Line;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Line {
+    func div(_rhs: conjugation) -> 
+Line {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Line {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Line {
+    func div=(const conjugation& _rhs) -> Line& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Line {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd3        0        2        0
-// no simd        0        6        0
-    fn conjugation(self) -> Self {
-        return Line::from_groups(/* e41, e42, e43 */self.group0() * float3(-1.0), /* e23, e31, e12 */self.group1() * float3(-1.0));
+extension Line: Conjugation {
+    func conjugation(self) -> Line {
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            self.group0() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group1() * float3(-1.0)
+        );
     }
 }
-impl std::ops::Div<conjugation> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Motor {
+    func div(_rhs: conjugation) -> 
+Motor {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Motor {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Motor {
+    func div=(const conjugation& _rhs) -> Motor& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Motor {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn conjugation(self) -> Self {
-        return Motor::from_groups(/* e41, e42, e43, e1234 */self.group0() * float4(-1.0, -1.0, -1.0, 1.0), /* e23, e31, e12, scalar */self.group1() * float4(-1.0, -1.0, -1.0, 1.0));
+extension Motor: Conjugation {
+    func conjugation(self) -> Motor {
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e23, e31, e12, scalar */
+            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+        );
     }
 }
-impl std::ops::Div<conjugation> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension MultiVector {
+    func div(_rhs: conjugation) -> 
+MultiVector {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for MultiVector {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension MultiVector {
+    func div=(const conjugation& _rhs) -> MultiVector& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for MultiVector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//    simd3        0        2        0
-//    simd4        0        1        0
-// Totals...
-// yes simd        0        3        0
-//  no simd        0       10        0
-    fn conjugation(self) -> Self {
-        return MultiVector::from_groups(/* scalar, e1234 */self.group0(), /* e1, e2, e3, e4 */self.group1() * float4(-1.0), /* e41, e42, e43 */self.group2() * float3(-1.0), /* e23, e31, e12 */self.group3() * float3(-1.0), /* e423, e431, e412, e321 */self.group4());
+extension MultiVector: Conjugation {
+    func conjugation(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            self.group0(), 
+            /* e1, e2, e3, e4 */
+            self.group1() * float4(-1.0), 
+            /* e41, e42, e43 */
+            self.group2() * float3(-1.0), 
+            /* e23, e31, e12 */
+            self.group3() * float3(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group4()
+        );
     }
 }
-impl std::ops::Div<conjugation> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Origin {
+    func div(_rhs: conjugation) -> 
+Origin {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Origin {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Origin {
+    func div=(const conjugation& _rhs) -> Origin& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Origin {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn conjugation(self) -> Self {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e4] * -1.0);
+extension Origin: Conjugation {
+    func conjugation(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e4] * -1.0
+        );
     }
 }
-impl std::ops::Div<conjugation> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Plane {
+    func div(_rhs: conjugation) -> 
+Plane {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Plane {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Plane {
+    func div=(const conjugation& _rhs) -> Plane& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Plane {
-    fn conjugation(self) -> Self {
+extension Plane: Conjugation {
+    func conjugation(self) -> Plane {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Point {
-    type Output = Point;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Point {
+    func div(_rhs: conjugation) -> 
+Point {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Point {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Point {
+    func div=(const conjugation& _rhs) -> Point& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Point {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn conjugation(self) -> Self {
-        return Point::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0));
+extension Point: Conjugation {
+    func conjugation(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<conjugation> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: conjugation) -> Self::Output {
-        self.conjugation()
+extension Scalar {
+    func div(_rhs: conjugation) -> 
+Scalar {
+        this.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Scalar {
-    fn div_assign(&mut self, _rhs: conjugation) {
-        *self = self.conjugation()
+extension Scalar {
+    func div=(const conjugation& _rhs) -> Scalar& {
+        this = this.conjugation()
+        return *this;
     }
 }
-impl Conjugation for Scalar {
-    fn conjugation(self) -> Self {
+extension Scalar: Conjugation {
+    func conjugation(self) -> Scalar {
         return self;
     }
 }

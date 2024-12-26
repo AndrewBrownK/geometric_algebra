@@ -1,216 +1,212 @@
 using traits::AntiSquareRoot;
 using traits::FlatWeightNormSquared;
-impl std::ops::Div<unitize> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension AntiScalar {
+    func div(_rhs: unitize) -> 
+AntiScalar {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for AntiScalar {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension AntiScalar {
+    func div=(const unitize& _rhs) -> AntiScalar& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for AntiScalar {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */self[e1234] / (self.flat_weight_norm_squared().anti_square_root()[e1234]));
+extension AntiScalar: Unitize {
+    func unitize(self) -> AntiScalar {
+        return AntiScalar::from_groups(
+            /* e1234 */
+            self[e1234] / (self.flat_weight_norm_squared().anti_square_root()[e1234])
+        );
     }
 }
-impl std::ops::Div<unitize> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension DualNum {
+    func div(_rhs: unitize) -> 
+DualNum {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for DualNum {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension DualNum {
+    func div=(const unitize& _rhs) -> DualNum& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for DualNum {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        1        1
-//    simd2        0        1        0
-// Totals...
-// yes simd        0        2        1
-//  no simd        0        3        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */float2(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0());
+extension DualNum: Unitize {
+    func unitize(self) -> DualNum {
+        return DualNum::from_groups(
+            /* scalar, e1234 */
+            float2(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+        );
     }
 }
-impl std::ops::Div<unitize> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Flector {
+    func div(_rhs: unitize) -> 
+Flector {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Flector {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Flector {
+    func div=(const unitize& _rhs) -> Flector& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Flector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        3        4        1
-//    simd4        0        2        0
-// Totals...
-// yes simd        3        6        1
-//  no simd        3       12        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-let geometric_anti_product = AntiScalar::from_groups(/* e1234 */1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]);
-        return Flector::from_groups(/* e1, e2, e3, e4 */float4(geometric_anti_product[e1234]) * self.group0(), /* e423, e431, e412, e321 */float4(geometric_anti_product[e1234]) * self.group1());
+extension Flector: Unitize {
+    func unitize(self) -> Flector {
+AntiScalar geometric_anti_product = AntiScalar::from_groups(
+            /* e1234 */
+            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+        );
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(geometric_anti_product[e1234]) * self.group0(), 
+            /* e423, e431, e412, e321 */
+            float4(geometric_anti_product[e1234]) * self.group1()
+        );
     }
 }
-impl std::ops::Div<unitize> for Line {
-    type Output = Line;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Line {
+    func div(_rhs: unitize) -> 
+Line {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Line {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Line {
+    func div=(const unitize& _rhs) -> Line& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Line {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        2        3        1
-//    simd3        0        2        0
-// Totals...
-// yes simd        2        5        1
-//  no simd        2        9        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-let geometric_anti_product = AntiScalar::from_groups(/* e1234 */1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]);
-        return Line::from_groups(/* e41, e42, e43 */float3(geometric_anti_product[e1234]) * self.group0(), /* e23, e31, e12 */float3(geometric_anti_product[e1234]) * self.group1());
+extension Line: Unitize {
+    func unitize(self) -> Line {
+AntiScalar geometric_anti_product = AntiScalar::from_groups(
+            /* e1234 */
+            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+        );
+        return Line::from_groups(
+            /* e41, e42, e43 */
+            float3(geometric_anti_product[e1234]) * self.group0(), 
+            /* e23, e31, e12 */
+            float3(geometric_anti_product[e1234]) * self.group1()
+        );
     }
 }
-impl std::ops::Div<unitize> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Motor {
+    func div(_rhs: unitize) -> 
+Motor {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Motor {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Motor {
+    func div=(const unitize& _rhs) -> Motor& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Motor {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        3        4        1
-//    simd4        0        2        0
-// Totals...
-// yes simd        3        6        1
-//  no simd        3       12        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-let geometric_anti_product = AntiScalar::from_groups(/* e1234 */1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]);
-        return Motor::from_groups(/* e41, e42, e43, e1234 */float4(geometric_anti_product[e1234]) * self.group0(), /* e23, e31, e12, scalar */float4(geometric_anti_product[e1234]) * self.group1());
+extension Motor: Unitize {
+    func unitize(self) -> Motor {
+AntiScalar geometric_anti_product = AntiScalar::from_groups(
+            /* e1234 */
+            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+        );
+        return Motor::from_groups(
+            /* e41, e42, e43, e1234 */
+            float4(geometric_anti_product[e1234]) * self.group0(), 
+            /* e23, e31, e12, scalar */
+            float4(geometric_anti_product[e1234]) * self.group1()
+        );
     }
 }
-impl std::ops::Div<unitize> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension MultiVector {
+    func div(_rhs: unitize) -> 
+MultiVector {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for MultiVector {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension MultiVector {
+    func div=(const unitize& _rhs) -> MultiVector& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for MultiVector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        7        8        1
-//    simd2        0        1        0
-//    simd3        0        2        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        7       13        1
-//  no simd        7       24        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-let geometric_anti_product = AntiScalar::from_groups(/* e1234 */1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]);
-        return MultiVector::from_groups(/* scalar, e1234 */float2(geometric_anti_product[e1234]) * self.group0(), /* e1, e2, e3, e4 */float4(geometric_anti_product[e1234]) * self.group1(), /* e41, e42, e43 */float3(geometric_anti_product[e1234]) * self.group2(), /* e23, e31, e12 */float3(geometric_anti_product[e1234]) * self.group3(), /* e423, e431, e412, e321 */float4(geometric_anti_product[e1234]) * self.group4());
+extension MultiVector: Unitize {
+    func unitize(self) -> MultiVector {
+AntiScalar geometric_anti_product = AntiScalar::from_groups(
+            /* e1234 */
+            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+        );
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            float2(geometric_anti_product[e1234]) * self.group0(), 
+            /* e1, e2, e3, e4 */
+            float4(geometric_anti_product[e1234]) * self.group1(), 
+            /* e41, e42, e43 */
+            float3(geometric_anti_product[e1234]) * self.group2(), 
+            /* e23, e31, e12 */
+            float3(geometric_anti_product[e1234]) * self.group3(), 
+            /* e423, e431, e412, e321 */
+            float4(geometric_anti_product[e1234]) * self.group4()
+        );
     }
 }
-impl std::ops::Div<unitize> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Origin {
+    func div(_rhs: unitize) -> 
+Origin {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Origin {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Origin {
+    func div=(const unitize& _rhs) -> Origin& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Origin {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e4] / (self.flat_weight_norm_squared().anti_square_root()[e1234]));
+extension Origin: Unitize {
+    func unitize(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e4] / (self.flat_weight_norm_squared().anti_square_root()[e1234])
+        );
     }
 }
-impl std::ops::Div<unitize> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Plane {
+    func div(_rhs: unitize) -> 
+Plane {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Plane {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Plane {
+    func div=(const unitize& _rhs) -> Plane& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Plane {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        2        3        1
-//    simd4        0        1        0
-// Totals...
-// yes simd        2        4        1
-//  no simd        2        7        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0());
+extension Plane: Unitize {
+    func unitize(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+        );
     }
 }
-impl std::ops::Div<unitize> for Point {
-    type Output = Point;
-    fn div(self, _rhs: unitize) -> Self::Output {
-        self.unitize()
+extension Point {
+    func div(_rhs: unitize) -> 
+Point {
+        this.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Point {
-    fn div_assign(&mut self, _rhs: unitize) {
-        *self = self.unitize()
+extension Point {
+    func div=(const unitize& _rhs) -> Point& {
+        this = this.unitize()
+        return *this;
     }
 }
-impl Unitize for Point {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        1        1
-//    simd4        0        1        0
-// Totals...
-// yes simd        0        2        1
-//  no simd        0        5        1
-    fn unitize(self) -> Self {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0());
+extension Point: Unitize {
+    func unitize(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+        );
     }
 }

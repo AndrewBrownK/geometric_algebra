@@ -1,200 +1,215 @@
-impl std::ops::Div<anti_auto_morphism> for AntiScalar {
-    type Output = AntiScalar;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension AntiScalar {
+    func div(_rhs: anti_auto_morphism) -> 
+AntiScalar {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension AntiScalar {
+    func div=(const anti_auto_morphism& _rhs) -> AntiScalar& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for AntiScalar {
-    fn anti_auto_morphism(self) -> Self {
+extension AntiScalar: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension DualNum {
+    func div(_rhs: anti_auto_morphism) -> 
+DualNum {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for DualNum {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension DualNum {
+    func div=(const anti_auto_morphism& _rhs) -> DualNum& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for DualNum {
-    fn anti_auto_morphism(self) -> Self {
+extension DualNum: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> DualNum {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Flector {
-    type Output = Flector;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Flector {
+    func div(_rhs: anti_auto_morphism) -> 
+Flector {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Flector {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Flector {
+    func div=(const anti_auto_morphism& _rhs) -> Flector& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Flector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn anti_auto_morphism(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0), /* e423, e431, e412, e321 */self.group1() * float4(-1.0));
+extension Flector: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Flector {
+        return Flector::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0), 
+            /* e423, e431, e412, e321 */
+            self.group1() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Horizon {
-    type Output = Horizon;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Horizon {
+    func div(_rhs: anti_auto_morphism) -> 
+Horizon {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Horizon {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Horizon {
+    func div=(const anti_auto_morphism& _rhs) -> Horizon& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Horizon {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e321 */self[e321] * -1.0);
+extension Horizon: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Horizon {
+        return Horizon::from_groups(
+            /* e321 */
+            self[e321] * -1.0
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Line {
-    type Output = Line;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Line {
+    func div(_rhs: anti_auto_morphism) -> 
+Line {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Line {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Line {
+    func div=(const anti_auto_morphism& _rhs) -> Line& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Line {
-    fn anti_auto_morphism(self) -> Self {
+extension Line: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Line {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Motor {
-    type Output = Motor;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Motor {
+    func div(_rhs: anti_auto_morphism) -> 
+Motor {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Motor {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Motor {
+    func div=(const anti_auto_morphism& _rhs) -> Motor& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Motor {
-    fn anti_auto_morphism(self) -> Self {
+extension Motor: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Motor {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for MultiVector {
-    type Output = MultiVector;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension MultiVector {
+    func div(_rhs: anti_auto_morphism) -> 
+MultiVector {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension MultiVector {
+    func div=(const anti_auto_morphism& _rhs) -> MultiVector& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for MultiVector {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        2        0
-// no simd        0        8        0
-    fn anti_auto_morphism(self) -> Self {
-        return MultiVector::from_groups(/* scalar, e1234 */self.group0(), /* e1, e2, e3, e4 */self.group1() * float4(-1.0), /* e41, e42, e43 */self.group2(), /* e23, e31, e12 */self.group3(), /* e423, e431, e412, e321 */self.group4() * float4(-1.0));
+extension MultiVector: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> MultiVector {
+        return MultiVector::from_groups(
+            /* scalar, e1234 */
+            self.group0(), 
+            /* e1, e2, e3, e4 */
+            self.group1() * float4(-1.0), 
+            /* e41, e42, e43 */
+            self.group2(), 
+            /* e23, e31, e12 */
+            self.group3(), 
+            /* e423, e431, e412, e321 */
+            self.group4() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Origin {
-    type Output = Origin;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Origin {
+    func div(_rhs: anti_auto_morphism) -> 
+Origin {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Origin {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Origin {
+    func div=(const anti_auto_morphism& _rhs) -> Origin& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Origin {
-// Operative Statistics for this implementation:
-//      add/sub      mul      div
-// f32        0        1        0
-    fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */self[e4] * -1.0);
+extension Origin: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Origin {
+        return Origin::from_groups(
+            /* e4 */
+            self[e4] * -1.0
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Plane {
-    type Output = Plane;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Plane {
+    func div(_rhs: anti_auto_morphism) -> 
+Plane {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Plane {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Plane {
+    func div=(const anti_auto_morphism& _rhs) -> Plane& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Plane {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn anti_auto_morphism(self) -> Self {
-        return Plane::from_groups(/* e423, e431, e412, e321 */self.group0() * float4(-1.0));
+extension Plane: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Plane {
+        return Plane::from_groups(
+            /* e423, e431, e412, e321 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Point {
-    type Output = Point;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Point {
+    func div(_rhs: anti_auto_morphism) -> 
+Point {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Point {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Point {
+    func div=(const anti_auto_morphism& _rhs) -> Point& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Point {
-// Operative Statistics for this implementation:
-//          add/sub      mul      div
-//   simd4        0        1        0
-// no simd        0        4        0
-    fn anti_auto_morphism(self) -> Self {
-        return Point::from_groups(/* e1, e2, e3, e4 */self.group0() * float4(-1.0));
+extension Point: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Point {
+        return Point::from_groups(
+            /* e1, e2, e3, e4 */
+            self.group0() * float4(-1.0)
+        );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
-        self.anti_auto_morphism()
+extension Scalar {
+    func div(_rhs: anti_auto_morphism) -> 
+Scalar {
+        this.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
-        *self = self.anti_auto_morphism()
+extension Scalar {
+    func div=(const anti_auto_morphism& _rhs) -> Scalar& {
+        this = this.anti_auto_morphism()
+        return *this;
     }
 }
-impl AntiAutoMorphism for Scalar {
-    fn anti_auto_morphism(self) -> Self {
+extension Scalar: AntiAutoMorphism {
+    func anti_auto_morphism(self) -> Scalar {
         return self;
     }
 }

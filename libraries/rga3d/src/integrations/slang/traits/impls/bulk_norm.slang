@@ -1,94 +1,57 @@
 using traits::FlatBulkNormSquared;
 using traits::SquareRoot;
-impl std::ops::Div<bulk_norm> for Flector {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk_norm) -> Self::Output {
-        self.bulk_norm()
+extension Flector {
+    func div(_rhs: bulk_norm) -> 
+Scalar {
+        this.bulk_norm()
     }
 }
-impl BulkNorm for Flector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        3        4        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        3        6        0
-//  no simd        3       12        0
-    fn bulk_norm(self) -> Scalar {
+extension Flector: BulkNorm {
+    func bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<bulk_norm> for Line {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk_norm) -> Self::Output {
-        self.bulk_norm()
+extension Line {
+    func div(_rhs: bulk_norm) -> 
+Scalar {
+        this.bulk_norm()
     }
 }
-impl BulkNorm for Line {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        0        1        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        0        3        0
-//  no simd        0        9        0
-    fn bulk_norm(self) -> Scalar {
+extension Line: BulkNorm {
+    func bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<bulk_norm> for Motor {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk_norm) -> Self::Output {
-        self.bulk_norm()
+extension Motor {
+    func div(_rhs: bulk_norm) -> 
+Scalar {
+        this.bulk_norm()
     }
 }
-impl BulkNorm for Motor {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        3        5        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        3        7        0
-//  no simd        3       13        0
-    fn bulk_norm(self) -> Scalar {
+extension Motor: BulkNorm {
+    func bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<bulk_norm> for MultiVector {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk_norm) -> Self::Output {
-        self.bulk_norm()
+extension MultiVector {
+    func div(_rhs: bulk_norm) -> 
+Scalar {
+        this.bulk_norm()
     }
 }
-impl BulkNorm for MultiVector {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        7       10        0
-//    simd2        0        1        0
-//    simd3        0        2        0
-//    simd4        0        2        0
-// Totals...
-// yes simd        7       15        0
-//  no simd        7       26        0
-    fn bulk_norm(self) -> Scalar {
+extension MultiVector: BulkNorm {
+    func bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<bulk_norm> for Point {
-    type Output = Scalar;
-    fn div(self, _rhs: bulk_norm) -> Self::Output {
-        self.bulk_norm()
+extension Point {
+    func div(_rhs: bulk_norm) -> 
+Scalar {
+        this.bulk_norm()
     }
 }
-impl BulkNorm for Point {
-// Operative Statistics for this implementation:
-//           add/sub      mul      div
-//      f32        2        3        0
-//    simd3        0        2        0
-// Totals...
-// yes simd        2        5        0
-//  no simd        2        9        0
-    fn bulk_norm(self) -> Scalar {
+extension Point: BulkNorm {
+    func bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
