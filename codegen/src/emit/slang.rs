@@ -1539,7 +1539,7 @@ impl Slang {
             bail!("Other of TryInto (Owner of TryFrom) impl is not a MultiVector")
         };
         let destination_elements: BTreeSet<_> = owner.elements().into_iter().collect();
-        let misfit_elements: Vec<_> = other.elements().into_iter().enumerate().filter(|(_, el)| !destination_elements.contains(el)).collect();
+        let misfit_elements: Vec<_> = other.elements().into_iter().filter(|el| !destination_elements.contains(el)).collect();
         let other = other.name();
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
@@ -1565,11 +1565,11 @@ extension {owner}: TryFrom<{other}> {{
             expr: None,
         });
         ret.substitute_variable(old_var, new_var);
-        for (i, el) in misfit_elements {
+        for el in misfit_elements {
             write!(
                 w,
                 r#"
-        float disallowed_{el} = {lsc}[{i}];
+        float disallowed_{el} = {lsc}.{el};
         if disallowed_{el} != 0.0 {{
             return none;
         }}"#
