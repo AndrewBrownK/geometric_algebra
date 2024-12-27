@@ -6,9 +6,10 @@ public interface AntiSandwich<T> {
     associatedtype Output;
     func anti_sandwich(other: T) -> Output;
 }
-public struct anti_sandwich {}
-public struct anti_sandwich_partial<A> { a: A }
-extension anti_sandwich_partial<A> for A: AntiSandwich<B> {
+public const static anti_sandwich: AntiSandwichInfix = AntiSandwichInfix {}
+public struct AntiSandwichInfix {}
+public struct AntiSandwichInfixPartial<A> { a: A }
+extension AntiSandwichInfixPartial<A> for A: AntiSandwich<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.anti_sandwich(rhs);
     }

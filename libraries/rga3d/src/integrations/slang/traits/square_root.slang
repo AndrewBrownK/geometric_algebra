@@ -5,8 +5,9 @@ using data::*;
 public interface SquareRoot {
     func square_root() -> Scalar;
 }
-public struct square_root {}
-extension square_root for A: SquareRoot {
+public const static square_root: SquareRootInfix = SquareRootInfix {}
+public struct SquareRootInfix {}
+extension SquareRootInfix for A: SquareRoot {
     func operator/(rhs: A) -> A.Output {
         return rhs.square_root();
     }

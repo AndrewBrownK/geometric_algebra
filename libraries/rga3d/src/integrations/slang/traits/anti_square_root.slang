@@ -5,8 +5,9 @@ using data::*;
 public interface AntiSquareRoot {
     func anti_square_root() -> AntiScalar;
 }
-public struct anti_square_root {}
-extension anti_square_root for A: AntiSquareRoot {
+public const static anti_square_root: AntiSquareRootInfix = AntiSquareRootInfix {}
+public struct AntiSquareRootInfix {}
+extension AntiSquareRootInfix for A: AntiSquareRoot {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_square_root();
     }

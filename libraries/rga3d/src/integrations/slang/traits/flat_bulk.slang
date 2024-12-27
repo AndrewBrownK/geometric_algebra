@@ -6,8 +6,9 @@ public interface FlatBulk {
     associatedtype Output;
     func flat_bulk() -> Output;
 }
-public struct flat_bulk {}
-extension flat_bulk for A: FlatBulk {
+public const static flat_bulk: FlatBulkInfix = FlatBulkInfix {}
+public struct FlatBulkInfix {}
+extension FlatBulkInfix for A: FlatBulk {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_bulk();
     }

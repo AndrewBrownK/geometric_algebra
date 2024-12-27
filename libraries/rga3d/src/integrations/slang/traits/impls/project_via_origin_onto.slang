@@ -1,10 +1,6 @@
-extension AntiScalar {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<AntiScalar> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension AntiScalar: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Motor) -> Output {
 AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * 0.0
@@ -16,9 +12,13 @@ AntiScalar wedge = AntiScalar.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<AntiScalar> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension AntiScalar: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * 0.0
@@ -37,21 +37,21 @@ AntiScalar wedge = AntiScalar.from_groups(
         );
     }
 }
-extension DualNum {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<DualNum> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension DualNum: ProjectViaOriginOnto<DualNum> {
-    func project_via_origin_onto(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func project_via_origin_onto(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<DualNum> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension DualNum: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -73,7 +73,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension DualNum: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.e321, 2) * this.scalar
@@ -81,7 +82,8 @@ extension DualNum: ProjectViaOriginOnto<Horizon> {
     }
 }
 extension DualNum: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -101,7 +103,8 @@ Line wedge = Line.from_groups(
     }
 }
 extension DualNum: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -123,7 +126,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension DualNum: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -163,7 +167,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension DualNum: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Plane) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.e321, 2) * this.scalar
@@ -171,7 +176,8 @@ extension DualNum: ProjectViaOriginOnto<Plane> {
     }
 }
 extension DualNum: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * float4(other.e1, other.e2, other.e3, 0.0)
@@ -183,20 +189,17 @@ Plane wedge = Plane.from_groups(
     }
 }
 extension DualNum: ProjectViaOriginOnto<Scalar> {
-    func project_via_origin_onto(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.scalar, 2) * this.scalar
         );
     }
 }
-extension Flector {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Flector> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Flector: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -216,9 +219,13 @@ Motor wedge = Motor.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Flector> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Flector: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Horizon) -> Output {
 Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321 * -1.0) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -234,7 +241,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Flector: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -252,7 +260,8 @@ Plane wedge = Plane.from_groups(
     }
 }
 extension Flector: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -274,7 +283,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Flector: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -314,7 +324,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Flector: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Plane) -> Output {
 Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321 * -1.0) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -330,7 +341,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Flector: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
@@ -341,13 +353,9 @@ Plane right_dual = Plane.from_groups(
         );
     }
 }
-extension Horizon {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Horizon> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Horizon: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Flector) -> Output {
 AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             float4(float3(0.0), other.e321 * -1.0)[3] * this.e321 * -1.0
@@ -359,9 +367,13 @@ AntiScalar wedge = AntiScalar.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Horizon> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Horizon: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func project_via_origin_onto(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             powi(other.e321, 2) * this.e321
@@ -369,7 +381,8 @@ extension Horizon: ProjectViaOriginOnto<Horizon> {
     }
 }
 extension Horizon: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Motor) -> Output {
 Horizon wedge = Horizon.from_groups(
             /* e321 */
             this.e321 * 0.0
@@ -383,7 +396,8 @@ Horizon wedge = Horizon.from_groups(
     }
 }
 extension Horizon: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -423,20 +437,17 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Horizon: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func project_via_origin_onto(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e321 * other.e321) * other.group0
         );
     }
 }
-extension Line {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Line> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Line: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -454,9 +465,13 @@ Plane wedge = Plane.from_groups(
             float4(other.e321 * wedge.e423 * -1.0, other.e321 * wedge.e431 * -1.0, other.e321 * wedge.e412 * -1.0, (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321)) + (wedge.group0.wwwx * float4(other.group1.xyz, other.e1))
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Line> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Line: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Line {
+    associatedtype Output = Line;
+    func project_via_origin_onto(other: Horizon) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -470,7 +485,8 @@ Origin right_dual = Origin.from_groups(
     }
 }
 extension Line: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Line {
+    associatedtype Output = Line;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -490,7 +506,8 @@ AntiScalar wedge = AntiScalar.from_groups(
     }
 }
 extension Line: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -512,7 +529,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Line: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -552,7 +570,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Line: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func project_via_origin_onto(other: Plane) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -569,21 +588,21 @@ Plane wedge = Plane.from_groups(
         );
     }
 }
-extension Motor {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Motor> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Motor: ProjectViaOriginOnto<DualNum> {
-    func project_via_origin_onto(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func project_via_origin_onto(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Motor> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Motor: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -605,7 +624,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Horizon) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -625,7 +645,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -647,7 +668,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -669,7 +691,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -709,7 +732,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Plane) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -729,7 +753,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * float4(other.e1, other.e2, other.e3, 0.0)
@@ -741,28 +766,29 @@ Plane wedge = Plane.from_groups(
     }
 }
 extension Motor: ProjectViaOriginOnto<Scalar> {
-    func project_via_origin_onto(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.scalar, 2) * this.scalar
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<MultiVector> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension MultiVector: ProjectViaOriginOnto<DualNum> {
-    func project_via_origin_onto(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func project_via_origin_onto(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<MultiVector> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension MultiVector: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -796,7 +822,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Horizon) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -828,7 +855,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -862,7 +890,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -896,7 +925,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -936,7 +966,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Plane) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -968,7 +999,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
@@ -1000,20 +1032,17 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension MultiVector: ProjectViaOriginOnto<Scalar> {
-    func project_via_origin_onto(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.scalar, 2) * this.scalar
         );
     }
 }
-extension Origin {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Origin> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Origin: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1033,9 +1062,13 @@ Motor wedge = Motor.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Origin> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Origin: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1057,7 +1090,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Origin: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -1097,20 +1131,17 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Origin: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e4 * 0.0) * other.group0
         );
     }
 }
-extension Plane {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Plane> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Plane: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1128,9 +1159,13 @@ AntiScalar wedge = AntiScalar.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Plane> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Plane: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func project_via_origin_onto(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             powi(other.e321, 2) * this.e321
@@ -1138,7 +1173,8 @@ extension Plane: ProjectViaOriginOnto<Horizon> {
     }
 }
 extension Plane: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Plane {
+    associatedtype Output = Plane;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1152,7 +1188,8 @@ Motor right_dual = Motor.from_groups(
     }
 }
 extension Plane: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -1192,20 +1229,17 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Plane: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func project_via_origin_onto(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e321 * this.e321) * other.group0
         );
     }
 }
-extension Point {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Point> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Point: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1225,9 +1259,13 @@ Motor wedge = Motor.from_groups(
             float4(wedge.e1234) * other.group1
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Point> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Point: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Horizon) -> Output {
 Origin right_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -1239,7 +1277,8 @@ Origin right_dual = Origin.from_groups(
     }
 }
 extension Point: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -1257,7 +1296,8 @@ Plane wedge = Plane.from_groups(
     }
 }
 extension Point: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1279,7 +1319,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Point: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -1319,7 +1360,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Point: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Plane) -> Output {
 Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e321 * -1.0) * this.group0.xyz * float3(-1.0), 
@@ -1333,7 +1375,8 @@ Line wedge = Line.from_groups(
     }
 }
 extension Point: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Point {
+    associatedtype Output = Point;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
@@ -1344,21 +1387,21 @@ Plane right_dual = Plane.from_groups(
         );
     }
 }
-extension Scalar {
-    func div(_rhs: project_via_origin_onto) -> project_via_origin_onto_partial<Scalar> {
-        project_via_origin_onto_partial(this)
-    }
-}
 extension Scalar: ProjectViaOriginOnto<DualNum> {
-    func project_via_origin_onto(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func project_via_origin_onto(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
     }
+    func operator/(_rhs: ProjectViaOriginOntoInfix) -> project_via_origin_onto_partial<Scalar> {
+        project_via_origin_onto_partial(this)
+    }
 }
 extension Scalar: ProjectViaOriginOnto<Flector> {
-    func project_via_origin_onto(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Flector) -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1380,7 +1423,8 @@ Flector wedge = Flector.from_groups(
     }
 }
 extension Scalar: ProjectViaOriginOnto<Horizon> {
-    func project_via_origin_onto(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.e321, 2) * this.scalar
@@ -1388,7 +1432,8 @@ extension Scalar: ProjectViaOriginOnto<Horizon> {
     }
 }
 extension Scalar: ProjectViaOriginOnto<Line> {
-    func project_via_origin_onto(other: Line) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Line) -> Output {
 Line right_dual = Line.from_groups(
             /* e41, e42, e43 */
             other.group1 * float3(-1.0), 
@@ -1408,7 +1453,8 @@ Line wedge = Line.from_groups(
     }
 }
 extension Scalar: ProjectViaOriginOnto<Motor> {
-    func project_via_origin_onto(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func project_via_origin_onto(other: Motor) -> Output {
 Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1430,7 +1476,8 @@ Motor wedge = Motor.from_groups(
     }
 }
 extension Scalar: ProjectViaOriginOnto<MultiVector> {
-    func project_via_origin_onto(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func project_via_origin_onto(other: MultiVector) -> Output {
 MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.scalar), 
@@ -1470,7 +1517,8 @@ MultiVector wedge = MultiVector.from_groups(
     }
 }
 extension Scalar: ProjectViaOriginOnto<Plane> {
-    func project_via_origin_onto(other: Plane) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Plane) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.e321, 2) * this.scalar
@@ -1478,7 +1526,8 @@ extension Scalar: ProjectViaOriginOnto<Plane> {
     }
 }
 extension Scalar: ProjectViaOriginOnto<Point> {
-    func project_via_origin_onto(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Point) -> Output {
 Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * float4(other.e1, other.e2, other.e3, 0.0)
@@ -1490,7 +1539,8 @@ Plane wedge = Plane.from_groups(
     }
 }
 extension Scalar: ProjectViaOriginOnto<Scalar> {
-    func project_via_origin_onto(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func project_via_origin_onto(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             powi(other.scalar, 2) * this.scalar

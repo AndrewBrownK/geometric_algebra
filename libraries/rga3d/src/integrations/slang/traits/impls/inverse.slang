@@ -1,37 +1,22 @@
-extension DualNum {
-    func div(_rhs: inverse) -> 
-DualNum {
-        this.inverse()
-    }
-}
-extension DualNum {
-    func div=(const inverse& _rhs) -> DualNum& {
-        this = this.inverse()
-        return *this;
-    }
-}
 extension DualNum: Inverse {
-    func inverse() -> DualNum {
+    associatedtype Output = DualNum;
+    func inverse() -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(this.scalar, -2)) * this.group0
         );
     }
-}
-extension Flector {
-    func div(_rhs: inverse) -> 
-Flector {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> DualNum {
+        return this.inverse();
     }
-}
-extension Flector {
-    func div=(const inverse& _rhs) -> Flector& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> DualNum& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Flector: Inverse {
-    func inverse() -> Flector {
+    associatedtype Output = Flector;
+    func inverse() -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -49,41 +34,33 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group1
         );
     }
-}
-extension Horizon {
-    func div(_rhs: inverse) -> 
-Horizon {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Flector {
+        return this.inverse();
     }
-}
-extension Horizon {
-    func div=(const inverse& _rhs) -> Horizon& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Flector& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Horizon: Inverse {
-    func inverse() -> Horizon {
+    associatedtype Output = Horizon;
+    func inverse() -> Output {
         return Horizon.from_groups(
             /* e321 */
             1.0/this.e321 * -1.0
         );
     }
-}
-extension Line {
-    func div(_rhs: inverse) -> 
-Line {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Horizon {
+        return this.inverse();
     }
-}
-extension Line {
-    func div=(const inverse& _rhs) -> Line& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Horizon& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Line: Inverse {
-    func inverse() -> Line {
+    associatedtype Output = Line;
+    func inverse() -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             this.group0 * float3(-1.0), 
@@ -101,21 +78,17 @@ Scalar other = Scalar.from_groups(
             float3(other.scalar) * reverse.group1
         );
     }
-}
-extension Motor {
-    func div(_rhs: inverse) -> 
-Motor {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Line {
+        return this.inverse();
     }
-}
-extension Motor {
-    func div=(const inverse& _rhs) -> Motor& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Line& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Motor: Inverse {
-    func inverse() -> Motor {
+    associatedtype Output = Motor;
+    func inverse() -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -133,21 +106,17 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group1
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: inverse) -> 
-MultiVector {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Motor {
+        return this.inverse();
     }
-}
-extension MultiVector {
-    func div=(const inverse& _rhs) -> MultiVector& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Motor& {
+        this = this.inverse();
         return *this;
     }
 }
 extension MultiVector: Inverse {
-    func inverse() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func inverse() -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -177,64 +146,59 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group4
         );
     }
-}
-extension Plane {
-    func div(_rhs: inverse) -> 
-Plane {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> MultiVector {
+        return this.inverse();
     }
-}
-extension Plane {
-    func div=(const inverse& _rhs) -> Plane& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> MultiVector& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Plane: Inverse {
-    func inverse() -> Plane {
+    associatedtype Output = Plane;
+    func inverse() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(this.e321, -2)) * float4(this.e423 * -1.0, this.e431 * -1.0, this.e412 * -1.0, this.e321 * -1.0)
         );
     }
-}
-extension Point {
-    func div(_rhs: inverse) -> 
-Point {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Plane {
+        return this.inverse();
     }
-}
-extension Point {
-    func div=(const inverse& _rhs) -> Point& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Plane& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Point: Inverse {
-    func inverse() -> Point {
+    associatedtype Output = Point;
+    func inverse() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
         );
     }
-}
-extension Scalar {
-    func div(_rhs: inverse) -> 
-Scalar {
-        this.inverse()
+    func operator/(_rhs: InverseInfix) -> Point {
+        return this.inverse();
     }
-}
-extension Scalar {
-    func div=(const inverse& _rhs) -> Scalar& {
-        this = this.inverse()
+    func operator/=(const InverseInfix& _rhs) -> Point& {
+        this = this.inverse();
         return *this;
     }
 }
 extension Scalar: Inverse {
-    func inverse() -> Scalar {
+    associatedtype Output = Scalar;
+    func inverse() -> Output {
         return Scalar.from_groups(
             /* scalar */
             1.0/this.scalar
         );
+    }
+    func operator/(_rhs: InverseInfix) -> Scalar {
+        return this.inverse();
+    }
+    func operator/=(const InverseInfix& _rhs) -> Scalar& {
+        this = this.inverse();
+        return *this;
     }
 }

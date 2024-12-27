@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<AntiScalar> {
-        anti_wedge_partial(this)
-    }
-}
 extension AntiScalar: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func anti_wedge(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<AntiScalar> {
+        anti_wedge_partial(this)
+    }
 }
 extension AntiScalar: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_wedge(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0
@@ -20,7 +20,8 @@ extension AntiScalar: AntiWedge<DualNum> {
     }
 }
 extension AntiScalar: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -30,7 +31,8 @@ extension AntiScalar: AntiWedge<Flector> {
     }
 }
 extension AntiScalar: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_wedge(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
@@ -38,7 +40,8 @@ extension AntiScalar: AntiWedge<Horizon> {
     }
 }
 extension AntiScalar: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -48,7 +51,8 @@ extension AntiScalar: AntiWedge<Line> {
     }
 }
 extension AntiScalar: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -58,7 +62,8 @@ extension AntiScalar: AntiWedge<Motor> {
     }
 }
 extension AntiScalar: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0, 
@@ -74,7 +79,8 @@ extension AntiScalar: AntiWedge<MultiVector> {
     }
 }
 extension AntiScalar: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e4
@@ -82,7 +88,8 @@ extension AntiScalar: AntiWedge<Origin> {
     }
 }
 extension AntiScalar: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func anti_wedge(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
@@ -90,7 +97,8 @@ extension AntiScalar: AntiWedge<Plane> {
     }
 }
 extension AntiScalar: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -98,28 +106,29 @@ extension AntiScalar: AntiWedge<Point> {
     }
 }
 extension AntiScalar: AntiWedge<Scalar> {
-    func anti_wedge(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension DualNum {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<DualNum> {
-        anti_wedge_partial(this)
-    }
-}
 extension DualNum: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_wedge(other: AntiScalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<DualNum> {
+        anti_wedge_partial(this)
+    }
 }
 extension DualNum: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_wedge(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234)
@@ -127,7 +136,8 @@ extension DualNum: AntiWedge<DualNum> {
     }
 }
 extension DualNum: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -137,7 +147,8 @@ extension DualNum: AntiWedge<Flector> {
     }
 }
 extension DualNum: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_wedge(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
@@ -145,7 +156,8 @@ extension DualNum: AntiWedge<Horizon> {
     }
 }
 extension DualNum: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -155,7 +167,8 @@ extension DualNum: AntiWedge<Line> {
     }
 }
 extension DualNum: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -165,7 +178,8 @@ extension DualNum: AntiWedge<Motor> {
     }
 }
 extension DualNum: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
@@ -181,7 +195,8 @@ extension DualNum: AntiWedge<MultiVector> {
     }
 }
 extension DualNum: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e4
@@ -189,7 +204,8 @@ extension DualNum: AntiWedge<Origin> {
     }
 }
 extension DualNum: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func anti_wedge(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
@@ -197,7 +213,8 @@ extension DualNum: AntiWedge<Plane> {
     }
 }
 extension DualNum: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -205,20 +222,17 @@ extension DualNum: AntiWedge<Point> {
     }
 }
 extension DualNum: AntiWedge<Scalar> {
-    func anti_wedge(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension Flector {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Flector> {
-        anti_wedge_partial(this)
-    }
-}
 extension Flector: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -226,9 +240,13 @@ extension Flector: AntiWedge<AntiScalar> {
             float4(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Flector> {
+        anti_wedge_partial(this)
+    }
 }
 extension Flector: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -238,7 +256,8 @@ extension Flector: AntiWedge<DualNum> {
     }
 }
 extension Flector: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group1.zxy) - (other.group1.zxy * this.group1.yzx)), 0.0), 
@@ -248,7 +267,8 @@ extension Flector: AntiWedge<Flector> {
     }
 }
 extension Flector: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Horizon) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -258,7 +278,8 @@ extension Flector: AntiWedge<Horizon> {
     }
 }
 extension Flector: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) - (this.group1.yzxx * float4(other.group1.zxy, other.e41))
@@ -266,7 +287,8 @@ extension Flector: AntiWedge<Line> {
     }
 }
 extension Flector: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) + (float4(other.e1234) * this.group0) - (this.group1.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -276,7 +298,8 @@ extension Flector: AntiWedge<Motor> {
     }
 }
 extension Flector: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
@@ -292,7 +315,8 @@ extension Flector: AntiWedge<MultiVector> {
     }
 }
 extension Flector: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Origin) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 * other.e4 * -1.0
@@ -300,7 +324,8 @@ extension Flector: AntiWedge<Origin> {
     }
 }
 extension Flector: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((this.group1.zxy * other.group0.yzx) - (this.group1.yzx * other.group0.zxy)), 0.0), 
@@ -310,28 +335,29 @@ extension Flector: AntiWedge<Plane> {
     }
 }
 extension Flector: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Point) -> Output {
         return Scalar.from_groups(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
 }
-extension Horizon {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Horizon> {
-        anti_wedge_partial(this)
-    }
-}
 extension Horizon: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e1234 * this.e321
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Horizon> {
+        anti_wedge_partial(this)
+    }
 }
 extension Horizon: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_wedge(other: DualNum) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e1234 * this.e321
@@ -339,7 +365,8 @@ extension Horizon: AntiWedge<DualNum> {
     }
 }
 extension Horizon: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -349,7 +376,8 @@ extension Horizon: AntiWedge<Flector> {
     }
 }
 extension Horizon: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -357,7 +385,8 @@ extension Horizon: AntiWedge<Line> {
     }
 }
 extension Horizon: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -367,7 +396,8 @@ extension Horizon: AntiWedge<Motor> {
     }
 }
 extension Horizon: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
@@ -383,7 +413,8 @@ extension Horizon: AntiWedge<MultiVector> {
     }
 }
 extension Horizon: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Origin) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 * other.e4 * -1.0
@@ -391,7 +422,8 @@ extension Horizon: AntiWedge<Origin> {
     }
 }
 extension Horizon: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: Plane) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -401,20 +433,17 @@ extension Horizon: AntiWedge<Plane> {
     }
 }
 extension Horizon: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Point) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 * other.e4 * -1.0
         );
     }
 }
-extension Line {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Line> {
-        anti_wedge_partial(this)
-    }
-}
 extension Line: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0, 
@@ -422,9 +451,13 @@ extension Line: AntiWedge<AntiScalar> {
             float3(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Line> {
+        anti_wedge_partial(this)
+    }
 }
 extension Line: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: DualNum) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0, 
@@ -434,7 +467,8 @@ extension Line: AntiWedge<DualNum> {
     }
 }
 extension Line: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Flector) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) - (other.group1.yzxx * float4(this.group1.zxy, this.e41))
@@ -442,7 +476,8 @@ extension Line: AntiWedge<Flector> {
     }
 }
 extension Line: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Horizon) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -450,7 +485,8 @@ extension Line: AntiWedge<Horizon> {
     }
 }
 extension Line: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Line) -> Output {
         return Scalar.from_groups(
             /* scalar */
             -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
@@ -458,7 +494,8 @@ extension Line: AntiWedge<Line> {
     }
 }
 extension Line: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0, 0.0) * float4(other.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -468,7 +505,8 @@ extension Line: AntiWedge<Motor> {
     }
 }
 extension Line: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0), 
@@ -484,20 +522,17 @@ extension Line: AntiWedge<MultiVector> {
     }
 }
 extension Line: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Plane) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41))
         );
     }
 }
-extension Motor {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Motor> {
-        anti_wedge_partial(this)
-    }
-}
 extension Motor: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -505,9 +540,13 @@ extension Motor: AntiWedge<AntiScalar> {
             float4(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Motor> {
+        anti_wedge_partial(this)
+    }
 }
 extension Motor: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -517,7 +556,8 @@ extension Motor: AntiWedge<DualNum> {
     }
 }
 extension Motor: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) + (float4(this.e1234) * other.group0) - (other.group1.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -527,7 +567,8 @@ extension Motor: AntiWedge<Flector> {
     }
 }
 extension Motor: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -537,7 +578,8 @@ extension Motor: AntiWedge<Horizon> {
     }
 }
 extension Motor: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -547,7 +589,8 @@ extension Motor: AntiWedge<Line> {
     }
 }
 extension Motor: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((float3(other.e1234) * this.group0.xyz) + (float3(this.e1234) * other.group0.xyz)), other.e1234 * this.e1234), 
@@ -557,7 +600,8 @@ extension Motor: AntiWedge<Motor> {
     }
 }
 extension Motor: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), this.e1234 * other.e1234), 
@@ -573,7 +617,8 @@ extension Motor: AntiWedge<MultiVector> {
     }
 }
 extension Motor: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e4
@@ -581,7 +626,8 @@ extension Motor: AntiWedge<Origin> {
     }
 }
 extension Motor: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -591,7 +637,8 @@ extension Motor: AntiWedge<Plane> {
     }
 }
 extension Motor: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -599,20 +646,17 @@ extension Motor: AntiWedge<Point> {
     }
 }
 extension Motor: AntiWedge<Scalar> {
-    func anti_wedge(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<MultiVector> {
-        anti_wedge_partial(this)
-    }
-}
 extension MultiVector: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0, 
@@ -626,9 +670,13 @@ extension MultiVector: AntiWedge<AntiScalar> {
             float4(other.e1234) * this.group4
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<MultiVector> {
+        anti_wedge_partial(this)
+    }
 }
 extension MultiVector: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 
@@ -644,7 +692,8 @@ extension MultiVector: AntiWedge<DualNum> {
     }
 }
 extension MultiVector: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
@@ -660,7 +709,8 @@ extension MultiVector: AntiWedge<Flector> {
     }
 }
 extension MultiVector: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -676,7 +726,8 @@ extension MultiVector: AntiWedge<Horizon> {
     }
 }
 extension MultiVector: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0), 
@@ -692,7 +743,8 @@ extension MultiVector: AntiWedge<Line> {
     }
 }
 extension MultiVector: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
@@ -708,7 +760,8 @@ extension MultiVector: AntiWedge<Motor> {
     }
 }
 extension MultiVector: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
@@ -724,7 +777,8 @@ extension MultiVector: AntiWedge<MultiVector> {
     }
 }
 extension MultiVector: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
@@ -740,7 +794,8 @@ extension MultiVector: AntiWedge<Origin> {
     }
 }
 extension MultiVector: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321), 0.0), 
@@ -756,7 +811,8 @@ extension MultiVector: AntiWedge<Plane> {
     }
 }
 extension MultiVector: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
@@ -772,28 +828,29 @@ extension MultiVector: AntiWedge<Point> {
     }
 }
 extension MultiVector: AntiWedge<Scalar> {
-    func anti_wedge(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension Origin {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Origin> {
-        anti_wedge_partial(this)
-    }
-}
 extension Origin: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Origin> {
+        anti_wedge_partial(this)
+    }
 }
 extension Origin: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: DualNum) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
@@ -801,7 +858,8 @@ extension Origin: AntiWedge<DualNum> {
     }
 }
 extension Origin: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Flector) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -809,7 +867,8 @@ extension Origin: AntiWedge<Flector> {
     }
 }
 extension Origin: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -817,7 +876,8 @@ extension Origin: AntiWedge<Horizon> {
     }
 }
 extension Origin: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Origin {
+    associatedtype Output = Origin;
+    func anti_wedge(other: Motor) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
@@ -825,7 +885,8 @@ extension Origin: AntiWedge<Motor> {
     }
 }
 extension Origin: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -841,28 +902,29 @@ extension Origin: AntiWedge<MultiVector> {
     }
 }
 extension Origin: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Plane) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e4 * other.e321
         );
     }
 }
-extension Plane {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Plane> {
-        anti_wedge_partial(this)
-    }
-}
 extension Plane: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Plane {
+    associatedtype Output = Plane;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Plane> {
+        anti_wedge_partial(this)
+    }
 }
 extension Plane: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Plane {
+    associatedtype Output = Plane;
+    func anti_wedge(other: DualNum) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
@@ -870,7 +932,8 @@ extension Plane: AntiWedge<DualNum> {
     }
 }
 extension Plane: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func anti_wedge(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group0.zxy) - (other.group1.zxy * this.group0.yzx)), 0.0), 
@@ -880,7 +943,8 @@ extension Plane: AntiWedge<Flector> {
     }
 }
 extension Plane: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: Horizon) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -890,7 +954,8 @@ extension Plane: AntiWedge<Horizon> {
     }
 }
 extension Plane: AntiWedge<Line> {
-    func anti_wedge(other: Line) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41))
@@ -898,7 +963,8 @@ extension Plane: AntiWedge<Line> {
     }
 }
 extension Plane: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func anti_wedge(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -908,7 +974,8 @@ extension Plane: AntiWedge<Motor> {
     }
 }
 extension Plane: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
@@ -924,7 +991,8 @@ extension Plane: AntiWedge<MultiVector> {
     }
 }
 extension Plane: AntiWedge<Origin> {
-    func anti_wedge(other: Origin) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Origin) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e4 * this.e321 * -1.0
@@ -932,7 +1000,8 @@ extension Plane: AntiWedge<Origin> {
     }
 }
 extension Plane: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func anti_wedge(other: Plane) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             (other.group0.yzx * this.group0.zxy) - (other.group0.zxy * this.group0.yzx), 
@@ -942,28 +1011,29 @@ extension Plane: AntiWedge<Plane> {
     }
 }
 extension Plane: AntiWedge<Point> {
-    func anti_wedge(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Point) -> Output {
         return Scalar.from_groups(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
 }
-extension Point {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Point> {
-        anti_wedge_partial(this)
-    }
-}
 extension Point: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Point> {
+        anti_wedge_partial(this)
+    }
 }
 extension Point: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: DualNum) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
@@ -971,7 +1041,8 @@ extension Point: AntiWedge<DualNum> {
     }
 }
 extension Point: AntiWedge<Flector> {
-    func anti_wedge(other: Flector) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Flector) -> Output {
         return Scalar.from_groups(
             /* scalar */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
@@ -979,7 +1050,8 @@ extension Point: AntiWedge<Flector> {
     }
 }
 extension Point: AntiWedge<Horizon> {
-    func anti_wedge(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -987,7 +1059,8 @@ extension Point: AntiWedge<Horizon> {
     }
 }
 extension Point: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Point {
+    associatedtype Output = Point;
+    func anti_wedge(other: Motor) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
@@ -995,7 +1068,8 @@ extension Point: AntiWedge<Motor> {
     }
 }
 extension Point: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_wedge(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), 0.0), 
@@ -1011,28 +1085,29 @@ extension Point: AntiWedge<MultiVector> {
     }
 }
 extension Point: AntiWedge<Plane> {
-    func anti_wedge(other: Plane) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Plane) -> Output {
         return Scalar.from_groups(
             /* scalar */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
 }
-extension Scalar {
-    func div(_rhs: anti_wedge) -> anti_wedge_partial<Scalar> {
-        anti_wedge_partial(this)
-    }
-}
 extension Scalar: AntiWedge<AntiScalar> {
-    func anti_wedge(other: AntiScalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: AntiScalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
         );
     }
+    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Scalar> {
+        anti_wedge_partial(this)
+    }
 }
 extension Scalar: AntiWedge<DualNum> {
-    func anti_wedge(other: DualNum) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: DualNum) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
@@ -1040,7 +1115,8 @@ extension Scalar: AntiWedge<DualNum> {
     }
 }
 extension Scalar: AntiWedge<Motor> {
-    func anti_wedge(other: Motor) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: Motor) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
@@ -1048,7 +1124,8 @@ extension Scalar: AntiWedge<Motor> {
     }
 }
 extension Scalar: AntiWedge<MultiVector> {
-    func anti_wedge(other: MultiVector) -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_wedge(other: MultiVector) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar

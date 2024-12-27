@@ -5,9 +5,10 @@ using data::*;
 public interface DotProduct<T> {
     func dot_product(other: T) -> Scalar;
 }
-public struct dot_product {}
-public struct dot_product_partial<A> { a: A }
-extension dot_product_partial<A> for A: DotProduct<B> {
+public const static dot_product: DotProductInfix = DotProductInfix {}
+public struct DotProductInfix {}
+public struct DotProductInfixPartial<A> { a: A }
+extension DotProductInfixPartial<A> for A: DotProduct<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.dot_product(rhs);
     }

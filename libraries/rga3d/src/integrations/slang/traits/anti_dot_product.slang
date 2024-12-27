@@ -5,9 +5,10 @@ using data::*;
 public interface AntiDotProduct<T> {
     func anti_dot_product(other: T) -> AntiScalar;
 }
-public struct anti_dot_product {}
-public struct anti_dot_product_partial<A> { a: A }
-extension anti_dot_product_partial<A> for A: AntiDotProduct<B> {
+public const static anti_dot_product: AntiDotProductInfix = AntiDotProductInfix {}
+public struct AntiDotProductInfix {}
+public struct AntiDotProductInfixPartial<A> { a: A }
+extension AntiDotProductInfixPartial<A> for A: AntiDotProduct<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.anti_dot_product(rhs);
     }

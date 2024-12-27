@@ -1,59 +1,40 @@
 using traits::AntiSquareRoot;
 using traits::FlatWeightNormSquared;
-extension AntiScalar {
-    func div(_rhs: unitize) -> 
-AntiScalar {
-        this.unitize()
-    }
-}
-extension AntiScalar {
-    func div=(const unitize& _rhs) -> AntiScalar& {
-        this = this.unitize()
-        return *this;
-    }
-}
 extension AntiScalar: Unitize {
-    func unitize() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func unitize() -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
-}
-extension DualNum {
-    func div(_rhs: unitize) -> 
-DualNum {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> AntiScalar {
+        return this.unitize();
     }
-}
-extension DualNum {
-    func div=(const unitize& _rhs) -> DualNum& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> AntiScalar& {
+        this = this.unitize();
         return *this;
     }
 }
 extension DualNum: Unitize {
-    func unitize() -> DualNum {
+    associatedtype Output = DualNum;
+    func unitize() -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
-}
-extension Flector {
-    func div(_rhs: unitize) -> 
-Flector {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> DualNum {
+        return this.unitize();
     }
-}
-extension Flector {
-    func div=(const unitize& _rhs) -> Flector& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> DualNum& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Flector: Unitize {
-    func unitize() -> Flector {
+    associatedtype Output = Flector;
+    func unitize() -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -65,21 +46,17 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
-}
-extension Line {
-    func div(_rhs: unitize) -> 
-Line {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> Flector {
+        return this.unitize();
     }
-}
-extension Line {
-    func div=(const unitize& _rhs) -> Line& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> Flector& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Line: Unitize {
-    func unitize() -> Line {
+    associatedtype Output = Line;
+    func unitize() -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -91,21 +68,17 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float3(geometric_anti_product.e1234) * this.group1
         );
     }
-}
-extension Motor {
-    func div(_rhs: unitize) -> 
-Motor {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> Line {
+        return this.unitize();
     }
-}
-extension Motor {
-    func div=(const unitize& _rhs) -> Motor& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> Line& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Motor: Unitize {
-    func unitize() -> Motor {
+    associatedtype Output = Motor;
+    func unitize() -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -117,21 +90,17 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: unitize) -> 
-MultiVector {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> Motor {
+        return this.unitize();
     }
-}
-extension MultiVector {
-    func div=(const unitize& _rhs) -> MultiVector& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> Motor& {
+        this = this.unitize();
         return *this;
     }
 }
 extension MultiVector: Unitize {
-    func unitize() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func unitize() -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -149,64 +118,59 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group4
         );
     }
-}
-extension Origin {
-    func div(_rhs: unitize) -> 
-Origin {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> MultiVector {
+        return this.unitize();
     }
-}
-extension Origin {
-    func div=(const unitize& _rhs) -> Origin& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> MultiVector& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Origin: Unitize {
-    func unitize() -> Origin {
+    associatedtype Output = Origin;
+    func unitize() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
-}
-extension Plane {
-    func div(_rhs: unitize) -> 
-Plane {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> Origin {
+        return this.unitize();
     }
-}
-extension Plane {
-    func div=(const unitize& _rhs) -> Plane& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> Origin& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Plane: Unitize {
-    func unitize() -> Plane {
+    associatedtype Output = Plane;
+    func unitize() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
-}
-extension Point {
-    func div(_rhs: unitize) -> 
-Point {
-        this.unitize()
+    func operator/(_rhs: UnitizeInfix) -> Plane {
+        return this.unitize();
     }
-}
-extension Point {
-    func div=(const unitize& _rhs) -> Point& {
-        this = this.unitize()
+    func operator/=(const UnitizeInfix& _rhs) -> Plane& {
+        this = this.unitize();
         return *this;
     }
 }
 extension Point: Unitize {
-    func unitize() -> Point {
+    associatedtype Output = Point;
+    func unitize() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
+    }
+    func operator/(_rhs: UnitizeInfix) -> Point {
+        return this.unitize();
+    }
+    func operator/=(const UnitizeInfix& _rhs) -> Point& {
+        this = this.unitize();
+        return *this;
     }
 }

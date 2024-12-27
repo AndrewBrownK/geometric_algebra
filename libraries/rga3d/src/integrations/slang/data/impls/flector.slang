@@ -1,7 +1,8 @@
 using traits::GeometricProduct;
 using traits::RightDual;
 extension Flector: Add<AntiScalar> {
-    func operator+(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
@@ -17,7 +18,8 @@ extension Flector: Add<AntiScalar> {
     }
 }
 extension Flector: Add<DualNum> {
-    func operator+(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -33,7 +35,8 @@ extension Flector: Add<DualNum> {
     }
 }
 extension Flector: Add<Flector> {
-    func operator+(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 + this.group0, 
@@ -43,6 +46,7 @@ extension Flector: Add<Flector> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator+=(const Flector& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -53,7 +57,8 @@ extension Flector {
     }
 }
 extension Flector: Add<Horizon> {
-    func operator+(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -63,6 +68,7 @@ extension Flector: Add<Horizon> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator+=(const Horizon& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -73,7 +79,8 @@ extension Flector {
     }
 }
 extension Flector: Add<Line> {
-    func operator+(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -89,7 +96,8 @@ extension Flector: Add<Line> {
     }
 }
 extension Flector: Add<Motor> {
-    func operator+(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
@@ -105,7 +113,8 @@ extension Flector: Add<Motor> {
     }
 }
 extension Flector: Add<MultiVector> {
-    func operator+(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -121,7 +130,8 @@ extension Flector: Add<MultiVector> {
     }
 }
 extension Flector: Add<Origin> {
-    func operator+(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4), 
@@ -131,6 +141,7 @@ extension Flector: Add<Origin> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator+=(const Origin& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -141,7 +152,8 @@ extension Flector {
     }
 }
 extension Flector: Add<Plane> {
-    func operator+(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -151,6 +163,7 @@ extension Flector: Add<Plane> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator+=(const Plane& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -161,7 +174,8 @@ extension Flector {
     }
 }
 extension Flector: Add<Point> {
-    func operator+(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + other.group0, 
@@ -171,6 +185,7 @@ extension Flector: Add<Point> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator+=(const Point& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -181,7 +196,8 @@ extension Flector {
     }
 }
 extension Flector: Add<Scalar> {
-    func operator+(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
@@ -243,87 +259,104 @@ impl From<Point> for Flector {
     }
 }
 extension Flector: Mul<AntiScalar> {
-    func operator*(other: AntiScalar) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: AntiScalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator*=(const AntiScalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Flector: Mul<DualNum> {
-    func operator*(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: DualNum) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Flector: Mul<Flector> {
-    func operator*(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Flector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Horizon> {
-    func operator*(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Horizon) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Line> {
-    func operator*(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Line) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator*=(const Line& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Flector: Mul<Motor> {
-    func operator*(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Motor) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator*=(const Motor& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Flector: Mul<MultiVector> {
-    func operator*(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator*(other: MultiVector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Origin> {
-    func operator*(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Origin) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Plane> {
-    func operator*(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Plane) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Point> {
-    func operator*(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Point) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector: Mul<Scalar> {
-    func operator*(other: Scalar) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Scalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Flector: Neg {
-    func neg() -> Flector {
+    associatedtype Output = Flector;
+    func neg() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -333,12 +366,14 @@ extension Flector: Neg {
     }
 }
 extension Flector: Not {
-    func not() -> Flector {
+    associatedtype Output = Flector;
+    func not() -> Output {
         return this.right_dual();
     }
 }
 extension Flector: Sub<AntiScalar> {
-    func operator-(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
@@ -354,7 +389,8 @@ extension Flector: Sub<AntiScalar> {
     }
 }
 extension Flector: Sub<DualNum> {
-    func operator-(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0 * float2(-1.0), 
@@ -370,7 +406,8 @@ extension Flector: Sub<DualNum> {
     }
 }
 extension Flector: Sub<Flector> {
-    func operator-(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
@@ -380,6 +417,7 @@ extension Flector: Sub<Flector> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator-=(const Flector& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -390,7 +428,8 @@ extension Flector {
     }
 }
 extension Flector: Sub<Horizon> {
-    func operator-(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -400,6 +439,7 @@ extension Flector: Sub<Horizon> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator-=(const Horizon& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -410,7 +450,8 @@ extension Flector {
     }
 }
 extension Flector: Sub<Line> {
-    func operator-(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -426,7 +467,8 @@ extension Flector: Sub<Line> {
     }
 }
 extension Flector: Sub<Motor> {
-    func operator-(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
@@ -442,7 +484,8 @@ extension Flector: Sub<Motor> {
     }
 }
 extension Flector: Sub<MultiVector> {
-    func operator-(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0 * float2(-1.0), 
@@ -458,7 +501,8 @@ extension Flector: Sub<MultiVector> {
     }
 }
 extension Flector: Sub<Origin> {
-    func operator-(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4 * -1.0), 
@@ -468,6 +512,7 @@ extension Flector: Sub<Origin> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator-=(const Origin& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -478,7 +523,8 @@ extension Flector {
     }
 }
 extension Flector: Sub<Plane> {
-    func operator-(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -488,6 +534,7 @@ extension Flector: Sub<Plane> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator-=(const Plane& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -498,7 +545,8 @@ extension Flector {
     }
 }
 extension Flector: Sub<Point> {
-    func operator-(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
@@ -508,6 +556,7 @@ extension Flector: Sub<Point> {
     }
 }
 extension Flector {
+    associatedtype Output = Flector;
     func operator-=(const Point& other) {
         *this = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -518,7 +567,8 @@ extension Flector {
     }
 }
 extension Flector: Sub<Scalar> {
-    func operator-(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 

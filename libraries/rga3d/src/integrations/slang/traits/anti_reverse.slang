@@ -5,8 +5,9 @@ using data::*;
 public interface AntiReverse {
     func anti_reverse() -> Output;
 }
-public struct anti_reverse {}
-extension anti_reverse for A: AntiReverse {
+public const static anti_reverse: AntiReverseInfix = AntiReverseInfix {}
+public struct AntiReverseInfix {}
+extension AntiReverseInfix for A: AntiReverse {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_reverse();
     }

@@ -1,48 +1,31 @@
-extension AntiScalar {
-    func div(_rhs: weight) -> 
-AntiScalar {
-        this.weight()
+extension AntiScalar: Weight {
+    associatedtype Output = AntiScalar;
+    func weight() -> Output {
+        return this;
     }
-}
-extension AntiScalar {
-    func div=(const weight& _rhs) -> AntiScalar& {
-        this = this.weight()
+    func operator/(_rhs: WeightInfix) -> AntiScalar {
+        return this.weight();
+    }
+    func operator/=(const WeightInfix& _rhs) -> AntiScalar& {
+        this = this.weight();
         return *this;
     }
 }
-extension AntiScalar: Weight {
-    func weight() -> AntiScalar {
-        return this;
-    }
-}
-extension DualNum {
-    func div(_rhs: weight) -> 
-AntiScalar {
-        this.weight()
-    }
-}
 extension DualNum: Weight {
-    func weight() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func weight() -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234
         );
     }
-}
-extension Flector {
-    func div(_rhs: weight) -> 
-Flector {
-        this.weight()
-    }
-}
-extension Flector {
-    func div=(const weight& _rhs) -> Flector& {
-        this = this.weight()
-        return *this;
+    func operator/(_rhs: WeightInfix) -> AntiScalar {
+        return this.weight();
     }
 }
 extension Flector: Weight {
-    func weight() -> Flector {
+    associatedtype Output = Flector;
+    func weight() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
@@ -50,21 +33,17 @@ extension Flector: Weight {
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-}
-extension Line {
-    func div(_rhs: weight) -> 
-Line {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> Flector {
+        return this.weight();
     }
-}
-extension Line {
-    func div=(const weight& _rhs) -> Line& {
-        this = this.weight()
+    func operator/=(const WeightInfix& _rhs) -> Flector& {
+        this = this.weight();
         return *this;
     }
 }
 extension Line: Weight {
-    func weight() -> Line {
+    associatedtype Output = Line;
+    func weight() -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0, 
@@ -72,21 +51,17 @@ extension Line: Weight {
             float3(0.0)
         );
     }
-}
-extension Motor {
-    func div(_rhs: weight) -> 
-Motor {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> Line {
+        return this.weight();
     }
-}
-extension Motor {
-    func div=(const weight& _rhs) -> Motor& {
-        this = this.weight()
+    func operator/=(const WeightInfix& _rhs) -> Line& {
+        this = this.weight();
         return *this;
     }
 }
 extension Motor: Weight {
-    func weight() -> Motor {
+    associatedtype Output = Motor;
+    func weight() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0, 
@@ -94,21 +69,17 @@ extension Motor: Weight {
             float4(0.0)
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: weight) -> 
-MultiVector {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> Motor {
+        return this.weight();
     }
-}
-extension MultiVector {
-    func div=(const weight& _rhs) -> MultiVector& {
-        this = this.weight()
+    func operator/=(const WeightInfix& _rhs) -> Motor& {
+        this = this.weight();
         return *this;
     }
 }
 extension MultiVector: Weight {
-    func weight() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func weight() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -122,55 +93,52 @@ extension MultiVector: Weight {
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-}
-extension Origin {
-    func div(_rhs: weight) -> 
-Origin {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> MultiVector {
+        return this.weight();
     }
-}
-extension Origin {
-    func div=(const weight& _rhs) -> Origin& {
-        this = this.weight()
+    func operator/=(const WeightInfix& _rhs) -> MultiVector& {
+        this = this.weight();
         return *this;
     }
 }
 extension Origin: Weight {
-    func weight() -> Origin {
+    associatedtype Output = Origin;
+    func weight() -> Output {
         return this;
     }
-}
-extension Plane {
-    func div(_rhs: weight) -> 
-Plane {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> Origin {
+        return this.weight();
     }
-}
-extension Plane {
-    func div=(const weight& _rhs) -> Plane& {
-        this = this.weight()
+    func operator/=(const WeightInfix& _rhs) -> Origin& {
+        this = this.weight();
         return *this;
     }
 }
 extension Plane: Weight {
-    func weight() -> Plane {
+    associatedtype Output = Plane;
+    func weight() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-}
-extension Point {
-    func div(_rhs: weight) -> 
-Origin {
-        this.weight()
+    func operator/(_rhs: WeightInfix) -> Plane {
+        return this.weight();
+    }
+    func operator/=(const WeightInfix& _rhs) -> Plane& {
+        this = this.weight();
+        return *this;
     }
 }
 extension Point: Weight {
-    func weight() -> Origin {
+    associatedtype Output = Origin;
+    func weight() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4
         );
+    }
+    func operator/(_rhs: WeightInfix) -> Origin {
+        return this.weight();
     }
 }

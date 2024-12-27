@@ -5,8 +5,9 @@ using data::*;
 public interface AntiConstraintValid {
     func anti_constraint_valid() -> Output;
 }
-public struct anti_constraint_valid {}
-extension anti_constraint_valid for A: AntiConstraintValid {
+public const static anti_constraint_valid: AntiConstraintValidInfix = AntiConstraintValidInfix {}
+public struct AntiConstraintValidInfix {}
+extension AntiConstraintValidInfix for A: AntiConstraintValid {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_constraint_valid();
     }

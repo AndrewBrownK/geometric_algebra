@@ -6,8 +6,9 @@ public interface AntiSupport {
     associatedtype Output;
     func anti_support() -> Output;
 }
-public struct anti_support {}
-extension anti_support for A: AntiSupport {
+public const static anti_support: AntiSupportInfix = AntiSupportInfix {}
+public struct AntiSupportInfix {}
+extension AntiSupportInfix for A: AntiSupport {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_support();
     }

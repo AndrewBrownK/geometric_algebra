@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<AntiScalar> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension AntiScalar: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (other.e1234)
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<AntiScalar> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension AntiScalar: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 AntiScalar other_2 = AntiScalar.from_groups(
             /* e1234 */
             powi(other.e1234, -2)
@@ -24,7 +24,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -50,7 +51,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -76,7 +78,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -102,7 +105,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -146,7 +150,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_anti_quotient(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 / (other.e4) * -1.0
@@ -154,7 +159,8 @@ extension AntiScalar: GeometricAntiQuotient<Origin> {
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_anti_quotient(other: Plane) -> Output {
 AntiScalar other_2 = AntiScalar.from_groups(
             /* e1234 */
             powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)
@@ -166,7 +172,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension AntiScalar: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point anti_reverse = Point.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0)
@@ -181,21 +188,21 @@ AntiScalar other_2 = AntiScalar.from_groups(
         );
     }
 }
-extension DualNum {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<DualNum> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension DualNum: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0/other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<DualNum> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension DualNum: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -207,7 +214,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -233,7 +241,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -259,7 +268,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -285,7 +295,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -329,7 +340,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -343,7 +355,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -357,7 +370,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension DualNum: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -370,13 +384,9 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Flector {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Flector> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Flector: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/other.e1234
@@ -388,9 +398,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Flector> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Flector: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -404,7 +418,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -430,7 +445,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -456,7 +472,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -482,7 +499,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -526,7 +544,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -540,7 +559,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -554,7 +574,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Flector: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -567,21 +588,21 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Horizon {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Horizon> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Horizon: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 / (other.e1234)
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Horizon> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Horizon: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_quotient(other: DualNum) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 / (other.e1234)
@@ -589,7 +610,8 @@ extension Horizon: GeometricAntiQuotient<DualNum> {
     }
 }
 extension Horizon: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -615,7 +637,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Horizon: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -633,7 +656,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension Horizon: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -659,7 +683,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Horizon: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -703,7 +728,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Horizon: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_quotient(other: Origin) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 / (other.e4)
@@ -711,7 +737,8 @@ extension Horizon: GeometricAntiQuotient<Origin> {
     }
 }
 extension Horizon: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: Plane) -> Output {
 AntiScalar other_2 = AntiScalar.from_groups(
             /* e1234 */
             powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)
@@ -725,20 +752,17 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension Horizon: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_quotient(other: Point) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 / (other.e4)
         );
     }
 }
-extension Line {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Line> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Line: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/other.e1234
@@ -750,9 +774,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float3(geometric_anti_product.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Line> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Line: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -766,7 +794,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -792,7 +821,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -818,7 +848,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -844,7 +875,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -888,7 +920,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -902,7 +935,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -916,7 +950,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Line: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -929,13 +964,9 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Motor {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Motor> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Motor: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/other.e1234
@@ -947,9 +978,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Motor> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Motor: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -963,7 +998,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -989,7 +1025,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1015,7 +1052,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1041,7 +1079,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1085,7 +1124,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -1099,7 +1139,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -1113,7 +1154,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Motor: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -1126,13 +1168,9 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<MultiVector> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension MultiVector: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
 AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/other.e1234
@@ -1150,9 +1188,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group4
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<MultiVector> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension MultiVector: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -1172,7 +1214,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -1204,7 +1247,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1236,7 +1280,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1268,7 +1313,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1312,7 +1358,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -1332,7 +1379,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -1352,7 +1400,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension MultiVector: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -1371,21 +1420,21 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Origin {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Origin> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Origin: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (other.e1234)
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Origin> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Origin: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -1399,7 +1448,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -1425,7 +1475,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1451,7 +1502,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1477,7 +1529,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1521,7 +1574,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_anti_quotient(other: Origin) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 / (other.e4)
@@ -1529,7 +1583,8 @@ extension Origin: GeometricAntiQuotient<Origin> {
     }
 }
 extension Origin: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -1543,7 +1598,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Origin: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -1556,21 +1612,21 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Plane {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Plane> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Plane: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0/other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Plane> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Plane: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -1584,7 +1640,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -1610,7 +1667,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1636,7 +1694,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1662,7 +1721,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1706,7 +1766,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -1720,7 +1781,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -1734,7 +1796,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Plane: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -1747,21 +1810,21 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Point {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Point> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Point: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0/other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Point> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Point: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: DualNum) -> Output {
 DualNum geometric_anti_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.e1234, -2)) * other.group0
@@ -1775,7 +1838,8 @@ DualNum geometric_anti_product = DualNum.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -1801,7 +1865,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1827,7 +1892,8 @@ Line geometric_anti_product = Line.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1853,7 +1919,8 @@ Motor geometric_anti_product = Motor.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1897,7 +1964,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Origin) -> Output {
 Origin geometric_anti_product = Origin.from_groups(
             /* e4 */
             1.0/other.e4 * -1.0
@@ -1911,7 +1979,8 @@ Origin geometric_anti_product = Origin.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Plane) -> Output {
 Plane geometric_anti_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)) * other.group0
@@ -1925,7 +1994,8 @@ Plane geometric_anti_product = Plane.from_groups(
     }
 }
 extension Point: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Point) -> Output {
 Point geometric_anti_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
@@ -1938,21 +2008,21 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
-extension Scalar {
-    func div(_rhs: geometric_anti_quotient) -> geometric_anti_quotient_partial<Scalar> {
-        geometric_anti_quotient_partial(this)
-    }
-}
 extension Scalar: GeometricAntiQuotient<AntiScalar> {
-    func geometric_anti_quotient(other: AntiScalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_quotient(other: AntiScalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.scalar / (other.e1234)
         );
     }
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Scalar> {
+        geometric_anti_quotient_partial(this)
+    }
 }
 extension Scalar: GeometricAntiQuotient<DualNum> {
-    func geometric_anti_quotient(other: DualNum) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_quotient(other: DualNum) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.scalar / (other.e1234)
@@ -1960,7 +2030,8 @@ extension Scalar: GeometricAntiQuotient<DualNum> {
     }
 }
 extension Scalar: GeometricAntiQuotient<Flector> {
-    func geometric_anti_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_quotient(other: Flector) -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -1986,7 +2057,8 @@ Flector geometric_anti_product = Flector.from_groups(
     }
 }
 extension Scalar: GeometricAntiQuotient<Line> {
-    func geometric_anti_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_quotient(other: Line) -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -2006,7 +2078,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension Scalar: GeometricAntiQuotient<Motor> {
-    func geometric_anti_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_quotient(other: Motor) -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -2026,7 +2099,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension Scalar: GeometricAntiQuotient<MultiVector> {
-    func geometric_anti_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_quotient(other: MultiVector) -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -2070,7 +2144,8 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
     }
 }
 extension Scalar: GeometricAntiQuotient<Origin> {
-    func geometric_anti_quotient(other: Origin) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_quotient(other: Origin) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.scalar / (other.e4) * -1.0
@@ -2078,7 +2153,8 @@ extension Scalar: GeometricAntiQuotient<Origin> {
     }
 }
 extension Scalar: GeometricAntiQuotient<Plane> {
-    func geometric_anti_quotient(other: Plane) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_quotient(other: Plane) -> Output {
 AntiScalar other_2 = AntiScalar.from_groups(
             /* e1234 */
             powi(other.e423, 2) + powi(other.e431, 2) + powi(other.e412, 2)
@@ -2090,7 +2166,8 @@ AntiScalar other_2 = AntiScalar.from_groups(
     }
 }
 extension Scalar: GeometricAntiQuotient<Point> {
-    func geometric_anti_quotient(other: Point) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_quotient(other: Point) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.scalar / (other.e4) * -1.0

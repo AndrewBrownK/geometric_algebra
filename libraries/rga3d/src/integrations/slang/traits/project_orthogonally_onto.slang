@@ -6,9 +6,10 @@ public interface ProjectOrthogonallyOnto<T> {
     associatedtype Output;
     func project_orthogonally_onto(other: T) -> Output;
 }
-public struct project_orthogonally_onto {}
-public struct project_orthogonally_onto_partial<A> { a: A }
-extension project_orthogonally_onto_partial<A> for A: ProjectOrthogonallyOnto<B> {
+public const static project_orthogonally_onto: ProjectOrthogonallyOntoInfix = ProjectOrthogonallyOntoInfix {}
+public struct ProjectOrthogonallyOntoInfix {}
+public struct ProjectOrthogonallyOntoInfixPartial<A> { a: A }
+extension ProjectOrthogonallyOntoInfixPartial<A> for A: ProjectOrthogonallyOnto<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.project_orthogonally_onto(rhs);
     }

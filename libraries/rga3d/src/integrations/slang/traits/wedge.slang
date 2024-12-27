@@ -6,9 +6,10 @@ public interface Wedge<T> {
     associatedtype Output;
     func wedge(other: T) -> Output;
 }
-public struct wedge {}
-public struct wedge_partial<A> { a: A }
-extension wedge_partial<A> for A: Wedge<B> {
+public const static wedge: WedgeInfix = WedgeInfix {}
+public struct WedgeInfix {}
+public struct WedgeInfixPartial<A> { a: A }
+extension WedgeInfixPartial<A> for A: Wedge<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.wedge(rhs);
     }

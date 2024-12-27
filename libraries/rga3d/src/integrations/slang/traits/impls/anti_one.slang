@@ -1,5 +1,6 @@
 extension AntiScalar: AntiOne {
-    func anti_one() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func anti_one() -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             1.0
@@ -7,7 +8,8 @@ extension AntiScalar: AntiOne {
     }
 }
 extension DualNum: AntiOne {
-    func anti_one() -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_one() -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(0.0, 1.0)
@@ -15,7 +17,8 @@ extension DualNum: AntiOne {
     }
 }
 extension Motor: AntiOne {
-    func anti_one() -> Motor {
+    associatedtype Output = Motor;
+    func anti_one() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), 1.0), 
@@ -25,7 +28,8 @@ extension Motor: AntiOne {
     }
 }
 extension MultiVector: AntiOne {
-    func anti_one() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_one() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, 1.0), 

@@ -5,8 +5,9 @@ using data::*;
 public interface Unitize {
     func unitize() -> Output;
 }
-public struct unitize {}
-extension unitize for A: Unitize {
+public const static unitize: UnitizeInfix = UnitizeInfix {}
+public struct UnitizeInfix {}
+extension UnitizeInfix for A: Unitize {
     func operator/(rhs: A) -> A.Output {
         return rhs.unitize();
     }

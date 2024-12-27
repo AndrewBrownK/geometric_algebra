@@ -1,102 +1,78 @@
-extension AntiScalar {
-    func div(_rhs: constraint_valid) -> 
-AntiScalar {
-        this.constraint_valid()
-    }
-}
-extension AntiScalar {
-    func div=(const constraint_valid& _rhs) -> AntiScalar& {
-        this = this.constraint_valid()
-        return *this;
-    }
-}
 extension AntiScalar: ConstraintValid {
-    func constraint_valid() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func constraint_valid() -> Output {
         return this;
     }
-}
-extension Horizon {
-    func div(_rhs: constraint_valid) -> 
-Horizon {
-        this.constraint_valid()
+    func operator/(_rhs: ConstraintValidInfix) -> AntiScalar {
+        return this.constraint_valid();
     }
-}
-extension Horizon {
-    func div=(const constraint_valid& _rhs) -> Horizon& {
-        this = this.constraint_valid()
+    func operator/=(const ConstraintValidInfix& _rhs) -> AntiScalar& {
+        this = this.constraint_valid();
         return *this;
     }
 }
 extension Horizon: ConstraintValid {
-    func constraint_valid() -> Horizon {
+    associatedtype Output = Horizon;
+    func constraint_valid() -> Output {
         return this;
     }
-}
-extension Origin {
-    func div(_rhs: constraint_valid) -> 
-Origin {
-        this.constraint_valid()
+    func operator/(_rhs: ConstraintValidInfix) -> Horizon {
+        return this.constraint_valid();
     }
-}
-extension Origin {
-    func div=(const constraint_valid& _rhs) -> Origin& {
-        this = this.constraint_valid()
+    func operator/=(const ConstraintValidInfix& _rhs) -> Horizon& {
+        this = this.constraint_valid();
         return *this;
     }
 }
 extension Origin: ConstraintValid {
-    func constraint_valid() -> Origin {
+    associatedtype Output = Origin;
+    func constraint_valid() -> Output {
         return this;
     }
-}
-extension Plane {
-    func div(_rhs: constraint_valid) -> 
-Plane {
-        this.constraint_valid()
+    func operator/(_rhs: ConstraintValidInfix) -> Origin {
+        return this.constraint_valid();
     }
-}
-extension Plane {
-    func div=(const constraint_valid& _rhs) -> Plane& {
-        this = this.constraint_valid()
+    func operator/=(const ConstraintValidInfix& _rhs) -> Origin& {
+        this = this.constraint_valid();
         return *this;
     }
 }
 extension Plane: ConstraintValid {
-    func constraint_valid() -> Plane {
+    associatedtype Output = Plane;
+    func constraint_valid() -> Output {
         return this;
     }
-}
-extension Point {
-    func div(_rhs: constraint_valid) -> 
-Point {
-        this.constraint_valid()
+    func operator/(_rhs: ConstraintValidInfix) -> Plane {
+        return this.constraint_valid();
     }
-}
-extension Point {
-    func div=(const constraint_valid& _rhs) -> Point& {
-        this = this.constraint_valid()
+    func operator/=(const ConstraintValidInfix& _rhs) -> Plane& {
+        this = this.constraint_valid();
         return *this;
     }
 }
 extension Point: ConstraintValid {
-    func constraint_valid() -> Point {
+    associatedtype Output = Point;
+    func constraint_valid() -> Output {
         return this;
     }
-}
-extension Scalar {
-    func div(_rhs: constraint_valid) -> 
-Scalar {
-        this.constraint_valid()
+    func operator/(_rhs: ConstraintValidInfix) -> Point {
+        return this.constraint_valid();
     }
-}
-extension Scalar {
-    func div=(const constraint_valid& _rhs) -> Scalar& {
-        this = this.constraint_valid()
+    func operator/=(const ConstraintValidInfix& _rhs) -> Point& {
+        this = this.constraint_valid();
         return *this;
     }
 }
 extension Scalar: ConstraintValid {
-    func constraint_valid() -> Scalar {
+    associatedtype Output = Scalar;
+    func constraint_valid() -> Output {
         return this;
+    }
+    func operator/(_rhs: ConstraintValidInfix) -> Scalar {
+        return this.constraint_valid();
+    }
+    func operator/=(const ConstraintValidInfix& _rhs) -> Scalar& {
+        this = this.constraint_valid();
+        return *this;
     }
 }

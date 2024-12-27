@@ -6,9 +6,10 @@ public interface AntiWedge<T> {
     associatedtype Output;
     func anti_wedge(other: T) -> Output;
 }
-public struct anti_wedge {}
-public struct anti_wedge_partial<A> { a: A }
-extension anti_wedge_partial<A> for A: AntiWedge<B> {
+public const static anti_wedge: AntiWedgeInfix = AntiWedgeInfix {}
+public struct AntiWedgeInfix {}
+public struct AntiWedgeInfixPartial<A> { a: A }
+extension AntiWedgeInfixPartial<A> for A: AntiWedge<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.anti_wedge(rhs);
     }

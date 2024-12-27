@@ -5,8 +5,9 @@ using data::*;
 public interface DoubleComplement {
     func double_complement() -> Output;
 }
-public struct double_complement {}
-extension double_complement for A: DoubleComplement {
+public const static double_complement: DoubleComplementInfix = DoubleComplementInfix {}
+public struct DoubleComplementInfix {}
+extension DoubleComplementInfix for A: DoubleComplement {
     func operator/(rhs: A) -> A.Output {
         return rhs.double_complement();
     }

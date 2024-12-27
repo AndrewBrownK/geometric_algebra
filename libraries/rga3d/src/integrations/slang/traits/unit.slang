@@ -5,5 +5,6 @@ using data::*;
 public interface Unit {
     func unit() -> Output;
 }
-public struct unit {}
+public const static unit: UnitInfix = UnitInfix {}
+public struct UnitInfix {}
 __include ./impls/unit;

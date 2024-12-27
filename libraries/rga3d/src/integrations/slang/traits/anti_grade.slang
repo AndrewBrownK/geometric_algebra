@@ -5,5 +5,6 @@ using data::*;
 public interface AntiGrade {
     func anti_grade() -> uint;
 }
-public struct anti_grade {}
+public const static anti_grade: AntiGradeInfix = AntiGradeInfix {}
+public struct AntiGradeInfix {}
 __include ./impls/anti_grade;

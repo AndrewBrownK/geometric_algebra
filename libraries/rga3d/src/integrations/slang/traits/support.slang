@@ -5,8 +5,9 @@ using data::*;
 public interface Support {
     func support() -> Line;
 }
-public struct support {}
-extension support for A: Support {
+public const static support: SupportInfix = SupportInfix {}
+public struct SupportInfix {}
+extension SupportInfix for A: Support {
     func operator/(rhs: A) -> A.Output {
         return rhs.support();
     }

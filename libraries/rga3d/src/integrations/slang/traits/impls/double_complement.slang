@@ -1,51 +1,32 @@
-extension AntiScalar {
-    func div(_rhs: double_complement) -> 
-AntiScalar {
-        this.double_complement()
-    }
-}
-extension AntiScalar {
-    func div=(const double_complement& _rhs) -> AntiScalar& {
-        this = this.double_complement()
-        return *this;
-    }
-}
 extension AntiScalar: DoubleComplement {
-    func double_complement() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func double_complement() -> Output {
         return this;
     }
-}
-extension DualNum {
-    func div(_rhs: double_complement) -> 
-DualNum {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> AntiScalar {
+        return this.double_complement();
     }
-}
-extension DualNum {
-    func div=(const double_complement& _rhs) -> DualNum& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> AntiScalar& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension DualNum: DoubleComplement {
-    func double_complement() -> DualNum {
+    associatedtype Output = DualNum;
+    func double_complement() -> Output {
         return this;
     }
-}
-extension Flector {
-    func div(_rhs: double_complement) -> 
-Flector {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> DualNum {
+        return this.double_complement();
     }
-}
-extension Flector {
-    func div=(const double_complement& _rhs) -> Flector& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> DualNum& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Flector: DoubleComplement {
-    func double_complement() -> Flector {
+    associatedtype Output = Flector;
+    func double_complement() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -53,75 +34,59 @@ extension Flector: DoubleComplement {
             this.group1 * float4(-1.0)
         );
     }
-}
-extension Horizon {
-    func div(_rhs: double_complement) -> 
-Horizon {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Flector {
+        return this.double_complement();
     }
-}
-extension Horizon {
-    func div=(const double_complement& _rhs) -> Horizon& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Flector& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Horizon: DoubleComplement {
-    func double_complement() -> Horizon {
+    associatedtype Output = Horizon;
+    func double_complement() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
         );
     }
-}
-extension Line {
-    func div(_rhs: double_complement) -> 
-Line {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Horizon {
+        return this.double_complement();
     }
-}
-extension Line {
-    func div=(const double_complement& _rhs) -> Line& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Horizon& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Line: DoubleComplement {
-    func double_complement() -> Line {
+    associatedtype Output = Line;
+    func double_complement() -> Output {
         return this;
     }
-}
-extension Motor {
-    func div(_rhs: double_complement) -> 
-Motor {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Line {
+        return this.double_complement();
     }
-}
-extension Motor {
-    func div=(const double_complement& _rhs) -> Motor& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Line& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Motor: DoubleComplement {
-    func double_complement() -> Motor {
+    associatedtype Output = Motor;
+    func double_complement() -> Output {
         return this;
     }
-}
-extension MultiVector {
-    func div(_rhs: double_complement) -> 
-MultiVector {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Motor {
+        return this.double_complement();
     }
-}
-extension MultiVector {
-    func div=(const double_complement& _rhs) -> MultiVector& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Motor& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension MultiVector: DoubleComplement {
-    func double_complement() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func double_complement() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -135,81 +100,72 @@ extension MultiVector: DoubleComplement {
             this.group4 * float4(-1.0)
         );
     }
-}
-extension Origin {
-    func div(_rhs: double_complement) -> 
-Origin {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> MultiVector {
+        return this.double_complement();
     }
-}
-extension Origin {
-    func div=(const double_complement& _rhs) -> Origin& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> MultiVector& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Origin: DoubleComplement {
-    func double_complement() -> Origin {
+    associatedtype Output = Origin;
+    func double_complement() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
         );
     }
-}
-extension Plane {
-    func div(_rhs: double_complement) -> 
-Plane {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Origin {
+        return this.double_complement();
     }
-}
-extension Plane {
-    func div=(const double_complement& _rhs) -> Plane& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Origin& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Plane: DoubleComplement {
-    func double_complement() -> Plane {
+    associatedtype Output = Plane;
+    func double_complement() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Point {
-    func div(_rhs: double_complement) -> 
-Point {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Plane {
+        return this.double_complement();
     }
-}
-extension Point {
-    func div=(const double_complement& _rhs) -> Point& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Plane& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Point: DoubleComplement {
-    func double_complement() -> Point {
+    associatedtype Output = Point;
+    func double_complement() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: double_complement) -> 
-Scalar {
-        this.double_complement()
+    func operator/(_rhs: DoubleComplementInfix) -> Point {
+        return this.double_complement();
     }
-}
-extension Scalar {
-    func div=(const double_complement& _rhs) -> Scalar& {
-        this = this.double_complement()
+    func operator/=(const DoubleComplementInfix& _rhs) -> Point& {
+        this = this.double_complement();
         return *this;
     }
 }
 extension Scalar: DoubleComplement {
-    func double_complement() -> Scalar {
+    associatedtype Output = Scalar;
+    func double_complement() -> Output {
         return this;
+    }
+    func operator/(_rhs: DoubleComplementInfix) -> Scalar {
+        return this.double_complement();
+    }
+    func operator/=(const DoubleComplementInfix& _rhs) -> Scalar& {
+        this = this.double_complement();
+        return *this;
     }
 }

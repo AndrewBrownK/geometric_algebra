@@ -521,7 +521,7 @@ impl Slang {
                 // TODO fancy infix can conflict with variable names
                 match (&self.fancy_infix, self.prefer_fancy_infix) {
                     (Some(infix), true) => {
-                        let op = infix.rust_operator();
+                        let op = infix.slang_operator();
                         write!(w, "(")?;
                         self.write_multi_vec(w, arg)?;
                         write!(w, " {op}{method}")?;
@@ -1370,7 +1370,7 @@ impl Slang {
                 // TODO fancy infix can conflict with variable names
                 match (&self.fancy_infix, self.prefer_fancy_infix) {
                     (Some(infix), true) => {
-                        let op = infix.rust_operator();
+                        let op = infix.slang_operator();
                         write!(w, "(")?;
                         self.write_multi_vec(w, arg)?;
                         write!(w, " {op}{method}")?;
@@ -1394,7 +1394,7 @@ impl Slang {
                 // TODO fancy infix can conflict with variable names
                 match (&self.fancy_infix, self.prefer_fancy_infix) {
                     (Some(infix), true) => {
-                        let op = infix.rust_operator();
+                        let op = infix.slang_operator();
                         write!(w, "(")?;
                         self.write_multi_vec(w, a)?;
                         write!(w, " {op}")?;
@@ -1438,7 +1438,7 @@ impl Slang {
                 // TODO fancy infix can conflict with variable names
                 match (&self.fancy_infix, self.prefer_fancy_infix) {
                     (Some(infix), true) => {
-                        let op = infix.rust_operator();
+                        let op = infix.slang_operator();
                         write!(w, "(")?;
                         self.write_multi_vec(w, a)?;
                         write!(w, " {op}")?;
@@ -1743,13 +1743,15 @@ impl TryFrom<{other}> for {owner} {{
         }
 
         if let Some(op) = &self.fancy_infix {
-            writeln!(w, "public struct {lsc} {{}}")?;
+            // TODO work around the empty brace clutter.
+            writeln!(w, "public const static {lsc}: {ucc}Infix = {ucc}Infix {{}}")?;
+            writeln!(w, "public struct {ucc}Infix {{}}")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "public struct {lsc}_partial<A> {{ a: A }}")?;
+                writeln!(w, "public struct {ucc}InfixPartial<A> {{ a: A }}")?;
             }
             let operator_method = op.slang_trait_method();
             if let TraitArity::Two = def.arity {
-                writeln!(w, "extension {lsc}_partial<A> for A: {ucc}<B> {{")?;
+                writeln!(w, "extension {ucc}InfixPartial<A> for A: {ucc}<B> {{")?;
                 // writeln!(w, "impl<A: {ucc}<B>, B> {operator_name}<B> for {lsc}_partial<A> {{")?;
                 // write!(w, "    associatedtype Output = ")?;
                 // match *output_ty {
@@ -1763,7 +1765,7 @@ impl TryFrom<{other}> for {owner} {{
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                writeln!(w, "extension {lsc} for A: {ucc} {{")?;
+                writeln!(w, "extension {ucc}Infix for A: {ucc} {{")?;
                 // writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
                 // write!(w, "    associatedtype Output = ")?;
                 // match *output_ty {
@@ -1822,36 +1824,6 @@ impl TryFrom<{other}> for {owner} {{
             var_param = Some(v_param);
         }
 
-        if let Some(op) = self.fancy_infix {
-            let operator_method = op.rust_trait_method();
-            if let TraitParam::Class(mv) = &owner_ty {
-                let n = mv.name();
-                if !is_op && !already_granted_infix.contains(n) {
-                    already_granted_infix.insert(n);
-                    if let TraitArity::Two = def.arity {
-                        writeln!(w, "extension {n} {{")?;
-                        writeln!(w, "    func {operator_method}(_rhs: {lsc}) -> {lsc}_partial<{n}> {{")?;
-                        writeln!(w, "        {lsc}_partial(this)")?;
-                        writeln!(w, "    }}\n}}")?;
-                    }
-                    if let TraitArity::One = def.arity {
-                        writeln!(w, "extension {n} {{")?;
-                        writeln!(w, "    func {operator_method}(_rhs: {lsc}) -> ")?;
-                        self.write_type(w, output_ty)?;
-                        writeln!(w, " {{\n        this.{lsc}()")?;
-                        writeln!(w, "    }}\n}}")?;
-                        if &output_ty == owner_ty {
-                            writeln!(w, "extension {n} {{")?;
-                            writeln!(w, "    func {operator_method}=(const {lsc}& _rhs) -> {n}& {{")?;
-                            writeln!(w, "        this = this.{lsc}()")?;
-                            writeln!(w, "        return *this;")?;
-                            writeln!(w, "    }}\n}}")?;
-                        }
-                    }
-                }
-            }
-        }
-
         // todo alias documentation
         write!(w, "extension ")?;
         self.write_type(w, *owner_ty)?;
@@ -1862,6 +1834,9 @@ impl TryFrom<{other}> for {owner} {{
             write!(w, ">")?;
         }
         writeln!(w, " {{")?;
+        write!(w, "    associatedtype Output = ")?;
+        self.write_type(w, output_ty)?;
+        writeln!(w, ";")?;
         write!(w, "    func {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
@@ -1872,9 +1847,7 @@ impl TryFrom<{other}> for {owner} {{
             }
             _ => panic!("Arity 2 should always have other type"),
         }
-        write!(w, ") -> ")?;
-        self.write_type(w, output_ty)?;
-        writeln!(w, " {{")?;
+        writeln!(w, ") -> Output {{")?;
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
@@ -1908,7 +1881,36 @@ impl TryFrom<{other}> for {owner} {{
         write!(w, "        return ")?;
         self.write_expression(w, &impls.return_expr, true)?;
         writeln!(w, ";")?;
-        writeln!(w, "    }}\n}}")?;
+        writeln!(w, "    }}")?;
+
+        if let Some(op) = self.fancy_infix {
+            let operator_method = op.slang_trait_method();
+            if let TraitParam::Class(mv) = &owner_ty {
+                let n = mv.name();
+                if !is_op && !already_granted_infix.contains(n) {
+                    already_granted_infix.insert(n);
+                    if let TraitArity::Two = def.arity {
+                        writeln!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> {lsc}_partial<{n}> {{")?;
+                        writeln!(w, "        {lsc}_partial(this)")?;
+                        writeln!(w, "    }}")?;
+                    }
+                    if let TraitArity::One = def.arity {
+                        write!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> ")?;
+                        self.write_type(w, output_ty)?;
+                        writeln!(w, " {{\n        return this.{lsc}();\n    }}")?;
+                        if &output_ty == owner_ty {
+                            // TODO it's really dubious that this is correct yet
+                            writeln!(w, "    func {operator_method}=(const {ucc}Infix& _rhs) -> {n}& {{")?;
+                            writeln!(w, "        this = this.{lsc}();")?;
+                            writeln!(w, "        return *this;\n    }}")?;
+                        }
+                    }
+                }
+            }
+        }
+        writeln!(w, "}}")?;
+
+
 
         if !do_assign_impl {
             return Ok(());
@@ -1917,6 +1919,9 @@ impl TryFrom<{other}> for {owner} {{
         write!(w, "extension ")?;
         self.write_type(w, *owner_ty)?;
         writeln!(w, " {{")?;
+        write!(w, "    associatedtype Output = ")?;
+        self.write_type(w, output_ty)?;
+        writeln!(w, ";")?;
         write!(w, "    func {lsc}=(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}

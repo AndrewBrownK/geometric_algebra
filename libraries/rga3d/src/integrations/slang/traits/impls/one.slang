@@ -1,5 +1,6 @@
 extension DualNum: One {
-    func one() -> DualNum {
+    associatedtype Output = DualNum;
+    func one() -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0, 0.0)
@@ -7,7 +8,8 @@ extension DualNum: One {
     }
 }
 extension Motor: One {
-    func one() -> Motor {
+    associatedtype Output = Motor;
+    func one() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -17,7 +19,8 @@ extension Motor: One {
     }
 }
 extension MultiVector: One {
-    func one() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func one() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, 0.0), 
@@ -33,7 +36,8 @@ extension MultiVector: One {
     }
 }
 extension Scalar: One {
-    func one() -> Scalar {
+    associatedtype Output = Scalar;
+    func one() -> Output {
         return Scalar.from_groups(
             /* scalar */
             1.0

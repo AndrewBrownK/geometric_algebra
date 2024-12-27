@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<AntiScalar> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension AntiScalar: RejectOrthogonallyFrom<DualNum> {
-    func reject_orthogonally_from(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<AntiScalar> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -34,7 +34,8 @@ Flector right_anti_dual = Flector.from_groups(
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Horizon) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.e321, 2)
@@ -42,7 +43,8 @@ extension AntiScalar: RejectOrthogonallyFrom<Horizon> {
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Line) -> Output {
 Line anti_wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -62,7 +64,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -84,7 +87,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0, 
@@ -124,7 +128,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Plane) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.e321, 2)
@@ -132,7 +137,8 @@ extension AntiScalar: RejectOrthogonallyFrom<Plane> {
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Point) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -148,28 +154,29 @@ Plane right_anti_dual = Plane.from_groups(
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Scalar> {
-    func reject_orthogonally_from(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
     }
 }
-extension DualNum {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<DualNum> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension DualNum: RejectOrthogonallyFrom<DualNum> {
-    func reject_orthogonally_from(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<DualNum> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension DualNum: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -191,7 +198,8 @@ Flector right_anti_dual = Flector.from_groups(
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Horizon) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.e321, 2)
@@ -199,7 +207,8 @@ extension DualNum: RejectOrthogonallyFrom<Horizon> {
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Line) -> Output {
 Line anti_wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -219,7 +228,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -241,7 +251,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension DualNum: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
@@ -281,7 +292,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Plane) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.e321, 2)
@@ -289,7 +301,8 @@ extension DualNum: RejectOrthogonallyFrom<Plane> {
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Point) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -305,20 +318,17 @@ Plane right_anti_dual = Plane.from_groups(
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Scalar> {
-    func reject_orthogonally_from(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
     }
 }
-extension Flector {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Flector> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Flector: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group1.zxy) - (other.group1.zxy * this.group1.yzx)), 0.0), 
@@ -338,9 +348,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Flector> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Flector: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Horizon) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -360,7 +374,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension Flector: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Line) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) - (this.group1.yzxx * float4(other.group1.zxy, other.e41))
@@ -378,7 +393,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension Flector: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) + (float4(other.e1234) * this.group0) - (this.group1.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -398,7 +414,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Flector: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
@@ -438,7 +455,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Flector: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Plane) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((this.group1.zxy * other.group0.yzx) - (this.group1.yzx * other.group0.zxy)), 0.0), 
@@ -458,7 +476,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension Flector: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Point) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
@@ -469,13 +488,9 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
-extension Horizon {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Horizon> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Horizon: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -495,9 +510,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Horizon> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Horizon: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Line) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -515,7 +534,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension Horizon: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -537,7 +557,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Horizon: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
@@ -577,7 +598,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Horizon: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Plane) -> Output {
 Origin right_anti_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -589,20 +611,17 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension Horizon: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Point) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e321 * other.e4 * -1.0) * float4(other.e1, other.e2, other.e3, 0.0)
         );
     }
 }
-extension Line {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Line> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Line: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) - (other.group1.yzxx * float4(this.group1.zxy, this.e41))
@@ -620,9 +639,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4(((right_anti_dual.group0.zxy * anti_wedge.group0.yzx) - (right_anti_dual.group0.yzx * anti_wedge.group0.zxy)), 0.0)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Line> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Line: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Line {
+    associatedtype Output = Line;
+    func reject_orthogonally_from(other: Horizon) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e321 * -1.0) * float4(other.e321 * this.e41, other.e321 * this.e42, other.e321 * this.e43, 0.0).xyz * float3(-1.0), 
@@ -632,7 +655,8 @@ extension Line: RejectOrthogonallyFrom<Horizon> {
     }
 }
 extension Line: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> Line {
+    associatedtype Output = Line;
+    func reject_orthogonally_from(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 
@@ -642,7 +666,8 @@ extension Line: RejectOrthogonallyFrom<Line> {
     }
 }
 extension Line: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0, 0.0) * float4(other.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -664,7 +689,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Line: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0), 
@@ -704,7 +730,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Line: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func reject_orthogonally_from(other: Plane) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e321 * -1.0) * float4((this.e41 * other.e321) + (this.e31 * other.e412) - (this.e12 * other.e431), (this.e42 * other.e321) + (this.e12 * other.e423) - (this.e23 * other.e412), (this.e43 * other.e321) + (this.e23 * other.e431) - (this.e31 * other.e423), -(this.e41 * other.e423) - (this.e42 * other.e431) - (this.e43 * other.e412)).xyz * float3(-1.0), 
@@ -713,21 +740,21 @@ extension Line: RejectOrthogonallyFrom<Plane> {
         );
     }
 }
-extension Motor {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Motor> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Motor: RejectOrthogonallyFrom<DualNum> {
-    func reject_orthogonally_from(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Motor> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Motor: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) + (float4(this.e1234) * other.group0) - (other.group1.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -749,7 +776,8 @@ Flector right_anti_dual = Flector.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Horizon) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -765,7 +793,8 @@ Flector anti_wedge = Flector.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Line) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -787,7 +816,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((float3(other.e1234) * this.group0.xyz) + (float3(this.e1234) * other.group0.xyz)), other.e1234 * this.e1234), 
@@ -809,7 +839,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), this.e1234 * other.e1234), 
@@ -849,7 +880,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Plane) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -865,7 +897,8 @@ Flector anti_wedge = Flector.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Point) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -881,28 +914,29 @@ Plane right_anti_dual = Plane.from_groups(
     }
 }
 extension Motor: RejectOrthogonallyFrom<Scalar> {
-    func reject_orthogonally_from(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<MultiVector> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension MultiVector: RejectOrthogonallyFrom<DualNum> {
-    func reject_orthogonally_from(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<MultiVector> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension MultiVector: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
@@ -936,7 +970,8 @@ Flector right_anti_dual = Flector.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Horizon) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -968,7 +1003,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Line) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0), 
@@ -1002,7 +1038,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Motor) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
@@ -1036,7 +1073,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
@@ -1076,7 +1114,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Plane) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321), 0.0), 
@@ -1108,7 +1147,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: Point) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
@@ -1140,20 +1180,17 @@ Plane right_anti_dual = Plane.from_groups(
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Scalar> {
-    func reject_orthogonally_from(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
     }
 }
-extension Origin {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Origin> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Origin: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -1171,9 +1208,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4(anti_wedge.scalar) * right_anti_dual.group1
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Origin> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Origin: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Origin {
+    associatedtype Output = Origin;
+    func reject_orthogonally_from(other: Horizon) -> Output {
         return Origin.from_groups(
             /* e4 */
             powi(other.e321, 2) * this.e4 * -1.0
@@ -1181,7 +1222,8 @@ extension Origin: RejectOrthogonallyFrom<Horizon> {
     }
 }
 extension Origin: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Origin anti_wedge = Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
@@ -1201,7 +1243,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Origin: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -1241,20 +1284,17 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Origin: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Origin {
+    associatedtype Output = Origin;
+    func reject_orthogonally_from(other: Plane) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * powi(other.e321, 2) * -1.0
         );
     }
 }
-extension Plane {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Plane> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Plane: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group0.zxy) - (other.group1.zxy * this.group0.yzx)), 0.0), 
@@ -1274,9 +1314,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Plane> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Plane: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Horizon) -> Output {
 Origin right_anti_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -1288,7 +1332,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension Plane: RejectOrthogonallyFrom<Line> {
-    func reject_orthogonally_from(other: Line) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Line) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41))
@@ -1306,7 +1351,8 @@ Line right_anti_dual = Line.from_groups(
     }
 }
 extension Plane: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1326,7 +1372,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Plane: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
@@ -1366,7 +1413,8 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Plane: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Plane) -> Output {
 Origin right_anti_dual = Origin.from_groups(
             /* e4 */
             other.e321 * -1.0
@@ -1378,7 +1426,8 @@ Origin right_anti_dual = Origin.from_groups(
     }
 }
 extension Plane: RejectOrthogonallyFrom<Point> {
-    func reject_orthogonally_from(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func reject_orthogonally_from(other: Point) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
@@ -1389,13 +1438,9 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
-extension Point {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Point> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Point: RejectOrthogonallyFrom<Flector> {
-    func reject_orthogonally_from(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Flector) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
@@ -1413,9 +1458,13 @@ Flector right_anti_dual = Flector.from_groups(
             float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Point> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Point: RejectOrthogonallyFrom<Horizon> {
-    func reject_orthogonally_from(other: Horizon) -> Origin {
+    associatedtype Output = Origin;
+    func reject_orthogonally_from(other: Horizon) -> Output {
         return Origin.from_groups(
             /* e4 */
             powi(other.e321, 2) * this.e4 * -1.0
@@ -1423,7 +1472,8 @@ extension Point: RejectOrthogonallyFrom<Horizon> {
     }
 }
 extension Point: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
@@ -1443,7 +1493,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Point: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), 0.0), 
@@ -1483,28 +1534,29 @@ MultiVector right_anti_dual = MultiVector.from_groups(
     }
 }
 extension Point: RejectOrthogonallyFrom<Plane> {
-    func reject_orthogonally_from(other: Plane) -> Origin {
+    associatedtype Output = Origin;
+    func reject_orthogonally_from(other: Plane) -> Output {
         return Origin.from_groups(
             /* e4 */
             -(powi(other.e321, 2) * this.e4) - (other.e423 * other.e321 * this.e1) - (other.e431 * other.e321 * this.e2) - (other.e412 * other.e321 * this.e3)
         );
     }
 }
-extension Scalar {
-    func div(_rhs: reject_orthogonally_from) -> reject_orthogonally_from_partial<Scalar> {
-        reject_orthogonally_from_partial(this)
-    }
-}
 extension Scalar: RejectOrthogonallyFrom<DualNum> {
-    func reject_orthogonally_from(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func reject_orthogonally_from(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.scalar * other.e1234 * this.scalar
         );
     }
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Scalar> {
+        reject_orthogonally_from_partial(this)
+    }
 }
 extension Scalar: RejectOrthogonallyFrom<Motor> {
-    func reject_orthogonally_from(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func reject_orthogonally_from(other: Motor) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
@@ -1524,7 +1576,8 @@ Motor right_anti_dual = Motor.from_groups(
     }
 }
 extension Scalar: RejectOrthogonallyFrom<MultiVector> {
-    func reject_orthogonally_from(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func reject_orthogonally_from(other: MultiVector) -> Output {
 Scalar anti_wedge = Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar

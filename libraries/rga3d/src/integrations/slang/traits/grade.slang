@@ -5,5 +5,6 @@ using data::*;
 public interface Grade {
     func grade() -> uint;
 }
-public struct grade {}
+public const static grade: GradeInfix = GradeInfix {}
+public struct GradeInfix {}
 __include ./impls/grade;

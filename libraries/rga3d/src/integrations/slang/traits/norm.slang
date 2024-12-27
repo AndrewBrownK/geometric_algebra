@@ -5,8 +5,9 @@ using data::*;
 public interface Norm {
     func norm() -> DualNum;
 }
-public struct norm {}
-extension norm for A: Norm {
+public const static norm: NormInfix = NormInfix {}
+public struct NormInfix {}
+extension NormInfix for A: Norm {
     func operator/(rhs: A) -> A.Output {
         return rhs.norm();
     }

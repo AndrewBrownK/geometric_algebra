@@ -6,8 +6,9 @@ public interface RightComplement {
     associatedtype Output;
     func right_complement() -> Output;
 }
-public struct right_complement {}
-extension right_complement for A: RightComplement {
+public const static right_complement: RightComplementInfix = RightComplementInfix {}
+public struct RightComplementInfix {}
+extension RightComplementInfix for A: RightComplement {
     func operator/(rhs: A) -> A.Output {
         return rhs.right_complement();
     }

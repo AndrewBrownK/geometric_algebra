@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<AntiScalar> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension AntiScalar: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<AntiScalar> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension AntiScalar: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_product(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0
@@ -20,7 +20,8 @@ extension AntiScalar: GeometricAntiProduct<DualNum> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -30,7 +31,8 @@ extension AntiScalar: GeometricAntiProduct<Flector> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
@@ -38,7 +40,8 @@ extension AntiScalar: GeometricAntiProduct<Horizon> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -48,7 +51,8 @@ extension AntiScalar: GeometricAntiProduct<Line> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -58,7 +62,8 @@ extension AntiScalar: GeometricAntiProduct<Motor> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0, 
@@ -74,7 +79,8 @@ extension AntiScalar: GeometricAntiProduct<MultiVector> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_anti_product(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e4
@@ -82,7 +88,8 @@ extension AntiScalar: GeometricAntiProduct<Origin> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_anti_product(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
@@ -90,7 +97,8 @@ extension AntiScalar: GeometricAntiProduct<Plane> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
@@ -98,28 +106,29 @@ extension AntiScalar: GeometricAntiProduct<Point> {
     }
 }
 extension AntiScalar: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension DualNum {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<DualNum> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension DualNum: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<DualNum> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension DualNum: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_anti_product(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234)
@@ -127,7 +136,8 @@ extension DualNum: GeometricAntiProduct<DualNum> {
     }
 }
 extension DualNum: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group0.xyz)), this.e1234 * other.e4), 
@@ -137,7 +147,8 @@ extension DualNum: GeometricAntiProduct<Flector> {
     }
 }
 extension DualNum: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
@@ -145,7 +156,8 @@ extension DualNum: GeometricAntiProduct<Horizon> {
     }
 }
 extension DualNum: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0, 
@@ -155,7 +167,8 @@ extension DualNum: GeometricAntiProduct<Line> {
     }
 }
 extension DualNum: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -165,7 +178,8 @@ extension DualNum: GeometricAntiProduct<Motor> {
     }
 }
 extension DualNum: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
@@ -181,7 +195,8 @@ extension DualNum: GeometricAntiProduct<MultiVector> {
     }
 }
 extension DualNum: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * other.e4), 
@@ -191,7 +206,8 @@ extension DualNum: GeometricAntiProduct<Origin> {
     }
 }
 extension DualNum: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.group0.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -201,7 +217,8 @@ extension DualNum: GeometricAntiProduct<Plane> {
     }
 }
 extension DualNum: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -211,20 +228,17 @@ extension DualNum: GeometricAntiProduct<Point> {
     }
 }
 extension DualNum: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
         );
     }
 }
-extension Flector {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Flector> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Flector: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -232,9 +246,13 @@ extension Flector: GeometricAntiProduct<AntiScalar> {
             float4(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Flector> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Flector: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group0.xyz) - (float3(other.scalar) * this.group1.xyz)), other.e1234 * this.e4), 
@@ -244,7 +262,8 @@ extension Flector: GeometricAntiProduct<DualNum> {
     }
 }
 extension Flector: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(other.e423 * this.e4) - (other.e412 * this.e431), -(other.e423 * this.e412) - (other.e431 * this.e4), -(other.e431 * this.e423) - (other.e412 * this.e4), (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group1.yzxx * this.group1.zxyx) - (float4(other.e4) * float4(this.group1.xyz, this.e4)), 
@@ -254,7 +273,8 @@ extension Flector: GeometricAntiProduct<Flector> {
     }
 }
 extension Flector: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -264,7 +284,8 @@ extension Flector: GeometricAntiProduct<Horizon> {
     }
 }
 extension Flector: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.zyz, other.e43)) - float4((other.group0.yzx * this.group0.zxy), this.e423 * other.e41), 
@@ -274,7 +295,8 @@ extension Flector: GeometricAntiProduct<Line> {
     }
 }
 extension Flector: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41) - (this.e431 * other.e12), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42) - (this.e412 * other.e23), (this.e3 * other.e1234) + (this.e431 * other.e23) + (this.e321 * other.e43) - (this.e412 * other.scalar), 0.0) + (this.group0.xyxw * other.group0.wwyw) - (this.group1.xyxz * float4(other.group1.wwy, other.e43)) - (other.group0.yzxx * float4(this.group0.zxy, this.e423)) - float4((this.group0.www * other.group1.xyz), this.e431 * other.e42), 
@@ -284,7 +306,8 @@ extension Flector: GeometricAntiProduct<Motor> {
     }
 }
 extension Flector: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e4 * other.e321) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group1.xw), 
@@ -300,7 +323,8 @@ extension Flector: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Flector: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Origin) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
@@ -310,7 +334,8 @@ extension Flector: GeometricAntiProduct<Origin> {
     }
 }
 extension Flector: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(this.e4 * other.e423) - (this.e431 * other.e412), -(this.e4 * other.e431) - (this.e412 * other.e423), -(this.e4 * other.e412) - (this.e423 * other.e431), (this.e431 * other.e431) + (this.e412 * other.e412)) + (this.group1.zxyx * other.group0.yzxx), 
@@ -320,7 +345,8 @@ extension Flector: GeometricAntiProduct<Plane> {
     }
 }
 extension Flector: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
@@ -330,7 +356,8 @@ extension Flector: GeometricAntiProduct<Point> {
     }
 }
 extension Flector: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar, other.scalar, other.scalar, 0.0) * float4(this.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -339,21 +366,21 @@ extension Flector: GeometricAntiProduct<Scalar> {
         );
     }
 }
-extension Horizon {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Horizon> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Horizon: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e1234 * this.e321
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Horizon> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Horizon: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e1234 * this.e321
@@ -361,7 +388,8 @@ extension Horizon: GeometricAntiProduct<DualNum> {
     }
 }
 extension Horizon: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -371,7 +399,8 @@ extension Horizon: GeometricAntiProduct<Flector> {
     }
 }
 extension Horizon: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -379,7 +408,8 @@ extension Horizon: GeometricAntiProduct<Line> {
     }
 }
 extension Horizon: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -389,7 +419,8 @@ extension Horizon: GeometricAntiProduct<Motor> {
     }
 }
 extension Horizon: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
@@ -405,7 +436,8 @@ extension Horizon: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Horizon: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Origin) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 * other.e4 * -1.0
@@ -413,7 +445,8 @@ extension Horizon: GeometricAntiProduct<Origin> {
     }
 }
 extension Horizon: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Plane) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -423,20 +456,17 @@ extension Horizon: GeometricAntiProduct<Plane> {
     }
 }
 extension Horizon: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Point) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 * other.e4 * -1.0
         );
     }
 }
-extension Line {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Line> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Line: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0, 
@@ -444,9 +474,13 @@ extension Line: GeometricAntiProduct<AntiScalar> {
             float3(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Line> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Line: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0, 
@@ -456,7 +490,8 @@ extension Line: GeometricAntiProduct<DualNum> {
     }
 }
 extension Line: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group0.zxy * other.group0.yzx), other.e423 * this.e41), 
@@ -466,7 +501,8 @@ extension Line: GeometricAntiProduct<Flector> {
     }
 }
 extension Line: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -474,7 +510,8 @@ extension Line: GeometricAntiProduct<Horizon> {
     }
 }
 extension Line: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e43 * this.e42, other.e41 * this.e43, other.e42 * this.e41, -(other.e42 * this.e42) - (other.e43 * this.e43)) - float4((other.group0.yzx * this.group0.zxy), other.e41 * this.e41), 
@@ -484,7 +521,8 @@ extension Line: GeometricAntiProduct<Line> {
     }
 }
 extension Line: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((this.e41 * other.e1234) + (this.e42 * other.e43), (this.e42 * other.e1234) + (this.e43 * other.e41), (this.e41 * other.e42) + (this.e43 * other.e1234), -(this.e42 * other.e42) - (this.e43 * other.e43)) - (other.group0.yzxx * float4(this.group0.zxy, this.e41)), 
@@ -494,7 +532,8 @@ extension Line: GeometricAntiProduct<Motor> {
     }
 }
 extension Line: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
@@ -510,7 +549,8 @@ extension Line: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Line: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -520,7 +560,8 @@ extension Line: GeometricAntiProduct<Origin> {
     }
 }
 extension Line: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -530,7 +571,8 @@ extension Line: GeometricAntiProduct<Plane> {
     }
 }
 extension Line: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.e4) * this.group1), 0.0) + float4((this.group0.yzx * other.group0.zxy), 0.0) - float4((this.group0.zxy * other.group0.yzx), 0.0), 
@@ -540,7 +582,8 @@ extension Line: GeometricAntiProduct<Point> {
     }
 }
 extension Line: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -549,13 +592,9 @@ extension Line: GeometricAntiProduct<Scalar> {
         );
     }
 }
-extension Motor {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Motor> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Motor: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -563,9 +602,13 @@ extension Motor: GeometricAntiProduct<AntiScalar> {
             float4(other.e1234) * this.group1
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Motor> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Motor: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -575,7 +618,8 @@ extension Motor: GeometricAntiProduct<DualNum> {
     }
 }
 extension Motor: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e423 * this.scalar) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e431 * this.scalar) + (other.e321 * this.e42), (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e412 * this.scalar) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) + (other.group0.xxyw * this.group0.wzxw) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - (this.group0.zxyx * float4(other.group0.yzx, other.e423)), 
@@ -585,7 +629,8 @@ extension Motor: GeometricAntiProduct<Flector> {
     }
 }
 extension Motor: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -595,7 +640,8 @@ extension Motor: GeometricAntiProduct<Horizon> {
     }
 }
 extension Motor: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e41 * this.e1234) + (other.e43 * this.e42), (other.e41 * this.e43) + (other.e42 * this.e1234), (other.e42 * this.e41) + (other.e43 * this.e1234), -(other.e42 * this.e42) - (other.e43 * this.e43)) - (this.group0.zxyx * float4(other.group0.yzx, other.e41)), 
@@ -605,7 +651,8 @@ extension Motor: GeometricAntiProduct<Line> {
     }
 }
 extension Motor: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e43 * this.e42) + (other.e1234 * this.e41), (other.e42 * this.e1234) + (other.e1234 * this.e42), (other.e43 * this.e1234) + (other.e1234 * this.e43), -(other.e42 * this.e42) - (other.e43 * this.e43)) + (other.group0.xxyw * this.group0.wzxw) - (other.group0.yzxx * this.group0.zxyx), 
@@ -615,7 +662,8 @@ extension Motor: GeometricAntiProduct<Motor> {
     }
 }
 extension Motor: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12), 0.0) + (float2(this.e1234) * other.group0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
@@ -631,7 +679,8 @@ extension Motor: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Motor: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e4) * float4(this.group1.xyz, this.e1234), 
@@ -641,7 +690,8 @@ extension Motor: GeometricAntiProduct<Origin> {
     }
 }
 extension Motor: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412) + (this.scalar * other.e423), (this.e42 * other.e321) + (this.e12 * other.e423) + (this.scalar * other.e431), (this.e43 * other.e321) + (this.e23 * other.e431) + (this.scalar * other.e412), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -651,7 +701,8 @@ extension Motor: GeometricAntiProduct<Plane> {
     }
 }
 extension Motor: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(this.e1234) * other.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (this.group0.yzx * other.group0.zxy) - (this.group0.zxy * other.group0.yzx)), this.e1234 * other.e4), 
@@ -661,7 +712,8 @@ extension Motor: GeometricAntiProduct<Point> {
     }
 }
 extension Motor: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -670,13 +722,9 @@ extension Motor: GeometricAntiProduct<Scalar> {
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<MultiVector> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension MultiVector: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0, 
@@ -690,9 +738,13 @@ extension MultiVector: GeometricAntiProduct<AntiScalar> {
             float4(other.e1234) * this.group4
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<MultiVector> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension MultiVector: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 
@@ -708,7 +760,8 @@ extension MultiVector: GeometricAntiProduct<DualNum> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group0.xw), 
@@ -724,7 +777,8 @@ extension MultiVector: GeometricAntiProduct<Flector> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -740,7 +794,8 @@ extension MultiVector: GeometricAntiProduct<Horizon> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
@@ -756,7 +811,8 @@ extension MultiVector: GeometricAntiProduct<Line> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12), 0.0) + (float2(other.e1234) * this.group0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
@@ -772,7 +828,8 @@ extension MultiVector: GeometricAntiProduct<Motor> {
     }
 }
 extension MultiVector: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e1234 * this.scalar) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * other.group0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * other.group1.xw), 
@@ -788,7 +845,8 @@ extension MultiVector: GeometricAntiProduct<MultiVector> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e4) * float2(this.e321, this.e4) * float2(-1.0), 
@@ -804,7 +862,8 @@ extension MultiVector: GeometricAntiProduct<Origin> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e4 * other.e321, 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)), 
@@ -820,7 +879,8 @@ extension MultiVector: GeometricAntiProduct<Plane> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), this.e4 * other.e4) * float2(1.0, -1.0), 
@@ -836,7 +896,8 @@ extension MultiVector: GeometricAntiProduct<Point> {
     }
 }
 extension MultiVector: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234 * other.scalar, 1.0) * float2(1.0, 0.0), 
@@ -851,21 +912,21 @@ extension MultiVector: GeometricAntiProduct<Scalar> {
         );
     }
 }
-extension Origin {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Origin> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Origin: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Origin> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Origin: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e1234 * this.e4), 
@@ -875,7 +936,8 @@ extension Origin: GeometricAntiProduct<DualNum> {
     }
 }
 extension Origin: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group1.xyz, other.e4) * float4(-1.0), 
@@ -885,7 +947,8 @@ extension Origin: GeometricAntiProduct<Flector> {
     }
 }
 extension Origin: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -893,7 +956,8 @@ extension Origin: GeometricAntiProduct<Horizon> {
     }
 }
 extension Origin: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -903,7 +967,8 @@ extension Origin: GeometricAntiProduct<Line> {
     }
 }
 extension Origin: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e4) * float4(other.group1.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -913,7 +978,8 @@ extension Origin: GeometricAntiProduct<Motor> {
     }
 }
 extension Origin: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e4) * float2(other.e321, other.e4) * float2(1.0, -1.0), 
@@ -929,7 +995,8 @@ extension Origin: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Origin: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_anti_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4 * -1.0
@@ -937,7 +1004,8 @@ extension Origin: GeometricAntiProduct<Origin> {
     }
 }
 extension Origin: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -947,7 +1015,8 @@ extension Origin: GeometricAntiProduct<Plane> {
     }
 }
 extension Origin: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e4 * other.e4 * -1.0), 
@@ -957,28 +1026,29 @@ extension Origin: GeometricAntiProduct<Point> {
     }
 }
 extension Origin: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e4 * other.scalar * -1.0
         );
     }
 }
-extension Plane {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Plane> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Plane: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Plane> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Plane: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.group0.xx, other.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -988,7 +1058,8 @@ extension Plane: GeometricAntiProduct<DualNum> {
     }
 }
 extension Plane: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(other.e4 * this.e423) - (other.e412 * this.e431), -(other.e4 * this.e431) - (other.e423 * this.e412), -(other.e4 * this.e412) - (other.e431 * this.e423), (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group1.yzxx * this.group0.zxyx), 
@@ -998,7 +1069,8 @@ extension Plane: GeometricAntiProduct<Flector> {
     }
 }
 extension Plane: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -1008,7 +1080,8 @@ extension Plane: GeometricAntiProduct<Horizon> {
     }
 }
 extension Plane: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1018,7 +1091,8 @@ extension Plane: GeometricAntiProduct<Line> {
     }
 }
 extension Plane: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), other.e43 * this.e412 * -1.0) - (this.group0.xyzy * float4(other.group1.www, other.e42)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1028,7 +1102,8 @@ extension Plane: GeometricAntiProduct<Motor> {
     }
 }
 extension Plane: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)), 
@@ -1044,7 +1119,8 @@ extension Plane: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Plane: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Origin) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1054,7 +1130,8 @@ extension Plane: GeometricAntiProduct<Origin> {
     }
 }
 extension Plane: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e412 * this.e431 * -1.0, other.e423 * this.e412 * -1.0, other.e431 * this.e423 * -1.0, (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group0.yzxx * this.group0.zxyx), 
@@ -1064,7 +1141,8 @@ extension Plane: GeometricAntiProduct<Plane> {
     }
 }
 extension Plane: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1074,28 +1152,29 @@ extension Plane: GeometricAntiProduct<Point> {
     }
 }
 extension Plane: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar, other.scalar, other.scalar, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
 }
-extension Point {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Point> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Point: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Point> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Point: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -1105,7 +1184,8 @@ extension Point: GeometricAntiProduct<DualNum> {
     }
 }
 extension Point: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group1.xyz, other.e4) * float4(-1.0), 
@@ -1115,7 +1195,8 @@ extension Point: GeometricAntiProduct<Flector> {
     }
 }
 extension Point: GeometricAntiProduct<Horizon> {
-    func geometric_anti_product(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
@@ -1123,7 +1204,8 @@ extension Point: GeometricAntiProduct<Horizon> {
     }
 }
 extension Point: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.group0.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * other.group1), 0.0) - float4((other.group0.yzx * this.group0.zxy), 0.0), 
@@ -1133,7 +1215,8 @@ extension Point: GeometricAntiProduct<Line> {
     }
 }
 extension Point: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group0.xyz) + (other.group0.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.yzx * this.group0.zxy)), other.e1234 * this.e4), 
@@ -1143,7 +1226,8 @@ extension Point: GeometricAntiProduct<Motor> {
     }
 }
 extension Point: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), other.e4 * this.e4) * float2(1.0, -1.0), 
@@ -1159,7 +1243,8 @@ extension Point: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Point: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Origin) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), other.e4 * this.e4 * -1.0), 
@@ -1169,7 +1254,8 @@ extension Point: GeometricAntiProduct<Origin> {
     }
 }
 extension Point: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1179,7 +1265,8 @@ extension Point: GeometricAntiProduct<Plane> {
     }
 }
 extension Point: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), other.e4 * this.e4 * -1.0), 
@@ -1189,28 +1276,29 @@ extension Point: GeometricAntiProduct<Point> {
     }
 }
 extension Point: GeometricAntiProduct<Scalar> {
-    func geometric_anti_product(other: Scalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Scalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e4 * other.scalar * -1.0
         );
     }
 }
-extension Scalar {
-    func div(_rhs: geometric_anti_product) -> geometric_anti_product_partial<Scalar> {
-        geometric_anti_product_partial(this)
-    }
-}
 extension Scalar: GeometricAntiProduct<AntiScalar> {
-    func geometric_anti_product(other: AntiScalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: AntiScalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
         );
     }
+    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Scalar> {
+        geometric_anti_product_partial(this)
+    }
 }
 extension Scalar: GeometricAntiProduct<DualNum> {
-    func geometric_anti_product(other: DualNum) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_anti_product(other: DualNum) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e1234 * this.scalar
@@ -1218,7 +1306,8 @@ extension Scalar: GeometricAntiProduct<DualNum> {
     }
 }
 extension Scalar: GeometricAntiProduct<Flector> {
-    func geometric_anti_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_anti_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -1228,7 +1317,8 @@ extension Scalar: GeometricAntiProduct<Flector> {
     }
 }
 extension Scalar: GeometricAntiProduct<Line> {
-    func geometric_anti_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_anti_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -1238,7 +1328,8 @@ extension Scalar: GeometricAntiProduct<Line> {
     }
 }
 extension Scalar: GeometricAntiProduct<Motor> {
-    func geometric_anti_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_anti_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -1248,7 +1339,8 @@ extension Scalar: GeometricAntiProduct<Motor> {
     }
 }
 extension Scalar: GeometricAntiProduct<MultiVector> {
-    func geometric_anti_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_anti_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 
@@ -1264,7 +1356,8 @@ extension Scalar: GeometricAntiProduct<MultiVector> {
     }
 }
 extension Scalar: GeometricAntiProduct<Origin> {
-    func geometric_anti_product(other: Origin) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Origin) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e4 * this.scalar
@@ -1272,7 +1365,8 @@ extension Scalar: GeometricAntiProduct<Origin> {
     }
 }
 extension Scalar: GeometricAntiProduct<Plane> {
-    func geometric_anti_product(other: Plane) -> Point {
+    associatedtype Output = Point;
+    func geometric_anti_product(other: Plane) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -1280,7 +1374,8 @@ extension Scalar: GeometricAntiProduct<Plane> {
     }
 }
 extension Scalar: GeometricAntiProduct<Point> {
-    func geometric_anti_product(other: Point) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_anti_product(other: Point) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e4 * this.scalar

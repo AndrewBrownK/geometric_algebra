@@ -6,9 +6,10 @@ public interface GeometricAntiProduct<T> {
     associatedtype Output;
     func geometric_anti_product(other: T) -> Output;
 }
-public struct geometric_anti_product {}
-public struct geometric_anti_product_partial<A> { a: A }
-extension geometric_anti_product_partial<A> for A: GeometricAntiProduct<B> {
+public const static geometric_anti_product: GeometricAntiProductInfix = GeometricAntiProductInfix {}
+public struct GeometricAntiProductInfix {}
+public struct GeometricAntiProductInfixPartial<A> { a: A }
+extension GeometricAntiProductInfixPartial<A> for A: GeometricAntiProduct<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.geometric_anti_product(rhs);
     }

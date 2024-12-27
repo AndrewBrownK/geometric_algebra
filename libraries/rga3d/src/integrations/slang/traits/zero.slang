@@ -5,5 +5,6 @@ using data::*;
 public interface Zero {
     func zero() -> Output;
 }
-public struct zero {}
+public const static zero: ZeroInfix = ZeroInfix {}
+public struct ZeroInfix {}
 __include ./impls/zero;

@@ -5,8 +5,9 @@ using data::*;
 public interface NormSquared {
     func norm_squared() -> DualNum;
 }
-public struct norm_squared {}
-extension norm_squared for A: NormSquared {
+public const static norm_squared: NormSquaredInfix = NormSquaredInfix {}
+public struct NormSquaredInfix {}
+extension NormSquaredInfix for A: NormSquared {
     func operator/(rhs: A) -> A.Output {
         return rhs.norm_squared();
     }

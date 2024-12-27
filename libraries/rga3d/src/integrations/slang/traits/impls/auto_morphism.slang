@@ -1,51 +1,32 @@
-extension AntiScalar {
-    func div(_rhs: auto_morphism) -> 
-AntiScalar {
-        this.auto_morphism()
-    }
-}
-extension AntiScalar {
-    func div=(const auto_morphism& _rhs) -> AntiScalar& {
-        this = this.auto_morphism()
-        return *this;
-    }
-}
 extension AntiScalar: AutoMorphism {
-    func auto_morphism() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func auto_morphism() -> Output {
         return this;
     }
-}
-extension DualNum {
-    func div(_rhs: auto_morphism) -> 
-DualNum {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> AntiScalar {
+        return this.auto_morphism();
     }
-}
-extension DualNum {
-    func div=(const auto_morphism& _rhs) -> DualNum& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> AntiScalar& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension DualNum: AutoMorphism {
-    func auto_morphism() -> DualNum {
+    associatedtype Output = DualNum;
+    func auto_morphism() -> Output {
         return this;
     }
-}
-extension Flector {
-    func div(_rhs: auto_morphism) -> 
-Flector {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> DualNum {
+        return this.auto_morphism();
     }
-}
-extension Flector {
-    func div=(const auto_morphism& _rhs) -> Flector& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> DualNum& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Flector: AutoMorphism {
-    func auto_morphism() -> Flector {
+    associatedtype Output = Flector;
+    func auto_morphism() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -53,75 +34,59 @@ extension Flector: AutoMorphism {
             this.group1 * float4(-1.0)
         );
     }
-}
-extension Horizon {
-    func div(_rhs: auto_morphism) -> 
-Horizon {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Flector {
+        return this.auto_morphism();
     }
-}
-extension Horizon {
-    func div=(const auto_morphism& _rhs) -> Horizon& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Flector& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Horizon: AutoMorphism {
-    func auto_morphism() -> Horizon {
+    associatedtype Output = Horizon;
+    func auto_morphism() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
         );
     }
-}
-extension Line {
-    func div(_rhs: auto_morphism) -> 
-Line {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Horizon {
+        return this.auto_morphism();
     }
-}
-extension Line {
-    func div=(const auto_morphism& _rhs) -> Line& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Horizon& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Line: AutoMorphism {
-    func auto_morphism() -> Line {
+    associatedtype Output = Line;
+    func auto_morphism() -> Output {
         return this;
     }
-}
-extension Motor {
-    func div(_rhs: auto_morphism) -> 
-Motor {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Line {
+        return this.auto_morphism();
     }
-}
-extension Motor {
-    func div=(const auto_morphism& _rhs) -> Motor& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Line& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Motor: AutoMorphism {
-    func auto_morphism() -> Motor {
+    associatedtype Output = Motor;
+    func auto_morphism() -> Output {
         return this;
     }
-}
-extension MultiVector {
-    func div(_rhs: auto_morphism) -> 
-MultiVector {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Motor {
+        return this.auto_morphism();
     }
-}
-extension MultiVector {
-    func div=(const auto_morphism& _rhs) -> MultiVector& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Motor& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension MultiVector: AutoMorphism {
-    func auto_morphism() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func auto_morphism() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -135,81 +100,72 @@ extension MultiVector: AutoMorphism {
             this.group4 * float4(-1.0)
         );
     }
-}
-extension Origin {
-    func div(_rhs: auto_morphism) -> 
-Origin {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> MultiVector {
+        return this.auto_morphism();
     }
-}
-extension Origin {
-    func div=(const auto_morphism& _rhs) -> Origin& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> MultiVector& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Origin: AutoMorphism {
-    func auto_morphism() -> Origin {
+    associatedtype Output = Origin;
+    func auto_morphism() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
         );
     }
-}
-extension Plane {
-    func div(_rhs: auto_morphism) -> 
-Plane {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Origin {
+        return this.auto_morphism();
     }
-}
-extension Plane {
-    func div=(const auto_morphism& _rhs) -> Plane& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Origin& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Plane: AutoMorphism {
-    func auto_morphism() -> Plane {
+    associatedtype Output = Plane;
+    func auto_morphism() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Point {
-    func div(_rhs: auto_morphism) -> 
-Point {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Plane {
+        return this.auto_morphism();
     }
-}
-extension Point {
-    func div=(const auto_morphism& _rhs) -> Point& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Plane& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Point: AutoMorphism {
-    func auto_morphism() -> Point {
+    associatedtype Output = Point;
+    func auto_morphism() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: auto_morphism) -> 
-Scalar {
-        this.auto_morphism()
+    func operator/(_rhs: AutoMorphismInfix) -> Point {
+        return this.auto_morphism();
     }
-}
-extension Scalar {
-    func div=(const auto_morphism& _rhs) -> Scalar& {
-        this = this.auto_morphism()
+    func operator/=(const AutoMorphismInfix& _rhs) -> Point& {
+        this = this.auto_morphism();
         return *this;
     }
 }
 extension Scalar: AutoMorphism {
-    func auto_morphism() -> Scalar {
+    associatedtype Output = Scalar;
+    func auto_morphism() -> Output {
         return this;
+    }
+    func operator/(_rhs: AutoMorphismInfix) -> Scalar {
+        return this.auto_morphism();
+    }
+    func operator/=(const AutoMorphismInfix& _rhs) -> Scalar& {
+        this = this.auto_morphism();
+        return *this;
     }
 }

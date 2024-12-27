@@ -6,9 +6,10 @@ public interface RejectViaOriginFrom<T> {
     associatedtype Output;
     func reject_via_origin_from(other: T) -> Output;
 }
-public struct reject_via_origin_from {}
-public struct reject_via_origin_from_partial<A> { a: A }
-extension reject_via_origin_from_partial<A> for A: RejectViaOriginFrom<B> {
+public const static reject_via_origin_from: RejectViaOriginFromInfix = RejectViaOriginFromInfix {}
+public struct RejectViaOriginFromInfix {}
+public struct RejectViaOriginFromInfixPartial<A> { a: A }
+extension RejectViaOriginFromInfixPartial<A> for A: RejectViaOriginFrom<B> {
     func operator/(rhs: B) -> A.Output {
         return this.a.reject_via_origin_from(rhs);
     }

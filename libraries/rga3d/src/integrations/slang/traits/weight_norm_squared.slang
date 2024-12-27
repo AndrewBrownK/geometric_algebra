@@ -5,8 +5,9 @@ using data::*;
 public interface WeightNormSquared {
     func weight_norm_squared() -> AntiScalar;
 }
-public struct weight_norm_squared {}
-extension weight_norm_squared for A: WeightNormSquared {
+public const static weight_norm_squared: WeightNormSquaredInfix = WeightNormSquaredInfix {}
+public struct WeightNormSquaredInfix {}
+extension WeightNormSquaredInfix for A: WeightNormSquared {
     func operator/(rhs: A) -> A.Output {
         return rhs.weight_norm_squared();
     }

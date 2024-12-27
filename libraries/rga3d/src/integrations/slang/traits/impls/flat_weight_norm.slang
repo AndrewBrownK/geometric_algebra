@@ -1,57 +1,47 @@
 using traits::AntiSquareRoot;
 using traits::FlatWeightNormSquared;
-extension Flector {
-    func div(_rhs: flat_weight_norm) -> 
-AntiScalar {
-        this.flat_weight_norm()
-    }
-}
 extension Flector: FlatWeightNorm {
-    func flat_weight_norm() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func flat_weight_norm() -> Output {
         return this.flat_weight_norm_squared().anti_square_root();
     }
-}
-extension Line {
-    func div(_rhs: flat_weight_norm) -> 
-AntiScalar {
-        this.flat_weight_norm()
+    func operator/(_rhs: FlatWeightNormInfix) -> AntiScalar {
+        return this.flat_weight_norm();
     }
 }
 extension Line: FlatWeightNorm {
-    func flat_weight_norm() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func flat_weight_norm() -> Output {
         return this.flat_weight_norm_squared().anti_square_root();
     }
-}
-extension Motor {
-    func div(_rhs: flat_weight_norm) -> 
-AntiScalar {
-        this.flat_weight_norm()
+    func operator/(_rhs: FlatWeightNormInfix) -> AntiScalar {
+        return this.flat_weight_norm();
     }
 }
 extension Motor: FlatWeightNorm {
-    func flat_weight_norm() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func flat_weight_norm() -> Output {
         return this.flat_weight_norm_squared().anti_square_root();
     }
-}
-extension MultiVector {
-    func div(_rhs: flat_weight_norm) -> 
-AntiScalar {
-        this.flat_weight_norm()
+    func operator/(_rhs: FlatWeightNormInfix) -> AntiScalar {
+        return this.flat_weight_norm();
     }
 }
 extension MultiVector: FlatWeightNorm {
-    func flat_weight_norm() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func flat_weight_norm() -> Output {
         return this.flat_weight_norm_squared().anti_square_root();
     }
-}
-extension Point {
-    func div(_rhs: flat_weight_norm) -> 
-AntiScalar {
-        this.flat_weight_norm()
+    func operator/(_rhs: FlatWeightNormInfix) -> AntiScalar {
+        return this.flat_weight_norm();
     }
 }
 extension Point: FlatWeightNorm {
-    func flat_weight_norm() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func flat_weight_norm() -> Output {
         return this.flat_weight_norm_squared().anti_square_root();
+    }
+    func operator/(_rhs: FlatWeightNormInfix) -> AntiScalar {
+        return this.flat_weight_norm();
     }
 }

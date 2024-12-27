@@ -6,8 +6,9 @@ public interface FlatWeight {
     associatedtype Output;
     func flat_weight() -> Output;
 }
-public struct flat_weight {}
-extension flat_weight for A: FlatWeight {
+public const static flat_weight: FlatWeightInfix = FlatWeightInfix {}
+public struct FlatWeightInfix {}
+extension FlatWeightInfix for A: FlatWeight {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_weight();
     }

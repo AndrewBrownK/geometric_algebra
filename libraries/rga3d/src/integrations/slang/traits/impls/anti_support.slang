@@ -1,25 +1,18 @@
-extension DualNum {
-    func div(_rhs: anti_support) -> 
-Horizon {
-        this.anti_support()
-    }
-}
 extension DualNum: AntiSupport {
-    func anti_support() -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_support() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.scalar
         );
     }
-}
-extension Flector {
-    func div(_rhs: anti_support) -> 
-Motor {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Horizon {
+        return this.anti_support();
     }
 }
 extension Flector: AntiSupport {
-    func anti_support() -> Motor {
+    associatedtype Output = Motor;
+    func anti_support() -> Output {
 Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
@@ -33,29 +26,25 @@ Flector right_dual = Flector.from_groups(
             float4(right_dual.group1.xyz, right_dual.e4) * float4(-1.0)
         );
     }
-}
-extension Horizon {
-    func div(_rhs: anti_support) -> 
-Scalar {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Motor {
+        return this.anti_support();
     }
 }
 extension Horizon: AntiSupport {
-    func anti_support() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_support() -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321
         );
     }
-}
-extension Line {
-    func div(_rhs: anti_support) -> 
-Point {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Scalar {
+        return this.anti_support();
     }
 }
 extension Line: AntiSupport {
-    func anti_support() -> Point {
+    associatedtype Output = Point;
+    func anti_support() -> Output {
 Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
@@ -65,15 +54,13 @@ Horizon right_complement = Horizon.from_groups(
             float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(float3(this.e23 * -1.0, this.e31 * -1.0, this.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
-}
-extension Motor {
-    func div(_rhs: anti_support) -> 
-Flector {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Point {
+        return this.anti_support();
     }
 }
 extension Motor: AntiSupport {
-    func anti_support() -> Flector {
+    associatedtype Output = Flector;
+    func anti_support() -> Output {
 Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
@@ -91,21 +78,13 @@ Motor right_dual = Motor.from_groups(
             float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: anti_support) -> 
-MultiVector {
-        this.anti_support()
-    }
-}
-extension MultiVector {
-    func div=(const anti_support& _rhs) -> MultiVector& {
-        this = this.anti_support()
-        return *this;
+    func operator/(_rhs: AntiSupportInfix) -> Flector {
+        return this.anti_support();
     }
 }
 extension MultiVector: AntiSupport {
-    func anti_support() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_support() -> Output {
 Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
@@ -135,29 +114,29 @@ MultiVector right_dual = MultiVector.from_groups(
             float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
-}
-extension Plane {
-    func div(_rhs: anti_support) -> 
-Scalar {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> MultiVector {
+        return this.anti_support();
+    }
+    func operator/=(const AntiSupportInfix& _rhs) -> MultiVector& {
+        this = this.anti_support();
+        return *this;
     }
 }
 extension Plane: AntiSupport {
-    func anti_support() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_support() -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321
         );
     }
-}
-extension Point {
-    func div(_rhs: anti_support) -> 
-Line {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Scalar {
+        return this.anti_support();
     }
 }
 extension Point: AntiSupport {
-    func anti_support() -> Line {
+    associatedtype Output = Line;
+    func anti_support() -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -165,18 +144,19 @@ extension Point: AntiSupport {
             float4(this.e1, this.e2, this.e3, 0.0).xyz * float3(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: anti_support) -> 
-Horizon {
-        this.anti_support()
+    func operator/(_rhs: AntiSupportInfix) -> Line {
+        return this.anti_support();
     }
 }
 extension Scalar: AntiSupport {
-    func anti_support() -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_support() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.scalar
         );
+    }
+    func operator/(_rhs: AntiSupportInfix) -> Horizon {
+        return this.anti_support();
     }
 }

@@ -6,8 +6,9 @@ public interface RightDual {
     associatedtype Output;
     func right_dual() -> Output;
 }
-public struct right_dual {}
-extension right_dual for A: RightDual {
+public const static right_dual: RightDualInfix = RightDualInfix {}
+public struct RightDualInfix {}
+extension RightDualInfix for A: RightDual {
     func operator/(rhs: A) -> A.Output {
         return rhs.right_dual();
     }

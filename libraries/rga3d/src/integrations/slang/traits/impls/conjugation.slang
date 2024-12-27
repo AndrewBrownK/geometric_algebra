@@ -1,51 +1,32 @@
-extension AntiScalar {
-    func div(_rhs: conjugation) -> 
-AntiScalar {
-        this.conjugation()
-    }
-}
-extension AntiScalar {
-    func div=(const conjugation& _rhs) -> AntiScalar& {
-        this = this.conjugation()
-        return *this;
-    }
-}
 extension AntiScalar: Conjugation {
-    func conjugation() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func conjugation() -> Output {
         return this;
     }
-}
-extension DualNum {
-    func div(_rhs: conjugation) -> 
-DualNum {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> AntiScalar {
+        return this.conjugation();
     }
-}
-extension DualNum {
-    func div=(const conjugation& _rhs) -> DualNum& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> AntiScalar& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension DualNum: Conjugation {
-    func conjugation() -> DualNum {
+    associatedtype Output = DualNum;
+    func conjugation() -> Output {
         return this;
     }
-}
-extension Flector {
-    func div(_rhs: conjugation) -> 
-Flector {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> DualNum {
+        return this.conjugation();
     }
-}
-extension Flector {
-    func div=(const conjugation& _rhs) -> Flector& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> DualNum& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Flector: Conjugation {
-    func conjugation() -> Flector {
+    associatedtype Output = Flector;
+    func conjugation() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -53,38 +34,30 @@ extension Flector: Conjugation {
             this.group1
         );
     }
-}
-extension Horizon {
-    func div(_rhs: conjugation) -> 
-Horizon {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Flector {
+        return this.conjugation();
     }
-}
-extension Horizon {
-    func div=(const conjugation& _rhs) -> Horizon& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Flector& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Horizon: Conjugation {
-    func conjugation() -> Horizon {
+    associatedtype Output = Horizon;
+    func conjugation() -> Output {
         return this;
     }
-}
-extension Line {
-    func div(_rhs: conjugation) -> 
-Line {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Horizon {
+        return this.conjugation();
     }
-}
-extension Line {
-    func div=(const conjugation& _rhs) -> Line& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Horizon& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Line: Conjugation {
-    func conjugation() -> Line {
+    associatedtype Output = Line;
+    func conjugation() -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0 * float3(-1.0), 
@@ -92,21 +65,17 @@ extension Line: Conjugation {
             this.group1 * float3(-1.0)
         );
     }
-}
-extension Motor {
-    func div(_rhs: conjugation) -> 
-Motor {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Line {
+        return this.conjugation();
     }
-}
-extension Motor {
-    func div=(const conjugation& _rhs) -> Motor& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Line& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Motor: Conjugation {
-    func conjugation() -> Motor {
+    associatedtype Output = Motor;
+    func conjugation() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -114,21 +83,17 @@ extension Motor: Conjugation {
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: conjugation) -> 
-MultiVector {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Motor {
+        return this.conjugation();
     }
-}
-extension MultiVector {
-    func div=(const conjugation& _rhs) -> MultiVector& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Motor& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension MultiVector: Conjugation {
-    func conjugation() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func conjugation() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -142,78 +107,69 @@ extension MultiVector: Conjugation {
             this.group4
         );
     }
-}
-extension Origin {
-    func div(_rhs: conjugation) -> 
-Origin {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> MultiVector {
+        return this.conjugation();
     }
-}
-extension Origin {
-    func div=(const conjugation& _rhs) -> Origin& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> MultiVector& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Origin: Conjugation {
-    func conjugation() -> Origin {
+    associatedtype Output = Origin;
+    func conjugation() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
         );
     }
-}
-extension Plane {
-    func div(_rhs: conjugation) -> 
-Plane {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Origin {
+        return this.conjugation();
     }
-}
-extension Plane {
-    func div=(const conjugation& _rhs) -> Plane& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Origin& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Plane: Conjugation {
-    func conjugation() -> Plane {
+    associatedtype Output = Plane;
+    func conjugation() -> Output {
         return this;
     }
-}
-extension Point {
-    func div(_rhs: conjugation) -> 
-Point {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Plane {
+        return this.conjugation();
     }
-}
-extension Point {
-    func div=(const conjugation& _rhs) -> Point& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Plane& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Point: Conjugation {
-    func conjugation() -> Point {
+    associatedtype Output = Point;
+    func conjugation() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: conjugation) -> 
-Scalar {
-        this.conjugation()
+    func operator/(_rhs: ConjugationInfix) -> Point {
+        return this.conjugation();
     }
-}
-extension Scalar {
-    func div=(const conjugation& _rhs) -> Scalar& {
-        this = this.conjugation()
+    func operator/=(const ConjugationInfix& _rhs) -> Point& {
+        this = this.conjugation();
         return *this;
     }
 }
 extension Scalar: Conjugation {
-    func conjugation() -> Scalar {
+    associatedtype Output = Scalar;
+    func conjugation() -> Output {
         return this;
+    }
+    func operator/(_rhs: ConjugationInfix) -> Scalar {
+        return this.conjugation();
+    }
+    func operator/=(const ConjugationInfix& _rhs) -> Scalar& {
+        this = this.conjugation();
+        return *this;
     }
 }

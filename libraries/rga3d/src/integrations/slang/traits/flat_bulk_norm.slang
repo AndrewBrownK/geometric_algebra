@@ -5,8 +5,9 @@ using data::*;
 public interface FlatBulkNorm {
     func flat_bulk_norm() -> Scalar;
 }
-public struct flat_bulk_norm {}
-extension flat_bulk_norm for A: FlatBulkNorm {
+public const static flat_bulk_norm: FlatBulkNormInfix = FlatBulkNormInfix {}
+public struct FlatBulkNormInfix {}
+extension FlatBulkNormInfix for A: FlatBulkNorm {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_bulk_norm();
     }

@@ -5,8 +5,9 @@ using data::*;
 public interface Conjugation {
     func conjugation() -> Output;
 }
-public struct conjugation {}
-extension conjugation for A: Conjugation {
+public const static conjugation: ConjugationInfix = ConjugationInfix {}
+public struct ConjugationInfix {}
+extension ConjugationInfix for A: Conjugation {
     func operator/(rhs: A) -> A.Output {
         return rhs.conjugation();
     }

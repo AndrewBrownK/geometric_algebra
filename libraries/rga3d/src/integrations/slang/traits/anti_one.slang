@@ -5,5 +5,6 @@ using data::*;
 public interface AntiOne {
     func anti_one() -> Output;
 }
-public struct anti_one {}
+public const static anti_one: AntiOneInfix = AntiOneInfix {}
+public struct AntiOneInfix {}
 __include ./impls/anti_one;

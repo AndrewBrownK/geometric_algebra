@@ -5,8 +5,9 @@ using data::*;
 public interface ConstraintValid {
     func constraint_valid() -> Output;
 }
-public struct constraint_valid {}
-extension constraint_valid for A: ConstraintValid {
+public const static constraint_valid: ConstraintValidInfix = ConstraintValidInfix {}
+public struct ConstraintValidInfix {}
+extension ConstraintValidInfix for A: ConstraintValid {
     func operator/(rhs: A) -> A.Output {
         return rhs.constraint_valid();
     }

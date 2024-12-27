@@ -1,7 +1,8 @@
 using traits::GeometricProduct;
 using traits::RightDual;
 extension Horizon: Add<AntiScalar> {
-    func operator+(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
@@ -17,7 +18,8 @@ extension Horizon: Add<AntiScalar> {
     }
 }
 extension Horizon: Add<DualNum> {
-    func operator+(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -33,7 +35,8 @@ extension Horizon: Add<DualNum> {
     }
 }
 extension Horizon: Add<Flector> {
-    func operator+(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -43,7 +46,8 @@ extension Horizon: Add<Flector> {
     }
 }
 extension Horizon: Add<Horizon> {
-    func operator+(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func operator+(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e321 + this.e321
@@ -51,6 +55,7 @@ extension Horizon: Add<Horizon> {
     }
 }
 extension Horizon {
+    associatedtype Output = Horizon;
     func operator+=(const Horizon& other) {
         *this = Horizon.from_groups(
             /* e321 */
@@ -59,7 +64,8 @@ extension Horizon {
     }
 }
 extension Horizon: Add<Line> {
-    func operator+(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -75,7 +81,8 @@ extension Horizon: Add<Line> {
     }
 }
 extension Horizon: Add<Motor> {
-    func operator+(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
@@ -91,7 +98,8 @@ extension Horizon: Add<Motor> {
     }
 }
 extension Horizon: Add<MultiVector> {
-    func operator+(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -107,7 +115,8 @@ extension Horizon: Add<MultiVector> {
     }
 }
 extension Horizon: Add<Origin> {
-    func operator+(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4), 
@@ -117,7 +126,8 @@ extension Horizon: Add<Origin> {
     }
 }
 extension Horizon: Add<Plane> {
-    func operator+(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func operator+(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             other.group0 + float4(float3(0.0), this.e321)
@@ -125,7 +135,8 @@ extension Horizon: Add<Plane> {
     }
 }
 extension Horizon: Add<Point> {
-    func operator+(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func operator+(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -135,7 +146,8 @@ extension Horizon: Add<Point> {
     }
 }
 extension Horizon: Add<Scalar> {
-    func operator+(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
@@ -151,67 +163,80 @@ extension Horizon: Add<Scalar> {
     }
 }
 extension Horizon: Mul<AntiScalar> {
-    func operator*(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func operator*(other: AntiScalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<DualNum> {
-    func operator*(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: DualNum) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Flector> {
-    func operator*(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Flector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Horizon> {
-    func operator*(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func operator*(other: Horizon) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Line> {
-    func operator*(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Line) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Motor> {
-    func operator*(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Motor) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<MultiVector> {
-    func operator*(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator*(other: MultiVector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Origin> {
-    func operator*(other: Origin) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func operator*(other: Origin) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Plane> {
-    func operator*(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Plane) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Point> {
-    func operator*(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Point) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon: Mul<Scalar> {
-    func operator*(other: Scalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func operator*(other: Scalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Horizon {
+    associatedtype Output = Horizon;
     func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Horizon: Neg {
-    func neg() -> Horizon {
+    associatedtype Output = Horizon;
+    func neg() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
@@ -219,12 +244,14 @@ extension Horizon: Neg {
     }
 }
 extension Horizon: Not {
-    func not() -> Origin {
+    associatedtype Output = Origin;
+    func not() -> Output {
         return this.right_dual();
     }
 }
 extension Horizon: Sub<AntiScalar> {
-    func operator-(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
@@ -240,7 +267,8 @@ extension Horizon: Sub<AntiScalar> {
     }
 }
 extension Horizon: Sub<DualNum> {
-    func operator-(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0 * float2(-1.0), 
@@ -256,7 +284,8 @@ extension Horizon: Sub<DualNum> {
     }
 }
 extension Horizon: Sub<Flector> {
-    func operator-(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -266,7 +295,8 @@ extension Horizon: Sub<Flector> {
     }
 }
 extension Horizon: Sub<Horizon> {
-    func operator-(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func operator-(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 - other.e321
@@ -274,6 +304,7 @@ extension Horizon: Sub<Horizon> {
     }
 }
 extension Horizon {
+    associatedtype Output = Horizon;
     func operator-=(const Horizon& other) {
         *this = Horizon.from_groups(
             /* e321 */
@@ -282,7 +313,8 @@ extension Horizon {
     }
 }
 extension Horizon: Sub<Line> {
-    func operator-(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -298,7 +330,8 @@ extension Horizon: Sub<Line> {
     }
 }
 extension Horizon: Sub<Motor> {
-    func operator-(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
@@ -314,7 +347,8 @@ extension Horizon: Sub<Motor> {
     }
 }
 extension Horizon: Sub<MultiVector> {
-    func operator-(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0 * float2(-1.0), 
@@ -330,7 +364,8 @@ extension Horizon: Sub<MultiVector> {
     }
 }
 extension Horizon: Sub<Origin> {
-    func operator-(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4 * -1.0), 
@@ -340,7 +375,8 @@ extension Horizon: Sub<Origin> {
     }
 }
 extension Horizon: Sub<Plane> {
-    func operator-(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func operator-(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.group0.xyz, this.e321 - other.e321) * float4(-1.0, -1.0, -1.0, 1.0)
@@ -348,7 +384,8 @@ extension Horizon: Sub<Plane> {
     }
 }
 extension Horizon: Sub<Point> {
-    func operator-(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func operator-(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -358,7 +395,8 @@ extension Horizon: Sub<Point> {
     }
 }
 extension Horizon: Sub<Scalar> {
-    func operator-(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 

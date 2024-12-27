@@ -1,5 +1,6 @@
 extension AntiScalar: Zero {
-    func zero() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func zero() -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             0.0
@@ -7,7 +8,8 @@ extension AntiScalar: Zero {
     }
 }
 extension DualNum: Zero {
-    func zero() -> DualNum {
+    associatedtype Output = DualNum;
+    func zero() -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(0.0)
@@ -15,7 +17,8 @@ extension DualNum: Zero {
     }
 }
 extension Flector: Zero {
-    func zero() -> Flector {
+    associatedtype Output = Flector;
+    func zero() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(0.0), 
@@ -25,7 +28,8 @@ extension Flector: Zero {
     }
 }
 extension Horizon: Zero {
-    func zero() -> Horizon {
+    associatedtype Output = Horizon;
+    func zero() -> Output {
         return Horizon.from_groups(
             /* e321 */
             0.0
@@ -33,7 +37,8 @@ extension Horizon: Zero {
     }
 }
 extension Line: Zero {
-    func zero() -> Line {
+    associatedtype Output = Line;
+    func zero() -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -43,7 +48,8 @@ extension Line: Zero {
     }
 }
 extension Motor: Zero {
-    func zero() -> Motor {
+    associatedtype Output = Motor;
+    func zero() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -53,7 +59,8 @@ extension Motor: Zero {
     }
 }
 extension MultiVector: Zero {
-    func zero() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func zero() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -69,7 +76,8 @@ extension MultiVector: Zero {
     }
 }
 extension Origin: Zero {
-    func zero() -> Origin {
+    associatedtype Output = Origin;
+    func zero() -> Output {
         return Origin.from_groups(
             /* e4 */
             0.0
@@ -77,7 +85,8 @@ extension Origin: Zero {
     }
 }
 extension Plane: Zero {
-    func zero() -> Plane {
+    associatedtype Output = Plane;
+    func zero() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(0.0)
@@ -85,7 +94,8 @@ extension Plane: Zero {
     }
 }
 extension Point: Zero {
-    func zero() -> Point {
+    associatedtype Output = Point;
+    func zero() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(0.0)
@@ -93,7 +103,8 @@ extension Point: Zero {
     }
 }
 extension Scalar: Zero {
-    func zero() -> Scalar {
+    associatedtype Output = Scalar;
+    func zero() -> Output {
         return Scalar.from_groups(
             /* scalar */
             0.0

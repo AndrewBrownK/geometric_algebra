@@ -1,25 +1,18 @@
-extension DualNum {
-    func div(_rhs: anti_constraint_violation) -> 
-Scalar {
-        this.anti_constraint_violation()
-    }
-}
 extension DualNum: AntiConstraintViolation {
-    func anti_constraint_violation() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_constraint_violation() -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.scalar * this.e1234 * 2.0
         );
     }
-}
-extension Flector {
-    func div(_rhs: anti_constraint_violation) -> 
-Scalar {
-        this.anti_constraint_violation()
+    func operator/(_rhs: AntiConstraintViolationInfix) -> Scalar {
+        return this.anti_constraint_violation();
     }
 }
 extension Flector: AntiConstraintViolation {
-    func anti_constraint_violation() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_constraint_violation() -> Output {
 Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -31,15 +24,13 @@ Flector anti_reverse = Flector.from_groups(
             (anti_reverse.e423 * this.e1) + (anti_reverse.e431 * this.e2) + (anti_reverse.e412 * this.e3) + (anti_reverse.e321 * this.e4) - (anti_reverse.e1 * this.e423) - (anti_reverse.e2 * this.e431) - (anti_reverse.e3 * this.e412) - (anti_reverse.e4 * this.e321)
         );
     }
-}
-extension Line {
-    func div(_rhs: anti_constraint_violation) -> 
-Scalar {
-        this.anti_constraint_violation()
+    func operator/(_rhs: AntiConstraintViolationInfix) -> Scalar {
+        return this.anti_constraint_violation();
     }
 }
 extension Line: AntiConstraintViolation {
-    func anti_constraint_violation() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_constraint_violation() -> Output {
 Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
             this.group0 * float3(-1.0), 
@@ -51,15 +42,13 @@ Line anti_reverse = Line.from_groups(
             -(anti_reverse.e41 * this.e23) - (anti_reverse.e42 * this.e31) - (anti_reverse.e43 * this.e12) - (anti_reverse.e23 * this.e41) - (anti_reverse.e31 * this.e42) - (anti_reverse.e12 * this.e43)
         );
     }
-}
-extension Motor {
-    func div(_rhs: anti_constraint_violation) -> 
-Scalar {
-        this.anti_constraint_violation()
+    func operator/(_rhs: AntiConstraintViolationInfix) -> Scalar {
+        return this.anti_constraint_violation();
     }
 }
 extension Motor: AntiConstraintViolation {
-    func anti_constraint_violation() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_constraint_violation() -> Output {
 Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -71,21 +60,13 @@ Motor anti_reverse = Motor.from_groups(
             (anti_reverse.e1234 * this.scalar) + (anti_reverse.scalar * this.e1234) - (anti_reverse.e41 * this.e23) - (anti_reverse.e42 * this.e31) - (anti_reverse.e43 * this.e12) - (anti_reverse.e23 * this.e41) - (anti_reverse.e31 * this.e42) - (anti_reverse.e12 * this.e43)
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: anti_constraint_violation) -> 
-MultiVector {
-        this.anti_constraint_violation()
-    }
-}
-extension MultiVector {
-    func div=(const anti_constraint_violation& _rhs) -> MultiVector& {
-        this = this.anti_constraint_violation()
-        return *this;
+    func operator/(_rhs: AntiConstraintViolationInfix) -> Scalar {
+        return this.anti_constraint_violation();
     }
 }
 extension MultiVector: AntiConstraintViolation {
-    func anti_constraint_violation() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_constraint_violation() -> Output {
 MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -122,5 +103,12 @@ MultiVector geometric_anti_product = MultiVector.from_groups(
             /* e423, e431, e412, e321 */
             geometric_anti_product.group4
         );
+    }
+    func operator/(_rhs: AntiConstraintViolationInfix) -> MultiVector {
+        return this.anti_constraint_violation();
+    }
+    func operator/=(const AntiConstraintViolationInfix& _rhs) -> MultiVector& {
+        this = this.anti_constraint_violation();
+        return *this;
     }
 }

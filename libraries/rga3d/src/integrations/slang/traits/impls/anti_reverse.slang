@@ -1,51 +1,32 @@
-extension AntiScalar {
-    func div(_rhs: anti_reverse) -> 
-AntiScalar {
-        this.anti_reverse()
-    }
-}
-extension AntiScalar {
-    func div=(const anti_reverse& _rhs) -> AntiScalar& {
-        this = this.anti_reverse()
-        return *this;
-    }
-}
 extension AntiScalar: AntiReverse {
-    func anti_reverse() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func anti_reverse() -> Output {
         return this;
     }
-}
-extension DualNum {
-    func div(_rhs: anti_reverse) -> 
-DualNum {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> AntiScalar {
+        return this.anti_reverse();
     }
-}
-extension DualNum {
-    func div=(const anti_reverse& _rhs) -> DualNum& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> AntiScalar& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension DualNum: AntiReverse {
-    func anti_reverse() -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_reverse() -> Output {
         return this;
     }
-}
-extension Flector {
-    func div(_rhs: anti_reverse) -> 
-Flector {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> DualNum {
+        return this.anti_reverse();
     }
-}
-extension Flector {
-    func div=(const anti_reverse& _rhs) -> Flector& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> DualNum& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Flector: AntiReverse {
-    func anti_reverse() -> Flector {
+    associatedtype Output = Flector;
+    func anti_reverse() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -53,38 +34,30 @@ extension Flector: AntiReverse {
             this.group1
         );
     }
-}
-extension Horizon {
-    func div(_rhs: anti_reverse) -> 
-Horizon {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Flector {
+        return this.anti_reverse();
     }
-}
-extension Horizon {
-    func div=(const anti_reverse& _rhs) -> Horizon& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Flector& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Horizon: AntiReverse {
-    func anti_reverse() -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_reverse() -> Output {
         return this;
     }
-}
-extension Line {
-    func div(_rhs: anti_reverse) -> 
-Line {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Horizon {
+        return this.anti_reverse();
     }
-}
-extension Line {
-    func div=(const anti_reverse& _rhs) -> Line& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Horizon& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Line: AntiReverse {
-    func anti_reverse() -> Line {
+    associatedtype Output = Line;
+    func anti_reverse() -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0 * float3(-1.0), 
@@ -92,21 +65,17 @@ extension Line: AntiReverse {
             this.group1 * float3(-1.0)
         );
     }
-}
-extension Motor {
-    func div(_rhs: anti_reverse) -> 
-Motor {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Line {
+        return this.anti_reverse();
     }
-}
-extension Motor {
-    func div=(const anti_reverse& _rhs) -> Motor& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Line& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Motor: AntiReverse {
-    func anti_reverse() -> Motor {
+    associatedtype Output = Motor;
+    func anti_reverse() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -114,21 +83,17 @@ extension Motor: AntiReverse {
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
-}
-extension MultiVector {
-    func div(_rhs: anti_reverse) -> 
-MultiVector {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Motor {
+        return this.anti_reverse();
     }
-}
-extension MultiVector {
-    func div=(const anti_reverse& _rhs) -> MultiVector& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Motor& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension MultiVector: AntiReverse {
-    func anti_reverse() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_reverse() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -142,78 +107,69 @@ extension MultiVector: AntiReverse {
             this.group4
         );
     }
-}
-extension Origin {
-    func div(_rhs: anti_reverse) -> 
-Origin {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> MultiVector {
+        return this.anti_reverse();
     }
-}
-extension Origin {
-    func div=(const anti_reverse& _rhs) -> Origin& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> MultiVector& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Origin: AntiReverse {
-    func anti_reverse() -> Origin {
+    associatedtype Output = Origin;
+    func anti_reverse() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
         );
     }
-}
-extension Plane {
-    func div(_rhs: anti_reverse) -> 
-Plane {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Origin {
+        return this.anti_reverse();
     }
-}
-extension Plane {
-    func div=(const anti_reverse& _rhs) -> Plane& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Origin& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Plane: AntiReverse {
-    func anti_reverse() -> Plane {
+    associatedtype Output = Plane;
+    func anti_reverse() -> Output {
         return this;
     }
-}
-extension Point {
-    func div(_rhs: anti_reverse) -> 
-Point {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Plane {
+        return this.anti_reverse();
     }
-}
-extension Point {
-    func div=(const anti_reverse& _rhs) -> Point& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Plane& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Point: AntiReverse {
-    func anti_reverse() -> Point {
+    associatedtype Output = Point;
+    func anti_reverse() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: anti_reverse) -> 
-Scalar {
-        this.anti_reverse()
+    func operator/(_rhs: AntiReverseInfix) -> Point {
+        return this.anti_reverse();
     }
-}
-extension Scalar {
-    func div=(const anti_reverse& _rhs) -> Scalar& {
-        this = this.anti_reverse()
+    func operator/=(const AntiReverseInfix& _rhs) -> Point& {
+        this = this.anti_reverse();
         return *this;
     }
 }
 extension Scalar: AntiReverse {
-    func anti_reverse() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_reverse() -> Output {
         return this;
+    }
+    func operator/(_rhs: AntiReverseInfix) -> Scalar {
+        return this.anti_reverse();
+    }
+    func operator/=(const AntiReverseInfix& _rhs) -> Scalar& {
+        this = this.anti_reverse();
+        return *this;
     }
 }

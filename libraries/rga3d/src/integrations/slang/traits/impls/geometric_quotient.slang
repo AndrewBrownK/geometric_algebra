@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<AntiScalar> {
-        geometric_quotient_partial(this)
-    }
-}
 extension AntiScalar: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_quotient(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (other.scalar)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<AntiScalar> {
+        geometric_quotient_partial(this)
+    }
 }
 extension AntiScalar: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -38,7 +38,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension AntiScalar: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_quotient(other: Horizon) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 / (other.e321)
@@ -46,7 +47,8 @@ extension AntiScalar: GeometricQuotient<Horizon> {
     }
 }
 extension AntiScalar: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -66,7 +68,8 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension AntiScalar: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -86,7 +89,8 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension AntiScalar: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -130,7 +134,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension AntiScalar: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_quotient(other: Plane) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 / (other.e321)
@@ -138,7 +143,8 @@ extension AntiScalar: GeometricQuotient<Plane> {
     }
 }
 extension AntiScalar: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_quotient(other: Point) -> Output {
 Scalar other_2 = Scalar.from_groups(
             /* scalar */
             powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)
@@ -150,20 +156,17 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension AntiScalar: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_quotient(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (other.scalar)
         );
     }
 }
-extension DualNum {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<DualNum> {
-        geometric_quotient_partial(this)
-    }
-}
 extension DualNum: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -173,9 +176,13 @@ DualNum geometric_product = DualNum.from_groups(
             float2(geometric_product.scalar * this.scalar, (geometric_product.scalar * this.e1234) + (geometric_product.e1234 * this.scalar))
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<DualNum> {
+        geometric_quotient_partial(this)
+    }
 }
 extension DualNum: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -201,7 +208,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -215,7 +223,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -241,7 +250,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -267,7 +277,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -311,7 +322,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -325,7 +337,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -339,20 +352,17 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension DualNum: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_quotient(other: Scalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0/other.scalar) * this.group0
         );
     }
 }
-extension Flector {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Flector> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Flector: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -364,9 +374,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(((float3(geometric_product.scalar) * this.group1.xyz) + (float3(geometric_product.e1234) * this.group0.xyz)), geometric_product.scalar * this.e321)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Flector> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Flector: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -392,7 +406,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -406,7 +421,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -432,7 +448,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -458,7 +475,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Flector: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -502,7 +520,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -516,7 +535,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -530,7 +550,8 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Flector: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Scalar) -> Output {
 Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -543,13 +564,9 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
-extension Horizon {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Horizon> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Horizon: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -561,9 +578,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(float3(0.0), geometric_product.scalar * this.e321)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Horizon> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Horizon: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -589,7 +610,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_quotient(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.e321 / (other.e321)
@@ -597,7 +619,8 @@ extension Horizon: GeometricQuotient<Horizon> {
     }
 }
 extension Horizon: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -623,7 +646,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -649,7 +673,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -693,7 +718,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -707,7 +733,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -721,20 +748,17 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Horizon: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_quotient(other: Scalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 / (other.scalar)
         );
     }
 }
-extension Line {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Line> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Line: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -746,9 +770,13 @@ DualNum geometric_product = DualNum.from_groups(
             float3(geometric_product.scalar) * this.group1
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Line> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Line: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -774,7 +802,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Line: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -788,7 +817,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension Line: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -814,7 +844,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Line: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -840,7 +871,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Line: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -884,7 +916,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Line: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -898,7 +931,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Line: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -912,7 +946,8 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Line: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: Scalar) -> Output {
 Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -925,13 +960,9 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
-extension Motor {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Motor> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Motor: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -943,9 +974,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(geometric_product.scalar) * this.group1
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Motor> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Motor: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -971,7 +1006,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -985,7 +1021,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1011,7 +1048,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1037,7 +1075,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Motor: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1081,7 +1120,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1095,7 +1135,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -1109,7 +1150,8 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Motor: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Scalar) -> Output {
 Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -1122,13 +1164,9 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<MultiVector> {
-        geometric_quotient_partial(this)
-    }
-}
 extension MultiVector: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -1146,9 +1184,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(((float3(geometric_product.scalar) * this.group4.xyz) + (float3(geometric_product.e1234) * this.group1.xyz)), geometric_product.scalar * this.e321)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<MultiVector> {
+        geometric_quotient_partial(this)
+    }
 }
 extension MultiVector: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1180,7 +1222,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1200,7 +1243,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1232,7 +1276,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1264,7 +1309,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1308,7 +1354,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1328,7 +1375,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -1348,7 +1396,8 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension MultiVector: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: Scalar) -> Output {
 Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -1367,21 +1416,21 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
-extension Origin {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Origin> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Origin: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_quotient(other: DualNum) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (other.scalar)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Origin> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Origin: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1407,7 +1456,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Origin: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_quotient(other: Horizon) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
@@ -1415,7 +1465,8 @@ extension Origin: GeometricQuotient<Horizon> {
     }
 }
 extension Origin: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1433,7 +1484,8 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension Origin: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1459,7 +1511,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Origin: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1503,7 +1556,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Origin: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_quotient(other: Plane) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
@@ -1511,7 +1565,8 @@ extension Origin: GeometricQuotient<Plane> {
     }
 }
 extension Origin: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: Point) -> Output {
 Scalar other_2 = Scalar.from_groups(
             /* scalar */
             powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)
@@ -1525,20 +1580,17 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension Origin: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_quotient(other: Scalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (other.scalar)
         );
     }
 }
-extension Plane {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Plane> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Plane: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -1550,9 +1602,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(geometric_product.scalar) * this.group0
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Plane> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Plane: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1578,7 +1634,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1592,7 +1649,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1618,7 +1676,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1644,7 +1703,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Plane: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1688,7 +1748,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1702,7 +1763,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -1716,20 +1778,17 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Plane: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_quotient(other: Scalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0/other.scalar) * this.group0
         );
     }
 }
-extension Point {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Point> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Point: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: DualNum) -> Output {
 DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(powi(other.scalar, -2)) * other.group0
@@ -1741,9 +1800,13 @@ DualNum geometric_product = DualNum.from_groups(
             float4(geometric_product.group0.yy, geometric_product.e1234, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Point> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Point: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1769,7 +1832,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Point: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Horizon) -> Output {
 Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1783,7 +1847,8 @@ Horizon geometric_product = Horizon.from_groups(
     }
 }
 extension Point: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1809,7 +1874,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Point: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1835,7 +1901,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Point: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -1879,7 +1946,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Point: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Plane) -> Output {
 Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(powi(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1893,7 +1961,8 @@ Plane geometric_product = Plane.from_groups(
     }
 }
 extension Point: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Point) -> Output {
 Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)) * other.group0
@@ -1907,20 +1976,17 @@ Point geometric_product = Point.from_groups(
     }
 }
 extension Point: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Point {
+    associatedtype Output = Point;
+    func geometric_quotient(other: Scalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0/other.scalar) * this.group0
         );
     }
 }
-extension Scalar {
-    func div(_rhs: geometric_quotient) -> geometric_quotient_partial<Scalar> {
-        geometric_quotient_partial(this)
-    }
-}
 extension Scalar: GeometricQuotient<DualNum> {
-    func geometric_quotient(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_quotient(other: DualNum) -> Output {
 Scalar other_2 = Scalar.from_groups(
             /* scalar */
             powi(other.scalar, -2)
@@ -1930,9 +1996,13 @@ Scalar other_2 = Scalar.from_groups(
             float2(this.scalar) * float2(other.scalar * other_2.scalar, other.e1234 * other_2.scalar)
         );
     }
+    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Scalar> {
+        geometric_quotient_partial(this)
+    }
 }
 extension Scalar: GeometricQuotient<Flector> {
-    func geometric_quotient(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_quotient(other: Flector) -> Output {
 Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1958,7 +2028,8 @@ Flector geometric_product = Flector.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<Horizon> {
-    func geometric_quotient(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_quotient(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.scalar / (other.e321) * -1.0
@@ -1966,7 +2037,8 @@ extension Scalar: GeometricQuotient<Horizon> {
     }
 }
 extension Scalar: GeometricQuotient<Line> {
-    func geometric_quotient(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_quotient(other: Line) -> Output {
 Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0 * float3(-1.0), 
@@ -1992,7 +2064,8 @@ Line geometric_product = Line.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<Motor> {
-    func geometric_quotient(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_quotient(other: Motor) -> Output {
 Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -2018,7 +2091,8 @@ Motor geometric_product = Motor.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<MultiVector> {
-    func geometric_quotient(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_quotient(other: MultiVector) -> Output {
 MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0, 
@@ -2062,7 +2136,8 @@ MultiVector geometric_product = MultiVector.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<Plane> {
-    func geometric_quotient(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_quotient(other: Plane) -> Output {
 Plane reverse = Plane.from_groups(
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
@@ -2078,7 +2153,8 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<Point> {
-    func geometric_quotient(other: Point) -> Point {
+    associatedtype Output = Point;
+    func geometric_quotient(other: Point) -> Output {
 Scalar other_2 = Scalar.from_groups(
             /* scalar */
             powi(other.e1, 2) + powi(other.e2, 2) + powi(other.e3, 2)
@@ -2090,7 +2166,8 @@ Scalar other_2 = Scalar.from_groups(
     }
 }
 extension Scalar: GeometricQuotient<Scalar> {
-    func geometric_quotient(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_quotient(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             this.scalar / (other.scalar)

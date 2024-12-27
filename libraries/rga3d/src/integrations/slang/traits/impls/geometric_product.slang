@@ -1,18 +1,18 @@
-extension AntiScalar {
-    func div(_rhs: geometric_product) -> geometric_product_partial<AntiScalar> {
-        geometric_product_partial(this)
-    }
-}
 extension AntiScalar: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: DualNum) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<AntiScalar> {
+        geometric_product_partial(this)
+    }
 }
 extension AntiScalar: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * other.e321 * -1.0), 
@@ -22,7 +22,8 @@ extension AntiScalar: GeometricProduct<Flector> {
     }
 }
 extension AntiScalar: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: Horizon) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e321 * -1.0
@@ -30,7 +31,8 @@ extension AntiScalar: GeometricProduct<Horizon> {
     }
 }
 extension AntiScalar: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group1, 
@@ -40,7 +42,8 @@ extension AntiScalar: GeometricProduct<Line> {
     }
 }
 extension AntiScalar: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group1, 
@@ -50,7 +53,8 @@ extension AntiScalar: GeometricProduct<Motor> {
     }
 }
 extension AntiScalar: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, this.e1234 * other.scalar) * float2(0.0, 1.0), 
@@ -66,7 +70,8 @@ extension AntiScalar: GeometricProduct<MultiVector> {
     }
 }
 extension AntiScalar: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: Plane) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e321 * -1.0
@@ -74,7 +79,8 @@ extension AntiScalar: GeometricProduct<Plane> {
     }
 }
 extension AntiScalar: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: Point) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
@@ -82,28 +88,29 @@ extension AntiScalar: GeometricProduct<Point> {
     }
 }
 extension AntiScalar: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: Scalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
         );
     }
 }
-extension DualNum {
-    func div(_rhs: geometric_product) -> geometric_product_partial<DualNum> {
-        geometric_product_partial(this)
-    }
-}
 extension DualNum: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<DualNum> {
+        geometric_product_partial(this)
+    }
 }
 extension DualNum: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_product(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
@@ -111,7 +118,8 @@ extension DualNum: GeometricProduct<DualNum> {
     }
 }
 extension DualNum: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1, other.e2, other.e3, 1.0) * float4(this.group0.xx, this.scalar, (this.scalar * other.e4) - (this.e1234 * other.e321)), 
@@ -121,7 +129,8 @@ extension DualNum: GeometricProduct<Flector> {
     }
 }
 extension DualNum: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * other.e321 * -1.0), 
@@ -131,7 +140,8 @@ extension DualNum: GeometricProduct<Horizon> {
     }
 }
 extension DualNum: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             (float3(this.scalar) * other.group0) + (float3(this.e1234) * other.group1), 
@@ -141,7 +151,8 @@ extension DualNum: GeometricProduct<Line> {
     }
 }
 extension DualNum: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(this.scalar) * other.group0) + (float4(this.e1234) * other.group1), 
@@ -151,7 +162,8 @@ extension DualNum: GeometricProduct<Motor> {
     }
 }
 extension DualNum: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar * other.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
@@ -167,7 +179,8 @@ extension DualNum: GeometricProduct<MultiVector> {
     }
 }
 extension DualNum: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.scalar * other.e4
@@ -175,7 +188,8 @@ extension DualNum: GeometricProduct<Origin> {
     }
 }
 extension DualNum: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * other.e321 * -1.0), 
@@ -185,7 +199,8 @@ extension DualNum: GeometricProduct<Plane> {
     }
 }
 extension DualNum: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -195,20 +210,17 @@ extension DualNum: GeometricProduct<Point> {
     }
 }
 extension DualNum: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_product(other: Scalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * this.group0
         );
     }
 }
-extension Flector {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Flector> {
-        geometric_product_partial(this)
-    }
-}
 extension Flector: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: AntiScalar) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e1234 * this.e321), 
@@ -216,9 +228,13 @@ extension Flector: GeometricProduct<AntiScalar> {
             float4(other.e1234, other.e1234, other.e1234, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Flector> {
+        geometric_product_partial(this)
+    }
 }
 extension Flector: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1, this.e2, this.e3, 1.0) * float4(other.group0.xx, other.scalar, (other.scalar * this.e4) + (other.e1234 * this.e321)), 
@@ -228,7 +244,8 @@ extension Flector: GeometricProduct<DualNum> {
     }
 }
 extension Flector: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(other.e321) * float4(this.group1.xyz, this.e4)) + (other.group1.zxyz * this.group0.yzxz) + (float4(this.group0.ww, this.e431, this.e1) * float4(other.group0.xyx, other.e423)) + (float4(this.group1.zx, this.e4, this.e2) * float4(other.group0.yzz, other.e431)) - (other.group0.zxyx * this.group1.yzxx) - (other.group0.wwwy * float4(this.group0.xyz, this.e431)) - (float4(this.group0.zx, this.e321, this.e321) * float4(other.group1.yzz, other.e4)) - (float4(this.group1.ww, this.e2, this.e412) * float4(other.group1.xyx, other.e3)), 
@@ -238,7 +255,8 @@ extension Flector: GeometricProduct<Flector> {
     }
 }
 extension Flector: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Horizon) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321) * float4(this.group1.xyz, this.e4), 
@@ -248,7 +266,8 @@ extension Flector: GeometricProduct<Horizon> {
     }
 }
 extension Flector: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e3 * other.e31) + (this.e321 * other.e23), (this.e1 * other.e12) + (this.e321 * other.e31), (this.e2 * other.e23) + (this.e321 * other.e12), -(this.e2 * other.e42) - (this.e3 * other.e43) - (this.e423 * other.e23) - (this.e431 * other.e31) - (this.e412 * other.e12)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -258,7 +277,8 @@ extension Flector: GeometricProduct<Line> {
     }
 }
 extension Flector: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321 * other.e23, this.e321 * other.e31, this.e321 * other.e12, -(this.e2 * other.e42) - (this.e3 * other.e43) - (this.e423 * other.e23) - (this.e431 * other.e31) - (this.e412 * other.e12)) + (this.group0.xxyw * other.group1.wzxw) + float4((this.group0.zyz * other.group1.yww), this.e321 * other.e1234) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -268,7 +288,8 @@ extension Flector: GeometricProduct<Motor> {
     }
 }
 extension Flector: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.e4 * other.e321) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) + (float2(this.e1) * float2(other.e1, other.e423)) + (float2(this.e2) * float2(other.e2, other.e431)) + (float2(this.e3) * float2(other.e3, other.e412)) - (float2(other.e321, other.e1) * this.group1.wx), 
@@ -284,7 +305,8 @@ extension Flector: GeometricProduct<MultiVector> {
     }
 }
 extension Flector: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Origin) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -294,7 +316,8 @@ extension Flector: GeometricProduct<Origin> {
     }
 }
 extension Flector: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(this.e3 * other.e431) - (this.e321 * other.e423), -(this.e1 * other.e412) - (this.e321 * other.e431), -(this.e2 * other.e423) - (this.e321 * other.e412), (this.e3 * other.e412) + (this.e4 * other.e321)) + (this.group0.yzxx * other.group0.zxyx) + (other.group0.wwwy * float4(this.group1.xyz, this.e2)), 
@@ -304,7 +327,8 @@ extension Flector: GeometricProduct<Plane> {
     }
 }
 extension Flector: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((this.e4 * other.e1) + (this.e412 * other.e2), (this.e4 * other.e2) + (this.e423 * other.e3), (this.e4 * other.e3) + (this.e431 * other.e1), -(this.e412 * other.e3) - (this.e321 * other.e4)) - (this.group1.yzxy * other.group0.zxyy) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -314,7 +338,8 @@ extension Flector: GeometricProduct<Point> {
     }
 }
 extension Flector: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Scalar) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -323,21 +348,21 @@ extension Flector: GeometricProduct<Scalar> {
         );
     }
 }
-extension Horizon {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Horizon> {
-        geometric_product_partial(this)
-    }
-}
 extension Horizon: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: AntiScalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e321
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Horizon> {
+        geometric_product_partial(this)
+    }
 }
 extension Horizon: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e1234 * this.e321), 
@@ -347,7 +372,8 @@ extension Horizon: GeometricProduct<DualNum> {
     }
 }
 extension Horizon: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e321) * float4(other.group1.xyz, other.e4) * float4(-1.0), 
@@ -357,7 +383,8 @@ extension Horizon: GeometricProduct<Flector> {
     }
 }
 extension Horizon: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_product(other: Horizon) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e321 * -1.0
@@ -365,7 +392,8 @@ extension Horizon: GeometricProduct<Horizon> {
     }
 }
 extension Horizon: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -375,7 +403,8 @@ extension Horizon: GeometricProduct<Line> {
     }
 }
 extension Horizon: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321) * float4(other.group1.xyz, other.e1234), 
@@ -385,7 +414,8 @@ extension Horizon: GeometricProduct<Motor> {
     }
 }
 extension Horizon: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321) * float2(other.e321, other.e4) * float2(-1.0), 
@@ -401,7 +431,8 @@ extension Horizon: GeometricProduct<MultiVector> {
     }
 }
 extension Horizon: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e321 * other.e4 * -1.0
@@ -409,7 +440,8 @@ extension Horizon: GeometricProduct<Origin> {
     }
 }
 extension Horizon: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -419,7 +451,8 @@ extension Horizon: GeometricProduct<Plane> {
     }
 }
 extension Horizon: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e321 * other.e4 * -1.0), 
@@ -429,20 +462,17 @@ extension Horizon: GeometricProduct<Point> {
     }
 }
 extension Horizon: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_product(other: Scalar) -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * other.scalar
         );
     }
 }
-extension Line {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Line> {
-        geometric_product_partial(this)
-    }
-}
 extension Line: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: AntiScalar) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group1, 
@@ -450,9 +480,13 @@ extension Line: GeometricProduct<AntiScalar> {
             float3(0.0)
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Line> {
+        geometric_product_partial(this)
+    }
 }
 extension Line: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: DualNum) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             (float3(other.scalar) * this.group0) + (float3(other.e1234) * this.group1), 
@@ -462,7 +496,8 @@ extension Line: GeometricProduct<DualNum> {
     }
 }
 extension Line: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             (float4(other.e2, other.e321, other.e321, other.e2) * float4(this.group1.zyz, this.e42)) + (float4(other.e321, other.e3, other.e1, other.e1) * float4(this.group1.xxy, this.e41)) + float4(float3(0.0), (other.e3 * this.e43) - (other.e431 * this.e31) - (other.e412 * this.e12)) - float4((this.group1.yzx * other.group0.zxy), other.e423 * this.e23), 
@@ -472,7 +507,8 @@ extension Line: GeometricProduct<Flector> {
     }
 }
 extension Line: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -482,7 +518,8 @@ extension Line: GeometricProduct<Horizon> {
     }
 }
 extension Line: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e42 * this.e12) + (other.e31 * this.e43), (other.e43 * this.e23) + (other.e12 * this.e41), (other.e41 * this.e31) + (other.e23 * this.e42), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - float4((other.group0.zxy * this.group1.yzx), other.e41 * this.e23) - float4((other.group1.zxy * this.group0.yzx), other.e42 * this.e31), 
@@ -492,7 +529,8 @@ extension Line: GeometricProduct<Line> {
     }
 }
 extension Line: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((this.e41 * other.scalar) + (this.e43 * other.e31) + (this.e23 * other.e1234) + (this.e12 * other.e42), (this.e41 * other.e12) + (this.e42 * other.scalar) + (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e42 * other.e23) + (this.e43 * other.scalar) + (this.e31 * other.e41) + (this.e12 * other.e1234), -(this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)) - (other.group1.zxyx * float4(this.group0.yzx, this.e41)) - float4((this.group1.yzx * other.group0.zxy), this.e42 * other.e31), 
@@ -502,7 +540,8 @@ extension Line: GeometricProduct<Motor> {
     }
 }
 extension Line: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)) - (float2(other.e23) * float2(this.e23, this.e41)) - (float2(other.e31) * float2(this.e31, this.e42)) - (float2(other.e12) * float2(this.e12, this.e43)), 
@@ -518,7 +557,8 @@ extension Line: GeometricProduct<MultiVector> {
     }
 }
 extension Line: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: Origin) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -526,7 +566,8 @@ extension Line: GeometricProduct<Origin> {
     }
 }
 extension Line: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 1.0) * float4(this.group1, -(this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412)), 
@@ -536,7 +577,8 @@ extension Line: GeometricProduct<Plane> {
     }
 }
 extension Line: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e31 * other.e3 * -1.0, this.e12 * other.e1 * -1.0, this.e23 * other.e2 * -1.0, (this.e42 * other.e2) + (this.e43 * other.e3)) + (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -546,7 +588,8 @@ extension Line: GeometricProduct<Point> {
     }
 }
 extension Line: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Scalar) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.scalar) * this.group0, 
@@ -555,13 +598,9 @@ extension Line: GeometricProduct<Scalar> {
         );
     }
 }
-extension Motor {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Motor> {
-        geometric_product_partial(this)
-    }
-}
 extension Motor: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: AntiScalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group1, 
@@ -569,9 +608,13 @@ extension Motor: GeometricProduct<AntiScalar> {
             float4(0.0)
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Motor> {
+        geometric_product_partial(this)
+    }
 }
 extension Motor: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(other.scalar) * this.group0) + (float4(other.e1234) * this.group1), 
@@ -581,7 +624,8 @@ extension Motor: GeometricProduct<DualNum> {
     }
 }
 extension Motor: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             (other.group0.xyxx * float4(this.group1.wwy, this.e41)) + (other.group0.yzzy * float4(this.group1.zxw, this.e42)) + float4(float3(0.0), (other.e4 * this.scalar) - (other.e431 * this.e31) - (other.e412 * this.e12) - (other.e321 * this.e1234)) + float4((other.group1.www * this.group1.xyz), other.e3 * this.e43) - (this.group1.yzxx * float4(other.group0.zxy, other.e423)), 
@@ -591,7 +635,8 @@ extension Motor: GeometricProduct<Flector> {
     }
 }
 extension Motor: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321) * float4(this.group1.xyz, this.e1234) * float4(1.0, 1.0, 1.0, -1.0), 
@@ -601,7 +646,8 @@ extension Motor: GeometricProduct<Horizon> {
     }
 }
 extension Motor: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e41 * this.scalar) + (other.e42 * this.e12) + (other.e23 * this.e1234) + (other.e31 * this.e43), (other.e42 * this.scalar) + (other.e43 * this.e23) + (other.e31 * this.e1234) + (other.e12 * this.e41), (other.e41 * this.e31) + (other.e43 * this.scalar) + (other.e23 * this.e42) + (other.e12 * this.e1234), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - (this.group1.yzxx * float4(other.group0.zxy, other.e41)) - float4((other.group1.zxy * this.group0.yzx), other.e42 * this.e31), 
@@ -611,7 +657,8 @@ extension Motor: GeometricProduct<Line> {
     }
 }
 extension Motor: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e1234 * this.e23) + (other.e23 * this.e1234) + (other.e31 * this.e43) + (other.scalar * this.e41), (other.e1234 * this.e31) + (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.scalar * this.e42), (other.e1234 * this.e12) + (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.scalar * this.e43), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) + (other.group0.xyxw * this.group1.wwyw) + float4((other.group0.yzz * this.group1.zxw), other.scalar * this.e1234) - (other.group0.zxyx * this.group1.yzxx) - float4((other.group1.zxy * this.group0.yzx), other.e42 * this.e31), 
@@ -621,7 +668,8 @@ extension Motor: GeometricProduct<Motor> {
     }
 }
 extension Motor: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12)) + (float2(other.scalar) * float2(this.scalar, this.e1234)) - (float2(this.e23) * float2(other.e23, other.e41)) - (float2(this.e31) * float2(other.e31, other.e42)) - (float2(this.e12) * float2(other.e12, other.e43)), 
@@ -637,7 +685,8 @@ extension Motor: GeometricProduct<MultiVector> {
     }
 }
 extension Motor: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * other.e4), 
@@ -647,7 +696,8 @@ extension Motor: GeometricProduct<Origin> {
     }
 }
 extension Motor: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e321, other.e321, other.e321, 1.0) * float4(this.group1.xyz, -(this.e1234 * other.e321) - (this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412)), 
@@ -657,7 +707,8 @@ extension Motor: GeometricProduct<Plane> {
     }
 }
 extension Motor: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e31 * other.e3 * -1.0, this.e12 * other.e1 * -1.0, this.e23 * other.e2 * -1.0, (this.e43 * other.e3) + (this.scalar * other.e4)) + (other.group0.xyzy * float4(this.group1.www, this.e42)) + (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -667,7 +718,8 @@ extension Motor: GeometricProduct<Point> {
     }
 }
 extension Motor: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Scalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.scalar) * this.group0, 
@@ -676,13 +728,9 @@ extension Motor: GeometricProduct<Scalar> {
         );
     }
 }
-extension MultiVector {
-    func div(_rhs: geometric_product) -> geometric_product_partial<MultiVector> {
-        geometric_product_partial(this)
-    }
-}
 extension MultiVector: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234 * this.scalar) * float2(0.0, 1.0), 
@@ -696,9 +744,13 @@ extension MultiVector: GeometricProduct<AntiScalar> {
             float4(other.e1234, other.e1234, other.e1234, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<MultiVector> {
+        geometric_product_partial(this)
+    }
 }
 extension MultiVector: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: DualNum) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
@@ -714,7 +766,8 @@ extension MultiVector: GeometricProduct<DualNum> {
     }
 }
 extension MultiVector: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) + (float2(this.e1) * float2(other.e1, other.e423)) + (float2(this.e2) * float2(other.e2, other.e431)) + (float2(this.e3) * float2(other.e3, other.e412)) - (float2(other.e321, other.e1) * this.group4.wx), 
@@ -730,7 +783,8 @@ extension MultiVector: GeometricProduct<Flector> {
     }
 }
 extension MultiVector: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321) * float2(this.e321, this.e4) * float2(-1.0, 1.0), 
@@ -746,7 +800,8 @@ extension MultiVector: GeometricProduct<Horizon> {
     }
 }
 extension MultiVector: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Line) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - (float2(this.e23) * float2(other.e23, other.e41)) - (float2(this.e31) * float2(other.e31, other.e42)) - (float2(this.e12) * float2(other.e12, other.e43)), 
@@ -762,7 +817,8 @@ extension MultiVector: GeometricProduct<Line> {
     }
 }
 extension MultiVector: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Motor) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12)) + (float2(this.scalar) * float2(other.scalar, other.e1234)) - (float2(other.e23) * float2(this.e23, this.e41)) - (float2(other.e31) * float2(this.e31, this.e42)) - (float2(other.e12) * float2(this.e12, this.e43)), 
@@ -778,7 +834,8 @@ extension MultiVector: GeometricProduct<Motor> {
     }
 }
 extension MultiVector: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e1234 * this.scalar) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) + (float2(other.scalar) * this.group0) + (float2(this.e1) * float2(other.e1, other.e423)) + (float2(this.e2) * float2(other.e2, other.e431)) + (float2(this.e3) * float2(other.e3, other.e412)) - (float2(this.e23) * float2(other.e23, other.e41)) - (float2(this.e31) * float2(other.e31, other.e42)) - (float2(this.e12) * float2(other.e12, other.e43)) - (float2(other.e321, other.e1) * this.group4.wx), 
@@ -794,7 +851,8 @@ extension MultiVector: GeometricProduct<MultiVector> {
     }
 }
 extension MultiVector: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
@@ -810,7 +868,8 @@ extension MultiVector: GeometricProduct<Origin> {
     }
 }
 extension MultiVector: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e321, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)) * float2(-1.0, 1.0), 
@@ -826,7 +885,8 @@ extension MultiVector: GeometricProduct<Plane> {
     }
 }
 extension MultiVector: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3), -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
@@ -842,7 +902,8 @@ extension MultiVector: GeometricProduct<Point> {
     }
 }
 extension MultiVector: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: Scalar) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * this.group0, 
@@ -857,21 +918,21 @@ extension MultiVector: GeometricProduct<Scalar> {
         );
     }
 }
-extension Origin {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Origin> {
-        geometric_product_partial(this)
-    }
-}
 extension Origin: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: DualNum) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.scalar * this.e4
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Origin> {
+        geometric_product_partial(this)
+    }
 }
 extension Origin: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group0.xyz, other.e321), 
@@ -881,7 +942,8 @@ extension Origin: GeometricProduct<Flector> {
     }
 }
 extension Origin: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: Horizon) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e321 * this.e4
@@ -889,7 +951,8 @@ extension Origin: GeometricProduct<Horizon> {
     }
 }
 extension Origin: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: Line) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
@@ -897,7 +960,8 @@ extension Origin: GeometricProduct<Line> {
     }
 }
 extension Origin: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
@@ -907,7 +971,8 @@ extension Origin: GeometricProduct<Motor> {
     }
 }
 extension Origin: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
@@ -923,7 +988,8 @@ extension Origin: GeometricProduct<MultiVector> {
     }
 }
 extension Origin: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: Plane) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e321
@@ -931,7 +997,8 @@ extension Origin: GeometricProduct<Plane> {
     }
 }
 extension Origin: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Point) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e4) * other.group0.xyz, 
@@ -941,28 +1008,29 @@ extension Origin: GeometricProduct<Point> {
     }
 }
 extension Origin: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: Scalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * other.scalar
         );
     }
 }
-extension Plane {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Plane> {
-        geometric_product_partial(this)
-    }
-}
 extension Plane: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: AntiScalar) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e321
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Plane> {
+        geometric_product_partial(this)
+    }
 }
 extension Plane: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e1234 * this.e321), 
@@ -972,7 +1040,8 @@ extension Plane: GeometricProduct<DualNum> {
     }
 }
 extension Plane: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e2 * this.e412) + (other.e321 * this.e423), (other.e3 * this.e423) + (other.e321 * this.e431), (other.e1 * this.e431) + (other.e321 * this.e412), -(other.e3 * this.e412) - (other.e4 * this.e321)) - (other.group0.zxyx * this.group0.yzxx) - (this.group0.wwwy * float4(other.group1.xyz, other.e2)), 
@@ -982,7 +1051,8 @@ extension Plane: GeometricProduct<Flector> {
     }
 }
 extension Plane: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Horizon) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -992,7 +1062,8 @@ extension Plane: GeometricProduct<Horizon> {
     }
 }
 extension Plane: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 1.0) * float4(other.group1, -(other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412)), 
@@ -1002,7 +1073,8 @@ extension Plane: GeometricProduct<Line> {
     }
 }
 extension Plane: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 1.0) * float4(other.group1.xyz, (other.e1234 * this.e321) - (other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412)), 
@@ -1012,7 +1084,8 @@ extension Plane: GeometricProduct<Motor> {
     }
 }
 extension Plane: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e321, -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) * float2(-1.0, 1.0), 
@@ -1028,7 +1101,8 @@ extension Plane: GeometricProduct<MultiVector> {
     }
 }
 extension Plane: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e321 * -1.0
@@ -1036,7 +1110,8 @@ extension Plane: GeometricProduct<Origin> {
     }
 }
 extension Plane: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((float3(other.e321) * this.group0.xyz) - (float3(this.e321) * other.group0.xyz)), 0.0), 
@@ -1046,7 +1121,8 @@ extension Plane: GeometricProduct<Plane> {
     }
 }
 extension Plane: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e412 * other.e2, this.e423 * other.e3, this.e431 * other.e1, -(this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) - (this.group0.yzxx * other.group0.zxyx), 
@@ -1056,28 +1132,29 @@ extension Plane: GeometricProduct<Point> {
     }
 }
 extension Plane: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: Scalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Point {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Point> {
-        geometric_product_partial(this)
-    }
-}
 extension Point: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: AntiScalar) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1234, other.e1234, other.e1234, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Point> {
+        geometric_product_partial(this)
+    }
 }
 extension Point: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -1087,7 +1164,8 @@ extension Point: GeometricProduct<DualNum> {
     }
 }
 extension Point: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Flector) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(other.e4 * this.e1) - (other.e431 * this.e3), -(other.e4 * this.e2) - (other.e412 * this.e1), -(other.e4 * this.e3) - (other.e423 * this.e2), (other.e412 * this.e3) + (other.e321 * this.e4)) + (other.group1.zxyy * this.group0.yzxy) + (this.group0.wwwx * float4(other.group0.xyz, other.e423)), 
@@ -1097,7 +1175,8 @@ extension Point: GeometricProduct<Flector> {
     }
 }
 extension Point: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Horizon) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), other.e321 * this.e4), 
@@ -1107,7 +1186,8 @@ extension Point: GeometricProduct<Horizon> {
     }
 }
 extension Point: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e31 * this.e3, other.e12 * this.e1, other.e23 * this.e2, -(other.e42 * this.e2) - (other.e43 * this.e3)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1117,7 +1197,8 @@ extension Point: GeometricProduct<Line> {
     }
 }
 extension Point: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar * this.e1, other.scalar * this.e2, other.scalar * this.e3, -(other.e42 * this.e2) - (other.e43 * this.e3)) + (other.group1.yzxw * this.group0.zxyw) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1127,7 +1208,8 @@ extension Point: GeometricProduct<Motor> {
     }
 }
 extension Point: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e321 * this.e4) + (float2(this.e1) * float2(other.e1, other.e423)) + (float2(this.e2) * float2(other.e2, other.e431)) + (float2(this.e3) * float2(other.e3, other.e412)), 
@@ -1143,7 +1225,8 @@ extension Point: GeometricProduct<MultiVector> {
     }
 }
 extension Point: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Origin) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e4) * this.group0.xyz * float3(-1.0), 
@@ -1153,7 +1236,8 @@ extension Point: GeometricProduct<Origin> {
     }
 }
 extension Point: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Plane) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e431 * this.e3 * -1.0, other.e412 * this.e1 * -1.0, other.e423 * this.e2 * -1.0, (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)) + (other.group0.zxyx * this.group0.yzxx), 
@@ -1163,7 +1247,8 @@ extension Point: GeometricProduct<Plane> {
     }
 }
 extension Point: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Point) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz)), 0.0), 
@@ -1173,28 +1258,29 @@ extension Point: GeometricProduct<Point> {
     }
 }
 extension Point: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Point {
+    associatedtype Output = Point;
+    func geometric_product(other: Scalar) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Scalar {
-    func div(_rhs: geometric_product) -> geometric_product_partial<Scalar> {
-        geometric_product_partial(this)
-    }
-}
 extension Scalar: GeometricProduct<AntiScalar> {
-    func geometric_product(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func geometric_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
+    func operator/(_rhs: GeometricProductInfix) -> geometric_product_partial<Scalar> {
+        geometric_product_partial(this)
+    }
 }
 extension Scalar: GeometricProduct<DualNum> {
-    func geometric_product(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func geometric_product(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * other.group0
@@ -1202,7 +1288,8 @@ extension Scalar: GeometricProduct<DualNum> {
     }
 }
 extension Scalar: GeometricProduct<Flector> {
-    func geometric_product(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func geometric_product(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -1212,7 +1299,8 @@ extension Scalar: GeometricProduct<Flector> {
     }
 }
 extension Scalar: GeometricProduct<Horizon> {
-    func geometric_product(other: Horizon) -> Horizon {
+    associatedtype Output = Horizon;
+    func geometric_product(other: Horizon) -> Output {
         return Horizon.from_groups(
             /* e321 */
             other.e321 * this.scalar
@@ -1220,7 +1308,8 @@ extension Scalar: GeometricProduct<Horizon> {
     }
 }
 extension Scalar: GeometricProduct<Line> {
-    func geometric_product(other: Line) -> Line {
+    associatedtype Output = Line;
+    func geometric_product(other: Line) -> Output {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.scalar) * other.group0, 
@@ -1230,7 +1319,8 @@ extension Scalar: GeometricProduct<Line> {
     }
 }
 extension Scalar: GeometricProduct<Motor> {
-    func geometric_product(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func geometric_product(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * other.group0, 
@@ -1240,7 +1330,8 @@ extension Scalar: GeometricProduct<Motor> {
     }
 }
 extension Scalar: GeometricProduct<MultiVector> {
-    func geometric_product(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func geometric_product(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * other.group0, 
@@ -1256,7 +1347,8 @@ extension Scalar: GeometricProduct<MultiVector> {
     }
 }
 extension Scalar: GeometricProduct<Origin> {
-    func geometric_product(other: Origin) -> Origin {
+    associatedtype Output = Origin;
+    func geometric_product(other: Origin) -> Output {
         return Origin.from_groups(
             /* e4 */
             other.e4 * this.scalar
@@ -1264,7 +1356,8 @@ extension Scalar: GeometricProduct<Origin> {
     }
 }
 extension Scalar: GeometricProduct<Plane> {
-    func geometric_product(other: Plane) -> Plane {
+    associatedtype Output = Plane;
+    func geometric_product(other: Plane) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
@@ -1272,7 +1365,8 @@ extension Scalar: GeometricProduct<Plane> {
     }
 }
 extension Scalar: GeometricProduct<Point> {
-    func geometric_product(other: Point) -> Point {
+    associatedtype Output = Point;
+    func geometric_product(other: Point) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
@@ -1280,7 +1374,8 @@ extension Scalar: GeometricProduct<Point> {
     }
 }
 extension Scalar: GeometricProduct<Scalar> {
-    func geometric_product(other: Scalar) -> Scalar {
+    associatedtype Output = Scalar;
+    func geometric_product(other: Scalar) -> Output {
         return Scalar.from_groups(
             /* scalar */
             other.scalar * this.scalar

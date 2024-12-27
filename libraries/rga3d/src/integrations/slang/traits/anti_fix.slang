@@ -5,8 +5,9 @@ using data::*;
 public interface AntiFix {
     func anti_fix() -> Output;
 }
-public struct anti_fix {}
-extension anti_fix for A: AntiFix {
+public const static anti_fix: AntiFixInfix = AntiFixInfix {}
+public struct AntiFixInfix {}
+extension AntiFixInfix for A: AntiFix {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_fix();
     }

@@ -1,51 +1,32 @@
-extension AntiScalar {
-    func div(_rhs: anti_auto_morphism) -> 
-AntiScalar {
-        this.anti_auto_morphism()
-    }
-}
-extension AntiScalar {
-    func div=(const anti_auto_morphism& _rhs) -> AntiScalar& {
-        this = this.anti_auto_morphism()
-        return *this;
-    }
-}
 extension AntiScalar: AntiAutoMorphism {
-    func anti_auto_morphism() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func anti_auto_morphism() -> Output {
         return this;
     }
-}
-extension DualNum {
-    func div(_rhs: anti_auto_morphism) -> 
-DualNum {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> AntiScalar {
+        return this.anti_auto_morphism();
     }
-}
-extension DualNum {
-    func div=(const anti_auto_morphism& _rhs) -> DualNum& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> AntiScalar& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension DualNum: AntiAutoMorphism {
-    func anti_auto_morphism() -> DualNum {
+    associatedtype Output = DualNum;
+    func anti_auto_morphism() -> Output {
         return this;
     }
-}
-extension Flector {
-    func div(_rhs: anti_auto_morphism) -> 
-Flector {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> DualNum {
+        return this.anti_auto_morphism();
     }
-}
-extension Flector {
-    func div=(const anti_auto_morphism& _rhs) -> Flector& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> DualNum& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Flector: AntiAutoMorphism {
-    func anti_auto_morphism() -> Flector {
+    associatedtype Output = Flector;
+    func anti_auto_morphism() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -53,75 +34,59 @@ extension Flector: AntiAutoMorphism {
             this.group1 * float4(-1.0)
         );
     }
-}
-extension Horizon {
-    func div(_rhs: anti_auto_morphism) -> 
-Horizon {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Flector {
+        return this.anti_auto_morphism();
     }
-}
-extension Horizon {
-    func div=(const anti_auto_morphism& _rhs) -> Horizon& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Flector& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Horizon: AntiAutoMorphism {
-    func anti_auto_morphism() -> Horizon {
+    associatedtype Output = Horizon;
+    func anti_auto_morphism() -> Output {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
         );
     }
-}
-extension Line {
-    func div(_rhs: anti_auto_morphism) -> 
-Line {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Horizon {
+        return this.anti_auto_morphism();
     }
-}
-extension Line {
-    func div=(const anti_auto_morphism& _rhs) -> Line& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Horizon& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Line: AntiAutoMorphism {
-    func anti_auto_morphism() -> Line {
+    associatedtype Output = Line;
+    func anti_auto_morphism() -> Output {
         return this;
     }
-}
-extension Motor {
-    func div(_rhs: anti_auto_morphism) -> 
-Motor {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Line {
+        return this.anti_auto_morphism();
     }
-}
-extension Motor {
-    func div=(const anti_auto_morphism& _rhs) -> Motor& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Line& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Motor: AntiAutoMorphism {
-    func anti_auto_morphism() -> Motor {
+    associatedtype Output = Motor;
+    func anti_auto_morphism() -> Output {
         return this;
     }
-}
-extension MultiVector {
-    func div(_rhs: anti_auto_morphism) -> 
-MultiVector {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Motor {
+        return this.anti_auto_morphism();
     }
-}
-extension MultiVector {
-    func div=(const anti_auto_morphism& _rhs) -> MultiVector& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Motor& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension MultiVector: AntiAutoMorphism {
-    func anti_auto_morphism() -> MultiVector {
+    associatedtype Output = MultiVector;
+    func anti_auto_morphism() -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0, 
@@ -135,81 +100,72 @@ extension MultiVector: AntiAutoMorphism {
             this.group4 * float4(-1.0)
         );
     }
-}
-extension Origin {
-    func div(_rhs: anti_auto_morphism) -> 
-Origin {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> MultiVector {
+        return this.anti_auto_morphism();
     }
-}
-extension Origin {
-    func div=(const anti_auto_morphism& _rhs) -> Origin& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> MultiVector& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Origin: AntiAutoMorphism {
-    func anti_auto_morphism() -> Origin {
+    associatedtype Output = Origin;
+    func anti_auto_morphism() -> Output {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
         );
     }
-}
-extension Plane {
-    func div(_rhs: anti_auto_morphism) -> 
-Plane {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Origin {
+        return this.anti_auto_morphism();
     }
-}
-extension Plane {
-    func div=(const anti_auto_morphism& _rhs) -> Plane& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Origin& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Plane: AntiAutoMorphism {
-    func anti_auto_morphism() -> Plane {
+    associatedtype Output = Plane;
+    func anti_auto_morphism() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Point {
-    func div(_rhs: anti_auto_morphism) -> 
-Point {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Plane {
+        return this.anti_auto_morphism();
     }
-}
-extension Point {
-    func div=(const anti_auto_morphism& _rhs) -> Point& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Plane& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Point: AntiAutoMorphism {
-    func anti_auto_morphism() -> Point {
+    associatedtype Output = Point;
+    func anti_auto_morphism() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
     }
-}
-extension Scalar {
-    func div(_rhs: anti_auto_morphism) -> 
-Scalar {
-        this.anti_auto_morphism()
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Point {
+        return this.anti_auto_morphism();
     }
-}
-extension Scalar {
-    func div=(const anti_auto_morphism& _rhs) -> Scalar& {
-        this = this.anti_auto_morphism()
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Point& {
+        this = this.anti_auto_morphism();
         return *this;
     }
 }
 extension Scalar: AntiAutoMorphism {
-    func anti_auto_morphism() -> Scalar {
+    associatedtype Output = Scalar;
+    func anti_auto_morphism() -> Output {
         return this;
+    }
+    func operator/(_rhs: AntiAutoMorphismInfix) -> Scalar {
+        return this.anti_auto_morphism();
+    }
+    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Scalar& {
+        this = this.anti_auto_morphism();
+        return *this;
     }
 }

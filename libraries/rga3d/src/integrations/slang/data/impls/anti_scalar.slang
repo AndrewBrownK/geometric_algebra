@@ -1,6 +1,7 @@
 using traits::GeometricProduct;
 extension AntiScalar: Add<AntiScalar> {
-    func operator+(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func operator+(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 + this.e1234
@@ -8,6 +9,7 @@ extension AntiScalar: Add<AntiScalar> {
     }
 }
 extension AntiScalar {
+    associatedtype Output = AntiScalar;
     func operator+=(const AntiScalar& other) {
         *this = AntiScalar.from_groups(
             /* e1234 */
@@ -16,7 +18,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Add<DualNum> {
-    func operator+(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func operator+(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234) + other.group0
@@ -24,7 +27,8 @@ extension AntiScalar: Add<DualNum> {
     }
 }
 extension AntiScalar: Add<Flector> {
-    func operator+(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -40,7 +44,8 @@ extension AntiScalar: Add<Flector> {
     }
 }
 extension AntiScalar: Add<Horizon> {
-    func operator+(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -56,7 +61,8 @@ extension AntiScalar: Add<Horizon> {
     }
 }
 extension AntiScalar: Add<Line> {
-    func operator+(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0, this.e1234), 
@@ -66,7 +72,8 @@ extension AntiScalar: Add<Line> {
     }
 }
 extension AntiScalar: Add<Motor> {
-    func operator+(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 + float4(float3(0.0), this.e1234), 
@@ -76,7 +83,8 @@ extension AntiScalar: Add<Motor> {
     }
 }
 extension AntiScalar: Add<MultiVector> {
-    func operator+(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234) + other.group0, 
@@ -92,7 +100,8 @@ extension AntiScalar: Add<MultiVector> {
     }
 }
 extension AntiScalar: Add<Origin> {
-    func operator+(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -108,7 +117,8 @@ extension AntiScalar: Add<Origin> {
     }
 }
 extension AntiScalar: Add<Plane> {
-    func operator+(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -124,7 +134,8 @@ extension AntiScalar: Add<Plane> {
     }
 }
 extension AntiScalar: Add<Point> {
-    func operator+(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -140,7 +151,8 @@ extension AntiScalar: Add<Point> {
     }
 }
 extension AntiScalar: Add<Scalar> {
-    func operator+(other: Scalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func operator+(other: Scalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234)
@@ -148,62 +160,74 @@ extension AntiScalar: Add<Scalar> {
     }
 }
 extension AntiScalar: Mul<DualNum> {
-    func operator*(other: DualNum) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func operator*(other: DualNum) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar {
+    associatedtype Output = AntiScalar;
     func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Flector> {
-    func operator*(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Flector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Horizon> {
-    func operator*(other: Horizon) -> Origin {
+    associatedtype Output = Origin;
+    func operator*(other: Horizon) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Line> {
-    func operator*(other: Line) -> Line {
+    associatedtype Output = Line;
+    func operator*(other: Line) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Motor> {
-    func operator*(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Motor) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<MultiVector> {
-    func operator*(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator*(other: MultiVector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Plane> {
-    func operator*(other: Plane) -> Origin {
+    associatedtype Output = Origin;
+    func operator*(other: Plane) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Point> {
-    func operator*(other: Point) -> Plane {
+    associatedtype Output = Plane;
+    func operator*(other: Point) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar: Mul<Scalar> {
-    func operator*(other: Scalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func operator*(other: Scalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension AntiScalar {
+    associatedtype Output = AntiScalar;
     func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension AntiScalar: Neg {
-    func neg() -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func neg() -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * -1.0
@@ -211,7 +235,8 @@ extension AntiScalar: Neg {
     }
 }
 extension AntiScalar: Sub<AntiScalar> {
-    func operator-(other: AntiScalar) -> AntiScalar {
+    associatedtype Output = AntiScalar;
+    func operator-(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 - other.e1234
@@ -219,6 +244,7 @@ extension AntiScalar: Sub<AntiScalar> {
     }
 }
 extension AntiScalar {
+    associatedtype Output = AntiScalar;
     func operator-=(const AntiScalar& other) {
         *this = AntiScalar.from_groups(
             /* e1234 */
@@ -227,7 +253,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Sub<DualNum> {
-    func operator-(other: DualNum) -> DualNum {
+    associatedtype Output = DualNum;
+    func operator-(other: DualNum) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0)
@@ -235,7 +262,8 @@ extension AntiScalar: Sub<DualNum> {
     }
 }
 extension AntiScalar: Sub<Flector> {
-    func operator-(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -251,7 +279,8 @@ extension AntiScalar: Sub<Flector> {
     }
 }
 extension AntiScalar: Sub<Horizon> {
-    func operator-(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -267,7 +296,8 @@ extension AntiScalar: Sub<Horizon> {
     }
 }
 extension AntiScalar: Sub<Line> {
-    func operator-(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -277,7 +307,8 @@ extension AntiScalar: Sub<Line> {
     }
 }
 extension AntiScalar: Sub<Motor> {
-    func operator-(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234 - other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -287,7 +318,8 @@ extension AntiScalar: Sub<Motor> {
     }
 }
 extension AntiScalar: Sub<MultiVector> {
-    func operator-(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0), 
@@ -303,7 +335,8 @@ extension AntiScalar: Sub<MultiVector> {
     }
 }
 extension AntiScalar: Sub<Origin> {
-    func operator-(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -319,7 +352,8 @@ extension AntiScalar: Sub<Origin> {
     }
 }
 extension AntiScalar: Sub<Plane> {
-    func operator-(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -335,7 +369,8 @@ extension AntiScalar: Sub<Plane> {
     }
 }
 extension AntiScalar: Sub<Point> {
-    func operator-(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
@@ -351,7 +386,8 @@ extension AntiScalar: Sub<Point> {
     }
 }
 extension AntiScalar: Sub<Scalar> {
-    func operator-(other: Scalar) -> DualNum {
+    associatedtype Output = DualNum;
+    func operator-(other: Scalar) -> Output {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234) * float2(-1.0, 1.0)

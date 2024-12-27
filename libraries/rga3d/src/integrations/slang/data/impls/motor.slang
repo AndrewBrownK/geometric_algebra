@@ -1,7 +1,8 @@
 using traits::GeometricProduct;
 using traits::RightDual;
 extension Motor: Add<AntiScalar> {
-    func operator+(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: AntiScalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 + float4(float3(0.0), other.e1234), 
@@ -11,6 +12,7 @@ extension Motor: Add<AntiScalar> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator+=(const AntiScalar& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -21,7 +23,8 @@ extension Motor {
     }
 }
 extension Motor: Add<DualNum> {
-    func operator+(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.group0.xyz, other.e1234 + this.e1234), 
@@ -31,6 +34,7 @@ extension Motor: Add<DualNum> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator+=(const DualNum& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -41,7 +45,8 @@ extension Motor {
     }
 }
 extension Motor: Add<Flector> {
-    func operator+(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -57,7 +62,8 @@ extension Motor: Add<Flector> {
     }
 }
 extension Motor: Add<Horizon> {
-    func operator+(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -73,7 +79,8 @@ extension Motor: Add<Horizon> {
     }
 }
 extension Motor: Add<Line> {
-    func operator+(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0, this.e1234), 
@@ -83,6 +90,7 @@ extension Motor: Add<Line> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator+=(const Line& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -93,7 +101,8 @@ extension Motor {
     }
 }
 extension Motor: Add<Motor> {
-    func operator+(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 + this.group0, 
@@ -103,6 +112,7 @@ extension Motor: Add<Motor> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator+=(const Motor& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -113,7 +123,8 @@ extension Motor {
     }
 }
 extension Motor: Add<MultiVector> {
-    func operator+(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234) + other.group0, 
@@ -129,7 +140,8 @@ extension Motor: Add<MultiVector> {
     }
 }
 extension Motor: Add<Origin> {
-    func operator+(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -145,7 +157,8 @@ extension Motor: Add<Origin> {
     }
 }
 extension Motor: Add<Plane> {
-    func operator+(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -161,7 +174,8 @@ extension Motor: Add<Plane> {
     }
 }
 extension Motor: Add<Point> {
-    func operator+(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator+(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -177,7 +191,8 @@ extension Motor: Add<Point> {
     }
 }
 extension Motor: Add<Scalar> {
-    func operator+(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator+(other: Scalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0, 
@@ -187,6 +202,7 @@ extension Motor: Add<Scalar> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator+=(const Scalar& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -244,87 +260,104 @@ impl From<Scalar> for Motor {
     }
 }
 extension Motor: Mul<AntiScalar> {
-    func operator*(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: AntiScalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator*=(const AntiScalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Motor: Mul<DualNum> {
-    func operator*(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: DualNum) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Motor: Mul<Flector> {
-    func operator*(other: Flector) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Flector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Horizon> {
-    func operator*(other: Horizon) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Horizon) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Line> {
-    func operator*(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Line) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator*=(const Line& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Motor: Mul<Motor> {
-    func operator*(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Motor) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator*=(const Motor& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Motor: Mul<MultiVector> {
-    func operator*(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator*(other: MultiVector) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Origin> {
-    func operator*(other: Origin) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Origin) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Plane> {
-    func operator*(other: Plane) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Plane) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Point> {
-    func operator*(other: Point) -> Flector {
+    associatedtype Output = Flector;
+    func operator*(other: Point) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor: Mul<Scalar> {
-    func operator*(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator*(other: Scalar) -> Output {
         return this.geometric_product(other);
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
 extension Motor: Neg {
-    func neg() -> Motor {
+    associatedtype Output = Motor;
+    func neg() -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0), 
@@ -334,12 +367,14 @@ extension Motor: Neg {
     }
 }
 extension Motor: Not {
-    func not() -> Motor {
+    associatedtype Output = Motor;
+    func not() -> Output {
         return this.right_dual();
     }
 }
 extension Motor: Sub<AntiScalar> {
-    func operator-(other: AntiScalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: AntiScalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 + float4(float3(0.0), other.e1234 * -1.0), 
@@ -349,6 +384,7 @@ extension Motor: Sub<AntiScalar> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator-=(const AntiScalar& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -359,7 +395,8 @@ extension Motor {
     }
 }
 extension Motor: Sub<DualNum> {
-    func operator-(other: DualNum) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 + float4(float3(0.0), other.e1234 * -1.0), 
@@ -369,6 +406,7 @@ extension Motor: Sub<DualNum> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator-=(const DualNum& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -379,7 +417,8 @@ extension Motor {
     }
 }
 extension Motor: Sub<Flector> {
-    func operator-(other: Flector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Flector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -395,7 +434,8 @@ extension Motor: Sub<Flector> {
     }
 }
 extension Motor: Sub<Horizon> {
-    func operator-(other: Horizon) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Horizon) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -411,7 +451,8 @@ extension Motor: Sub<Horizon> {
     }
 }
 extension Motor: Sub<Line> {
-    func operator-(other: Line) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e41 * -1.0, other.e42 * -1.0, other.e43 * -1.0, 0.0) + this.group0, 
@@ -421,6 +462,7 @@ extension Motor: Sub<Line> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator-=(const Line& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -431,7 +473,8 @@ extension Motor {
     }
 }
 extension Motor: Sub<Motor> {
-    func operator-(other: Motor) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 - other.group0, 
@@ -441,6 +484,7 @@ extension Motor: Sub<Motor> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator-=(const Motor& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -451,7 +495,8 @@ extension Motor {
     }
 }
 extension Motor: Sub<MultiVector> {
-    func operator-(other: MultiVector) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234) - other.group0, 
@@ -467,7 +512,8 @@ extension Motor: Sub<MultiVector> {
     }
 }
 extension Motor: Sub<Origin> {
-    func operator-(other: Origin) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Origin) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -483,7 +529,8 @@ extension Motor: Sub<Origin> {
     }
 }
 extension Motor: Sub<Plane> {
-    func operator-(other: Plane) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Plane) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -499,7 +546,8 @@ extension Motor: Sub<Plane> {
     }
 }
 extension Motor: Sub<Point> {
-    func operator-(other: Point) -> MultiVector {
+    associatedtype Output = MultiVector;
+    func operator-(other: Point) -> Output {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar, this.e1234), 
@@ -515,7 +563,8 @@ extension Motor: Sub<Point> {
     }
 }
 extension Motor: Sub<Scalar> {
-    func operator-(other: Scalar) -> Motor {
+    associatedtype Output = Motor;
+    func operator-(other: Scalar) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0, 
@@ -525,6 +574,7 @@ extension Motor: Sub<Scalar> {
     }
 }
 extension Motor {
+    associatedtype Output = Motor;
     func operator-=(const Scalar& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
