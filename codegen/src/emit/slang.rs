@@ -202,10 +202,10 @@ impl Slang {
                     trait_pb.inc(1);
                     continue;
                 }
-                "Into" | "TryInto" => {
-                    trait_pb.inc(1);
-                    continue;
-                }
+                // "Into" | "TryInto" => {
+                //     trait_pb.inc(1);
+                //     continue;
+                // }
                 _ => {}
             }
             let tx2 = started_file.clone();
@@ -237,11 +237,11 @@ impl Slang {
                     let n = TraitKey::new(mv.name()).as_lower_snake();
                     ("data", n)
                 }
-                "Into" | "TryInto" => {
-                    let Some(ExpressionType::Class(mv)) = i.other_type_params.get(0) else { continue };
-                    let n = TraitKey::new(mv.name()).as_lower_snake();
-                    ("data", n)
-                }
+                // "Into" | "TryInto" => {
+                //     let Some(ExpressionType::Class(mv)) = i.other_type_params.get(0) else { continue };
+                //     let n = TraitKey::new(mv.name()).as_lower_snake();
+                //     ("data", n)
+                // }
                 _ => ("traits", k.as_lower_snake()),
             };
             let i2 = i.clone();
@@ -315,10 +315,10 @@ impl Slang {
                 for i in impls {
                     let ucc = i.definition.names.trait_key.as_upper_camel();
                     match ucc.as_str() {
-                        "Into" => self.write_trait_from(&mut file, i),
-                        "TryInto" => self.write_trait_try_from(&mut file, i),
-                        _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix),
-                    }?;
+                        "Into" => self.write_trait_from(&mut file, i.clone())?,
+                        "TryInto" => self.write_trait_try_from(&mut file, i.clone())?,
+                        _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix)?,
+                    };
                     if let Some(pb) = &pb {
                         pb.inc(1);
                     }
@@ -371,9 +371,10 @@ impl Slang {
                 let lsc = k.as_lower_snake();
                 match n.as_str() {
                     "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
-                    "Into" | "TryInto" => continue,
+                    // "Into" | "TryInto" => continue,
                     _ => {}
                 }
+
                 writeln!(&mut file, "__include \"traits/{lsc}\";")?;
             }
             // tx3.send(file_path)?;
@@ -1499,17 +1500,12 @@ impl Slang {
         };
         let other = other.name();
         let owner = owner.name();
-        let lsc = TraitKey::new(other).as_lower_snake();
-        let lsc = format!("from_{lsc}");
-        writeln!(
-            w,
-            r#"
-impl From<{other}> for {owner} {{
-    fn from({lsc}: {other}) -> Self {{"#
-        )?;
-        if impls.statistics.basis_element_struct_access {
-            writeln!(w, "        use crate::elements::*;")?;
-        }
+        let other_lsc = TraitKey::new(other).as_lower_snake();
+        let other_lsc = format!("from_{other_lsc}");
+
+        writeln!(w, "extension {owner}: From<{other}> {{")?;
+        writeln!(w, "    associatedtype Self = {owner}:")?;
+        writeln!(w, "    static func from({other_lsc}: {other}) -> Self {{")?;
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1518,13 +1514,19 @@ impl From<{other}> for {owner} {{
         });
         let new_var = Arc::new(RawVariableDeclaration {
             comment: None,
-            name: (lsc, 0),
+            name: (other_lsc, 0),
             expr: None,
         });
         ret.substitute_variable(old_var, new_var);
         write!(w, "        return ")?;
         self.write_expression(w, &ret, true)?;
-        writeln!(w, ";\n    }}\n}}")?;
+        writeln!(w, ";\n    }}")?;
+        writeln!(w, "}}")?;
+        writeln!(w, "extension {other}: Into<{owner}> {{")?;
+        writeln!(w, "    public func into() -> {owner} {{")?;
+        writeln!(w, "        return {owner}.from(this);")?;
+        writeln!(w, "    }}")?;
+        writeln!(w, "}}")?;
         Ok(())
     }
 
@@ -1544,13 +1546,13 @@ impl From<{other}> for {owner} {{
         write!(
             w,
             r#"
-impl TryFrom<{other}> for {owner} {{
-    type Error = String;
-    fn try_from({lsc}: {other}) -> Result<Self, Self::Error> {{"#
+extension {owner}: TryFrom<{other}> {{
+    associatedtype Self = {owner};
+    static func try_from({lsc}: {other}) -> Option<Self> {{"#
         )?;
-        if impls.statistics.basis_element_struct_access {
-            writeln!(w, "        use crate::elements::*;")?;
-        }
+        // if impls.statistics.basis_element_struct_access {
+        //     writeln!(w, "        use crate::elements::*;")?;
+        // }
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1563,34 +1565,25 @@ impl TryFrom<{other}> for {owner} {{
             expr: None,
         });
         ret.substitute_variable(old_var, new_var);
-        writeln!(w, "        let mut error_string = String::new();")?;
-        write!(w, "        let mut fail = false;")?;
         for (i, el) in misfit_elements {
             write!(
                 w,
                 r#"
-        let el = {lsc}[{i}];
-        if el != 0.0 {{
-            fail = true;
-            error_string.push_str("{el}: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
+        float disallowed_{el} = {lsc}[{i}];
+        if disallowed_{el} != 0.0 {{
+            return none;
         }}"#
             )?;
         }
-        write!(
-            w,
-            r#"
-        if fail {{
-            let mut error = "Elements from {other} do not fit into {owner} {{ ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}}');
-            return Err(error);
-        }}
-        return Ok("#
-        )?;
+        write!(w, "\n        return ")?;
         self.write_expression(w, &ret, true)?;
-        writeln!(w, ");\n    }}\n}}")?;
+        writeln!(w, ";\n    }}\n}}")?;
+
+        writeln!(w, "extension {other}: TryInto<{owner}> {{")?;
+        writeln!(w, "    public func try_into() -> Optional<{owner}> {{")?;
+        writeln!(w, "        return {owner}.try_from(this);")?;
+        writeln!(w, "    }}")?;
+        writeln!(w, "}}")?;
         Ok(())
     }
 
@@ -1729,6 +1722,11 @@ impl TryFrom<{other}> for {owner} {{
         writeln!(w, ";\n    }}")?;
         writeln!(w, "}}")?;
 
+
+        // TODO although I can kind of give or take nearly, I want clamp_zeros.
+        //  So I guess that means I want to implement nearly.
+
+
         Ok(())
     }
 
@@ -1741,6 +1739,9 @@ impl TryFrom<{other}> for {owner} {{
         if let TraitArity::Two = def.arity {
             write!(w, "<T>")?;
         }
+        if ucc == "Into" || ucc == "TryInto" {
+            write!(w, "<Output>")?;
+        }
         writeln!(w, " {{")?;
 
         let output_ty = def.output.read();
@@ -1750,7 +1751,9 @@ impl TryFrom<{other}> for {owner} {{
                 // self.write_type(w, et)?;
             }
             TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
-                writeln!(w, "    associatedtype Output;")?;
+                if ucc != "Into" && ucc != "TryInto" {
+                    writeln!(w, "    associatedtype Output;")?;
+                }
             }
         }
         write!(w, "    func {lsc}(")?;
@@ -1760,12 +1763,31 @@ impl TryFrom<{other}> for {owner} {{
             TraitArity::Two => write!(w, "other: T")?,
         }
         write!(w, ") -> ")?;
-        match *output_ty {
-            TraitTypeConsensus::AlwaysSelf => write!(w, "Output")?,
-            TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Output")?,
+        if ucc == "TryInto" {
+            write!(w, "Optional<Output>")?;
+        } else {
+            match *output_ty {
+                TraitTypeConsensus::AlwaysSelf => write!(w, "Output")?,
+                TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Output")?,
+            }
         }
         writeln!(w, ";\n}}")?;
+
+        if ucc == "Into" {
+            writeln!(w, "public interface From<Other> {{")?;
+            writeln!(w, "    associatedtype Self;")?;
+            writeln!(w, "    static func from(other: Other) -> Self;")?;
+            writeln!(w, "}}")?;
+            return Ok(())
+        }
+        if ucc == "TryInto" {
+            writeln!(w, "public interface TryFrom<Other> {{")?;
+            writeln!(w, "    associatedtype Self;")?;
+            writeln!(w, "    static func try_from(other: Other) -> Optional<Self>;")?;
+            writeln!(w, "}}")?;
+            return Ok(())
+        }
 
         let infix_term = match def.arity {
             TraitArity::Zero => None,
