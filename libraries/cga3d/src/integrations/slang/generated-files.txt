@@ -137,6 +137,7 @@
 ./libraries/cga3d/src/integrations/slang/traits/impls/geometric_product.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/geometric_quotient.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/grade.slang
+./libraries/cga3d/src/integrations/slang/traits/impls/into.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/inverse.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/one.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/project_orthogonally_onto.slang
@@ -159,6 +160,7 @@
 ./libraries/cga3d/src/integrations/slang/traits/impls/sandwich.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/square_root.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/support.slang
+./libraries/cga3d/src/integrations/slang/traits/impls/try_into.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/unit.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/unitize.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/unitized_center_norm.slang
@@ -173,6 +175,7 @@
 ./libraries/cga3d/src/integrations/slang/traits/impls/weight_contraction.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/weight_expansion.slang
 ./libraries/cga3d/src/integrations/slang/traits/impls/zero.slang
+./libraries/cga3d/src/integrations/slang/traits/into.slang
 ./libraries/cga3d/src/integrations/slang/traits/inverse.slang
 ./libraries/cga3d/src/integrations/slang/traits/one.slang
 ./libraries/cga3d/src/integrations/slang/traits/project_orthogonally_onto.slang
@@ -195,6 +198,7 @@
 ./libraries/cga3d/src/integrations/slang/traits/sandwich.slang
 ./libraries/cga3d/src/integrations/slang/traits/square_root.slang
 ./libraries/cga3d/src/integrations/slang/traits/support.slang
+./libraries/cga3d/src/integrations/slang/traits/try_into.slang
 ./libraries/cga3d/src/integrations/slang/traits/unit.slang
 ./libraries/cga3d/src/integrations/slang/traits/unitize.slang
 ./libraries/cga3d/src/integrations/slang/traits/unitized_center_norm.slang
