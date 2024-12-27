@@ -8,9 +8,10 @@ pub trait AntiConstraintViolation {
     type Output;
     fn anti_constraint_violation(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_constraint_violation;
-impl<A: AntiConstraintViolation> std::ops::Div<A> for anti_constraint_violation {
+#[allow(non_upper_case_globals, dead_code)]
+pub static anti_constraint_violation: AntiConstraintViolationPrefixOrPostfix = AntiConstraintViolationPrefixOrPostfix;
+pub struct AntiConstraintViolationPrefixOrPostfix;
+impl<A: AntiConstraintViolation> std::ops::Div<A> for AntiConstraintViolationPrefixOrPostfix {
     type Output = <A as AntiConstraintViolation>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.anti_constraint_violation()

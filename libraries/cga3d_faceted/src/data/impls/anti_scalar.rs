@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,11 +7,11 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 318
+// Total Implementations: 302
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       1       0
+//   Median:         0       2       0
 //  Average:         0       1       0
 //  Maximum:         1      19       0
 //
@@ -183,7 +182,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -237,7 +236,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e5
@@ -253,7 +252,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiScalar {
         use crate::elements::*;
         return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
             // e415, e425, e435, e4
             other.group1().with_w(other[e4]),
             // e235, e315, e125, e5
@@ -320,7 +319,7 @@ impl std::ops::Add<AntiFlatPoint> for AntiScalar {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235], other[e315], other[e125], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
         );
     }
 }
@@ -582,7 +581,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -981,7 +980,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group1().xyz(),
             // e23, e31, e12
@@ -1041,7 +1040,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group2().xyz(),
             // e23, e31, e12
@@ -1628,7 +1627,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1682,7 +1681,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiScalar {
         use crate::elements::*;
         return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
             // e415, e425, e435, e4
             Simd32x3::from(0.0).with_w(other[e4]),
         );
@@ -1967,7 +1966,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiScalar {
         use crate::elements::*;
         return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
             // e415, e425, e435, e4
             Simd32x3::from(0.0).with_w(other[e4]),
             // e235, e315, e125, e5
@@ -1997,7 +1996,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345]]),
+            other.group0().xyz().with_w(self[e12345]),
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e5
@@ -2079,7 +2078,7 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiScalar {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group2().xyz(),
             // e23, e31, e12
@@ -2095,230 +2094,6 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiScalar {
             // e3215
             other[e3215],
         );
-    }
-}
-impl std::ops::BitXor<AntiCircleRotor> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiCircleRotor> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiCircleRotor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiCircleRotorAligningOrigin> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiCircleRotorAligningOrigin) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiCircleRotorAligningOriginAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiCircleRotorAtInfinity> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiCircleRotorAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiCircleRotorOnOrigin> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiCircleRotorOnOrigin) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDualNum> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiDualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiDualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotor> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiMotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMotor> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiMotor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotorOnOrigin> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMotorOnOrigin> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiMotorOnOrigin) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMysteryCircleRotor> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiMysteryCircleRotor) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiVersorEvenOnOrigin> for AntiScalar {
-    fn bitxor_assign(&mut self, other: AntiVersorEvenOnOrigin) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MultiVector> for AntiScalar {
-    fn bitxor_assign(&mut self, other: MultiVector) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorOdd> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MysteryVersorOdd> for AntiScalar {
-    fn bitxor_assign(&mut self, other: MysteryVersorOdd) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for AntiScalar {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOdd> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: VersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorOdd> for AntiScalar {
-    fn bitxor_assign(&mut self, other: VersorOdd) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorOddAtInfinity> for AntiScalar {
-    fn bitxor_assign(&mut self, other: VersorOddAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiScalar {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorOddOrthogonalOrigin> for AntiScalar {
-    fn bitxor_assign(&mut self, other: VersorOddOrthogonalOrigin) {
-        *self = self.wedge(other);
     }
 }
 impl std::ops::Mul<AntiCircleOnOrigin> for AntiScalar {
@@ -3195,11 +2970,11 @@ impl std::ops::Mul<RoundPoint> for AntiScalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        4        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        5        0
+    //  no simd        0        7        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3232,11 +3007,11 @@ impl std::ops::Mul<Sphere> for AntiScalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        2        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        4        0
+    //  no simd        0        8        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }

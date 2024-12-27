@@ -144,7 +144,7 @@ fn main() {
         binary
         Add => Addition,
         Sub => Subtraction,
-        BitXor => Wedge,
+        // BitXor => Wedge,
         Mul => GeometricProduct;
 
         unary
@@ -166,6 +166,14 @@ fn main() {
         &[],
         repo.clone(),
         traits.clone(),
+    );
+
+    let slang = codegen::Slang::new();
+    slang.write_src(
+        "libraries/cga3d/src",
+        "cga3d",
+        repo.clone(),
+        traits.clone()
     );
 
     let mut rust = codegen::Rust::new(true).all_features();

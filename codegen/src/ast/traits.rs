@@ -1392,6 +1392,7 @@ impl BinaryOps {
         }
     }
 
+    // TODO return a result type here, the panics are terrible
     pub fn slang_trait_method(self) -> &'static str {
         match self {
             BinaryOps::Add => "operator+",

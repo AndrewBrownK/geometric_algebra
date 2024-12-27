@@ -20,9 +20,9 @@ use crate::traits::SquareRoot;
 //   Median:         2       3       0
 //  Average:         3       4       0
 //  Maximum:        31      32       0
-impl std::ops::Div<round_bulk_norm> for AntiCircleRotor {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -34,9 +34,9 @@ impl RoundBulkNorm for AntiCircleRotor {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiDipoleInversion {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -48,9 +48,9 @@ impl RoundBulkNorm for AntiDipoleInversion {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiDualNum {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiDualNum {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -62,9 +62,9 @@ impl RoundBulkNorm for AntiDualNum {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiFlatPoint {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiFlatPoint {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -76,9 +76,9 @@ impl RoundBulkNorm for AntiFlatPoint {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiFlector {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiFlector {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -90,9 +90,9 @@ impl RoundBulkNorm for AntiFlector {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiLine {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiLine {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -104,9 +104,9 @@ impl RoundBulkNorm for AntiLine {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiMotor {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiMotor {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -118,9 +118,9 @@ impl RoundBulkNorm for AntiMotor {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for AntiPlane {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for AntiPlane {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -132,9 +132,9 @@ impl RoundBulkNorm for AntiPlane {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for Circle {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for Circle {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -146,9 +146,9 @@ impl RoundBulkNorm for Circle {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for CircleRotor {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for CircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -160,9 +160,9 @@ impl RoundBulkNorm for CircleRotor {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for Dipole {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for Dipole {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -174,9 +174,9 @@ impl RoundBulkNorm for Dipole {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for DipoleInversion {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for DipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -188,9 +188,9 @@ impl RoundBulkNorm for DipoleInversion {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for MultiVector {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -202,9 +202,9 @@ impl RoundBulkNorm for MultiVector {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for RoundPoint {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for RoundPoint {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -216,14 +216,14 @@ impl RoundBulkNorm for RoundPoint {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for Scalar {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
-impl std::ops::DivAssign<round_bulk_norm> for Scalar {
-    fn div_assign(&mut self, _rhs: round_bulk_norm) {
+impl std::ops::DivAssign<RoundBulkNormPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: RoundBulkNormPrefixOrPostfix) {
         *self = self.round_bulk_norm()
     }
 }
@@ -235,9 +235,9 @@ impl RoundBulkNorm for Scalar {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for VersorEven {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for VersorEven {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }
@@ -249,9 +249,9 @@ impl RoundBulkNorm for VersorEven {
         return self.round_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<round_bulk_norm> for VersorOdd {
+impl std::ops::Div<RoundBulkNormPrefixOrPostfix> for VersorOdd {
     type Output = Scalar;
-    fn div(self, _rhs: round_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: RoundBulkNormPrefixOrPostfix) -> Self::Output {
         self.round_bulk_norm()
     }
 }

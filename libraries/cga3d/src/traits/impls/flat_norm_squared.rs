@@ -13,16 +13,16 @@ use crate::traits::FlatWeightNormSquared;
 //  Minimum:         0       5       0
 //   Median:        10      20       0
 //  Average:        16      24       0
-//  Maximum:        87     106       0
+//  Maximum:        87     107       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0      11       0
 //   Median:        15      25       0
 //  Average:        19      34       0
 //  Maximum:       111     144       0
-impl std::ops::Div<flat_norm_squared> for AntiCircleRotor {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for AntiCircleRotor {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -62,9 +62,9 @@ impl FlatNormSquared for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for AntiDipoleInversion {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for AntiDipoleInversion {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -72,11 +72,10 @@ impl FlatNormSquared for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       19       26        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       21       34        0
-    //  no simd       25       52        0
+    //  no simd       25       50        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -105,9 +104,9 @@ impl FlatNormSquared for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Circle {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Circle {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -115,10 +114,10 @@ impl FlatNormSquared for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       14        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        9       16        0
-    //  no simd        9       22        0
+    //  no simd        9       20        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -147,9 +146,9 @@ impl FlatNormSquared for Circle {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for CircleRotor {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for CircleRotor {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -157,10 +156,10 @@ impl FlatNormSquared for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       15        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd       10       17        0
-    //  no simd       10       23        0
+    //  no simd       10       21        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -189,9 +188,9 @@ impl FlatNormSquared for CircleRotor {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Dipole {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Dipole {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -231,9 +230,9 @@ impl FlatNormSquared for Dipole {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for DipoleInversion {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for DipoleInversion {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -274,9 +273,9 @@ impl FlatNormSquared for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for DualNum {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for DualNum {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -316,9 +315,9 @@ impl FlatNormSquared for DualNum {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for FlatPoint {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for FlatPoint {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -358,9 +357,9 @@ impl FlatNormSquared for FlatPoint {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Flector {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Flector {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -401,9 +400,9 @@ impl FlatNormSquared for Flector {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Line {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Line {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -411,10 +410,10 @@ impl FlatNormSquared for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       14        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        9       16        0
-    //  no simd        9       22        0
+    //  no simd        9       20        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -443,9 +442,9 @@ impl FlatNormSquared for Line {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Motor {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Motor {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -453,11 +452,10 @@ impl FlatNormSquared for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       20       27        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       22       35        0
-    //  no simd       26       53        0
+    //  no simd       26       51        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -486,25 +484,25 @@ impl FlatNormSquared for Motor {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for MultiVector {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
-impl std::ops::DivAssign<flat_norm_squared> for MultiVector {
-    fn div_assign(&mut self, _rhs: flat_norm_squared) {
+impl std::ops::DivAssign<FlatNormSquaredPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: FlatNormSquaredPrefixOrPostfix) {
         *self = self.flat_norm_squared()
     }
 }
 impl FlatNormSquared for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77       90        0
-    //    simd3        6       10        0
-    //    simd4        4        6        0
+    //      f32       77       91        0
+    //    simd3        6       11        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       87      106        0
+    // yes simd       87      107        0
     //  no simd      111      144        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
@@ -534,9 +532,9 @@ impl FlatNormSquared for MultiVector {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Plane {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Plane {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -576,9 +574,9 @@ impl FlatNormSquared for Plane {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for Sphere {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for Sphere {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -618,9 +616,9 @@ impl FlatNormSquared for Sphere {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for VersorEven {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for VersorEven {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }
@@ -628,11 +626,10 @@ impl FlatNormSquared for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       20       27        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       22       35        0
-    //  no simd       26       53        0
+    //  no simd       26       51        0
     fn flat_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -661,9 +658,9 @@ impl FlatNormSquared for VersorEven {
         );
     }
 }
-impl std::ops::Div<flat_norm_squared> for VersorOdd {
+impl std::ops::Div<FlatNormSquaredPrefixOrPostfix> for VersorOdd {
     type Output = MultiVector;
-    fn div(self, _rhs: flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_norm_squared()
     }
 }

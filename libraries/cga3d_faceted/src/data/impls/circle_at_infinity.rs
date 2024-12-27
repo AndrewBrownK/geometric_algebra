@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,18 +7,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 387
+// Total Implementations: 323
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       2       0
-//  Average:         4       9       0
+//   Median:         0       2       0
+//  Average:         5       9       0
 //  Maximum:        94     117       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       4       0
-//  Average:        10      15       0
+//   Median:         0       4       0
+//  Average:        11      16       0
 //  Maximum:       197     224       0
 impl std::ops::Add<AntiCircleOnOrigin> for CircleAtInfinity {
     type Output = MultiVector;
@@ -182,7 +181,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -203,9 +202,12 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for CircleAtInfinity {
 impl std::ops::Add<AntiDipoleInversion> for CircleAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -214,7 +216,7 @@ impl std::ops::Add<AntiDipoleInversion> for CircleAtInfinity {
             // e415, e425, e435, e321
             other.group1() + self.group0(),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e4]),
+            (self.group1() + other.group2().xyz()).with_w(other[e4]),
             // e1, e2, e3, e5
             other.group3(),
         );
@@ -263,17 +265,17 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for CircleAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group1().with_w(self[e321]),
+            (other.group1() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e4]),
+            (self.group1() + other.group2().xyz()).with_w(other[e4]),
             // e1, e2, e3, e5
             Simd32x3::from(0.0).with_w(other[e5]),
         );
@@ -631,7 +633,7 @@ impl std::ops::Add<AntiSphereOnOrigin> for CircleAtInfinity {
             // e235, e315, e125, e4
             self.group1().with_w(other[e4]),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
     }
 }
@@ -647,7 +649,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -688,19 +690,16 @@ impl std::ops::Add<Circle> for CircleAtInfinity {
 impl std::ops::Add<CircleAligningOrigin> for CircleAtInfinity {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        1        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        2        0        0
-    //  no simd        7        0        0
+    //          add/sub      mul      div
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group1().with_w(self[e321]),
+            (other.group1() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             other.group2() + self.group1(),
         );
@@ -755,15 +754,15 @@ impl std::ops::Add<CircleOnOrigin> for CircleAtInfinity {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group1().with_w(self[e321]),
+            (other.group1() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             self.group1(),
         );
@@ -793,9 +792,12 @@ impl std::ops::Add<CircleOrthogonalOrigin> for CircleAtInfinity {
 impl std::ops::Add<CircleRotor> for CircleAtInfinity {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
@@ -804,7 +806,7 @@ impl std::ops::Add<CircleRotor> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0() + other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e12345]),
+            (self.group1() + other.group2().xyz()).with_w(other[e12345]),
         );
     }
 }
@@ -812,17 +814,17 @@ impl std::ops::Add<CircleRotorAligningOrigin> for CircleAtInfinity {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group1().with_w(self[e321]),
+            (other.group1() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e12345]),
+            (self.group1() + other.group2().xyz()).with_w(other[e12345]),
         );
     }
 }
@@ -830,31 +832,34 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for CircleAtInfinity {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
+            (other.group0() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e12345]),
+            (self.group1() + other.group1().xyz()).with_w(other[e12345]),
         );
     }
 }
 impl std::ops::Add<CircleRotorAtInfinity> for CircleAtInfinity {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             self.group0() + other.group0(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e12345]),
+            (self.group1() + other.group1().xyz()).with_w(other[e12345]),
         );
     }
 }
@@ -862,15 +867,15 @@ impl std::ops::Add<CircleRotorOnOrigin> for CircleAtInfinity {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             other.group0().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group1().with_w(self[e321]),
+            (other.group1() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125, e12345
             self.group1().with_w(other[e12345]),
         );
@@ -1096,7 +1101,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group1().xyz(),
             // e23, e31, e12
@@ -1155,7 +1160,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group2().xyz(),
             // e23, e31, e12
@@ -1473,17 +1478,14 @@ impl std::ops::Add<Infinity> for CircleAtInfinity {
 impl std::ops::Add<Line> for CircleAtInfinity {
     type Output = CircleAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        1        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        2        0        0
-    //  no simd        7        0        0
+    //          add/sub      mul      div
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
+            (other.group0() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             self.group1() + other.group1(),
         );
@@ -1494,7 +1496,7 @@ impl std::ops::AddAssign<Line> for CircleAtInfinity {
         use crate::elements::*;
         *self = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
+            (other.group0() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             self.group1() + other.group1(),
         );
@@ -1519,13 +1521,13 @@ impl std::ops::Add<LineOnOrigin> for CircleAtInfinity {
     type Output = CircleAtInfinity;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: LineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
+            (other.group0() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             self.group1(),
         );
@@ -1536,7 +1538,7 @@ impl std::ops::AddAssign<LineOnOrigin> for CircleAtInfinity {
         use crate::elements::*;
         *self = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().with_w(self[e321]),
+            (other.group0() + self.group0().xyz()).with_w(self[e321]),
             // e235, e315, e125
             self.group1(),
         );
@@ -1545,18 +1547,21 @@ impl std::ops::AddAssign<LineOnOrigin> for CircleAtInfinity {
 impl std::ops::Add<Motor> for CircleAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other[e12345], 0.0, 0.0, 0.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]) + self.group0(),
+            self.group0() + other.group0().xyz().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e5]),
+            (self.group1() + other.group1().xyz()).with_w(other[e5]),
         );
     }
 }
@@ -1588,7 +1593,7 @@ impl std::ops::Add<MotorOnOrigin> for CircleAtInfinity {
         use crate::elements::*;
         return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]) + self.group0(),
+            self.group0() + other.group0().xyz().with_w(0.0),
             // e235, e315, e125, e12345
             self.group1().with_w(other[e12345]),
         );
@@ -1823,7 +1828,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -2117,9 +2122,12 @@ impl std::ops::Add<SphereOnOrigin> for CircleAtInfinity {
 impl std::ops::Add<VersorEven> for CircleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -2128,7 +2136,7 @@ impl std::ops::Add<VersorEven> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0() + other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e5]),
+            (self.group1() + other.group2().xyz()).with_w(other[e5]),
             // e1, e2, e3, e4
             other.group3(),
         );
@@ -2137,18 +2145,21 @@ impl std::ops::Add<VersorEven> for CircleAtInfinity {
 impl std::ops::Add<VersorEvenAligningOrigin> for CircleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]) + self.group0(),
+            self.group0() + other.group1().xyz().with_w(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e5]),
+            (self.group1() + other.group2().xyz()).with_w(other[e5]),
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e4]),
         );
@@ -2157,9 +2168,12 @@ impl std::ops::Add<VersorEvenAligningOrigin> for CircleAtInfinity {
 impl std::ops::Add<VersorEvenAtInfinity> for CircleAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorEvenAtInfinity::from_groups(
@@ -2168,7 +2182,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0() + other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e5]),
+            (self.group1() + other.group2().xyz()).with_w(other[e5]),
         );
     }
 }
@@ -2176,8 +2190,8 @@ impl std::ops::Add<VersorEvenAtOrigin> for CircleAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -2186,7 +2200,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0(),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e4]),
+            (self.group1() + other.group1().xyz()).with_w(other[e4]),
             // e1, e2, e3, e5
             Simd32x3::from(0.0).with_w(other[e5]),
         );
@@ -2204,7 +2218,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for CircleAtInfinity {
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]) + self.group0(),
+            self.group0() + other.group1().xyz().with_w(0.0),
             // e235, e315, e125, e5
             self.group1().with_w(0.0),
             // e1, e2, e3, e4
@@ -2215,9 +2229,12 @@ impl std::ops::Add<VersorEvenOnOrigin> for CircleAtInfinity {
 impl std::ops::Add<VersorEvenOrthogonalOrigin> for CircleAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -2226,7 +2243,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0() + Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group1().with_w(other[e4]),
+            (self.group1() + other.group1().xyz()).with_w(other[e4]),
             // e1, e2, e3, e5
             Simd32x4::from([other[e1], other[e2], other[e3], other[e5]]),
         );
@@ -2304,7 +2321,7 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for CircleAtInfinity {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group2().xyz(),
             // e23, e31, e12
@@ -2320,742 +2337,6 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for CircleAtInfinity {
             // e3215
             other[e3215],
         );
-    }
-}
-impl std::ops::BitXor<AntiCircleOnOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        6        0
-    fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotor> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        6        9        0
-    //  no simd        6       15        0
-    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
-    fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAtInfinity> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
-    fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorOnOrigin> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversion> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       12        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        6       13        0
-    //  no simd        9       15        0
-    fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       10        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3       11        0
-    //  no simd        6       13        0
-    fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       11        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        5       12        0
-    //  no simd        8       14        0
-    fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
-    fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDualNum> for CircleAtInfinity {
-    type Output = CircleAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
-    fn bitxor(self, other: AntiDualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum> for CircleAtInfinity {
-    fn bitxor_assign(&mut self, other: AntiDualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlector> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       10        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3       11        0
-    //  no simd        6       13        0
-    fn bitxor(self, other: AntiFlector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlectorOnOrigin> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        9        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        2       10        0
-    //  no simd        5       12        0
-    fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiLine> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: AntiLine) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiLineOnOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: AntiLineOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotor> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
-    fn bitxor(self, other: AntiMotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotorOnOrigin> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        2        5        0
-    //  no simd        2       11        0
-    fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMysteryCircleRotor> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
-    fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMysteryDipoleInversion> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        9        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        2       10        0
-    //  no simd        5       12        0
-    fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiPlane> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       10        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3       11        0
-    //  no simd        6       13        0
-    fn bitxor(self, other: AntiPlane) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiPlaneOnOrigin> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        9        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        2       10        0
-    //  no simd        5       12        0
-    fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiSphereOnOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       11        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        5       12        0
-    //  no simd        8       14        0
-    fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorEvenOnOrigin> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Dipole> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        7        0
-    fn bitxor(self, other: Dipole) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAligningOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAtInfinity> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAtOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversion> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        7        0
-    fn bitxor(self, other: DipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAligningOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAtInfinity> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAtOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionOnOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        6        0
-    fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleOnOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleOrthogonalOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        6        0
-    fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DualNum> for CircleAtInfinity {
-    type Output = SphereOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: FlatOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatPoint> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: FlatPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Flector> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: Flector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlectorOnOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: FlectorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Infinity> for CircleAtInfinity {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Infinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for CircleAtInfinity {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MotorAtInfinity> for CircleAtInfinity {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for CircleAtInfinity {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       15       21        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd       15       24        0
-    //  no simd       15       32        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryDipole> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: MysteryDipole) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryDipoleInversion> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorEven> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
-    fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorOdd> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
-    fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullDipoleAtOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullDipoleInversionAtOrigin> for CircleAtInfinity {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
-    fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullVersorEvenAtOrigin> for CircleAtInfinity {
-    type Output = SphereOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Origin> for CircleAtInfinity {
-    type Output = SphereOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: Origin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPoint> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       11        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        6       12        0
-    //  no simd        9       15        0
-    fn bitxor(self, other: RoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPointAtOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
-    fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for CircleAtInfinity {
-    type Output = CircleAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for CircleAtInfinity {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEven> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       11        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        6       12        0
-    //  no simd        9       15        0
-    fn bitxor(self, other: VersorEven) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAligningOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
-    fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAtInfinity> for CircleAtInfinity {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        9        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        3       10        0
-    //  no simd        6       13        0
-    fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAtOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
-    fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenOnOrigin> for CircleAtInfinity {
-    type Output = SphereOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for CircleAtInfinity {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       11        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        6       12        0
-    //  no simd        9       15        0
-    fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOdd> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        6        9        0
-    //  no simd        6       15        0
-    fn bitxor(self, other: VersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddAtInfinity> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
-    fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddOrthogonalOrigin> for CircleAtInfinity {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
     }
 }
 
@@ -3255,11 +2536,11 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4       20        0
-    //    simd3        0        4        0
-    //    simd4        5        4        0
+    //    simd3        0        6        0
+    //    simd4        5        2        0
     // Totals...
     // yes simd        9       28        0
-    //  no simd       24       48        0
+    //  no simd       24       46        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3281,9 +2562,12 @@ impl std::ops::Mul<AntiDualNum> for CircleAtInfinity {
 impl std::ops::Mul<AntiFlatOrigin> for CircleAtInfinity {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3293,10 +2577,11 @@ impl std::ops::Mul<AntiFlatPoint> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       16        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd       11       18        0
-    //  no simd       11       24        0
+    //  no simd       11       23        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3306,11 +2591,11 @@ impl std::ops::Mul<AntiFlector> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       24       38        0
-    //    simd3        0        2        0
-    //    simd4        2        3        0
+    //    simd3        0        4        0
+    //    simd4        2        1        0
     // Totals...
     // yes simd       26       43        0
-    //  no simd       32       56        0
+    //  no simd       32       54        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3320,11 +2605,11 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       22        0
-    //    simd3        0        2        0
-    //    simd4        2        3        0
+    //    simd3        0        4        0
+    //    simd4        2        1        0
     // Totals...
     // yes simd       10       27        0
-    //  no simd       16       40        0
+    //  no simd       16       38        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3418,11 +2703,11 @@ impl std::ops::Mul<AntiPlane> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4       13        0
-    //    simd3        2        4        0
-    //    simd4        1        2        0
+    //    simd3        2        6        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        7       19        0
-    //  no simd       14       33        0
+    //  no simd       14       31        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3432,11 +2717,11 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3       12        0
-    //    simd3        1        3        0
-    //    simd4        1        2        0
+    //    simd3        1        5        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        5       17        0
-    //  no simd       10       29        0
+    //  no simd       10       27        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3599,11 +2884,11 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       16        0
-    //    simd3        2        3        0
-    //    simd4        3        4        0
+    //    simd3        2        4        0
+    //    simd4        3        3        0
     // Totals...
     // yes simd       16       23        0
-    //  no simd       29       41        0
+    //  no simd       29       40        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3820,9 +3105,12 @@ impl std::ops::Mul<DualNum> for CircleAtInfinity {
 impl std::ops::Mul<FlatOrigin> for CircleAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //           add/sub      mul      div
+    //    simd3        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       14        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3858,10 +3146,11 @@ impl std::ops::Mul<Flector> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       13        0
-    //    simd4        6       10        0
+    //    simd3        0        2        0
+    //    simd4        6        8        0
     // Totals...
     // yes simd       14       23        0
-    //  no simd       32       53        0
+    //  no simd       32       51        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3917,11 +3206,11 @@ impl std::ops::Mul<Line> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       12        0
-    //    simd3        1        2        0
-    //    simd4        3        4        0
+    //    simd3        1        3        0
+    //    simd4        3        3        0
     // Totals...
     // yes simd       12       18        0
-    //  no simd       23       34        0
+    //  no simd       23       33        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3944,11 +3233,11 @@ impl std::ops::Mul<LineOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3       11        0
-    //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd3        1        3        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd        5       15        0
-    //  no simd       10       25        0
+    //  no simd       10       24        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3958,11 +3247,11 @@ impl std::ops::Mul<Motor> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       15       20        0
-    //    simd3        2        3        0
-    //    simd4        3        4        0
+    //    simd3        2        4        0
+    //    simd4        3        3        0
     // Totals...
     // yes simd       20       27        0
-    //  no simd       33       45        0
+    //  no simd       33       44        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3985,11 +3274,11 @@ impl std::ops::Mul<MotorOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       12        0
-    //    simd3        2        3        0
-    //    simd4        1        2        0
+    //    simd3        2        4        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd        9       17        0
-    //  no simd       16       29        0
+    //  no simd       16       28        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4138,11 +3427,10 @@ impl std::ops::Mul<NullSphereAtOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       20        0
+    // yes simd        0        5        0
+    //  no simd        0       13        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4166,11 +3454,10 @@ impl std::ops::Mul<Origin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        6        0
     // Totals...
     // yes simd        0        8        0
-    //  no simd        0       24        0
+    //  no simd        0       20        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4180,11 +3467,11 @@ impl std::ops::Mul<Plane> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        2        3        0
-    //    simd4        2        4        0
+    //    simd3        2        5        0
+    //    simd4        2        2        0
     // Totals...
     // yes simd        7       12        0
-    //  no simd       17       30        0
+    //  no simd       17       28        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4194,11 +3481,11 @@ impl std::ops::Mul<PlaneOnOrigin> for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3       12        0
-    //    simd3        1        3        0
-    //    simd4        1        2        0
+    //    simd3        1        5        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        5       17        0
-    //  no simd       10       29        0
+    //  no simd       10       27        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4252,11 +3539,11 @@ impl std::ops::Mul<Sphere> for CircleAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2       17        0
-    //    simd3        2        4        0
-    //    simd4        3        3        0
+    //      f32        2       19        0
+    //    simd3        2        6        0
+    //    simd4        3        1        0
     // Totals...
-    // yes simd        7       24        0
+    // yes simd        7       26        0
     //  no simd       20       41        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
@@ -8023,7 +7310,6 @@ impl TryFrom<CircleRotorOnOrigin> for CircleAtInfinity {
 impl TryFrom<Motor> for CircleAtInfinity {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = motor[3];
@@ -8048,7 +7334,7 @@ impl TryFrom<Motor> for CircleAtInfinity {
         }
         return Ok(CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([motor[e415], motor[e425], motor[e435], 0.0]),
+            motor.group0().xyz().with_w(0.0),
             // e235, e315, e125
             motor.group1().xyz(),
         ));
@@ -8085,7 +7371,6 @@ impl TryFrom<MotorAtInfinity> for CircleAtInfinity {
 impl TryFrom<MotorOnOrigin> for CircleAtInfinity {
     type Error = String;
     fn try_from(motor_on_origin: MotorOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = motor_on_origin[3];
@@ -8103,7 +7388,7 @@ impl TryFrom<MotorOnOrigin> for CircleAtInfinity {
         }
         return Ok(CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([motor_on_origin[e415], motor_on_origin[e425], motor_on_origin[e435], 0.0]),
+            motor_on_origin.group0().xyz().with_w(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
         ));
@@ -8466,7 +7751,6 @@ impl TryFrom<VersorEven> for CircleAtInfinity {
 impl TryFrom<VersorEvenAligningOrigin> for CircleAtInfinity {
     type Error = String;
     fn try_from(versor_even_aligning_origin: VersorEvenAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_aligning_origin[0];
@@ -8519,7 +7803,7 @@ impl TryFrom<VersorEvenAligningOrigin> for CircleAtInfinity {
         }
         return Ok(CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([versor_even_aligning_origin[e415], versor_even_aligning_origin[e425], versor_even_aligning_origin[e435], 0.0]),
+            versor_even_aligning_origin.group1().xyz().with_w(0.0),
             // e235, e315, e125
             versor_even_aligning_origin.group2().xyz(),
         ));
@@ -8639,7 +7923,6 @@ impl TryFrom<VersorEvenAtOrigin> for CircleAtInfinity {
 impl TryFrom<VersorEvenOnOrigin> for CircleAtInfinity {
     type Error = String;
     fn try_from(versor_even_on_origin: VersorEvenOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_on_origin[0];
@@ -8685,7 +7968,7 @@ impl TryFrom<VersorEvenOnOrigin> for CircleAtInfinity {
         }
         return Ok(CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([versor_even_on_origin[e415], versor_even_on_origin[e425], versor_even_on_origin[e435], 0.0]),
+            versor_even_on_origin.group1().xyz().with_w(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
         ));

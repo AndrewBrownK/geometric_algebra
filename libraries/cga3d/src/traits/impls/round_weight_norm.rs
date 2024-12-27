@@ -20,9 +20,9 @@ use crate::traits::RoundWeightNormSquared;
 //   Median:         2       9       0
 //  Average:         4      14       0
 //  Maximum:        32      58       0
-impl std::ops::Div<round_weight_norm> for AntiCircleRotor {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -38,9 +38,9 @@ impl RoundWeightNorm for AntiCircleRotor {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for AntiDipoleInversion {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -56,9 +56,9 @@ impl RoundWeightNorm for AntiDipoleInversion {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for Circle {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for Circle {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -74,9 +74,9 @@ impl RoundWeightNorm for Circle {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for CircleRotor {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for CircleRotor {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -92,9 +92,9 @@ impl RoundWeightNorm for CircleRotor {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for Dipole {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for Dipole {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -110,9 +110,9 @@ impl RoundWeightNorm for Dipole {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for DipoleInversion {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for DipoleInversion {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -128,9 +128,9 @@ impl RoundWeightNorm for DipoleInversion {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for MultiVector {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for MultiVector {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -147,9 +147,9 @@ impl RoundWeightNorm for MultiVector {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for RoundPoint {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for RoundPoint {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -165,9 +165,9 @@ impl RoundWeightNorm for RoundPoint {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for Sphere {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for Sphere {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -179,9 +179,9 @@ impl RoundWeightNorm for Sphere {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for VersorEven {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for VersorEven {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }
@@ -197,9 +197,9 @@ impl RoundWeightNorm for VersorEven {
         return self.round_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<round_weight_norm> for VersorOdd {
+impl std::ops::Div<RoundWeightNormPrefixOrPostfix> for VersorOdd {
     type Output = AntiScalar;
-    fn div(self, _rhs: round_weight_norm) -> Self::Output {
+    fn div(self, _rhs: RoundWeightNormPrefixOrPostfix) -> Self::Output {
         self.round_weight_norm()
     }
 }

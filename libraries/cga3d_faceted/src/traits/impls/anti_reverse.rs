@@ -18,14 +18,14 @@
 //   Median:         0       4       0
 //  Average:         0       5       0
 //  Maximum:         0      20       0
-impl std::ops::Div<anti_reverse> for AntiCircleOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleOnOrigin {
     type Output = AntiCircleOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -43,14 +43,14 @@ impl AntiReverse for AntiCircleOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiCircleRotor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleRotor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleRotor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -73,14 +73,14 @@ impl AntiReverse for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiCircleRotorAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleRotorAligningOrigin {
     type Output = AntiCircleRotorAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleRotorAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleRotorAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -103,14 +103,14 @@ impl AntiReverse for AntiCircleRotorAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiCircleRotorAligningOriginAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = AntiCircleRotorAligningOriginAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleRotorAligningOriginAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleRotorAligningOriginAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -131,14 +131,14 @@ impl AntiReverse for AntiCircleRotorAligningOriginAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiCircleRotorAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleRotorAtInfinity {
     type Output = AntiCircleRotorAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleRotorAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleRotorAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -156,14 +156,14 @@ impl AntiReverse for AntiCircleRotorAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiCircleRotorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiCircleRotorOnOrigin {
     type Output = AntiCircleRotorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiCircleRotorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiCircleRotorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -184,14 +184,14 @@ impl AntiReverse for AntiCircleRotorOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDipoleInversion {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -216,14 +216,14 @@ impl AntiReverse for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDipoleInversionAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDipoleInversionAtInfinity {
     type Output = AntiDipoleInversionAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDipoleInversionAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDipoleInversionAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -246,14 +246,14 @@ impl AntiReverse for AntiDipoleInversionAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDipoleInversionOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDipoleInversionOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDipoleInversionOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDipoleInversionOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -266,14 +266,14 @@ impl AntiReverse for AntiDipoleInversionOnOrigin {
         return AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0), /* e4, e1, e2, e3 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDipoleInversionOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDipoleInversionOrthogonalOrigin {
     type Output = AntiDipoleInversionOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDipoleInversionOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDipoleInversionOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -296,14 +296,14 @@ impl AntiReverse for AntiDipoleInversionOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDipoleOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDipoleOnOrigin {
     type Output = AntiDipoleOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDipoleOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDipoleOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -316,14 +316,14 @@ impl AntiReverse for AntiDipoleOnOrigin {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for AntiDualNum {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiDualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiDualNum {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -332,14 +332,14 @@ impl AntiReverse for AntiDualNum {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for AntiFlatOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiFlatOrigin {
     type Output = AntiFlatOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiFlatOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiFlatOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -352,14 +352,14 @@ impl AntiReverse for AntiFlatOrigin {
         return AntiFlatOrigin::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<anti_reverse> for AntiFlatPoint {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiFlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiFlatPoint {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -372,14 +372,14 @@ impl AntiReverse for AntiFlatPoint {
         return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for AntiFlector {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiFlector {
     type Output = AntiFlector;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiFlector {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiFlector {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -392,14 +392,14 @@ impl AntiReverse for AntiFlector {
         return AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for AntiFlectorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiFlectorOnOrigin {
     type Output = AntiFlectorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiFlectorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiFlectorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -412,14 +412,14 @@ impl AntiReverse for AntiFlectorOnOrigin {
         return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for AntiLine {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiLine {
     type Output = AntiLine;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiLine {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiLine {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -437,14 +437,14 @@ impl AntiReverse for AntiLine {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiLineOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiLineOnOrigin {
     type Output = AntiLineOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiLineOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiLineOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -457,14 +457,14 @@ impl AntiReverse for AntiLineOnOrigin {
         return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for AntiMotor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiMotor {
     type Output = AntiMotor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiMotor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiMotor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -482,14 +482,14 @@ impl AntiReverse for AntiMotor {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for AntiMotorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiMotorOnOrigin {
     type Output = AntiMotorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiMotorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiMotorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -502,14 +502,14 @@ impl AntiReverse for AntiMotorOnOrigin {
         return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for AntiMysteryCircleRotor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiMysteryCircleRotor {
     type Output = AntiMysteryCircleRotor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiMysteryCircleRotor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiMysteryCircleRotor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -523,14 +523,14 @@ impl AntiReverse for AntiMysteryCircleRotor {
         return AntiMysteryCircleRotor::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0), /* scalar */ self[scalar]);
     }
 }
-impl std::ops::Div<anti_reverse> for AntiMysteryDipoleInversion {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiMysteryDipoleInversion {
     type Output = AntiMysteryDipoleInversion;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiMysteryDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiMysteryDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -543,14 +543,14 @@ impl AntiReverse for AntiMysteryDipoleInversion {
         return AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for AntiPlane {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiPlane {
     type Output = AntiPlane;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiPlane {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiPlane {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -559,14 +559,14 @@ impl AntiReverse for AntiPlane {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for AntiPlaneOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiPlaneOnOrigin {
     type Output = AntiPlaneOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiPlaneOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiPlaneOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -575,14 +575,14 @@ impl AntiReverse for AntiPlaneOnOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for AntiScalar {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -591,14 +591,14 @@ impl AntiReverse for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for AntiSphereOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiSphereOnOrigin {
     type Output = AntiSphereOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiSphereOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiSphereOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -607,14 +607,14 @@ impl AntiReverse for AntiSphereOnOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for AntiVersorEvenOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for AntiVersorEvenOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for AntiVersorEvenOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for AntiVersorEvenOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -632,14 +632,14 @@ impl AntiReverse for AntiVersorEvenOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for Circle {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Circle {
     type Output = Circle;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Circle {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Circle {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -662,14 +662,14 @@ impl AntiReverse for Circle {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleAligningOrigin {
     type Output = CircleAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -689,14 +689,14 @@ impl AntiReverse for CircleAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleAtInfinity {
     type Output = CircleAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -717,14 +717,14 @@ impl AntiReverse for CircleAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleAtOrigin {
     type Output = CircleAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -742,14 +742,14 @@ impl AntiReverse for CircleAtOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleOnOrigin {
     type Output = CircleOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -767,14 +767,14 @@ impl AntiReverse for CircleOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleOrthogonalOrigin {
     type Output = CircleOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -795,14 +795,14 @@ impl AntiReverse for CircleOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleRotor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleRotor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleRotor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -825,14 +825,14 @@ impl AntiReverse for CircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleRotorAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleRotorAligningOrigin {
     type Output = CircleRotorAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleRotorAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleRotorAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -855,14 +855,14 @@ impl AntiReverse for CircleRotorAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleRotorAligningOriginAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleRotorAligningOriginAtInfinity {
     type Output = CircleRotorAligningOriginAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleRotorAligningOriginAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleRotorAligningOriginAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -883,14 +883,14 @@ impl AntiReverse for CircleRotorAligningOriginAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleRotorAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleRotorAtInfinity {
     type Output = CircleRotorAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleRotorAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleRotorAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -908,14 +908,14 @@ impl AntiReverse for CircleRotorAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for CircleRotorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for CircleRotorOnOrigin {
     type Output = CircleRotorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for CircleRotorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for CircleRotorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -936,14 +936,14 @@ impl AntiReverse for CircleRotorOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for Dipole {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Dipole {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -966,14 +966,14 @@ impl AntiReverse for Dipole {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleAligningOrigin {
     type Output = DipoleAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -994,14 +994,14 @@ impl AntiReverse for DipoleAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1022,14 +1022,14 @@ impl AntiReverse for DipoleAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleAtOrigin {
     type Output = DipoleAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1047,14 +1047,14 @@ impl AntiReverse for DipoleAtOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversion {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1079,14 +1079,14 @@ impl AntiReverse for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversionAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversionAligningOrigin {
     type Output = DipoleInversionAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversionAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversionAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1106,14 +1106,14 @@ impl AntiReverse for DipoleInversionAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversionAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversionAtInfinity {
     type Output = DipoleInversionAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversionAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversionAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1136,14 +1136,14 @@ impl AntiReverse for DipoleInversionAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversionAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversionAtOrigin {
     type Output = DipoleInversionAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversionAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversionAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1161,14 +1161,14 @@ impl AntiReverse for DipoleInversionAtOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversionOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversionOnOrigin {
     type Output = DipoleInversionOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversionOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversionOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1181,14 +1181,14 @@ impl AntiReverse for DipoleInversionOnOrigin {
         return DipoleInversionOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0), /* e1234, e4235, e4315, e4125 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleInversionOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleInversionOrthogonalOrigin {
     type Output = DipoleInversionOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleInversionOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleInversionOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1211,14 +1211,14 @@ impl AntiReverse for DipoleInversionOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1231,14 +1231,14 @@ impl AntiReverse for DipoleOnOrigin {
         return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for DipoleOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DipoleOrthogonalOrigin {
     type Output = DipoleOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DipoleOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DipoleOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1258,14 +1258,14 @@ impl AntiReverse for DipoleOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for DualNum {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for DualNum {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1274,14 +1274,14 @@ impl AntiReverse for DualNum {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for FlatOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for FlatOrigin {
     type Output = FlatOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for FlatOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for FlatOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1294,14 +1294,14 @@ impl AntiReverse for FlatOrigin {
         return FlatOrigin::from_groups(/* e45 */ self[e45] * -1.0);
     }
 }
-impl std::ops::Div<anti_reverse> for FlatPoint {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for FlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for FlatPoint {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for FlatPoint {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1314,14 +1314,14 @@ impl AntiReverse for FlatPoint {
         return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for FlatPointAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for FlatPointAtInfinity {
     type Output = FlatPointAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for FlatPointAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for FlatPointAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1334,14 +1334,14 @@ impl AntiReverse for FlatPointAtInfinity {
         return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for Flector {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Flector {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1354,14 +1354,14 @@ impl AntiReverse for Flector {
         return Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for FlectorAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for FlectorAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for FlectorAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1374,14 +1374,14 @@ impl AntiReverse for FlectorAtInfinity {
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for FlectorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for FlectorOnOrigin {
     type Output = FlectorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for FlectorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for FlectorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1394,14 +1394,14 @@ impl AntiReverse for FlectorOnOrigin {
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for Horizon {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Horizon {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1410,14 +1410,14 @@ impl AntiReverse for Horizon {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for Infinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Infinity {
     type Output = Infinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Infinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Infinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1426,14 +1426,14 @@ impl AntiReverse for Infinity {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for Line {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Line {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1451,14 +1451,14 @@ impl AntiReverse for Line {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for LineAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for LineAtInfinity {
     type Output = LineAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for LineAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for LineAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1471,14 +1471,14 @@ impl AntiReverse for LineAtInfinity {
         return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for LineOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for LineOnOrigin {
     type Output = LineOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for LineOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for LineOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1491,14 +1491,14 @@ impl AntiReverse for LineOnOrigin {
         return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for Motor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Motor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1516,14 +1516,14 @@ impl AntiReverse for Motor {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for MotorAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MotorAtInfinity {
     type Output = MotorAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MotorAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MotorAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1536,14 +1536,14 @@ impl AntiReverse for MotorAtInfinity {
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for MotorOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MotorOnOrigin {
     type Output = MotorOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MotorOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MotorOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1556,14 +1556,14 @@ impl AntiReverse for MotorOnOrigin {
         return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for MultiVector {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1603,14 +1603,14 @@ impl AntiReverse for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryCircle {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryCircle {
     type Output = MysteryCircle;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryCircle {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryCircle {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1623,14 +1623,14 @@ impl AntiReverse for MysteryCircle {
         return MysteryCircle::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryCircleRotor {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryCircleRotor {
     type Output = MysteryCircleRotor;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryCircleRotor {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryCircleRotor {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1644,14 +1644,14 @@ impl AntiReverse for MysteryCircleRotor {
         return MysteryCircleRotor::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0), /* e12345 */ self[e12345]);
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryDipole {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryDipole {
     type Output = MysteryDipole;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryDipole {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryDipole {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1664,14 +1664,14 @@ impl AntiReverse for MysteryDipole {
         return MysteryDipole::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryDipoleInversion {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryDipoleInversion {
     type Output = MysteryDipoleInversion;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1684,14 +1684,14 @@ impl AntiReverse for MysteryDipoleInversion {
         return MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125 */ self.group1());
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryVersorEven {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryVersorEven {
     type Output = MysteryVersorEven;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryVersorEven {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryVersorEven {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1704,14 +1704,14 @@ impl AntiReverse for MysteryVersorEven {
         return MysteryVersorEven::from_groups(/* e12345, e1, e2, e3 */ self.group0(), /* e415, e425, e435, e321 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for MysteryVersorOdd {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for MysteryVersorOdd {
     type Output = MysteryVersorOdd;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for MysteryVersorOdd {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for MysteryVersorOdd {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1724,14 +1724,14 @@ impl AntiReverse for MysteryVersorOdd {
         return MysteryVersorOdd::from_groups(/* scalar, e4235, e4315, e4125 */ self.group0(), /* e23, e31, e12, e45 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for NullCircleAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for NullCircleAtOrigin {
     type Output = NullCircleAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for NullCircleAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for NullCircleAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1744,14 +1744,14 @@ impl AntiReverse for NullCircleAtOrigin {
         return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for NullDipoleAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for NullDipoleAtOrigin {
     type Output = NullDipoleAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for NullDipoleAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for NullDipoleAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1764,14 +1764,14 @@ impl AntiReverse for NullDipoleAtOrigin {
         return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<anti_reverse> for NullDipoleInversionAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for NullDipoleInversionAtOrigin {
     type Output = NullDipoleInversionAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for NullDipoleInversionAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for NullDipoleInversionAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1784,14 +1784,14 @@ impl AntiReverse for NullDipoleInversionAtOrigin {
         return NullDipoleInversionAtOrigin::from_groups(/* e41, e42, e43, e1234 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for NullSphereAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for NullSphereAtOrigin {
     type Output = NullSphereAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for NullSphereAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for NullSphereAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1800,14 +1800,14 @@ impl AntiReverse for NullSphereAtOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for NullVersorEvenAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for NullVersorEvenAtOrigin {
     type Output = NullVersorEvenAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for NullVersorEvenAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for NullVersorEvenAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1820,14 +1820,14 @@ impl AntiReverse for NullVersorEvenAtOrigin {
         return NullVersorEvenAtOrigin::from_groups(/* e423, e431, e412, e4 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<anti_reverse> for Origin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Origin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1836,14 +1836,14 @@ impl AntiReverse for Origin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for Plane {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Plane {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1852,14 +1852,14 @@ impl AntiReverse for Plane {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for PlaneOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for PlaneOnOrigin {
     type Output = PlaneOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for PlaneOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for PlaneOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1868,14 +1868,14 @@ impl AntiReverse for PlaneOnOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for RoundPoint {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for RoundPoint {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1884,14 +1884,14 @@ impl AntiReverse for RoundPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for RoundPointAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for RoundPointAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for RoundPointAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1900,14 +1900,14 @@ impl AntiReverse for RoundPointAtOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for Scalar {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1916,14 +1916,14 @@ impl AntiReverse for Scalar {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for Sphere {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for Sphere {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1932,14 +1932,14 @@ impl AntiReverse for Sphere {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for SphereAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for SphereAtOrigin {
     type Output = SphereAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for SphereAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for SphereAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1948,14 +1948,14 @@ impl AntiReverse for SphereAtOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for SphereOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for SphereOnOrigin {
     type Output = SphereOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for SphereOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for SphereOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1964,14 +1964,14 @@ impl AntiReverse for SphereOnOrigin {
         return self;
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEven {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEven {
     type Output = VersorEven;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEven {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEven {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -1993,14 +1993,14 @@ impl AntiReverse for VersorEven {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEvenAligningOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEvenAligningOrigin {
     type Output = VersorEvenAligningOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEvenAligningOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEvenAligningOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2020,14 +2020,14 @@ impl AntiReverse for VersorEvenAligningOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEvenAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEvenAtInfinity {
     type Output = VersorEvenAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEvenAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEvenAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2047,14 +2047,14 @@ impl AntiReverse for VersorEvenAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEvenAtOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEvenAtOrigin {
     type Output = VersorEvenAtOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEvenAtOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEvenAtOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2072,14 +2072,14 @@ impl AntiReverse for VersorEvenAtOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEvenOnOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEvenOnOrigin {
     type Output = VersorEvenOnOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEvenOnOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEvenOnOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2097,14 +2097,14 @@ impl AntiReverse for VersorEvenOnOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorEvenOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorEvenOrthogonalOrigin {
     type Output = VersorEvenOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorEvenOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorEvenOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2124,14 +2124,14 @@ impl AntiReverse for VersorEvenOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorOdd {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorOdd {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2153,14 +2153,14 @@ impl AntiReverse for VersorOdd {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorOddAtInfinity {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorOddAtInfinity {
     type Output = VersorOddAtInfinity;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorOddAtInfinity {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorOddAtInfinity {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }
@@ -2180,14 +2180,14 @@ impl AntiReverse for VersorOddAtInfinity {
         );
     }
 }
-impl std::ops::Div<anti_reverse> for VersorOddOrthogonalOrigin {
+impl std::ops::Div<AntiReversePrefixOrPostfix> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
-    fn div(self, _rhs: anti_reverse) -> Self::Output {
+    fn div(self, _rhs: AntiReversePrefixOrPostfix) -> Self::Output {
         self.anti_reverse()
     }
 }
-impl std::ops::DivAssign<anti_reverse> for VersorOddOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: anti_reverse) {
+impl std::ops::DivAssign<AntiReversePrefixOrPostfix> for VersorOddOrthogonalOrigin {
+    fn div_assign(&mut self, _rhs: AntiReversePrefixOrPostfix) {
         *self = self.anti_reverse()
     }
 }

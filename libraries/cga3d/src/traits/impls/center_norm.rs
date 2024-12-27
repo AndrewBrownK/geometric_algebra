@@ -20,9 +20,9 @@ use crate::traits::SquareRoot;
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
-impl std::ops::Div<center_norm> for AntiCircleRotor {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -34,9 +34,9 @@ impl CenterNorm for AntiCircleRotor {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for AntiDipoleInversion {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -48,9 +48,9 @@ impl CenterNorm for AntiDipoleInversion {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for Circle {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for Circle {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -62,9 +62,9 @@ impl CenterNorm for Circle {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for CircleRotor {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for CircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -76,9 +76,9 @@ impl CenterNorm for CircleRotor {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for Dipole {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for Dipole {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -90,9 +90,9 @@ impl CenterNorm for Dipole {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for DipoleInversion {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for DipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -104,9 +104,9 @@ impl CenterNorm for DipoleInversion {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for MultiVector {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -118,9 +118,9 @@ impl CenterNorm for MultiVector {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for VersorEven {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for VersorEven {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }
@@ -132,9 +132,9 @@ impl CenterNorm for VersorEven {
         return self.center_norm_squared().square_root();
     }
 }
-impl std::ops::Div<center_norm> for VersorOdd {
+impl std::ops::Div<CenterNormPrefixOrPostfix> for VersorOdd {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm) -> Self::Output {
+    fn div(self, _rhs: CenterNormPrefixOrPostfix) -> Self::Output {
         self.center_norm()
     }
 }

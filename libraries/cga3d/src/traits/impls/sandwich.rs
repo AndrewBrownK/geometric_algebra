@@ -12,18 +12,18 @@ use crate::traits::Reverse;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:        44      77       0
-//  Average:        79     112       0
-//  Maximum:       784     906       0
+//  Average:        79     113       0
+//  Maximum:       784     924       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        96     135       0
+//   Median:        96     133       0
 //  Average:       186     223       0
 //  Maximum:      1984    2068       0
-impl std::ops::Div<sandwich> for AntiCircleRotor {
-    type Output = sandwich_partial<AntiCircleRotor>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiCircleRotor {
+    type Output = SandwichInfixPartial<AntiCircleRotor>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiCircleRotor {
@@ -180,20 +180,17 @@ impl Sandwich<AntiFlatPoint> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       62       96        0
-    //    simd3        0       16        0
-    //    simd4       33       23        0
+    //    simd3        0       18        0
+    //    simd4       33       21        0
     // Totals...
     // yes simd       95      135        0
-    //  no simd      194      236        0
+    //  no simd      194      234        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(self[e41] * other[e235]) - (self[e42] * other[e315]) - (self[e43] * other[e125]) - (self[e45] * other[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e321]) * self.group0() * Simd32x3::from(-1.0))
+                .with_w(-(self[e41] * other[e235]) - (self[e42] * other[e315]) - (self[e43] * other[e125]) - (self[e45] * other[e321])),
             // e415, e425, e435, e321
             (other.group0().yzxw() * self.group0().zxy().with_w(self[scalar])) + Simd32x3::from(0.0).with_w(-(self[e42] * other[e315]) - (self[e43] * other[e125]))
                 - (other.group0().zxyx() * self.group0().yzx().with_w(self[e41])),
@@ -719,19 +716,16 @@ impl Sandwich<FlatPoint> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       57       91        0
-    //    simd3        0       12        0
-    //    simd4       34       27        0
+    //    simd3        0       13        0
+    //    simd4       34       26        0
     // Totals...
     // yes simd       91      130        0
-    //  no simd      193      235        0
+    //  no simd      193      234        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 self[e42] * other[e35] * -1.0,
@@ -904,12 +898,12 @@ impl Sandwich<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      104      174        0
+    //      f32      104      175        0
     //    simd2       20       20        0
-    //    simd3       80      117        0
-    //    simd4       64       38        0
+    //    simd3       80      118        0
+    //    simd4       64       37        0
     // Totals...
-    // yes simd      268      349        0
+    // yes simd      268      350        0
     //  no simd      640      717        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -1104,11 +1098,11 @@ impl Sandwich<RoundPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       46       81        0
-    //    simd3        2       13        0
-    //    simd4       35       28        0
+    //      f32       46       82        0
+    //    simd3        2       14        0
+    //    simd4       35       27        0
     // Totals...
-    // yes simd       83      122        0
+    // yes simd       83      123        0
     //  no simd      192      232        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -1123,9 +1117,9 @@ impl Sandwich<RoundPoint> for AntiCircleRotor {
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
             ]) - (self.group1().wwwx() * other.group0().xyzx()),
             // e235, e315, e125, e4
-            (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group1().xyz().with_w(self[e41]))
-                + (other.group0().yzxy() * self.group2().zxy().with_w(self[e42]))
+            (other.group0().yzxy() * self.group2().zxy().with_w(self[e42]))
                 + Simd32x3::from(0.0).with_w((self[e43] * other[e3]) + (self[scalar] * other[e4]))
+                + (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(self[e41] * other[e1])
                 - (other.group0().zxyw() * self.group2().yzx().with_w(self[e45])),
             // e1, e2, e3, e5
             Simd32x4::from([self[scalar] * other[e1], self[scalar] * other[e2], self[scalar] * other[e3], self[e35] * other[e3] * -1.0])
@@ -1196,8 +1190,8 @@ impl Sandwich<Sphere> for AntiCircleRotor {
                 -(self[e42] * other[e3215]) - (self[e12] * other[e4235]),
                 -(self[e43] * other[e3215]) - (self[e23] * other[e4315]),
                 (self[e35] * other[e4125]) + (self[scalar] * other[e3215]),
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4235]]) * self.group2().xyzx())
-                + (self.group1().zxyw() * other.group0().yzxw())
+            ]) + (self.group1().zxyw() * other.group0().yzxw())
+                + (self.group2().xyzx() * Simd32x3::from(other[e1234]).with_w(other[e4235]))
                 + (self.group2().wwwy() * other.group0().xyzy()),
         )
         .geometric_product(self.reverse());
@@ -1376,10 +1370,10 @@ impl Sandwich<VersorOdd> for AntiCircleRotor {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiDipoleInversion {
-    type Output = sandwich_partial<AntiDipoleInversion>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiDipoleInversion {
+    type Output = SandwichInfixPartial<AntiDipoleInversion>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiDipoleInversion {
@@ -1587,19 +1581,16 @@ impl Sandwich<AntiFlatPoint> for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       37       74        0
-    //    simd3        5       20        0
-    //    simd4       55       45        0
+    //    simd3        5       21        0
+    //    simd4       55       44        0
     // Totals...
     // yes simd       97      139        0
-    //  no simd      272      314        0
+    //  no simd      272      313        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w((self[e423] * other[e235]) + (self[e431] * other[e315]) + (self[e412] * other[e125]) - (self[e321] * other[e321])),
+            (Simd32x3::from(other[e321]) * self.group0()).with_w((self[e423] * other[e235]) + (self[e431] * other[e315]) + (self[e412] * other[e125]) - (self[e321] * other[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([self[e431] * other[e125], self[e412] * other[e235], self[e423] * other[e315], 0.0])
                 - (other.group0().xyzy() * self.group2().www().with_w(self[e431]))
@@ -2172,19 +2163,16 @@ impl Sandwich<FlatPoint> for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       38       85        0
-    //    simd3        3       22        0
-    //    simd4       56       42        0
+    //    simd3        3       23        0
+    //    simd4       56       41        0
     // Totals...
     // yes simd       97      149        0
-    //  no simd      271      319        0
+    //  no simd      271      318        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e412] * other[e25]) + (self[e4] * other[e15]),
@@ -2388,12 +2376,12 @@ impl Sandwich<MultiVector> for AntiDipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      104      183        0
+    //      f32      104      186        0
     //    simd2       12       12        0
-    //    simd3      112      149        0
-    //    simd4      108       82        0
+    //    simd3      112      152        0
+    //    simd4      108       79        0
     // Totals...
-    // yes simd      336      426        0
+    // yes simd      336      429        0
     //  no simd      896      982        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -2435,9 +2423,9 @@ impl Sandwich<MultiVector> for AntiDipoleInversion {
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], other[e1234]]) * self.group0().xxy().with_w(self[e321]))
                 - (Simd32x4::from([other[e45], other[e4125], other[e4235], other[e12]]) * self.group1().xxy().with_w(self[e412]))
                 - (Simd32x4::from([other[e4315], other[e45], other[e45], other[e4125]]) * self.group1().zyz().with_w(self[e412]))
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e415]]) * self.group2().xyz().with_w(other[e41]))
                 - (self.group2().zx().with_zw(self[e5], other[e31]) * other.group4().yzz().with_w(self[e431]))
                 - (self.group3().ww().with_zw(self[e315], other[e4235]) * other.group4().xyx().with_w(self[e423]))
+                - (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e415] * other[e41])
                 - (self.group0().yzx() * other.group3().zxy()).with_w(self[e423] * other[e23])
                 - (other.group5().zxy() * self.group3().yzx()).with_w(self[e431] * other[e4315]),
             // e5
@@ -2466,8 +2454,8 @@ impl Sandwich<MultiVector> for AntiDipoleInversion {
                 - (Simd32x4::from([self[e435], self[e3], self[e425], other[e315]]) * other.group8().yxx().with_w(self[e431]))
                 - (Simd32x4::from([self[e2], self[e415], self[e1], other[e125]]) * other.group8().zzy().with_w(self[e412]))
                 - (Simd32x4::from([other[e2], other[e435], other[e415], other[e3]]) * self.group2().zxy().with_w(self[e435]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group1().xyzx())
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e2]]) * self.group2().xxy().with_w(self[e425]))
+                - (self.group1().xyzx() * Simd32x3::from(other[e5]).with_w(other[e1]))
                 - (self.group3().wwwy() * other.group1().xyz().with_w(other[e425]))
                 - (self.group3().wwwz() * other.group6().xyzz())
                 - (other.group6().ywwx() * self.group2().zyz().with_w(self[e1]))
@@ -2510,9 +2498,9 @@ impl Sandwich<MultiVector> for AntiDipoleInversion {
                 + (Simd32x4::from(other[scalar]) * self.group1())
                 + (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e315]]) * self.group0().zyz().with_w(other[e42]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], self[e235]]) * self.group0().xxy().with_w(other[e41]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4125]]) * self.group2().xyz().with_w(self[e435]))
                 + (self.group2().zx().with_zw(self[e5], other[e4235]) * other.group4().yzz().with_w(self[e415]))
                 + (self.group3().ww().with_zw(self[e315], self[e125]) * other.group4().xyx().with_w(other[e43]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e435] * other[e4125])
                 + (other.group5().yzx() * self.group1().zxy()).with_w(self[e425] * other[e4315])
                 - (Simd32x4::from([other[e45], other[e4125], other[e4235], self[e2]]) * self.group3().xxy().with_w(other[e31]))
                 - (Simd32x4::from([other[e4315], other[e45], other[e45], self[e3]]) * self.group3().zyz().with_w(other[e12]))
@@ -2641,11 +2629,11 @@ impl Sandwich<RoundPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       39       88        0
-    //    simd3        0       16        0
-    //    simd4       61       49        0
+    //      f32       39       90        0
+    //    simd3        0       18        0
+    //    simd4       61       47        0
     // Totals...
-    // yes simd      100      153        0
+    // yes simd      100      155        0
     //  no simd      283      332        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -2658,19 +2646,19 @@ impl Sandwich<RoundPoint> for AntiDipoleInversion {
                 - (self.group0().yzx() * other.group0().zxy()).with_w(self[e4] * other[e5]),
             // e23, e31, e12, e45
             (self.group3().yzx() * other.group0().zxy()).with_w(self[e4] * other[e5])
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().with_w(self[e415]))
                 - (self.group1().wwwy() * other.group0().xyzy())
                 - (self.group3().zxyw() * other.group0().yzxw())
-                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435])),
+                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435]))
+                - (Simd32x3::from(other[e5]) * self.group0()).with_w(self[e415] * other[e1]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 (self[e315] * other[e3]) + (self[e1] * other[e5]),
                 (self[e125] * other[e1]) + (self[e2] * other[e5]),
                 (self[e235] * other[e2]) + (self[e3] * other[e5]),
                 self[e321] * other[e4] * -1.0,
-            ]) - (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group1().xyz().with_w(self[e423]))
-                - (other.group0().xyzz() * self.group3().www().with_w(self[e412]))
-                - (other.group0().yzxy() * self.group2().zxy().with_w(self[e431])),
+            ]) - (other.group0().xyzz() * self.group3().www().with_w(self[e412]))
+                - (other.group0().yzxy() * self.group2().zxy().with_w(self[e431]))
+                - (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(self[e423] * other[e1]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 -(self[e425] * other[e3]) - (self[e235] * other[e4]),
@@ -2712,11 +2700,11 @@ impl Sandwich<Sphere> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       99        0
-    //    simd3        0       20        0
-    //    simd4       62       45        0
+    //      f32       35      102        0
+    //    simd3        0       23        0
+    //    simd4       62       42        0
     // Totals...
-    // yes simd       97      164        0
+    // yes simd       97      167        0
     //  no simd      283      339        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -2727,15 +2715,15 @@ impl Sandwich<Sphere> for AntiDipoleInversion {
                 self[e412] * other[e4235] * -1.0,
                 self[e423] * other[e4315] * -1.0,
                 self[e5] * other[e1234],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4235]]) * self.group1().xyz().with_w(self[e1]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4125]]) * self.group3().xyzz())
+            ]) + (self.group3().xyzz() * Simd32x3::from(other[e1234]).with_w(other[e4125]))
                 + (other.group0().xyzy() * self.group2().www().with_w(self[e2]))
-                + (other.group0().yzxw() * self.group0().zxy().with_w(self[e4])),
+                + (other.group0().yzxw() * self.group0().zxy().with_w(self[e4]))
+                + (Simd32x3::from(other[e1234]) * self.group1().xyz()).with_w(self[e1] * other[e4235]),
             // e415, e425, e435, e321
             Simd32x4::from([self[e3] * other[e4315] * -1.0, self[e1] * other[e4125] * -1.0, self[e2] * other[e4235] * -1.0, self[e4] * other[e3215]])
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group2().xyz().with_w(self[e425]))
                 + (other.group0().zxyz() * self.group3().yzx().with_w(self[e435]))
                 + (other.group0().wwwx() * self.group0().with_w(self[e415]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e425] * other[e4315])
                 - (self.group1().www() * other.group0().xyz()).with_w(self[e5] * other[e1234]),
             // e235, e315, e125, e5
             Simd32x4::from([
@@ -2749,8 +2737,8 @@ impl Sandwich<Sphere> for AntiDipoleInversion {
             // e1, e2, e3, e4
             Simd32x4::from([self[e425] * other[e4125], self[e435] * other[e4235], self[e415] * other[e4315], self[e412] * other[e4125] * -1.0])
                 + (self.group0() * other.group0().www()).with_w(self[e321] * other[e1234])
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group2().xyz().with_w(self[e431]))
-                - (other.group0().yzxx() * self.group1().zxy().with_w(self[e423])),
+                - (other.group0().yzxx() * self.group1().zxy().with_w(self[e423]))
+                - (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e431] * other[e4315]),
         )
         .geometric_product(self.reverse());
     }
@@ -2921,10 +2909,10 @@ impl Sandwich<VersorOdd> for AntiDipoleInversion {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiDualNum {
-    type Output = sandwich_partial<AntiDualNum>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiDualNum {
+    type Output = SandwichInfixPartial<AntiDualNum>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiDualNum {
@@ -3031,7 +3019,7 @@ impl Sandwich<AntiFlector> for AntiDualNum {
             // e235, e315, e125, e321
             ((Simd32x3::from(self[e3215]) * other.group1().xyz()) + (Simd32x3::from(self[scalar]) * other.group0().xyz())).with_w(self[scalar] * other[e321]),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e321]) + (self[scalar] * other[e5])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e321]) + (self[scalar] * other[e5])) * other.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -3258,7 +3246,7 @@ impl Sandwich<Flector> for AntiDualNum {
             // e15, e25, e35, e45
             ((Simd32x3::from(self[scalar]) * other.group0().xyz()) - (Simd32x3::from(self[e3215]) * other.group1().xyz())).with_w(self[scalar] * other[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 1.0]) * self.group0().yy().with_zw(self[scalar], (self[scalar] * other[e3215]) - (self[e3215] * other[e45])),
+            self.group0().yy().with_zw(self[scalar], (self[scalar] * other[e3215]) - (self[e3215] * other[e45])) * other.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -3441,7 +3429,7 @@ impl Sandwich<VersorEven> for AntiDualNum {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0]) * self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e4]) + (self[scalar] * other[e12345])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e4]) + (self[scalar] * other[e12345])) * other.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[scalar] * other[e415], self[scalar] * other[e425], self[scalar] * other[e435], self[e3215] * other[e4] * -1.0])
                 + (self.group0().xx().with_zw(self[e3215], self[scalar]) * other.group0().xyz().with_w(other[e321])),
@@ -3469,7 +3457,7 @@ impl Sandwich<VersorOdd> for AntiDualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e1234]) + (self[scalar] * other[scalar])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * other[e1234]) + (self[scalar] * other[scalar])) * other.group0().xyz().with_w(1.0),
             // e23, e31, e12, e45
             (Simd32x4::from(self[e3215]) * other.group0().xyz().with_w(other[e1234])) + (Simd32x4::from(self[scalar]) * other.group1()),
             // e15, e25, e35, e1234
@@ -3481,10 +3469,10 @@ impl Sandwich<VersorOdd> for AntiDualNum {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiFlatPoint {
-    type Output = sandwich_partial<AntiFlatPoint>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiFlatPoint {
+    type Output = SandwichInfixPartial<AntiFlatPoint>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiFlatPoint {
@@ -3492,19 +3480,16 @@ impl Sandwich<AntiCircleRotor> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       13       27        0
-    //    simd3        6       10        0
-    //    simd4       13       15        0
+    //    simd3        6       12        0
+    //    simd4       13       13        0
     // Totals...
     // yes simd       32       52        0
-    //  no simd       83      117        0
+    //  no simd       83      115        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(other[e41] * self[e235]) - (other[e42] * self[e315]) - (other[e43] * self[e125]) - (other[e45] * self[e321])),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w(-(other[e41] * self[e235]) - (other[e42] * self[e315]) - (other[e43] * self[e125]) - (other[e45] * self[e321])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 other[e43] * self[e315] * -1.0,
@@ -3533,20 +3518,17 @@ impl Sandwich<AntiDipoleInversion> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       32       55        0
-    //    simd3        8       10        0
-    //    simd4        9       14        0
+    //    simd3        8       14        0
+    //    simd4        9       10        0
     // Totals...
     // yes simd       49       79        0
-    //  no simd       92      141        0
+    //  no simd       92      137        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w((other[e423] * self[e235]) + (other[e431] * self[e315]) + (other[e412] * self[e125]) - (other[e321] * self[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e321]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((other[e423] * self[e235]) + (other[e431] * self[e315]) + (other[e412] * self[e125]) - (other[e321] * self[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(other[e431] * self[e125]) - (other[e4] * self[e235]) - (other[e1] * self[e321]),
@@ -3597,11 +3579,11 @@ impl Sandwich<AntiFlatPoint> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        7        0
-    //    simd3        4        6        0
-    //    simd4        0        2        0
+    //    simd3        4        7        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        7       15        0
-    //  no simd       15       33        0
+    //  no simd       15       32        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -3618,11 +3600,11 @@ impl Sandwich<AntiFlector> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        6        0
+    //    simd3        3        5        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       23        0
-    //  no simd       24       49        0
+    //  no simd       24       48        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -3645,11 +3627,11 @@ impl Sandwich<AntiLine> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd3        0        3        0
-    //    simd4        4        6        0
+    //    simd3        0        4        0
+    //    simd4        4        5        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       22       44        0
+    //  no simd       22       43        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -3658,7 +3640,7 @@ impl Sandwich<AntiLine> for AntiFlatPoint {
                 - (Simd32x3::from(self[e321]) * other.group1()).with_w(0.0)
                 - (other.group0().zxy() * self.group0().yzx()).with_w(0.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0]) * other.group0().with_w(-(self[e235] * other[e23]) - (self[e315] * other[e31]) - (self[e125] * other[e12])),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w(-(self[e235] * other[e23]) - (self[e315] * other[e31]) - (self[e125] * other[e12])),
         )
         .geometric_product(self.reverse());
     }
@@ -3668,11 +3650,11 @@ impl Sandwich<AntiMotor> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        6        0
+    //    simd3        3        5        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       23        0
-    //  no simd       24       49        0
+    //  no simd       24       48        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -3682,11 +3664,7 @@ impl Sandwich<AntiMotor> for AntiFlatPoint {
                 - (self.group0().yzx() * other.group0().zxy()))
             .with_w(self[e321] * other[scalar]),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e23], other[e31], other[e12], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w(-(self[e235] * other[e23]) - (self[e315] * other[e31]) - (self[e125] * other[e12]) - (self[e321] * other[e3215])),
+            (self.group0().www() * other.group0().xyz()).with_w(-(self[e235] * other[e23]) - (self[e315] * other[e31]) - (self[e125] * other[e12]) - (self[e321] * other[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -3696,11 +3674,11 @@ impl Sandwich<AntiPlane> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5       14        0
-    //    simd3        3        4        0
-    //    simd4        1        6        0
+    //    simd3        3        5        0
+    //    simd4        1        5        0
     // Totals...
     // yes simd        9       24        0
-    //  no simd       18       50        0
+    //  no simd       18       49        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -3738,20 +3716,17 @@ impl Sandwich<Circle> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       19       47        0
-    //    simd3        3        9        0
-    //    simd4       12       13        0
+    //    simd3        3       13        0
+    //    simd4       12        9        0
     // Totals...
     // yes simd       34       69        0
-    //  no simd       76      126        0
+    //  no simd       76      122        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e321]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 self[e125] * other[e431] * -1.0,
@@ -3780,20 +3755,17 @@ impl Sandwich<CircleRotor> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       20       48        0
-    //    simd3        3       10        0
-    //    simd4       13       13        0
+    //    simd3        3       14        0
+    //    simd4       13        9        0
     // Totals...
     // yes simd       36       71        0
-    //  no simd       81      130        0
+    //  no simd       81      126        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e321]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 self[e125] * other[e431] * -1.0,
@@ -3823,19 +3795,16 @@ impl Sandwich<Dipole> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       24        0
-    //    simd3        6       11        0
-    //    simd4       13       14        0
+    //    simd3        6       13        0
+    //    simd4       13       12        0
     // Totals...
     // yes simd       28       49        0
-    //  no simd       79      113        0
+    //  no simd       79      111        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 self[e315] * other[e43] * -1.0,
@@ -3860,19 +3829,16 @@ impl Sandwich<DipoleInversion> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       22        0
-    //    simd3        9       12        0
-    //    simd4       15       18        0
+    //    simd3        9       14        0
+    //    simd4       15       16        0
     // Totals...
     // yes simd       35       52        0
-    //  no simd       98      130        0
+    //  no simd       98      128        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 -(self[e315] * other[e43]) - (self[e321] * other[e4235]),
@@ -3923,11 +3889,11 @@ impl Sandwich<FlatPoint> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        7        0
-    //    simd3        4        6        0
-    //    simd4        0        2        0
+    //    simd3        4        7        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        7       15        0
-    //  no simd       15       33        0
+    //  no simd       15       32        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -3944,11 +3910,11 @@ impl Sandwich<Flector> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        6        0
+    //    simd3        3        5        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       23        0
-    //  no simd       24       49        0
+    //  no simd       24       48        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -3971,11 +3937,11 @@ impl Sandwich<Line> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd3        0        3        0
-    //    simd4        4        6        0
+    //    simd3        0        4        0
+    //    simd4        4        5        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       22       44        0
+    //  no simd       22       43        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -3983,7 +3949,7 @@ impl Sandwich<Line> for AntiFlatPoint {
             (Simd32x3::from(self[e321]) * other.group1()).with_w(0.0) + (other.group0().zxy() * self.group0().yzx()).with_w(0.0)
                 - (other.group0().yzx() * self.group0().zxy()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0]) * other.group0().with_w((self[e235] * other[e415]) + (self[e315] * other[e425]) + (self[e125] * other[e435])),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w((self[e235] * other[e415]) + (self[e315] * other[e425]) + (self[e125] * other[e435])),
         )
         .geometric_product(self.reverse());
     }
@@ -3993,11 +3959,11 @@ impl Sandwich<Motor> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        6        0
+    //    simd3        3        5        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       23        0
-    //  no simd       24       49        0
+    //  no simd       24       48        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -4007,11 +3973,7 @@ impl Sandwich<Motor> for AntiFlatPoint {
                 - (self.group0().zyz() * other.group0().yww()))
             .with_w(self[e321] * other[e12345]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[e235] * other[e415]) + (self[e315] * other[e425]) + (self[e125] * other[e435]) + (self[e321] * other[e5])),
+            (self.group0().www() * other.group0().xyz()).with_w((self[e235] * other[e415]) + (self[e315] * other[e425]) + (self[e125] * other[e435]) + (self[e321] * other[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -4020,12 +3982,12 @@ impl Sandwich<MultiVector> for AntiFlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       87        0
+    //      f32       48       88        0
     //    simd2        2        2        0
-    //    simd3       24       42        0
-    //    simd4       18       13        0
+    //    simd3       24       43        0
+    //    simd4       18       12        0
     // Totals...
-    // yes simd       92      144        0
+    // yes simd       92      145        0
     //  no simd      196      269        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -4068,8 +4030,8 @@ impl Sandwich<MultiVector> for AntiFlatPoint {
                 -(self[e125] * other[e41]) - (self[e321] * other[e4315]),
                 -(self[e235] * other[e42]) - (self[e321] * other[e4125]),
                 (self[e315] * other[e42]) + (self[e125] * other[e43]),
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e235]]) * self.group0().xyz().with_w(other[e41]))
-                + (self.group0().zxyw() * other.group4().yzx().with_w(other[scalar])),
+            ]) + (self.group0().zxyw() * other.group4().yzx().with_w(other[scalar]))
+                + (Simd32x3::from(other[e1234]) * self.group0().xyz()).with_w(self[e235] * other[e41]),
             // e423, e431, e412
             Simd32x3::from(self[e321]) * other.group4(),
             // e235, e315, e125
@@ -4097,11 +4059,11 @@ impl Sandwich<Plane> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4        7        0
-    //    simd3        3        4        0
-    //    simd4        2        7        0
+    //    simd3        3        5        0
+    //    simd4        2        6        0
     // Totals...
     // yes simd        9       18        0
-    //  no simd       21       47        0
+    //  no simd       21       46        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -4119,11 +4081,11 @@ impl Sandwich<RoundPoint> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       34        0
-    //    simd3        5        9        0
-    //    simd4        5        9        0
+    //    simd3        5       13        0
+    //    simd4        5        5        0
     // Totals...
     // yes simd       28       52        0
-    //  no simd       53       97        0
+    //  no simd       53       93        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -4134,12 +4096,8 @@ impl Sandwich<RoundPoint> for AntiFlatPoint {
             // e15, e25, e35, e1234
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(self[e321] * other[e4] * -1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * other[e1]) + (self[e315] * other[e2]) + (self[e125] * other[e3]) + (self[e321] * other[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e1]) + (self[e315] * other[e2]) + (self[e125] * other[e3]) + (self[e321] * other[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -4164,11 +4122,11 @@ impl Sandwich<Sphere> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       16        0
-    //    simd3        7       10        0
-    //    simd4        7       11        0
+    //    simd3        7       13        0
+    //    simd4        7        8        0
     // Totals...
     // yes simd       22       37        0
-    //  no simd       57       90        0
+    //  no simd       57       87        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -4179,12 +4137,8 @@ impl Sandwich<Sphere> for AntiFlatPoint {
             // e235, e315, e125, e4
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(self[e321] * other[e1234]),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * other[e4235]) + (self[e315] * other[e4315]) + (self[e125] * other[e4125]) - (self[e321] * other[e3215]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e1234]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e4235]) + (self[e315] * other[e4315]) + (self[e125] * other[e4125]) - (self[e321] * other[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -4194,21 +4148,17 @@ impl Sandwich<VersorEven> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       33       56        0
-    //    simd3        9       11        0
-    //    simd4        9       14        0
+    //    simd3        9       15        0
+    //    simd4        9       10        0
     // Totals...
     // yes simd       51       81        0
-    //  no simd       96      145        0
+    //  no simd       96      141        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (self.group0().www() * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) - (self[e321] * other[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(self[e235] * other[e4]) - (self[e125] * other[e431]) - (self[e321] * other[e1]),
@@ -4240,20 +4190,16 @@ impl Sandwich<VersorOdd> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       12       21        0
-    //    simd3        9       11        0
-    //    simd4       15       20        0
+    //    simd3        9       13        0
+    //    simd4       15       18        0
     // Totals...
     // yes simd       36       52        0
-    //  no simd       99      134        0
+    //  no simd       99      132        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
+            (self.group0().www() * other.group0().xyz()).with_w(-(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 -(self[e315] * other[e43]) - (self[e321] * other[e4235]),
@@ -4279,10 +4225,10 @@ impl Sandwich<VersorOdd> for AntiFlatPoint {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiFlector {
-    type Output = sandwich_partial<AntiFlector>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiFlector {
+    type Output = SandwichInfixPartial<AntiFlector>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiFlector {
@@ -4421,7 +4367,7 @@ impl Sandwich<AntiDualNum> for AntiFlector {
             // e235, e315, e125, e321
             ((Simd32x3::from(other[scalar]) * self.group0().xyz()) - (Simd32x3::from(other[e3215]) * self.group1().xyz())).with_w(other[scalar] * self[e321]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], 1.0]) * other.group0().yy().with_zw(other[scalar], (other[scalar] * self[e5]) - (other[e3215] * self[e321])),
+            other.group0().yy().with_zw(other[scalar], (other[scalar] * self[e5]) - (other[e3215] * self[e321])) * self.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -4820,7 +4766,7 @@ impl Sandwich<DualNum> for AntiFlector {
             // e15, e25, e35, e45
             ((Simd32x3::from(other[e5]) * self.group1().xyz()) - (Simd32x3::from(other[e12345]) * self.group0().xyz())).with_w(self[e321] * other[e12345]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1], self[e2], self[e3], 1.0]) * other.group0().yy().with_zw(other[e12345], (self[e321] * other[e5]) - (self[e5] * other[e12345])),
+            other.group0().yy().with_zw(other[e12345], (self[e321] * other[e5]) - (self[e5] * other[e12345])) * self.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -4955,12 +4901,12 @@ impl Sandwich<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      126        0
+    //      f32       86      127        0
     //    simd2        8        8        0
-    //    simd3       48       70        0
-    //    simd4       53       41        0
+    //    simd3       48       71        0
+    //    simd4       53       40        0
     // Totals...
-    // yes simd      195      245        0
+    // yes simd      195      246        0
     //  no simd      458      516        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -5024,9 +4970,9 @@ impl Sandwich<MultiVector> for AntiFlector {
                 - (Simd32x3::from([other[e2], other[e321], other[e321]]) * self.group1().zyz())
                 - (Simd32x3::from([other[e321], other[e3], other[e1]]) * self.group1().xxy()),
             // e415, e425, e435, e321
-            (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e315]]) * self.group0().xyz().with_w(other[e42]))
-                + (self.group0().zx().with_zw(self[e5], self[e235]) * other.group4().yzz().with_w(other[e41]))
+            (self.group0().zx().with_zw(self[e5], self[e235]) * other.group4().yzz().with_w(other[e41]))
                 + (self.group1().ww().with_zw(self[e315], self[e321]) * other.group4().xyx().with_w(other[scalar]))
+                + (Simd32x3::from(other[e1234]) * self.group0().xyz()).with_w(self[e315] * other[e42])
                 + (self.group1().yzx() * other.group9().zxy()).with_w(self[e125] * other[e43])
                 - (Simd32x4::from([other[e45], other[e4125], other[e4235], self[e3]]) * self.group1().xxy().with_w(other[e12]))
                 - (Simd32x4::from([other[e4315], other[e45], other[e45], other[e1234]]) * self.group1().zyzw())
@@ -5103,21 +5049,17 @@ impl Sandwich<RoundPoint> for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       42       62        0
-    //    simd3        6       10        0
-    //    simd4       20       23        0
+    //    simd3        6       14        0
+    //    simd4       20       19        0
     // Totals...
     // yes simd       68       95        0
-    //  no simd      140      184        0
+    //  no simd      140      180        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e1] * other[e1]) + (self[e2] * other[e2]) + (self[e3] * other[e3]) - (self[e5] * other[e4]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e1] * other[e1]) + (self[e2] * other[e2]) + (self[e3] * other[e3]) - (self[e5] * other[e4])),
             // e23, e31, e12, e45
             ((self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e321]) * other.group0().xyz())
@@ -5130,12 +5072,8 @@ impl Sandwich<RoundPoint> for AntiFlector {
                 - (self.group0().zxy() * other.group0().yzx()))
             .with_w(self[e321] * other[e4] * -1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * other[e1]) + (self[e315] * other[e2]) + (self[e125] * other[e3]) + (self[e321] * other[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * other[e1]) + (self[e315] * other[e2]) + (self[e125] * other[e3]) + (self[e321] * other[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -5165,20 +5103,17 @@ impl Sandwich<Sphere> for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       34       48        0
-    //    simd3        3        6        0
-    //    simd4       25       28        0
+    //    simd3        3        7        0
+    //    simd4       25       27        0
     // Totals...
     // yes simd       62       82        0
-    //  no simd      143      178        0
+    //  no simd      143      177        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e1] * other[e4235]) + (self[e2] * other[e4315]) + (self[e3] * other[e4125]) + (self[e5] * other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group1().xyz())
+                .with_w((self[e1] * other[e4235]) + (self[e2] * other[e4315]) + (self[e3] * other[e4125]) + (self[e5] * other[e1234])),
             // e415, e425, e435, e321
             ((Simd32x3::from(other[e1234]) * self.group0().xyz()) + (self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e321]) * other.group0().xyz())
@@ -5332,10 +5267,10 @@ impl Sandwich<VersorOdd> for AntiFlector {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiLine {
-    type Output = sandwich_partial<AntiLine>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiLine {
+    type Output = SandwichInfixPartial<AntiLine>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiLine {
@@ -5461,11 +5396,11 @@ impl Sandwich<AntiFlatPoint> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       17        0
-    //    simd3        0        7        0
-    //    simd4        8        5        0
+    //    simd3        0        8        0
+    //    simd4        8        4        0
     // Totals...
     // yes simd       18       29        0
-    //  no simd       42       58        0
+    //  no simd       42       57        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -5473,7 +5408,7 @@ impl Sandwich<AntiFlatPoint> for AntiLine {
             (Simd32x3::from(other[e321]) * self.group1()).with_w(0.0) + (self.group0().zxy() * other.group0().yzx()).with_w(0.0)
                 - (self.group0().yzx() * other.group0().zxy()).with_w(0.0),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0]) * self.group0().with_w(-(other[e235] * self[e23]) - (other[e315] * self[e31]) - (other[e125] * self[e12])),
+            (Simd32x3::from(other[e321]) * self.group0()).with_w(-(other[e235] * self[e23]) - (other[e315] * self[e31]) - (other[e125] * self[e12])),
         )
         .geometric_product(self.reverse());
     }
@@ -5843,11 +5778,11 @@ impl Sandwich<FlatPoint> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       30        0
-    //    simd3        0        7        0
-    //    simd4        5        2        0
+    //    simd3        0        8        0
+    //    simd4        5        1        0
     // Totals...
     // yes simd       23       39        0
-    //  no simd       38       59        0
+    //  no simd       38       58        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -5856,7 +5791,7 @@ impl Sandwich<FlatPoint> for AntiLine {
                 - (Simd32x3::from(other[e45]) * self.group1()).with_w(0.0)
                 - (self.group0().yzx() * other.group0().zxy()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0]) * self.group0().with_w(-(self[e23] * other[e15]) - (self[e31] * other[e25]) - (self[e12] * other[e35])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w(-(self[e23] * other[e15]) - (self[e31] * other[e25]) - (self[e12] * other[e35])),
         )
         .geometric_product(self.reverse());
     }
@@ -6089,18 +6024,18 @@ impl Sandwich<RoundPoint> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       28       56        0
-    //    simd3        0       11        0
-    //    simd4       16       10        0
+    //    simd3        0       12        0
+    //    simd4       16        9        0
     // Totals...
     // yes simd       44       77        0
-    //  no simd       92      129        0
+    //  no simd       92      128        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(other[e4]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0]) * self.group1().with_w(-(self[e23] * other[e1]) - (self[e31] * other[e2]) - (self[e12] * other[e3])),
+            (Simd32x3::from(other[e4]) * self.group1()).with_w(-(self[e23] * other[e1]) - (self[e31] * other[e2]) - (self[e12] * other[e3])),
             // e235, e315, e125, e4
             (Simd32x3::from(other[e5]) * self.group0()).with_w(0.0) + (self.group1().zxy() * other.group0().yzx()).with_w(0.0)
                 - (self.group1().yzx() * other.group0().zxy()).with_w(0.0),
@@ -6137,20 +6072,19 @@ impl Sandwich<Sphere> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       61        0
-    //    simd3        0       14        0
-    //    simd4       16        7        0
+    //      f32       32       62        0
+    //    simd3        0       16        0
+    //    simd4       16        5        0
     // Totals...
-    // yes simd       48       82        0
-    //  no simd       96      131        0
+    // yes simd       48       83        0
+    //  no simd       96      130        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e1234]) * self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self.group1().with_w(-(self[e23] * other[e4235]) - (self[e31] * other[e4315]) - (self[e12] * other[e4125])),
+            (Simd32x3::from(other[e1234]) * self.group1()).with_w(-(self[e23] * other[e4235]) - (self[e31] * other[e4315]) - (self[e12] * other[e4125])),
             // e15, e25, e35, e1234
             (Simd32x3::from(other[e3215]) * self.group0()).with_w(0.0) + (self.group1().yzx() * other.group0().zxy()).with_w(0.0)
                 - (self.group1().zxy() * other.group0().yzx()).with_w(0.0),
@@ -6160,8 +6094,8 @@ impl Sandwich<Sphere> for AntiLine {
                 self[e12] * other[e4235] * -1.0,
                 self[e23] * other[e4315] * -1.0,
                 self[e35] * other[e4125],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group1().with_w(self[e25]))
-                + (other.group0().yzxx() * self.group0().zxy().with_w(self[e15])),
+            ]) + (other.group0().yzxx() * self.group0().zxy().with_w(self[e15]))
+                + (Simd32x3::from(other[e1234]) * self.group1()).with_w(self[e25] * other[e4315]),
         )
         .geometric_product(self.reverse());
     }
@@ -6270,10 +6204,10 @@ impl Sandwich<VersorOdd> for AntiLine {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiMotor {
-    type Output = sandwich_partial<AntiMotor>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiMotor {
+    type Output = SandwichInfixPartial<AntiMotor>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiMotor {
@@ -6422,11 +6356,11 @@ impl Sandwich<AntiFlatPoint> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       15       23        0
-    //    simd3        3        6        0
-    //    simd4        8        9        0
+    //    simd3        3        7        0
+    //    simd4        8        8        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       56       77        0
+    //  no simd       56       76        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -6435,11 +6369,7 @@ impl Sandwich<AntiFlatPoint> for AntiMotor {
                 - (other.group0().zxy() * self.group0().yzx()))
             .with_w(other[e321] * self[scalar]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e23], self[e31], self[e12], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w((other[e321] * self[e3215]) - (other[e235] * self[e23]) - (other[e315] * self[e31]) - (other[e125] * self[e12])),
+            (other.group0().www() * self.group0().xyz()).with_w((other[e321] * self[e3215]) - (other[e235] * self[e23]) - (other[e315] * self[e31]) - (other[e125] * self[e12])),
         )
         .geometric_product(self.reverse());
     }
@@ -6841,11 +6771,11 @@ impl Sandwich<FlatPoint> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       19       30        0
-    //    simd3        3        4        0
-    //    simd4        6        9        0
+    //    simd3        3        5        0
+    //    simd4        6        8        0
     // Totals...
     // yes simd       28       43        0
-    //  no simd       52       78        0
+    //  no simd       52       77        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -6855,11 +6785,7 @@ impl Sandwich<FlatPoint> for AntiMotor {
                 - (self.group0().yzx() * other.group0().zxy()))
             .with_w(self[scalar] * other[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w(-(self[e23] * other[e15]) - (self[e31] * other[e25]) - (self[e12] * other[e35]) - (self[e3215] * other[e45])),
+            (Simd32x3::from(other[e45]) * self.group0().xyz()).with_w(-(self[e23] * other[e15]) - (self[e31] * other[e25]) - (self[e12] * other[e35]) - (self[e3215] * other[e45])),
         )
         .geometric_product(self.reverse());
     }
@@ -6967,12 +6893,12 @@ impl Sandwich<MultiVector> for AntiMotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       97      151        0
+    //      f32       97      152        0
     //    simd2       14       16        0
-    //    simd3       48       72        0
-    //    simd4       45       31        0
+    //    simd3       48       73        0
+    //    simd4       45       30        0
     // Totals...
-    // yes simd      204      270        0
+    // yes simd      204      271        0
     //  no simd      449      523        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -7115,22 +7041,18 @@ impl Sandwich<RoundPoint> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       39       65        0
-    //    simd3        3        7        0
-    //    simd4       22       23        0
+    //    simd3        3        8        0
+    //    simd4       22       22        0
     // Totals...
     // yes simd       64       95        0
-    //  no simd      136      178        0
+    //  no simd      136      177        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(other[e4]) * self.group0().xyz().with_w(self[e3215]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w(-(self[e23] * other[e1]) - (self[e31] * other[e2]) - (self[e12] * other[e3]) - (self[e3215] * other[e4])),
+            (Simd32x3::from(other[e4]) * self.group1().xyz()).with_w(-(self[e23] * other[e1]) - (self[e31] * other[e2]) - (self[e12] * other[e3]) - (self[e3215] * other[e4])),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (self[e35] * other[e2]) + (self[e3215] * other[e1]),
@@ -7174,22 +7096,19 @@ impl Sandwich<Sphere> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       36       65        0
-    //    simd3        3        9        0
-    //    simd4       23       22        0
+    //    simd3        3       10        0
+    //    simd4       23       21        0
     // Totals...
     // yes simd       62       96        0
-    //  no simd      137      180        0
+    //  no simd      137      179        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(other[e1234]) * self.group0().xyz().with_w(self[e3215]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e3215] * other[e1234]) - (self[e23] * other[e4235]) - (self[e31] * other[e4315]) - (self[e12] * other[e4125])),
+            (Simd32x3::from(other[e1234]) * self.group1().xyz())
+                .with_w((self[e3215] * other[e1234]) - (self[e23] * other[e4235]) - (self[e31] * other[e4315]) - (self[e12] * other[e4125])),
             // e15, e25, e35, e1234
             ((Simd32x3::from(other[e3215]) * self.group0().xyz()) + (self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e3215]) * other.group0().xyz())
@@ -7201,8 +7120,8 @@ impl Sandwich<Sphere> for AntiMotor {
                 self[e12] * other[e4235] * -1.0,
                 self[e23] * other[e4315] * -1.0,
                 self[e35] * other[e4125],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group1().xyzy())
-                + (self.group0().zxyw() * other.group0().yzxw())
+            ]) + (self.group0().zxyw() * other.group0().yzxw())
+                + (self.group1().xyzy() * Simd32x3::from(other[e1234]).with_w(other[e4315]))
                 + (other.group0().xyzx() * self.group0().www().with_w(self[e15])),
         )
         .geometric_product(self.reverse());
@@ -7363,10 +7282,10 @@ impl Sandwich<VersorOdd> for AntiMotor {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiPlane {
-    type Output = sandwich_partial<AntiPlane>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiPlane {
+    type Output = SandwichInfixPartial<AntiPlane>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiPlane {
@@ -8042,7 +7961,7 @@ impl Sandwich<RoundPoint> for AntiPlane {
             // e23, e31, e12, e45
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(self[e5] * other[e4] * -1.0),
             // e15, e25, e35, scalar
-            (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().xyzx()) + Simd32x3::from(0.0).with_w((self[e2] * other[e2]) + (self[e3] * other[e3]))
+            (self.group0().xyzx() * Simd32x3::from(other[e5]).with_w(other[e1])) + Simd32x3::from(0.0).with_w((self[e2] * other[e2]) + (self[e3] * other[e3]))
                 - (Simd32x4::from(self[e5]) * other.group0()),
         )
         .geometric_product(self.reverse());
@@ -8185,10 +8104,10 @@ impl Sandwich<VersorOdd> for AntiPlane {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for AntiScalar {
-    type Output = sandwich_partial<AntiScalar>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiScalar {
+    type Output = SandwichInfixPartial<AntiScalar>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for AntiScalar {
@@ -8504,20 +8423,20 @@ impl Sandwich<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
+    //      f32        0       12        0
     //    simd2        0        4        0
-    //    simd3        0       12        0
-    //    simd4        0       16        0
+    //    simd3        0       18        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       38        0
-    //  no simd        0      114        0
+    // yes simd        0       42        0
+    //  no simd        0      106        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(self[e12345]) * other.group0().yx() * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e12345], self[e12345], self[e12345], other[e1234]]) * other.group9().xyz().with_w(self[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e12345]) * other.group9().xyz() * Simd32x3::from(-1.0)).with_w(self[e12345] * other[e1234]),
             // e5
             self[e12345] * other[e3215],
             // e15, e25, e35, e45
@@ -8533,7 +8452,7 @@ impl Sandwich<MultiVector> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(self[e12345]) * other.group3().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e12345], self[e12345], self[e12345], other[e5]]) * other.group1().xyz().with_w(self[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (Simd32x3::from(self[e12345]) * other.group1().xyz()).with_w(self[e12345] * other[e5] * -1.0),
             // e1234
             self[e12345] * other[e4] * -1.0,
         )
@@ -8556,16 +8475,16 @@ impl Sandwich<RoundPoint> for AntiScalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        4        0
+    //      f32        0        6        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       19        0
+    // yes simd        0        9        0
+    //  no simd        0       15        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e12345], self[e12345], self[e12345], other[e5]]) * other.group0().xyz().with_w(self[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (Simd32x3::from(self[e12345]) * other.group0().xyz()).with_w(self[e12345] * other[e5] * -1.0),
             // e1234
             self[e12345] * other[e4] * -1.0,
         )
@@ -8586,16 +8505,16 @@ impl Sandwich<Sphere> for AntiScalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        4        0
+    //      f32        0        6        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       19        0
+    // yes simd        0        9        0
+    //  no simd        0       15        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e12345], self[e12345], self[e12345], other[e1234]]) * other.group0().xyz().with_w(self[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e12345]) * other.group0().xyz() * Simd32x3::from(-1.0)).with_w(self[e12345] * other[e1234]),
             // e5
             self[e12345] * other[e3215],
         )
@@ -8644,10 +8563,10 @@ impl Sandwich<VersorOdd> for AntiScalar {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Circle {
-    type Output = sandwich_partial<Circle>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Circle {
+    type Output = SandwichInfixPartial<Circle>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Circle {
@@ -8803,19 +8722,16 @@ impl Sandwich<AntiFlatPoint> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       44       81        0
-    //    simd3        0       12        0
-    //    simd4       32       25        0
+    //    simd3        0       13        0
+    //    simd4       32       24        0
     // Totals...
     // yes simd       76      118        0
-    //  no simd      172      217        0
+    //  no simd      172      216        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
+            (Simd32x3::from(other[e321]) * self.group0()).with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 other[e125] * self[e431],
@@ -9340,19 +9256,16 @@ impl Sandwich<FlatPoint> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       40       75        0
-    //    simd3        0       17        0
-    //    simd4       33       22        0
+    //    simd3        0       18        0
+    //    simd4       33       21        0
     // Totals...
     // yes simd       73      114        0
-    //  no simd      172      214        0
+    //  no simd      172      213        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 self[e412] * other[e25],
@@ -9583,8 +9496,8 @@ impl Sandwich<MultiVector> for Circle {
                 + (other.group8().xxy() * self.group1().wzx()).with_w(self[e315] * other[e431])
                 + (other.group8().zyz() * self.group1().yww()).with_w(self[e125] * other[e412])
                 - (Simd32x4::from([other[e2], other[e435], other[e415], other[e125]]) * self.group2().zxy().with_w(self[e412]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e3]]) * self.group1().xyzz())
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e315]]) * self.group2().xxy().with_w(self[e431]))
+                - (self.group1().xyzz() * Simd32x3::from(other[e5]).with_w(other[e3]))
                 - (other.group0().yy().with_zw(other[e12345], self[e423]) * self.group2().with_w(other[e235]))
                 - (self.group2().zyz() * other.group6().yww()).with_w(self[e415] * other[e1])
                 - (other.group8().yzx() * self.group1().zxy()).with_w(self[e425] * other[e2]),
@@ -9714,11 +9627,11 @@ impl Sandwich<RoundPoint> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       39       75        0
-    //    simd3        2       14        0
-    //    simd4       31       24        0
+    //      f32       39       78        0
+    //    simd3        2       17        0
+    //    simd4       31       21        0
     // Totals...
-    // yes simd       72      113        0
+    // yes simd       72      116        0
     //  no simd      169      213        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -9726,25 +9639,25 @@ impl Sandwich<RoundPoint> for Circle {
             // e41, e42, e43
             (self.group0().zxy() * other.group0().yzx()) - (Simd32x3::from(other[e4]) * self.group1().xyz()) - (self.group0().yzx() * other.group0().zxy()),
             // e23, e31, e12, e45
-            -(Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().with_w(self[e415]))
-                - (self.group1().wwwz() * other.group0().xyzz())
-                - (other.group0().wwwy() * self.group2().with_w(self[e425])),
+            -(self.group1().wwwz() * other.group0().xyzz())
+                - (other.group0().wwwy() * self.group2().with_w(self[e425]))
+                - (Simd32x3::from(other[e5]) * self.group0()).with_w(self[e415] * other[e1]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 self[e315] * other[e3],
                 self[e125] * other[e1],
                 self[e235] * other[e2],
                 -(self[e412] * other[e3]) - (self[e321] * other[e4]),
-            ]) - (Simd32x4::from([other[e5], other[e5], other[e5], other[e2]]) * self.group1().xyz().with_w(self[e431]))
-                - (other.group0().yzxx() * self.group2().zxy().with_w(self[e423])),
+            ]) - (other.group0().yzxx() * self.group2().zxy().with_w(self[e423]))
+                - (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(self[e431] * other[e2]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 -(self[e425] * other[e3]) - (self[e235] * other[e4]),
                 -(self[e435] * other[e1]) - (self[e315] * other[e4]),
                 -(self[e415] * other[e2]) - (self[e125] * other[e4]),
                 (self[e321] * other[e5]) + (self[e125] * other[e3]),
-            ]) + (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().with_w(self[e235]))
-                + (other.group0().yzxy() * self.group1().zxy().with_w(self[e315])),
+            ]) + (other.group0().yzxy() * self.group1().zxy().with_w(self[e315]))
+                + (Simd32x3::from(other[e5]) * self.group0()).with_w(self[e235] * other[e1]),
         )
         .geometric_product(self.reverse());
     }
@@ -9776,11 +9689,11 @@ impl Sandwich<Sphere> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       31       71        0
-    //    simd3        2       19        0
-    //    simd4       33       22        0
+    //      f32       31       73        0
+    //    simd3        2       21        0
+    //    simd4       33       20        0
     // Totals...
-    // yes simd       66      112        0
+    // yes simd       66      114        0
     //  no simd      169      216        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -9793,8 +9706,8 @@ impl Sandwich<Sphere> for Circle {
                 self[e321] * other[e4315] * -1.0,
                 self[e321] * other[e4125] * -1.0,
                 self[e435] * other[e4125],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group2().with_w(self[e425]))
-                + (other.group0().wwwx() * self.group0().with_w(self[e415])),
+            ]) + (other.group0().wwwx() * self.group0().with_w(self[e415]))
+                + (Simd32x3::from(other[e1234]) * self.group2()).with_w(self[e425] * other[e4315]),
             // e235, e315, e125, e4
             Simd32x4::from([
                 self[e415] * other[e3215],
@@ -9811,7 +9724,7 @@ impl Sandwich<Sphere> for Circle {
                 self[e125] * other[e4125],
             ]) + (other.group0().zxyy() * self.group1().yzx().with_w(self[e315]))
                 + (other.group0().wwwx() * self.group0().with_w(self[e235]))
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e3215]]) * self.group2().with_w(self[e321])),
+                - (Simd32x3::from(other[e1234]) * self.group2()).with_w(self[e321] * other[e3215]),
         )
         .geometric_product(self.reverse());
     }
@@ -9972,10 +9885,10 @@ impl Sandwich<VersorOdd> for Circle {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for CircleRotor {
-    type Output = sandwich_partial<CircleRotor>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for CircleRotor {
+    type Output = SandwichInfixPartial<CircleRotor>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for CircleRotor {
@@ -10138,19 +10051,16 @@ impl Sandwich<AntiFlatPoint> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       40       73        0
-    //    simd3        0       17        0
-    //    simd4       39       28        0
+    //    simd3        0       18        0
+    //    simd4       39       27        0
     // Totals...
     // yes simd       79      118        0
-    //  no simd      196      236        0
+    //  no simd      196      235        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
+            (Simd32x3::from(other[e321]) * self.group0()).with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
             // e23, e31, e12, e45
             Simd32x3::from(0.0).with_w(-(other[e315] * self[e431]) - (other[e125] * self[e412])) + (self.group0().yzx() * other.group0().zxy()).with_w(other[e321] * self[e12345])
                 - (other.group0().yzxx() * self.group0().zxy().with_w(self[e423])),
@@ -10681,19 +10591,16 @@ impl Sandwich<FlatPoint> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       48       84        0
-    //    simd3        0       15        0
-    //    simd4       36       26        0
+    //    simd3        0       16        0
+    //    simd4       36       25        0
     // Totals...
     // yes simd       84      125        0
-    //  no simd      192      233        0
+    //  no simd      192      232        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w(-(self[e423] * other[e15]) - (self[e431] * other[e25]) - (self[e412] * other[e35]) - (self[e321] * other[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 self[e412] * other[e25],
@@ -10870,12 +10777,12 @@ impl Sandwich<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      148        0
+    //      f32       84      151        0
     //    simd2        6        6        0
-    //    simd3       80      113        0
-    //    simd4       76       56        0
+    //    simd3       80      116        0
+    //    simd4       76       53        0
     // Totals...
-    // yes simd      246      323        0
+    // yes simd      246      326        0
     //  no simd      640      723        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -10911,8 +10818,8 @@ impl Sandwich<MultiVector> for CircleRotor {
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], other[e1234]]) * self.group0().xxy().with_w(self[e321]))
                 - (Simd32x4::from([other[e45], other[e4125], other[e4235], other[e31]]) * self.group1().xxy().with_w(self[e431]))
                 - (Simd32x4::from([other[e4315], other[e45], other[e45], other[e4315]]) * self.group1().zyz().with_w(self[e431]))
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e12]]) * self.group2().xyz().with_w(self[e412]))
                 - (other.group9().xyzz() * self.group2().www().with_w(self[e412]))
+                - (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e412] * other[e12])
                 - (self.group0().yzx() * other.group3().zxy()).with_w(self[e423] * other[e23])
                 - (other.group4().yzx() * self.group2().zxy()).with_w(self[e423] * other[e4235]),
             // e5
@@ -10935,8 +10842,8 @@ impl Sandwich<MultiVector> for CircleRotor {
                 + (self.group2().yzx() * other.group1().zxy()).with_w(self[e315] * other[e431])
                 + (self.group2().yzx() * other.group6().zxy()).with_w(self[e125] * other[e412])
                 - (Simd32x4::from([other[e2], other[e435], other[e415], other[e3]]) * self.group2().zxy().with_w(self[e435]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group1().xyzx())
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e2]]) * self.group2().xxy().with_w(self[e425]))
+                - (self.group1().xyzx() * Simd32x3::from(other[e5]).with_w(other[e1]))
                 - (other.group0().yy().with_zw(other[e12345], self[e423]) * self.group2().xyz().with_w(other[e235]))
                 - (self.group1().zx().with_zw(self[e12345], other[e125]) * other.group8().yzz().with_w(self[e412]))
                 - (self.group2().ww().with_zw(self[e425], other[e315]) * other.group8().xyx().with_w(self[e431])),
@@ -10966,10 +10873,10 @@ impl Sandwich<MultiVector> for CircleRotor {
             (Simd32x4::from(other[scalar]) * self.group1())
                 + (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e315]]) * self.group0().zyz().with_w(other[e42]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], self[e235]]) * self.group0().xxy().with_w(other[e41]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4125]]) * self.group2().xyz().with_w(self[e435]))
                 + (self.group2().zxyz() * other.group4().yzx().with_w(other[e43]))
                 + (self.group1().zx().with_zw(self[e12345], other[e4315]) * other.group5().yzz().with_w(self[e425]))
                 + (self.group2().ww().with_zw(self[e425], other[e4235]) * other.group5().xyx().with_w(self[e415]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e435] * other[e4125])
                 - (other.group3().zxyx() * self.group0().yzx().with_w(self[e423]))
                 - (other.group4().zxy() * self.group2().yzx()).with_w(self[e431] * other[e25])
                 - (other.group5().zxy() * self.group1().yzx()).with_w(self[e412] * other[e35])
@@ -11074,11 +10981,11 @@ impl Sandwich<RoundPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       75        0
-    //    simd3        2       20        0
-    //    simd4       37       25        0
+    //      f32       35       77        0
+    //    simd3        2       22        0
+    //    simd4       37       23        0
     // Totals...
-    // yes simd       74      120        0
+    // yes simd       74      122        0
     //  no simd      189      235        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -11086,17 +10993,17 @@ impl Sandwich<RoundPoint> for CircleRotor {
             // e41, e42, e43
             (self.group0().zxy() * other.group0().yzx()) - (Simd32x3::from(other[e4]) * self.group1().xyz()) - (self.group0().yzx() * other.group0().zxy()),
             // e23, e31, e12, e45
-            -(Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().with_w(self[e415]))
-                - (self.group1().wwwy() * other.group0().xyzy())
-                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435])),
+            -(self.group1().wwwy() * other.group0().xyzy())
+                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435]))
+                - (Simd32x3::from(other[e5]) * self.group0()).with_w(self[e415] * other[e1]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 self[e315] * other[e3],
                 self[e125] * other[e1],
                 self[e235] * other[e2],
                 -(self[e412] * other[e3]) - (self[e321] * other[e4]) - (self[e12345] * other[e4]),
-            ]) - (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group1().xyz().with_w(self[e423]))
-                - (other.group0().yzxy() * self.group2().zxy().with_w(self[e431])),
+            ]) - (other.group0().yzxy() * self.group2().zxy().with_w(self[e431]))
+                - (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(self[e423] * other[e1]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e235] * other[e4] * -1.0, self[e315] * other[e4] * -1.0, self[e125] * other[e4] * -1.0, self[e125] * other[e3]])
                 + (Simd32x4::from(other[e5]) * self.group0().with_w(self[e321]))
@@ -11134,11 +11041,11 @@ impl Sandwich<Sphere> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       38       81        0
-    //    simd3        2       15        0
-    //    simd4       37       28        0
+    //      f32       38       82        0
+    //    simd3        2       16        0
+    //    simd4       37       27        0
     // Totals...
-    // yes simd       77      124        0
+    // yes simd       77      125        0
     //  no simd      192      238        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -11151,8 +11058,8 @@ impl Sandwich<Sphere> for CircleRotor {
                 self[e321] * other[e4315] * -1.0,
                 self[e321] * other[e4125] * -1.0,
                 self[e435] * other[e4125],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group2().xyz().with_w(self[e425]))
-                + (other.group0().wwwx() * self.group0().with_w(self[e415])),
+            ]) + (other.group0().wwwx() * self.group0().with_w(self[e415]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(self[e425] * other[e4315]),
             // e235, e315, e125, e4
             (self.group1() * other.group0().www().with_w(other[e1234]))
                 + (self.group2().yzxw() * other.group0().zxy().with_w(other[e1234]))
@@ -11336,10 +11243,10 @@ impl Sandwich<VersorOdd> for CircleRotor {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Dipole {
-    type Output = sandwich_partial<Dipole>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Dipole {
+    type Output = SandwichInfixPartial<Dipole>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Dipole {
@@ -11489,20 +11396,17 @@ impl Sandwich<AntiFlatPoint> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       59       93        0
-    //    simd3        0       14        0
-    //    simd4       28       20        0
+    //    simd3        0       16        0
+    //    simd4       28       18        0
     // Totals...
     // yes simd       87      127        0
-    //  no simd      171      215        0
+    //  no simd      171      213        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e321]) * self.group0() * Simd32x3::from(-1.0))
+                .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 other[e315] * self[e43],
@@ -11989,19 +11893,16 @@ impl Sandwich<FlatPoint> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       56       89        0
-    //    simd3        0       11        0
-    //    simd4       29       23        0
+    //    simd3        0       12        0
+    //    simd4       29       22        0
     // Totals...
     // yes simd       85      123        0
-    //  no simd      172      214        0
+    //  no simd      172      213        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 self[e42] * other[e35] * -1.0,
@@ -12359,11 +12260,11 @@ impl Sandwich<RoundPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       80        0
-    //    simd3        2       17        0
-    //    simd4       31       20        0
+    //      f32       42       81        0
+    //    simd3        2       18        0
+    //    simd4       31       19        0
     // Totals...
-    // yes simd       75      117        0
+    // yes simd       75      118        0
     //  no simd      172      211        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -12378,9 +12279,9 @@ impl Sandwich<RoundPoint> for Dipole {
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
             ]) - (self.group1().wwwx() * other.group0().xyzx()),
             // e235, e315, e125, e4
-            (Simd32x4::from([other[e5], other[e5], other[e5], other[e2]]) * self.group1().xyz().with_w(self[e42]))
-                + (other.group0().yzxx() * self.group2().zxy().with_w(self[e41]))
+            (other.group0().yzxx() * self.group2().zxy().with_w(self[e41]))
                 + Simd32x3::from(0.0).with_w(self[e43] * other[e3])
+                + (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(self[e42] * other[e2])
                 - (other.group0().zxyw() * self.group2().yzx().with_w(self[e45])),
             // e1, e2, e3, e5
             Simd32x4::from([self[e12] * other[e2], self[e23] * other[e3], self[e31] * other[e1], self[e35] * other[e3] * -1.0])
@@ -12418,11 +12319,11 @@ impl Sandwich<Sphere> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       59       95        0
-    //    simd3        2       13        0
-    //    simd4       26       19        0
+    //      f32       59       96        0
+    //    simd3        2       14        0
+    //    simd4       26       18        0
     // Totals...
-    // yes simd       87      127        0
+    // yes simd       87      128        0
     //  no simd      169      210        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -12449,8 +12350,8 @@ impl Sandwich<Sphere> for Dipole {
                 -(self[e42] * other[e3215]) - (self[e12] * other[e4235]),
                 -(self[e43] * other[e3215]) - (self[e23] * other[e4315]),
                 (self[e45] * other[e3215]) + (self[e35] * other[e4125]),
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4235]]) * self.group2().with_w(self[e15]))
-                + (other.group0().yzxy() * self.group1().zxy().with_w(self[e25])),
+            ]) + (other.group0().yzxy() * self.group1().zxy().with_w(self[e25]))
+                + (Simd32x3::from(other[e1234]) * self.group2()).with_w(self[e15] * other[e4235]),
         )
         .geometric_product(self.reverse());
     }
@@ -12605,10 +12506,10 @@ impl Sandwich<VersorOdd> for Dipole {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for DipoleInversion {
-    type Output = sandwich_partial<DipoleInversion>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for DipoleInversion {
+    type Output = SandwichInfixPartial<DipoleInversion>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for DipoleInversion {
@@ -12841,20 +12742,17 @@ impl Sandwich<AntiFlatPoint> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       51       93        0
-    //    simd3        3       23        0
-    //    simd4       52       39        0
+    //    simd3        3       25        0
+    //    simd4       52       37        0
     // Totals...
     // yes simd      106      155        0
-    //  no simd      268      318        0
+    //  no simd      268      316        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group0()
-                    .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e321]) * self.group0() * Simd32x3::from(-1.0))
+                .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e235] * self[e1234]) + (other[e315] * self[e43]),
@@ -13480,19 +13378,16 @@ impl Sandwich<FlatPoint> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       74      110        0
-    //    simd3        5       15        0
-    //    simd4       45       40        0
+    //    simd3        5       16        0
+    //    simd4       45       39        0
     // Totals...
     // yes simd      124      165        0
-    //  no simd      269      315        0
+    //  no simd      269      314        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self
-                    .group0()
-                    .with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
+            (Simd32x3::from(other[e45]) * self.group0()).with_w((self[e45] * other[e45]) - (self[e41] * other[e15]) - (self[e42] * other[e25]) - (self[e43] * other[e35])),
             // e23, e31, e12, e45
             Simd32x4::from([self[e42] * other[e35] * -1.0, self[e43] * other[e15] * -1.0, self[e41] * other[e25] * -1.0, 0.0])
                 + (other.group0().xyzy() * self.group2().www().with_w(self[e42]))
@@ -13714,12 +13609,12 @@ impl Sandwich<MultiVector> for DipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      204        0
+    //      f32      136      205        0
     //    simd2       22       22        0
-    //    simd3      112      153        0
-    //    simd4       95       66        0
+    //    simd3      112      154        0
+    //    simd4       95       65        0
     // Totals...
-    // yes simd      365      445        0
+    // yes simd      365      446        0
     //  no simd      896      971        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -13953,11 +13848,11 @@ impl Sandwich<RoundPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       55      104        0
-    //    simd3        0       19        0
-    //    simd4       57       42        0
+    //      f32       55      105        0
+    //    simd3        0       20        0
+    //    simd4       57       41        0
     // Totals...
-    // yes simd      112      165        0
+    // yes simd      112      166        0
     //  no simd      283      329        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -13989,8 +13884,8 @@ impl Sandwich<RoundPoint> for DipoleInversion {
                 - (self.group2().yzxx() * other.group0().zxyx()),
             // e1, e2, e3, e4
             Simd32x4::from([self[e15] * other[e4] * -1.0, self[e25] * other[e4] * -1.0, self[e35] * other[e4] * -1.0, self[e43] * other[e3]])
-                + (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().with_w(self[e41]))
                 + (other.group0().yzxy() * self.group1().zxy().with_w(self[e42]))
+                + (Simd32x3::from(other[e5]) * self.group0()).with_w(self[e41] * other[e1])
                 - (self.group1().yzxw() * other.group0().zxyw()),
         )
         .geometric_product(self.reverse());
@@ -14038,7 +13933,7 @@ impl Sandwich<Sphere> for DipoleInversion {
             Simd32x4::from([self[e1234] * other[e4235], self[e1234] * other[e4315], self[e1234] * other[e4125], self[e4125] * other[e4125] * -1.0])
                 + (Simd32x4::from(other[e1234]) * self.group1().xyz().with_w(self[e3215]))
                 + (other.group0().yzxw() * self.group0().zxy().with_w(self[e1234]))
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group3().xyzy())
+                - (self.group3().xyzy() * Simd32x3::from(other[e1234]).with_w(other[e4315]))
                 - (other.group0().zxyx() * self.group0().yzx().with_w(self[e4235])),
             // e23, e31, e12, e45
             Simd32x4::from([
@@ -14062,8 +13957,8 @@ impl Sandwich<Sphere> for DipoleInversion {
                 -(self[e42] * other[e3215]) - (self[e12] * other[e4235]),
                 -(self[e43] * other[e3215]) - (self[e23] * other[e4315]),
                 (self[e25] * other[e4315]) + (self[e35] * other[e4125]),
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4235]]) * self.group2().xyzx())
-                + (self.group1().zxyw() * other.group0().yzxw()),
+            ]) + (self.group1().zxyw() * other.group0().yzxw())
+                + (self.group2().xyzx() * Simd32x3::from(other[e1234]).with_w(other[e4235])),
         )
         .geometric_product(self.reverse());
     }
@@ -14301,10 +14196,10 @@ impl Sandwich<VersorOdd> for DipoleInversion {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for DualNum {
-    type Output = sandwich_partial<DualNum>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for DualNum {
+    type Output = SandwichInfixPartial<DualNum>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for DualNum {
@@ -14420,7 +14315,7 @@ impl Sandwich<AntiFlector> for DualNum {
             // e15, e25, e35, e45
             (-(Simd32x3::from(self[e5]) * other.group1().xyz()) - (Simd32x3::from(self[e12345]) * other.group0().xyz())).with_w(other[e321] * self[e12345]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * self.group0().yy().with_zw(self[e12345], -(other[e321] * self[e5]) - (other[e5] * self[e12345])),
+            self.group0().yy().with_zw(self[e12345], -(other[e321] * self[e5]) - (other[e5] * self[e12345])) * other.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -14656,8 +14551,8 @@ impl Sandwich<Flector> for DualNum {
             // e235, e315, e125, e321
             ((Simd32x3::from(self[e12345]) * other.group0().xyz()) - (Simd32x3::from(self[e5]) * other.group1().xyz())).with_w(self[e12345] * other[e45] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 1.0])
-                * self.group0().yy().with_zw(self[e12345], (self[e12345] * other[e3215]) - (self[e5] * other[e45]))
+            self.group0().yy().with_zw(self[e12345], (self[e12345] * other[e3215]) - (self[e5] * other[e45]))
+                * other.group1().xyz().with_w(1.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         )
         .geometric_product(self.reverse());
@@ -14850,8 +14745,8 @@ impl Sandwich<VersorEven> for DualNum {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0])
-                * self.group0().yy().with_zw(self[e12345], -(self[e5] * other[e4]) - (self[e12345] * other[e12345]))
+            self.group0().yy().with_zw(self[e12345], -(self[e5] * other[e4]) - (self[e12345] * other[e12345]))
+                * other.group0().xyz().with_w(1.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             Simd32x4::from([
@@ -14888,7 +14783,7 @@ impl Sandwich<VersorOdd> for DualNum {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * self.group0().yy().with_zw(self[e12345], (self[e5] * other[e1234]) + (self[e12345] * other[scalar])),
+            self.group0().yy().with_zw(self[e12345], (self[e5] * other[e1234]) + (self[e12345] * other[scalar])) * other.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e5] * other[e41]) + (self[e12345] * other[e23]),
@@ -14905,10 +14800,10 @@ impl Sandwich<VersorOdd> for DualNum {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for FlatPoint {
-    type Output = sandwich_partial<FlatPoint>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for FlatPoint {
+    type Output = SandwichInfixPartial<FlatPoint>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for FlatPoint {
@@ -14916,20 +14811,17 @@ impl Sandwich<AntiCircleRotor> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       37        0
-    //    simd3        6       12        0
-    //    simd4       12       12        0
+    //    simd3        6       15        0
+    //    simd4       12        9        0
     // Totals...
     // yes simd       36       61        0
-    //  no simd       84      121        0
+    //  no simd       84      118        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35])),
             // e23, e31, e12, e45
             (self.group0().zxyw() * other.group0().yzx().with_w(other[scalar])) + Simd32x3::from(0.0).with_w(-(other[e42] * self[e25]) - (other[e43] * self[e35]))
                 - (self.group0().yzxx() * other.group0().zxy().with_w(other[e41])),
@@ -14955,20 +14847,17 @@ impl Sandwich<AntiDipoleInversion> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       22       39        0
-    //    simd3        6        8        0
-    //    simd4       13       18        0
+    //    simd3        6       11        0
+    //    simd4       13       15        0
     // Totals...
     // yes simd       41       65        0
-    //  no simd       92      135        0
+    //  no simd       92      132        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 -(other[e412] * self[e25]) - (other[e1] * self[e45]),
@@ -15021,11 +14910,11 @@ impl Sandwich<AntiFlatPoint> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        8        0
-    //    simd3        4        6        0
-    //    simd4        0        3        0
+    //    simd3        4        8        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        7       17        0
-    //  no simd       15       38        0
+    //  no simd       15       36        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -15042,11 +14931,11 @@ impl Sandwich<AntiFlector> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       14        0
-    //    simd3        3        4        0
-    //    simd4        2        7        0
+    //    simd3        3        6        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       25        0
-    //  no simd       24       54        0
+    //  no simd       24       52        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -15069,11 +14958,11 @@ impl Sandwich<AntiLine> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd3        0        3        0
-    //    simd4        4        5        0
+    //    simd3        0        4        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       10       19        0
-    //  no simd       22       40        0
+    //  no simd       22       39        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -15081,7 +14970,7 @@ impl Sandwich<AntiLine> for FlatPoint {
             (Simd32x3::from(self[e45]) * other.group1()).with_w(0.0) + (other.group0().yzx() * self.group0().zxy()).with_w(0.0)
                 - (other.group0().zxy() * self.group0().yzx()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0]) * other.group0().with_w(-(other[e23] * self[e15]) - (other[e31] * self[e25]) - (other[e12] * self[e35])),
+            (Simd32x3::from(self[e45]) * other.group0()).with_w(-(other[e23] * self[e15]) - (other[e31] * self[e25]) - (other[e12] * self[e35])),
         )
         .geometric_product(self.reverse());
     }
@@ -15091,11 +14980,11 @@ impl Sandwich<AntiMotor> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        5        0
+    //    simd3        3        5        0
+    //    simd4        2        4        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       45        0
+    //  no simd       24       44        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -15104,11 +14993,7 @@ impl Sandwich<AntiMotor> for FlatPoint {
                 - (other.group0().zxy() * self.group0().yzx()))
             .with_w(other[scalar] * self[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w((other[e3215] * self[e45]) - (other[e23] * self[e15]) - (other[e31] * self[e25]) - (other[e12] * self[e35])),
+            (Simd32x3::from(self[e45]) * other.group0().xyz()).with_w((other[e3215] * self[e45]) - (other[e23] * self[e15]) - (other[e31] * self[e25]) - (other[e12] * self[e35])),
         )
         .geometric_product(self.reverse());
     }
@@ -15118,11 +15003,11 @@ impl Sandwich<AntiPlane> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4        8        0
-    //    simd3        3        4        0
-    //    simd4        2        8        0
+    //    simd3        3        6        0
+    //    simd4        2        6        0
     // Totals...
     // yes simd        9       20        0
-    //  no simd       21       52        0
+    //  no simd       21       50        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -15156,20 +15041,17 @@ impl Sandwich<Circle> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       36        0
-    //    simd3        3        7        0
-    //    simd4       12       15        0
+    //    simd3        3       10        0
+    //    simd4       12       12        0
     // Totals...
     // yes simd       33       58        0
-    //  no simd       75      117        0
+    //  no simd       75      114        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 other[e412] * self[e25] * -1.0,
@@ -15197,20 +15079,17 @@ impl Sandwich<CircleRotor> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       21       33        0
-    //    simd3        3        7        0
-    //    simd4       13       16        0
+    //    simd3        3       10        0
+    //    simd4       13       13        0
     // Totals...
     // yes simd       37       56        0
-    //  no simd       82      118        0
+    //  no simd       82      115        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w(-(other[e423] * self[e15]) - (other[e431] * self[e25]) - (other[e412] * self[e35]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             (self.group0().zxyx() * other.group0().yzx().with_w(other[e423])) + Simd32x3::from(0.0).with_w((other[e431] * self[e25]) + (other[e412] * self[e35]))
                 - (self.group0().yzxw() * other.group0().zxy().with_w(other[e12345])),
@@ -15234,20 +15113,17 @@ impl Sandwich<Dipole> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       40        0
-    //    simd3        6       11        0
-    //    simd4       10       11        0
+    //    simd3        6       14        0
+    //    simd4       10        8        0
     // Totals...
     // yes simd       34       62        0
-    //  no simd       76      117        0
+    //  no simd       76      114        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 other[e42] * self[e35],
@@ -15275,20 +15151,17 @@ impl Sandwich<DipoleInversion> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       22       43        0
-    //    simd3       11       13        0
-    //    simd4       10       14        0
+    //    simd3       11       16        0
+    //    simd4       10       11        0
     // Totals...
     // yes simd       43       70        0
-    //  no simd       95      138        0
+    //  no simd       95      135        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other
-                    .group0()
-                    .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0))
+                .with_w((other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e42] * self[e35]) + (other[e1234] * self[e15]) + (other[e4235] * self[e45]),
@@ -15337,11 +15210,11 @@ impl Sandwich<FlatPoint> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        6        0
-    //    simd3        4        6        0
-    //    simd4        0        2        0
+    //    simd3        4        7        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        7       14        0
-    //  no simd       15       32        0
+    //  no simd       15       31        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -15358,11 +15231,11 @@ impl Sandwich<Flector> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        5        0
+    //    simd3        3        5        0
+    //    simd4        2        4        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       45        0
+    //  no simd       24       44        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -15385,11 +15258,11 @@ impl Sandwich<Line> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd3        0        3        0
-    //    simd4        4        7        0
+    //    simd3        0        5        0
+    //    simd4        4        5        0
     // Totals...
     // yes simd       10       21        0
-    //  no simd       22       48        0
+    //  no simd       22       46        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -15397,9 +15270,7 @@ impl Sandwich<Line> for FlatPoint {
             (Simd32x3::from(self[e45]) * other.group1()).with_w(0.0) + (other.group0().yzx() * self.group0().zxy()).with_w(0.0)
                 - (other.group0().zxy() * self.group0().yzx()).with_w(0.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * other.group0().with_w(-(self[e15] * other[e415]) - (self[e25] * other[e425]) - (self[e35] * other[e435]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * other.group0() * Simd32x3::from(-1.0)).with_w(-(self[e15] * other[e415]) - (self[e25] * other[e425]) - (self[e35] * other[e435])),
         )
         .geometric_product(self.reverse());
     }
@@ -15409,11 +15280,11 @@ impl Sandwich<Motor> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       14        0
-    //    simd3        3        4        0
-    //    simd4        2        7        0
+    //    simd3        3        6        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       12       25        0
-    //  no simd       24       54        0
+    //  no simd       24       52        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -15422,12 +15293,8 @@ impl Sandwich<Motor> for FlatPoint {
                 - (self.group0().yzx() * other.group0().zxy()))
             .with_w(self[e45] * other[e12345] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[e45] * other[e5]) - (self[e15] * other[e415]) - (self[e25] * other[e425]) - (self[e35] * other[e435]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (self.group0().www() * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e45] * other[e5]) - (self[e15] * other[e415]) - (self[e25] * other[e425]) - (self[e35] * other[e435])),
         )
         .geometric_product(self.reverse());
     }
@@ -15436,12 +15303,12 @@ impl Sandwich<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       37       77        0
+    //      f32       37       78        0
     //    simd2        6        6        0
-    //    simd3       24       40        0
-    //    simd4       19       16        0
+    //    simd3       24       41        0
+    //    simd4       19       15        0
     // Totals...
-    // yes simd       86      139        0
+    // yes simd       86      140        0
     //  no simd      197      273        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -15496,7 +15363,7 @@ impl Sandwich<MultiVector> for FlatPoint {
                 - (self.group0().yzx() * other.group1().zxy())
                 - (self.group0().yzx() * other.group6().zxy()),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4125]]) * self.group0().xyzz())
+            (self.group0().xyzz() * Simd32x3::from(other[e1234]).with_w(other[e4125]))
                 + Simd32x3::from(0.0).with_w((self[e45] * other[e3215]) - (self[e25] * other[e31]) - (self[e35] * other[e12]))
                 + (other.group5() * self.group0().www()).with_w(self[e25] * other[e4315])
                 + (other.group4().yzx() * self.group0().zxy()).with_w(self[e15] * other[e4235])
@@ -15512,11 +15379,11 @@ impl Sandwich<Plane> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5       14        0
-    //    simd3        3        4        0
-    //    simd4        1        6        0
+    //    simd3        3        5        0
+    //    simd4        1        5        0
     // Totals...
     // yes simd        9       24        0
-    //  no simd       18       50        0
+    //  no simd       18       49        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -15538,11 +15405,11 @@ impl Sandwich<RoundPoint> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       20        0
-    //    simd3        5        8        0
-    //    simd4        8       12        0
+    //    simd3        5       11        0
+    //    simd4        8        9        0
     // Totals...
     // yes simd       22       40        0
-    //  no simd       56       92        0
+    //  no simd       56       89        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -15553,12 +15420,8 @@ impl Sandwich<RoundPoint> for FlatPoint {
             // e235, e315, e125, e4
             ((self.group0().zxy() * other.group0().yzx()) - (self.group0().yzx() * other.group0().zxy())).with_w(self[e45] * other[e4] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e45] * other[e5]) - (self[e15] * other[e1]) - (self[e25] * other[e2]) - (self[e35] * other[e3]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e45] * other[e5]) - (self[e15] * other[e1]) - (self[e25] * other[e2]) - (self[e35] * other[e3])),
         )
         .geometric_product(self.reverse());
     }
@@ -15583,11 +15446,11 @@ impl Sandwich<Sphere> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       13       28        0
-    //    simd3        7       10        0
-    //    simd4        5        8        0
+    //    simd3        7       12        0
+    //    simd4        5        6        0
     // Totals...
     // yes simd       25       46        0
-    //  no simd       54       90        0
+    //  no simd       54       88        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -15598,11 +15461,8 @@ impl Sandwich<Sphere> for FlatPoint {
             // e15, e25, e35, e1234
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(self[e45] * other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e15] * other[e4235]) + (self[e25] * other[e4315]) + (self[e35] * other[e4125]) + (self[e45] * other[e3215])),
+            (Simd32x3::from(other[e1234]) * self.group0().xyz())
+                .with_w((self[e15] * other[e4235]) + (self[e25] * other[e4315]) + (self[e35] * other[e4125]) + (self[e45] * other[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -15612,21 +15472,17 @@ impl Sandwich<VersorEven> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       22       42        0
-    //    simd3        6        8        0
-    //    simd4       14       19        0
+    //    simd3        6       11        0
+    //    simd4       14       16        0
     // Totals...
     // yes simd       42       69        0
-    //  no simd       96      142        0
+    //  no simd       96      139        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w(-(self[e15] * other[e423]) - (self[e25] * other[e431]) - (self[e35] * other[e412]) - (self[e45] * other[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (self.group0().www() * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(self[e15] * other[e423]) - (self[e25] * other[e431]) - (self[e35] * other[e412]) - (self[e45] * other[e321])),
             // e415, e425, e435, e321
             Simd32x4::from([self[e45] * other[e1] * -1.0, self[e45] * other[e2] * -1.0, self[e45] * other[e3] * -1.0, self[e35] * other[e412]])
                 + (Simd32x4::from([other[e431], other[e4], other[e4], other[e431]]) * self.group0().zyzy())
@@ -15656,21 +15512,17 @@ impl Sandwich<VersorOdd> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       19       40        0
-    //    simd3       12       14        0
-    //    simd4       11       15        0
+    //    simd3       12       17        0
+    //    simd4       11       12        0
     // Totals...
     // yes simd       42       69        0
-    //  no simd       99      142        0
+    //  no simd       99      139        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[e45] * other[e45]) - (self[e15] * other[e41]) - (self[e25] * other[e42]) - (self[e35] * other[e43]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (self.group0().www() * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e45] * other[e45]) - (self[e15] * other[e41]) - (self[e25] * other[e42]) - (self[e35] * other[e43])),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (self[e35] * other[e42]) + (self[e45] * other[e4235]),
@@ -15698,10 +15550,10 @@ impl Sandwich<VersorOdd> for FlatPoint {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Flector {
-    type Output = sandwich_partial<Flector>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Flector {
+    type Output = SandwichInfixPartial<Flector>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Flector {
@@ -15841,7 +15693,7 @@ impl Sandwich<AntiDualNum> for Flector {
             // e15, e25, e35, e45
             ((Simd32x3::from(other[e3215]) * self.group1().xyz()) + (Simd32x3::from(other[scalar]) * self.group0().xyz())).with_w(other[scalar] * self[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 1.0]) * other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e45]) + (other[scalar] * self[e3215])),
+            other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e45]) + (other[scalar] * self[e3215])) * self.group1().xyz().with_w(1.0),
         )
         .geometric_product(self.reverse());
     }
@@ -16254,8 +16106,8 @@ impl Sandwich<DualNum> for Flector {
             // e235, e315, e125, e321
             ((Simd32x3::from(other[e5]) * self.group1().xyz()) + (Simd32x3::from(other[e12345]) * self.group0().xyz())).with_w(other[e12345] * self[e45] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 1.0])
-                * other.group0().yy().with_zw(other[e12345], (other[e5] * self[e45]) + (other[e12345] * self[e3215]))
+            other.group0().yy().with_zw(other[e12345], (other[e5] * self[e45]) + (other[e12345] * self[e3215]))
+                * self.group1().xyz().with_w(1.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         )
         .geometric_product(self.reverse());
@@ -16541,21 +16393,17 @@ impl Sandwich<RoundPoint> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       23       40        0
-    //    simd3        3        6        0
-    //    simd4       27       31        0
+    //    simd3        3        8        0
+    //    simd4       27       29        0
     // Totals...
     // yes simd       53       77        0
-    //  no simd      140      182        0
+    //  no simd      140      180        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e4235] * other[e1]) + (self[e4315] * other[e2]) + (self[e4125] * other[e3]) + (self[e3215] * other[e4]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e4235] * other[e1]) + (self[e4315] * other[e2]) + (self[e4125] * other[e3]) + (self[e3215] * other[e4])),
             // e415, e425, e435, e321
             ((Simd32x3::from(other[e4]) * self.group0().xyz()) + (self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e45]) * other.group0().xyz())
@@ -16600,21 +16448,17 @@ impl Sandwich<Sphere> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       38       62        0
-    //    simd3        6       15        0
-    //    simd4       21       18        0
+    //    simd3        6       18        0
+    //    simd4       21       15        0
     // Totals...
     // yes simd       65       95        0
-    //  no simd      140      179        0
+    //  no simd      140      176        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e3215] * other[e1234]) - (self[e4235] * other[e4235]) - (self[e4315] * other[e4315]) - (self[e4125] * other[e4125]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e1234]) * self.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e3215] * other[e1234]) - (self[e4235] * other[e4235]) - (self[e4315] * other[e4315]) - (self[e4125] * other[e4125])),
             // e23, e31, e12, e45
             ((Simd32x3::from(self[e45]) * other.group0().xyz()) + (Simd32x3::from(other[e1234]) * self.group0().xyz()) + (self.group1().zxy() * other.group0().yzx())
                 - (self.group1().yzx() * other.group0().zxy()))
@@ -16625,11 +16469,8 @@ impl Sandwich<Sphere> for Flector {
                 - (self.group0().zxy() * other.group0().yzx()))
             .with_w(self[e45] * other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e15] * other[e4235]) + (self[e25] * other[e4315]) + (self[e35] * other[e4125]) + (self[e45] * other[e3215])),
+            (Simd32x3::from(other[e1234]) * self.group0().xyz())
+                .with_w((self[e15] * other[e4235]) + (self[e25] * other[e4315]) + (self[e35] * other[e4125]) + (self[e45] * other[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -16778,10 +16619,10 @@ impl Sandwich<VersorOdd> for Flector {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Line {
-    type Output = sandwich_partial<Line>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Line {
+    type Output = SandwichInfixPartial<Line>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Line {
@@ -16910,11 +16751,11 @@ impl Sandwich<AntiFlatPoint> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       19        0
-    //    simd3        0        5        0
-    //    simd4        7        6        0
+    //    simd3        0        6        0
+    //    simd4        7        5        0
     // Totals...
     // yes simd       18       30        0
-    //  no simd       39       58        0
+    //  no simd       39       57        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -16923,8 +16764,7 @@ impl Sandwich<AntiFlatPoint> for Line {
                 - (Simd32x3::from(other[e321]) * self.group1()).with_w(0.0)
                 - (self.group0().zxy() * other.group0().yzx()).with_w(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self.group0().with_w((other[e235] * self[e415]) + (other[e315] * self[e425]) + (other[e125] * self[e435])),
+            (Simd32x3::from(other[e321]) * self.group0()).with_w((other[e235] * self[e415]) + (other[e315] * self[e425]) + (other[e125] * self[e435])),
         )
         .geometric_product(self.reverse());
     }
@@ -17298,11 +17138,11 @@ impl Sandwich<FlatPoint> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       15        0
-    //    simd3        0        5        0
-    //    simd4        8        8        0
+    //    simd3        0        7        0
+    //    simd4        8        6        0
     // Totals...
     // yes simd       18       28        0
-    //  no simd       42       62        0
+    //  no simd       42       60        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -17311,9 +17151,7 @@ impl Sandwich<FlatPoint> for Line {
                 - (Simd32x3::from(other[e45]) * self.group1()).with_w(0.0)
                 - (self.group0().yzx() * other.group0().zxy()).with_w(0.0),
             // e1, e2, e3, e5
-            Simd32x4::from([other[e45], other[e45], other[e45], 1.0])
-                * self.group0().with_w(-(other[e15] * self[e415]) - (other[e25] * self[e425]) - (other[e35] * self[e435]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e45]) * self.group0() * Simd32x3::from(-1.0)).with_w(-(other[e15] * self[e415]) - (other[e25] * self[e425]) - (other[e35] * self[e435])),
         )
         .geometric_product(self.reverse());
     }
@@ -17560,20 +17398,18 @@ impl Sandwich<RoundPoint> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       36       63        0
-    //    simd3        0       16        0
-    //    simd4       15        6        0
+    //    simd3        0       18        0
+    //    simd4       15        4        0
     // Totals...
     // yes simd       51       85        0
-    //  no simd       96      135        0
+    //  no simd       96      133        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e4]) * self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self.group1().with_w(-(self[e415] * other[e1]) - (self[e425] * other[e2]) - (self[e435] * other[e3]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group1() * Simd32x3::from(-1.0)).with_w(-(self[e415] * other[e1]) - (self[e425] * other[e2]) - (self[e435] * other[e3])),
             // e15, e25, e35, e1234
             (self.group1().yzx() * other.group0().zxy()).with_w(0.0)
                 - (Simd32x3::from(other[e5]) * self.group0()).with_w(0.0)
@@ -17615,19 +17451,18 @@ impl Sandwich<Sphere> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       32       57        0
-    //    simd3        0       14        0
-    //    simd4       16        7        0
+    //    simd3        0       15        0
+    //    simd4       16        6        0
     // Totals...
     // yes simd       48       78        0
-    //  no simd       96      127        0
+    //  no simd       96      126        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(other[e1234]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self.group1().with_w((self[e415] * other[e4235]) + (self[e425] * other[e4315]) + (self[e435] * other[e4125])),
+            (Simd32x3::from(other[e1234]) * self.group1()).with_w((self[e415] * other[e4235]) + (self[e425] * other[e4315]) + (self[e435] * other[e4125])),
             // e235, e315, e125, e4
             (Simd32x3::from(other[e3215]) * self.group0()).with_w(0.0) + (self.group1().yzx() * other.group0().zxy()).with_w(0.0)
                 - (self.group1().zxy() * other.group0().yzx()).with_w(0.0),
@@ -17767,10 +17602,10 @@ impl Sandwich<VersorOdd> for Line {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Motor {
-    type Output = sandwich_partial<Motor>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Motor {
+    type Output = SandwichInfixPartial<Motor>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Motor {
@@ -17926,11 +17761,11 @@ impl Sandwich<AntiFlatPoint> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       15       23        0
-    //    simd3        3        6        0
-    //    simd4        8        9        0
+    //    simd3        3        7        0
+    //    simd4        8        8        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       56       77        0
+    //  no simd       56       76        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -17941,11 +17776,7 @@ impl Sandwich<AntiFlatPoint> for Motor {
                 - (other.group0().yzz() * self.group0().zxw()))
             .with_w(other[e321] * self[e12345]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e415], self[e425], self[e435], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w((other[e235] * self[e415]) + (other[e315] * self[e425]) + (other[e125] * self[e435]) - (other[e321] * self[e5])),
+            (other.group0().www() * self.group0().xyz()).with_w((other[e235] * self[e415]) + (other[e315] * self[e425]) + (other[e125] * self[e435]) - (other[e321] * self[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -18342,11 +18173,11 @@ impl Sandwich<FlatPoint> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       15       22        0
-    //    simd3        3        4        0
-    //    simd4        8       12        0
+    //    simd3        3        6        0
+    //    simd4        8       10        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       56       82        0
+    //  no simd       56       80        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
@@ -18356,12 +18187,8 @@ impl Sandwich<FlatPoint> for Motor {
                 - (other.group0().zxy() * self.group0().yzx()))
             .with_w(other[e45] * self[e12345] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e415], self[e425], self[e435], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w(-(other[e15] * self[e415]) - (other[e25] * self[e425]) - (other[e35] * self[e435]) - (other[e45] * self[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (other.group0().www() * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(other[e15] * self[e415]) - (other[e25] * self[e425]) - (other[e35] * self[e435]) - (other[e45] * self[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -18469,12 +18296,12 @@ impl Sandwich<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       90      150        0
+    //      f32       90      152        0
     //    simd2        8        8        0
-    //    simd3       48       83        0
-    //    simd4       51       27        0
+    //    simd3       48       85        0
+    //    simd4       51       25        0
     // Totals...
-    // yes simd      197      268        0
+    // yes simd      197      270        0
     //  no simd      454      523        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -18515,8 +18342,8 @@ impl Sandwich<MultiVector> for Motor {
             ]) + (other.group8().zxy() * self.group0().yzx()).with_w(self[e235] * other[e423])
                 + (self.group1().yzx() * other.group1().zxy()).with_w(self[e315] * other[e431])
                 + (self.group1().yzx() * other.group6().zxy()).with_w(self[e125] * other[e412])
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e4]]) * self.group0().xyz().with_w(self[e5]))
                 - (other.group0().yy().with_zw(other[e12345], self[e415]) * self.group1().xyz().with_w(other[e1]))
+                - (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(self[e5] * other[e4])
                 - (other.group8().xyx() * self.group0().wwy()).with_w(self[e425] * other[e2])
                 - (other.group8().yzz() * self.group0().zxw()).with_w(self[e435] * other[e3]),
             // e41, e42, e43
@@ -18533,10 +18360,10 @@ impl Sandwich<MultiVector> for Motor {
                 - (other.group7().yzz() * self.group1().zxw())
                 - (self.group0().zxy() * other.group6().yzx()),
             // e415, e425, e435, e321
-            (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4125]]) * self.group1().xyz().with_w(self[e435]))
-                + (self.group1().zxwz() * other.group4().yzz().with_w(other[e43]))
+            (self.group1().zxwz() * other.group4().yzz().with_w(other[e43]))
                 + (self.group1().wwyy() * other.group4().xyx().with_w(other[e42]))
                 + (other.group0().xx().with_zw(other[scalar], other[e41]) * self.group0().xyz().with_w(self[e235]))
+                + (Simd32x3::from(other[e1234]) * self.group1().xyz()).with_w(self[e435] * other[e4125])
                 + (other.group5().xyx() * self.group0().wwy()).with_w(self[e415] * other[e4235])
                 + (other.group5().yzz() * self.group0().zxw()).with_w(self[e425] * other[e4315])
                 - (other.group4().zxy() * self.group1().yzx()).with_w(self[e12345] * other[e45])
@@ -18612,23 +18439,19 @@ impl Sandwich<RoundPoint> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       40       68        0
-    //    simd3        3        7        0
-    //    simd4       22       25        0
+    //    simd3        3        9        0
+    //    simd4       22       23        0
     // Totals...
     // yes simd       65      100        0
-    //  no simd      137      189        0
+    //  no simd      137      187        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(other[e4]) * self.group0().xyz().with_w(self[e5]) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w(-(self[e415] * other[e1]) - (self[e425] * other[e2]) - (self[e435] * other[e3]) - (self[e5] * other[e4]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e4]) * self.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(self[e415] * other[e1]) - (self[e425] * other[e2]) - (self[e435] * other[e3]) - (self[e5] * other[e4])),
             // e15, e25, e35, e1234
             ((self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e5]) * other.group0().xyz())
@@ -18670,22 +18493,19 @@ impl Sandwich<Sphere> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       35       52        0
-    //    simd3        3        4        0
-    //    simd4       24       29        0
+    //    simd3        3        5        0
+    //    simd4       24       28        0
     // Totals...
     // yes simd       62       85        0
-    //  no simd      140      180        0
+    //  no simd      140      179        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(other[e1234]) * self.group0().xyz().with_w(self[e5]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e415] * other[e4235]) + (self[e425] * other[e4315]) + (self[e435] * other[e4125]) - (self[e5] * other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group1().xyz())
+                .with_w((self[e415] * other[e4235]) + (self[e425] * other[e4315]) + (self[e435] * other[e4125]) - (self[e5] * other[e1234])),
             // e235, e315, e125, e5
             Simd32x4::from([
                 -(self[e125] * other[e4315]) - (self[e5] * other[e4235]),
@@ -18847,22 +18667,22 @@ impl Sandwich<VersorOdd> for Motor {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for MultiVector {
-    type Output = sandwich_partial<MultiVector>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for MultiVector {
+    type Output = SandwichInfixPartial<MultiVector>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      204      291        0
+    //      f32      204      301        0
     //    simd2       26       26        0
-    //    simd3      164      222        0
-    //    simd4      141       97        0
+    //    simd3      164      232        0
+    //    simd4      141       87        0
     // Totals...
-    // yes simd      535      636        0
+    // yes simd      535      646        0
     //  no simd     1312     1397        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -18886,7 +18706,7 @@ impl Sandwich<AntiCircleRotor> for MultiVector {
                 -(other[e43] * self[e435]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412]),
             ]) + (other.group0().zxy() * self.group8().yzx()).with_w(other[e45] * self[e4])
                 + (self.group7().zxy() * other.group2().yzx()).with_w(other[scalar] * self[e4])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e1]]) * other.group0().xyx().with_w(other[e41]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e1]) * other.group0().xyx().with_w(other[e41]))
                 - (self.group8().zx().with_zw(self[e5], self[e415]) * other.group0().yzz().with_w(other[e41]))
                 - (self.group7().yzx() * other.group2().zxy()).with_w(other[e42] * self[e2])
                 - (other.group1().zxy() * self.group1().yzx()).with_w(other[e42] * self[e425])
@@ -18945,7 +18765,7 @@ impl Sandwich<AntiCircleRotor> for MultiVector {
                 (other[e12] * self[e415]) + (other[e25] * self[e4]) + (other[scalar] * self[e425]),
                 (other[e23] * self[e425]) + (other[e35] * self[e4]) + (other[scalar] * self[e435]),
                 -(other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e315], self[e315]]) * other.group0().xyx().with_w(other[e42]))
+            ]) + (Simd32x2::from(self[e5]).with_zw(self[e315], self[e315]) * other.group0().xyx().with_w(other[e42]))
                 + (self.group0().yy().with_zw(self[e12345], other[e41]) * other.group1().xyz().with_w(self[e235]))
                 + (self.group8().zx().with_zw(self[e5], self[e125]) * other.group0().yzz().with_w(other[e43]))
                 + (self.group7().zxy() * other.group2().yzx()).with_w(other[scalar] * self[e321])
@@ -19004,8 +18824,8 @@ impl Sandwich<AntiCircleRotor> for MultiVector {
                     - (other[e25] * self[e4315])
                     - (other[e35] * self[e4125]),
             ]) + (self.group9().ww().with_zw(self[e25], self[e3215]) * other.group0().xyx().with_w(other[scalar]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e15]]) * other.group2().xyz().with_w(other[e23]))
                 - (other.group2().yzxy() * self.group4().zxy().with_w(self[e31]))
+                - (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e23] * self[e15])
                 - (other.group0().zxy() * self.group3().yzx()).with_w(other[e15] * self[e23])
                 - (other.group1().zxy() * self.group9().yzx()).with_w(other[e35] * self[e12]),
             // e1234
@@ -19024,12 +18844,12 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      279        0
+    //      f32      184      289        0
     //    simd2       22       22        0
-    //    simd3      180      241        0
-    //    simd4      168      121        0
+    //    simd3      180      251        0
+    //    simd4      168      111        0
     // Totals...
-    // yes simd      554      663        0
+    // yes simd      554      673        0
     //  no simd     1440     1530        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -19100,10 +18920,10 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
                 - (Simd32x4::from([other[e425], other[e3], other[e1], other[e125]]) * self.group8().zxy().with_w(self[e412]))
                 - (Simd32x4::from([other[e2], other[e321], other[e321], self[e1]]) * self.group8().zyz().with_w(other[e415]))
                 - (Simd32x4::from([self[e2], self[e415], self[e1], self[e5]]) * other.group2().zzyw())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e2]]) * other.group1().xyzy())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e415]]) * other.group3().xyzx())
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e3]]) * other.group2().yxx().with_w(other[e435]))
+                - (other.group1().xyzy() * Simd32x3::from(self[e5]).with_w(self[e2]))
                 - (other.group2().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
+                - (other.group3().xyzx() * Simd32x3::from(self[e5]).with_w(self[e415]))
                 - (other.group3().wwwy() * self.group6().xyzy())
                 - (self.group8().xxy() * other.group1().wzx()).with_w(other[e315] * self[e431]),
             // e41, e42, e43
@@ -19134,8 +18954,8 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
                 - (Simd32x3::from([other[e315], other[e5], other[e5]]) * self.group7().zyz())
                 - (Simd32x3::from([other[e5], other[e125], other[e235]]) * self.group7().xxy())
                 - (Simd32x3::from([self[e3], self[e1], self[e321]]) * other.group3().yzz())
-                - (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group0().xyx())
                 - (Simd32x3::from([self[e321], self[e321], self[e2]]) * other.group3().xyx())
+                - (other.group0().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 - (other.group0().yzz() * self.group8().zx().with_z(self[e5]))
                 - (other.group1().yzx() * self.group6().zxy()),
             // e415, e425, e435, e321
@@ -19143,9 +18963,9 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
                 + (Simd32x4::from(self[scalar]) * other.group1())
                 + (Simd32x4::from([other[e315], other[e5], other[e5], self[e4235]]) * self.group4().zyz().with_w(other[e415]))
                 + (Simd32x4::from([other[e5], other[e125], other[e235], self[e35]]) * self.group4().xxy().with_w(other[e412]))
-                + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4125]]) * other.group2().xyz().with_w(other[e435]))
                 + (self.group3().zx().with_zw(self[e3215], self[e25]) * other.group0().yzz().with_w(other[e431]))
                 + (self.group9().ww().with_zw(self[e25], self[e15]) * other.group0().xyx().with_w(other[e423]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e435] * self[e4125])
                 + (self.group5().zxy() * other.group1().yzx()).with_w(other[e425] * self[e4315])
                 + (other.group2().www() * self.group3().xyz()).with_w(other[e5] * self[e1234])
                 - (other.group2().zxyy() * self.group4().yzx().with_w(self[e42]))
@@ -19197,8 +19017,8 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
                 + (self.group1().zx().with_zw(self[e321], other[e3]) * other.group1().yzz().with_w(self[e125]))
                 + (self.group6().ww().with_zw(self[e2], other[e435]) * other.group1().xyx().with_w(self[e125]))
                 + (other.group0().zxy() * self.group8().yzx()).with_w(other[e1] * self[e235])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], other[e5]]) * other.group0().xyx().with_w(self[e12345]))
                 - (self.group1().yzxz() * other.group1().zxy().with_w(other[e125]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], other[e5]) * other.group0().xyx().with_w(self[e12345]))
                 - (self.group8().zx().with_zw(self[e5], self[e5]) * other.group0().yzz().with_w(other[e321]))
                 - (self.group8() * other.group2().www()).with_w(other[e315] * self[e2])
                 - (self.group7().yzx() * other.group2().zxy()).with_w(other[e235] * self[e1]),
@@ -19226,12 +19046,12 @@ impl Sandwich<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      146      215        0
+    //      f32      146      224        0
     //    simd2       17       18        0
-    //    simd3      128      175        0
-    //    simd4      115       84        0
+    //    simd3      128      184        0
+    //    simd4      115       75        0
     // Totals...
-    // yes simd      406      492        0
+    // yes simd      406      501        0
     //  no simd     1024     1112        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
@@ -19276,12 +19096,12 @@ impl Sandwich<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      158      230        0
+    //      f32      158      239        0
     //    simd2       17       17        0
-    //    simd3      136      187        0
-    //    simd4      123       88        0
+    //    simd3      136      196        0
+    //    simd4      123       79        0
     // Totals...
-    // yes simd      434      522        0
+    // yes simd      434      531        0
     //  no simd     1092     1177        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -19351,12 +19171,12 @@ impl Sandwich<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      185      259        0
+    //      f32      185      268        0
     //    simd2       20       20        0
-    //    simd3      148      199        0
-    //    simd4      138      101        0
+    //    simd3      148      208        0
+    //    simd4      138       92        0
     // Totals...
-    // yes simd      491      579        0
+    // yes simd      491      588        0
     //  no simd     1221     1300        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
@@ -19401,9 +19221,9 @@ impl Sandwich<AntiFlector> for MultiVector {
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e315]]) * self.group8().xxy().with_w(self[e431]))
                 - (Simd32x4::from([other[e2], other[e321], other[e321], other[e125]]) * self.group8().zyz().with_w(self[e412]))
                 - (Simd32x4::from([self[e2], self[e415], self[e1], self[e425]]) * other.group0().zzy().with_w(other[e2]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e435]]) * other.group1().xyzz())
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e415]]) * other.group0().yxx().with_w(other[e1]))
-                - (other.group0().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423])),
+                - (other.group0().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
+                - (other.group1().xyzz() * Simd32x3::from(self[e5]).with_w(self[e435])),
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group1().xyz())
                 + (Simd32x3::from([other[e321], other[e3], other[e1]]) * self.group7().xxy())
@@ -19467,12 +19287,12 @@ impl Sandwich<AntiLine> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      188      267        0
+    //      f32      188      276        0
     //    simd2       21       22        0
-    //    simd3      141      194        0
-    //    simd4      125       86        0
+    //    simd3      141      203        0
+    //    simd4      125       77        0
     // Totals...
-    // yes simd      475      569        0
+    // yes simd      475      578        0
     //  no simd     1153     1237        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
@@ -19513,12 +19333,12 @@ impl Sandwich<AntiLine> for MultiVector {
                 - (other.group0().zxy() * self.group3().yzx()).with_w(other[e23] * self[e4235])
                 - (other.group1().zxy() * self.group5().yzx()).with_w(other[e31] * self[e4315]),
             // e41, e42, e43
-            (Simd32x3::from([self[e1234], self[e1234], self[e42]]) * other.group0().xyx()) + (other.group0().yzz() * self.group4().zx().with_z(self[e1234]))
+            (other.group0().xyx() * Simd32x2::from(self[e1234]).with_z(self[e42])) + (other.group0().yzz() * self.group4().zx().with_z(self[e1234]))
                 - (other.group0().zxy() * self.group4().yzx()),
             // e23, e31, e12
             (Simd32x3::from(self[scalar]) * other.group0())
-                + (Simd32x3::from([self[e1234], self[e1234], self[e42]]) * other.group1().xyx())
                 + (other.group0().yzx() * self.group5().zxy())
+                + (other.group1().xyx() * Simd32x2::from(self[e1234]).with_z(self[e42]))
                 + (other.group1().yzz() * self.group4().zx().with_z(self[e1234]))
                 - (other.group0().zxy() * self.group5().yzx())
                 - (other.group1().zxy() * self.group4().yzx()),
@@ -19531,13 +19351,13 @@ impl Sandwich<AntiLine> for MultiVector {
             ]) - (other.group0().zxy() * self.group6().yzx()).with_w(other[e23] * self[e1])
                 - (other.group1().zxy() * self.group7().yzx()).with_w(other[e31] * self[e2]),
             // e423, e431, e412
-            (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group0().xyx()) + (other.group0().yzz() * self.group7().zx().with_z(self[e4]))
+            (other.group0().xyx() * Simd32x2::from(self[e4]).with_z(self[e431])) + (other.group0().yzz() * self.group7().zx().with_z(self[e4]))
                 - (other.group0().zxy() * self.group7().yzx()),
             // e235, e315, e125
             (Simd32x3::from(self[e12345]) * other.group1())
                 + (Simd32x3::from([self[e2], self[e415], self[e1]]) * other.group1().zzy())
-                + (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group0().xyx())
                 + (Simd32x3::from([self[e435], self[e3], self[e425]]) * other.group1().yxx())
+                + (other.group0().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 + (other.group0().yzz() * self.group8().zx().with_z(self[e5]))
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
@@ -19554,7 +19374,7 @@ impl Sandwich<AntiLine> for MultiVector {
                     - (other[e25] * self[e4315])
                     - (other[e35] * self[e12])
                     - (other[e35] * self[e4125]),
-            ]) - (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e25]]) * other.group1().xyx().with_w(other[e31]))
+            ]) - (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e25]) * other.group1().xyx().with_w(other[e31]))
                 - (self.group4().zx().with_zw(self[e1234], self[e35]) * other.group1().yzz().with_w(other[e12]))
                 - (other.group0().zxy() * self.group9().yzx()).with_w(other[e23] * self[e15]),
             // e1234
@@ -19567,12 +19387,12 @@ impl Sandwich<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      194      275        0
+    //      f32      194      285        0
     //    simd2       23       24        0
-    //    simd3      148      201        0
-    //    simd4      133       94        0
+    //    simd3      148      211        0
+    //    simd4      133       84        0
     // Totals...
-    // yes simd      498      594        0
+    // yes simd      498      604        0
     //  no simd     1216     1302        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
@@ -19663,9 +19483,9 @@ impl Sandwich<AntiMotor> for MultiVector {
             ]) + (other.group0().xyxw() * self.group3().ww().with_zw(self[e4315], self[e3215]))
                 + (other.group1().zxyw() * self.group4().yzx().with_w(self[scalar]))
                 + (self.group9().zx().with_zw(self[e45], self[e45]) * other.group0().yzz().with_w(other[e3215]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e15]]) * other.group1().xyz().with_w(other[e23]))
                 - (other.group1().ywwy() * self.group4().zyz().with_w(self[e31]))
                 - (other.group1().wzxx() * self.group4().xxy().with_w(self[e23]))
+                - (Simd32x3::from(self[e1234]) * other.group1().xyz()).with_w(other[e23] * self[e15])
                 - (other.group0().zxy() * self.group9().yzx()).with_w(other[e35] * self[e12]),
             // e1234
             (other[scalar] * self[e1234]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
@@ -19677,12 +19497,12 @@ impl Sandwich<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      146      225        0
+    //      f32      146      234        0
     //    simd2       19       19        0
-    //    simd3      135      186        0
-    //    simd4      126       89        0
+    //    simd3      135      195        0
+    //    simd4      126       80        0
     // Totals...
-    // yes simd      426      519        0
+    // yes simd      426      528        0
     //  no simd     1093     1177        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -19701,7 +19521,7 @@ impl Sandwich<AntiPlane> for MultiVector {
             (other[e5] * self[scalar]) + (other[e5] * self[e45]) - (other[e1] * self[e15]) - (other[e2] * self[e25]) - (other[e3] * self[e35]),
             // e15, e25, e35, e45
             Simd32x4::from([other[e5] * self[e1], other[e5] * self[e2], other[e5] * self[e3], 0.0]) + (self.group8().yzx() * other.group0().zxy()).with_w(other[e5] * self[e4])
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e425]]) * other.group0().xyzy())
+                - (other.group0().xyzy() * Simd32x3::from(self[e5]).with_w(self[e425]))
                 - (other.group0().wwwz() * self.group6().xyzz())
                 - (self.group8().zxy() * other.group0().yzx()).with_w(other[e1] * self[e415]),
             // e41, e42, e43
@@ -19740,20 +19560,20 @@ impl Sandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      197        0
+    //      f32      140      209        0
     //    simd2       16       18        0
-    //    simd3      124      172        0
-    //    simd4      112       88        0
+    //    simd3      124      184        0
+    //    simd4      112       75        0
     // Totals...
-    // yes simd      392      475        0
-    //  no simd      992     1101        0
+    // yes simd      392      486        0
+    //  no simd      992     1097        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(other[e12345]) * self.group0().yx() * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e12345], other[e12345], other[e12345], self[e1234]]) * self.group9().xyz().with_w(other[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e12345]) * self.group9().xyz() * Simd32x3::from(-1.0)).with_w(other[e12345] * self[e1234]),
             // e5
             other[e12345] * self[e3215],
             // e15, e25, e35, e45
@@ -19769,7 +19589,7 @@ impl Sandwich<AntiScalar> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(other[e12345]) * self.group3().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e12345], other[e12345], other[e12345], self[e5]]) * self.group1().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (Simd32x3::from(other[e12345]) * self.group1().xyz()).with_w(other[e12345] * self[e5] * -1.0),
             // e1234
             other[e12345] * self[e4] * -1.0,
         )
@@ -19780,12 +19600,12 @@ impl Sandwich<Circle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      178      259        0
+    //      f32      178      268        0
     //    simd2       17       17        0
-    //    simd3      160      218        0
-    //    simd4      147      105        0
+    //    simd3      160      227        0
+    //    simd4      147       96        0
     // Totals...
-    // yes simd      502      599        0
+    // yes simd      502      608        0
     //  no simd     1280     1367        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -19817,7 +19637,7 @@ impl Sandwich<Circle> for MultiVector {
                 (other[e415] * self[e4125]) + (other[e321] * self[e31]),
                 (other[e425] * self[e4235]) + (other[e321] * self[e12]),
                 -(other[e435] * self[e43]) - (other[e321] * self[e1234]),
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4315]]) * other.group2().xyx().with_w(other[e431]))
+            ]) + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4315]) * other.group2().xyx().with_w(other[e431]))
                 + (self.group4().zx().with_zw(self[e1234], self[e4125]) * other.group2().yzz().with_w(other[e412]))
                 + (other.group0().zxy() * self.group3().yzx()).with_w(other[e423] * self[e4235])
                 - (self.group3().zx().with_zw(self[e3215], self[e31]) * other.group0().yzz().with_w(other[e431]))
@@ -19842,8 +19662,8 @@ impl Sandwich<Circle> for MultiVector {
                 + (self.group6().wz().with_zw(self[e2], other[e321]) * other.group2().xxx().with_w(self[e12345]))
                 + (self.group8().yzx() * other.group1().zxy()).with_w(other[e412] * self[e125])
                 - (Simd32x4::from([self[e2], self[e415], self[e1], self[e412]]) * other.group2().zzy().with_w(other[e125]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e3]]) * other.group1().xyzz())
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e431]]) * other.group2().yxx().with_w(other[e315]))
+                - (other.group1().xyzz() * Simd32x3::from(self[e5]).with_w(self[e3]))
                 - (self.group0().yy().with_zw(self[e12345], other[e235]) * other.group2().with_w(self[e423]))
                 - (self.group8().xxy() * other.group1().wzx()).with_w(other[e415] * self[e1])
                 - (self.group8().zyz() * other.group1().yww()).with_w(other[e425] * self[e2]),
@@ -19862,9 +19682,9 @@ impl Sandwich<Circle> for MultiVector {
             (other.group0().zxy() * self.group8().yzx()) + (other.group2().zxy() * self.group7().yzx()) + (other.group1().zxy() * self.group6().yzx())
                 - (Simd32x3::from(other[e321]) * self.group1().xyz())
                 - (Simd32x3::from(self[e12345]) * other.group1().xyz())
-                - (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group2().xyx())
-                - (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group0().xyx())
+                - (other.group0().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 - (other.group0().yzz() * self.group8().zx().with_z(self[e5]))
+                - (other.group2().xyx() * Simd32x2::from(self[e4]).with_z(self[e431]))
                 - (other.group2().yzz() * self.group7().zx().with_z(self[e4]))
                 - (other.group1().yzx() * self.group6().zxy()),
             // e415, e425, e435, e321
@@ -19874,7 +19694,7 @@ impl Sandwich<Circle> for MultiVector {
                 other[e321] * self[e4125] * -1.0,
                 other[e435] * self[e4125],
             ]) + (Simd32x4::from(self[scalar]) * other.group1())
-                + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e35]]) * other.group2().xyx().with_w(other[e412]))
+                + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e35]) * other.group2().xyx().with_w(other[e412]))
                 + (self.group4().zx().with_zw(self[e1234], self[e4235]) * other.group2().yzz().with_w(other[e415]))
                 + (self.group3().zx().with_zw(self[e3215], self[e25]) * other.group0().yzz().with_w(other[e431]))
                 + (self.group9().ww().with_zw(self[e25], self[e15]) * other.group0().xyx().with_w(other[e423]))
@@ -19897,9 +19717,9 @@ impl Sandwich<Circle> for MultiVector {
             (Simd32x3::from(other[e321]) * self.group3().xyz())
                 + (Simd32x3::from(self[scalar]) * other.group2())
                 + (Simd32x3::from([self[e35], self[e15], self[e3215]]) * other.group1().yzz())
-                + (Simd32x3::from([self[e45], self[e45], self[e31]]) * other.group2().xyx())
                 + (Simd32x3::from([self[e4125], self[e4235], self[e45]]) * other.group2().yzz())
                 + (Simd32x3::from([self[e3215], self[e3215], self[e25]]) * other.group1().xyx())
+                + (other.group2().xyx() * Simd32x2::from(self[e45]).with_z(self[e31]))
                 + (other.group2().yzx() * self.group5().zx().with_z(self[e4315]))
                 - (other.group2().zxy() * self.group5().yzx())
                 - (other.group2().zxy() * self.group9().yzx())
@@ -19911,8 +19731,8 @@ impl Sandwich<Circle> for MultiVector {
                 + (self.group6().ww().with_zw(self[e2], other[e415]) * other.group1().xyx().with_w(self[e235]))
                 + (other.group0().zxy() * self.group8().yzx()).with_w(other[e235] * self[e415])
                 + (other.group1().www() * self.group6().xyz()).with_w(other[e435] * self[e125])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e1]]) * other.group0().xyx().with_w(other[e235]))
                 - (other.group1().zxyw() * self.group1().yzx().with_w(self[e5]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e1]) * other.group0().xyx().with_w(other[e235]))
                 - (self.group8().zx().with_zw(self[e5], self[e2]) * other.group0().yzz().with_w(other[e315]))
                 - (other.group2().zxy() * self.group7().yzx()).with_w(other[e125] * self[e3]),
             // e1234
@@ -19934,12 +19754,12 @@ impl Sandwich<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      174      263        0
+    //      f32      174      273        0
     //    simd2       19       19        0
-    //    simd3      164      224        0
-    //    simd4      152      107        0
+    //    simd3      164      234        0
+    //    simd4      152       97        0
     // Totals...
-    // yes simd      509      613        0
+    // yes simd      509      623        0
     //  no simd     1312     1401        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -20000,8 +19820,8 @@ impl Sandwich<CircleRotor> for MultiVector {
                 + (self.group6().wz().with_zw(self[e2], self[e235]) * other.group2().xxx().with_w(other[e423]))
                 - (Simd32x4::from([other[e425], other[e12345], other[e12345], self[e1]]) * self.group8().zyz().with_w(other[e415]))
                 - (Simd32x4::from([other[e12345], other[e321], other[e321], other[e125]]) * self.group8().with_w(self[e412]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e2]]) * other.group1().xyzy())
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e3]]) * other.group2().yxx().with_w(other[e435]))
+                - (other.group1().xyzy() * Simd32x3::from(self[e5]).with_w(self[e2]))
                 - (other.group2().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
                 - (self.group8().xxy() * other.group1().wzx()).with_w(other[e315] * self[e431]),
             // e41, e42, e43
@@ -20022,7 +19842,7 @@ impl Sandwich<CircleRotor> for MultiVector {
                 - (Simd32x3::from(other[e12345]) * self.group6().xyz())
                 - (Simd32x3::from(self[e12345]) * other.group1().xyz())
                 - (Simd32x3::from(self[e4]) * other.group2().xyz())
-                - (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group0().xyx())
+                - (other.group0().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 - (other.group0().yzz() * self.group8().zx().with_z(self[e5]))
                 - (self.group7().zxy() * other.group2().yzx())
                 - (other.group1().yzx() * self.group6().zxy()),
@@ -20030,9 +19850,9 @@ impl Sandwich<CircleRotor> for MultiVector {
             (Simd32x4::from(self[scalar]) * other.group1())
                 + (Simd32x4::from([other[e425], other[e12345], other[e12345], self[e4315]]) * self.group5().zyz().with_w(other[e425]))
                 + (Simd32x4::from([other[e12345], other[e435], other[e415], self[e4235]]) * self.group5().xxy().with_w(other[e415]))
-                + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4125]]) * other.group2().xyz().with_w(other[e435]))
                 + (self.group3().zx().with_zw(self[e3215], self[e25]) * other.group0().yzz().with_w(other[e431]))
                 + (self.group9().ww().with_zw(self[e25], self[e15]) * other.group0().xyx().with_w(other[e423]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e435] * self[e4125])
                 + (self.group4().zxy() * other.group2().yzx()).with_w(other[e412] * self[e35])
                 - (other.group2().zxyy() * self.group4().yzx().with_w(self[e42]))
                 - (other.group0().zxy() * self.group3().yzx()).with_w(other[e235] * self[e41])
@@ -20070,8 +19890,8 @@ impl Sandwich<CircleRotor> for MultiVector {
                 + (self.group6().ww().with_zw(self[e2], other[e435]) * other.group1().xyx().with_w(self[e125]))
                 + (other.group0().zxy() * self.group8().yzx()).with_w(other[e415] * self[e235])
                 + (self.group7().zxy() * other.group2().yzx()).with_w(other[e425] * self[e315])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e5]]) * other.group0().xyx().with_w(other[e321]))
                 - (self.group1().yzxz() * other.group1().zxy().with_w(other[e125]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e5]) * other.group0().xyx().with_w(other[e321]))
                 - (self.group8().zx().with_zw(self[e5], self[e1]) * other.group0().yzz().with_w(other[e235]))
                 - (self.group7().yzx() * other.group2().zxy()).with_w(other[e315] * self[e2]),
             // e1234
@@ -20094,12 +19914,12 @@ impl Sandwich<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      288        0
+    //      f32      202      297        0
     //    simd2       25       25        0
-    //    simd3      160      217        0
-    //    simd4      137       94        0
+    //    simd3      160      226        0
+    //    simd4      137       85        0
     // Totals...
-    // yes simd      524      624        0
+    // yes simd      524      633        0
     //  no simd     1280     1365        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -20122,7 +19942,7 @@ impl Sandwich<Dipole> for MultiVector {
                 (other[e23] * self[e2]) + (other[e12] * self[e321]) + (other[e15] * self[e431]) + (other[e35] * self[e4]),
                 -(other[e43] * self[e435]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412]),
             ]) + (other.group0().zxy() * self.group8().yzx()).with_w(other[e45] * self[e4])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e1]]) * other.group0().xyx().with_w(other[e41]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e1]) * other.group0().xyx().with_w(other[e41]))
                 - (self.group8().zx().with_zw(self[e5], self[e415]) * other.group0().yzz().with_w(other[e41]))
                 - (other.group2().zxy() * self.group7().yzx()).with_w(other[e42] * self[e2])
                 - (other.group1().zxy() * self.group1().yzx()).with_w(other[e42] * self[e425])
@@ -20166,7 +19986,7 @@ impl Sandwich<Dipole> for MultiVector {
                 + (Simd32x3::from(self[scalar]) * other.group1().xyz())
                 + (Simd32x3::from([self[e35], self[e15], self[e3215]]) * other.group0().yzz())
                 + (Simd32x3::from([self[e3215], self[e3215], self[e25]]) * other.group0().xyx())
-                + (Simd32x3::from([self[e1234], self[e1234], self[e42]]) * other.group2().xyx())
+                + (other.group2().xyx() * Simd32x2::from(self[e1234]).with_z(self[e42]))
                 + (other.group2().yzz() * self.group4().zx().with_z(self[e1234]))
                 + (self.group5().zxy() * other.group1().yzx())
                 - (other.group0().zxy() * self.group3().yzx())
@@ -20178,7 +19998,7 @@ impl Sandwich<Dipole> for MultiVector {
                 (other[e12] * self[e415]) + (other[e25] * self[e4]) + (other[e35] * self[e423]),
                 (other[e23] * self[e425]) + (other[e15] * self[e431]) + (other[e35] * self[e4]),
                 -(other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e315], self[e315]]) * other.group0().xyx().with_w(other[e42]))
+            ]) + (Simd32x2::from(self[e5]).with_zw(self[e315], self[e315]) * other.group0().xyx().with_w(other[e42]))
                 + (self.group0().yy().with_zw(self[e12345], other[e41]) * other.group1().xyz().with_w(self[e235]))
                 + (self.group8().zx().with_zw(self[e5], self[e125]) * other.group0().yzz().with_w(other[e43]))
                 - (other.group0().zxy() * self.group8().yzx()).with_w(other[e45] * self[e12345])
@@ -20218,8 +20038,8 @@ impl Sandwich<Dipole> for MultiVector {
                     - (other[e45] * self[e3215])
                     - (other[e35] * self[e12])
                     - (other[e35] * self[e4125]),
-            ]) - (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4235]]) * other.group2().xyx().with_w(other[e15]))
-                - (self.group9().yzxy() * other.group1().zxy().with_w(other[e25]))
+            ]) - (self.group9().yzxy() * other.group1().zxy().with_w(other[e25]))
+                - (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4235]) * other.group2().xyx().with_w(other[e15]))
                 - (self.group4().zx().with_zw(self[e1234], self[e31]) * other.group2().yzz().with_w(other[e25]))
                 - (other.group0().zxy() * self.group3().yzx()).with_w(other[e15] * self[e23]),
             // e1234
@@ -20238,12 +20058,12 @@ impl Sandwich<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      214      304        0
+    //      f32      214      314        0
     //    simd2       27       27        0
-    //    simd3      180      242        0
-    //    simd4      158      110        0
+    //    simd3      180      252        0
+    //    simd4      158      100        0
     // Totals...
-    // yes simd      579      683        0
+    // yes simd      579      693        0
     //  no simd     1440     1524        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -20272,7 +20092,7 @@ impl Sandwich<DipoleInversion> for MultiVector {
             ]) + (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e321]]) * self.group7().zyz().with_w(other[e1234]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], self[e4]]) * self.group7().xxy().with_w(other[e45]))
                 + (other.group0().zxy() * self.group8().yzx()).with_w(other[e1234] * self[e12345])
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e415]]) * other.group0().xyx().with_w(other[e41]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e415]) * other.group0().xyx().with_w(other[e41]))
                 - (self.group0().yy().with_zw(self[e12345], other[e41]) * other.group3().xyz().with_w(self[e1]))
                 - (self.group8().zx().with_zw(self[e5], self[e2]) * other.group0().yzz().with_w(other[e42]))
                 - (self.group8() * other.group2().www()).with_w(other[e43] * self[e3])
@@ -20353,7 +20173,7 @@ impl Sandwich<DipoleInversion> for MultiVector {
                 -(other[e12] * self[e3]) - (other[e1234] * self[e5]),
             ]) + (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e425]]) * self.group7().zyz().with_w(other[e4315]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], self[e415]]) * self.group7().xxy().with_w(other[e4235]))
-                + (Simd32x4::from([self[e5], self[e5], self[e315], self[e315]]) * other.group0().xyx().with_w(other[e42]))
+                + (Simd32x2::from(self[e5]).with_zw(self[e315], self[e315]) * other.group0().xyx().with_w(other[e42]))
                 + (self.group0().yy().with_zw(self[e12345], other[e41]) * other.group1().xyz().with_w(self[e235]))
                 + (self.group8().zx().with_zw(self[e5], self[e125]) * other.group0().yzz().with_w(other[e43]))
                 + (self.group8() * other.group2().www()).with_w(other[e4125] * self[e435])
@@ -20409,8 +20229,8 @@ impl Sandwich<DipoleInversion> for MultiVector {
                 + (self.group4().yzx() * other.group2().zxy()).with_w(other[e4125] * self[e35])
                 - (Simd32x4::from([other[e25], other[e3215], other[e3215], other[e35]]) * self.group4().zyz().with_w(self[e12]))
                 - (Simd32x4::from([other[e3215], other[e35], other[e15], other[e25]]) * self.group4().xxy().with_w(self[e31]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e35]]) * other.group2().xyz().with_w(other[e12]))
                 - (other.group1().zxyy() * self.group9().yzx().with_w(self[e25]))
+                - (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e12] * self[e35])
                 - (other.group0().zxy() * self.group3().yzx()).with_w(other[e15] * self[e23])
                 - (self.group5().yzx() * other.group3().zxy()).with_w(other[e23] * self[e15]),
             // e1234
@@ -20433,12 +20253,12 @@ impl Sandwich<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      221        0
+    //      f32      148      230        0
     //    simd2       16       16        0
-    //    simd3      128      176        0
-    //    simd4      115       83        0
+    //    simd3      128      185        0
+    //    simd4      115       74        0
     // Totals...
-    // yes simd      407      496        0
+    // yes simd      407      505        0
     //  no simd     1024     1113        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -20484,12 +20304,12 @@ impl Sandwich<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      163      235        0
+    //      f32      163      245        0
     //    simd2       19       19        0
-    //    simd3      136      184        0
-    //    simd4      120       87        0
+    //    simd3      136      194        0
+    //    simd4      120       77        0
     // Totals...
-    // yes simd      438      525        0
+    // yes simd      438      535        0
     //  no simd     1089     1173        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -20549,8 +20369,8 @@ impl Sandwich<FlatPoint> for MultiVector {
                 (other[e15] * self[e43]) + (other[e45] * self[e31]),
                 (other[e25] * self[e41]) + (other[e45] * self[e12]),
                 -(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e12]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]),
-            ]) - (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e25]]) * other.group0().xyz().with_w(self[e31]))
-                - (other.group0().yzxx() * self.group4().zxy().with_w(self[e23])),
+            ]) - (other.group0().yzxx() * self.group4().zxy().with_w(self[e23]))
+                - (Simd32x3::from(self[e1234]) * other.group0().xyz()).with_w(other[e25] * self[e31]),
             // e1234
             other[e45] * self[e1234],
         )
@@ -20561,12 +20381,12 @@ impl Sandwich<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      181      255        0
+    //      f32      181      264        0
     //    simd2       20       20        0
-    //    simd3      148      203        0
-    //    simd4      139       99        0
+    //    simd3      148      212        0
+    //    simd4      139       90        0
     // Totals...
-    // yes simd      488      577        0
+    // yes simd      488      586        0
     //  no simd     1221     1300        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
@@ -20665,7 +20485,7 @@ impl Sandwich<Flector> for MultiVector {
                 + (self.group4().yzx() * other.group0().zxy()).with_w(other[e4235] * self[e15])
                 - (Simd32x4::from([other[e25], other[e3215], other[e3215], other[e25]]) * self.group4().zyz().with_w(self[e31]))
                 - (Simd32x4::from([other[e3215], other[e35], other[e15], other[e15]]) * self.group4().xxy().with_w(self[e23]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4235]]) * other.group0().xyzx())
+                - (other.group0().xyzx() * Simd32x3::from(self[e1234]).with_w(self[e4235]))
                 - (self.group5().yzx() * other.group1().zxy()).with_w(other[e35] * self[e12]),
             // e1234
             (other[e45] * self[e1234]) - (other[e4235] * self[e41]) - (other[e4315] * self[e42]) - (other[e4125] * self[e43]),
@@ -20677,12 +20497,12 @@ impl Sandwich<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      177      254        0
+    //      f32      177      263        0
     //    simd2       16       16        0
-    //    simd3      141      192        0
-    //    simd4      131       94        0
+    //    simd3      141      201        0
+    //    simd4      131       85        0
     // Totals...
-    // yes simd      465      556        0
+    // yes simd      465      565        0
     //  no simd     1156     1238        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
@@ -20728,36 +20548,36 @@ impl Sandwich<Line> for MultiVector {
                 (other[e425] * self[e235]) + (other[e235] * self[e2]) + (other[e315] * self[e415]) + (other[e125] * self[e321]),
                 other[e125] * self[e412] * -1.0,
             ]) - (Simd32x4::from([self[e2], self[e415], self[e1], self[e431]]) * other.group1().zzy().with_w(other[e315]))
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e2]]) * other.group0().xyx().with_w(other[e425]))
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e423]]) * other.group1().yxx().with_w(other[e235]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e2]) * other.group0().xyx().with_w(other[e425]))
                 - (self.group0().yy().with_zw(self[e12345], other[e415]) * other.group1().with_w(self[e1]))
                 - (self.group8().zx().with_zw(self[e5], self[e3]) * other.group0().yzz().with_w(other[e435])),
             // e41, e42, e43
             (other.group0().zxy() * self.group7().yzx())
-                - (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group0().xyx())
+                - (other.group0().xyx() * Simd32x2::from(self[e4]).with_z(self[e431]))
                 - (other.group0().yzz() * self.group7().zx().with_z(self[e4])),
             // e23, e31, e12
             (other.group0().zxy() * self.group6().yzx()) + (other.group1().zxy() * self.group7().yzx())
                 - (Simd32x3::from(self[e12345]) * other.group0())
-                - (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group1().xyx())
                 - (other.group0().yzx() * self.group6().zxy())
+                - (other.group1().xyx() * Simd32x2::from(self[e4]).with_z(self[e431]))
                 - (other.group1().yzz() * self.group7().zx().with_z(self[e4])),
             // e415, e425, e435, e321
             Simd32x4::from([other[e315] * self[e43], other[e125] * self[e41], other[e125] * self[e1234], other[e125] * self[e43] * -1.0])
-                + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4125]]) * other.group1().xyx().with_w(other[e435]))
+                + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4125]) * other.group1().xyx().with_w(other[e435]))
                 + (self.group0().xx().with_zw(self[scalar], other[e415]) * other.group0().with_w(self[e4235]))
                 + (other.group0().yzx() * self.group5().zxy()).with_w(other[e425] * self[e4315])
                 - (other.group0().zxy() * self.group5().yzx()).with_w(other[e235] * self[e41])
                 - (other.group1().zxy() * self.group4().yzx()).with_w(other[e315] * self[e42]),
             // e423, e431, e412
-            (Simd32x3::from([self[e1234], self[e1234], self[e42]]) * other.group0().xyx()) + (other.group0().yzz() * self.group4().zx().with_z(self[e1234]))
+            (other.group0().xyx() * Simd32x2::from(self[e1234]).with_z(self[e42])) + (other.group0().yzz() * self.group4().zx().with_z(self[e1234]))
                 - (other.group0().zxy() * self.group4().yzx()),
             // e235, e315, e125
             (Simd32x3::from(self[scalar]) * other.group1())
                 + (Simd32x3::from([self[e35], self[e15], self[e3215]]) * other.group0().yzz())
-                + (Simd32x3::from([self[e45], self[e45], self[e31]]) * other.group1().xyx())
                 + (Simd32x3::from([self[e4125], self[e4235], self[e45]]) * other.group1().yzz())
                 + (Simd32x3::from([self[e3215], self[e3215], self[e25]]) * other.group0().xyx())
+                + (other.group1().xyx() * Simd32x2::from(self[e45]).with_z(self[e31]))
                 + (other.group1().yzx() * self.group5().zx().with_z(self[e4315]))
                 - (other.group0().zxy() * self.group3().yzx())
                 - (other.group1().zxy() * self.group5().yzx())
@@ -20780,12 +20600,12 @@ impl Sandwich<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      185      266        0
+    //      f32      185      275        0
     //    simd2       20       20        0
-    //    simd3      148      206        0
-    //    simd4      138       94        0
+    //    simd3      148      215        0
+    //    simd4      138       85        0
     // Totals...
-    // yes simd      491      586        0
+    // yes simd      491      595        0
     //  no simd     1221     1300        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
@@ -20828,8 +20648,8 @@ impl Sandwich<Motor> for MultiVector {
             ]) + (other.group1().xxxw() * self.group6().wz().with_zw(self[e2], self[e4]))
                 + (self.group8().yzx() * other.group0().zxy()).with_w(other[e12345] * self[e321])
                 - (Simd32x4::from([self[e2], self[e415], self[e1], self[e3]]) * other.group1().zzy().with_w(other[e435]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().xyzx())
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e2]]) * other.group1().yxx().with_w(other[e425]))
+                - (other.group0().xyzx() * Simd32x3::from(self[e5]).with_w(self[e1]))
                 - (other.group1().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
                 - (self.group8().xxy() * other.group0().wzx()).with_w(other[e315] * self[e431])
                 - (self.group8().zyz() * other.group0().yww()).with_w(other[e125] * self[e412]),
@@ -20894,12 +20714,12 @@ impl Sandwich<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      388        0
+    //      f32      280      406        0
     //    simd2       32       32        0
-    //    simd3      248      328        0
-    //    simd4      224      158        0
+    //    simd3      248      346        0
+    //    simd4      224      140        0
     // Totals...
-    // yes simd      784      906        0
+    // yes simd      784      924        0
     //  no simd     1984     2068        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -20962,19 +20782,18 @@ impl Sandwich<MultiVector> for MultiVector {
                 -(other[e4] * self[e45]) - (other[e321] * self[e1234]) - (other[e4315] * self[e431]) - (other[e4125] * self[e412]),
             ]) + (Simd32x4::from(other[scalar]) * self.group1())
                 + (Simd32x4::from([other[e2], other[e321], other[e321], self[e4]]) * self.group5().zyz().with_w(other[e45]))
-                + (Simd32x4::from([other[e5], other[e5], other[e5], other[e2]]) * self.group4().with_w(self[e42]))
                 + (Simd32x4::from([other[e321], other[e3], other[e1], other[e3]]) * self.group5().xxy().with_w(self[e43]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], other[e1234]]) * self.group7().xxy().with_w(self[e321]))
-                + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4125]]) * other.group8().xyx().with_w(other[e412]))
+                + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4125]) * other.group8().xyx().with_w(other[e412]))
                 + (self.group0().xx().with_zw(self[scalar], other[e12345]) * other.group1().xyz().with_w(self[e1234]))
                 + (self.group4().zx().with_zw(self[e1234], other[e1]) * other.group8().yzz().with_w(self[e41]))
                 + (self.group1().zx().with_zw(self[e321], self[e4235]) * other.group5().yzz().with_w(other[e423]))
                 + (self.group6().ww().with_zw(self[e2], other[e1234]) * other.group5().xyx().with_w(self[e12345]))
+                + (Simd32x3::from(other[e5]) * self.group4()).with_w(other[e2] * self[e42])
                 + (other.group4().zxy() * self.group8().yzx()).with_w(other[e4] * self[scalar])
                 + (other.group7().zxy() * self.group3().yzx()).with_w(other[e431] * self[e4315])
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e31]]) * self.group8().with_w(other[e431]))
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e2]]) * other.group4().xyx().with_w(other[e42]))
                 - (self.group1().yzxz() * other.group5().zxy().with_w(other[e43]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e2]) * other.group4().xyx().with_w(other[e42]))
                 - (other.group0().yy().with_zw(other[e12345], other[e41]) * self.group9().xyz().with_w(self[e1]))
                 - (self.group0().yy().with_zw(self[e12345], other[e41]) * other.group9().xyz().with_w(self[e415]))
                 - (self.group8().zx().with_zw(self[e5], self[e425]) * other.group4().yzz().with_w(other[e42]))
@@ -20982,6 +20801,7 @@ impl Sandwich<MultiVector> for MultiVector {
                 - (self.group3().ww().with_zw(self[e4315], other[e425]) * other.group6().xyx().with_w(self[e42]))
                 - (self.group9().zx().with_zw(self[e45], other[e435]) * other.group6().yzz().with_w(self[e43]))
                 - (self.group9().ww().with_zw(self[e25], self[e435]) * other.group7().xyx().with_w(other[e43]))
+                - (Simd32x3::from(other[e1234]) * self.group8()).with_w(other[e431] * self[e31])
                 - (other.group8().zxy() * self.group4().yzx()).with_w(other[e31] * self[e431])
                 - (self.group5().yzx() * other.group1().zxy()).with_w(other[e12] * self[e412])
                 - (self.group7().yzx() * other.group3().zxy()).with_w(other[e423] * self[e23])
@@ -21040,17 +20860,17 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (self.group8().yzx() * other.group1().zxy()).with_w(other[e35] * self[e43])
                 + (self.group8().yzx() * other.group6().zxy()).with_w(other[e5] * self[e4])
                 - (Simd32x4::from([other[e2], other[e435], other[e415], self[e431]]) * self.group8().zxy().with_w(other[e315]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], self[e5]]) * self.group6().xyz().with_w(other[e4]))
                 - (Simd32x4::from([other[e321], other[e3], other[e1], self[e423]]) * self.group8().xxy().with_w(other[e235]))
                 - (Simd32x4::from([self[e2], self[e415], self[e1], self[e4315]]) * other.group8().zzy().with_w(other[e31]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], other[e4235]]) * other.group1().xyz().with_w(self[e23]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e415]]) * other.group6().xyz().with_w(other[e1]))
                 - (Simd32x4::from([self[e435], self[e3], self[e425], self[e4235]]) * other.group8().yxx().with_w(other[e23]))
                 - (self.group3().yzxz() * other.group5().zxy().with_w(other[e43]))
                 - (other.group0().yy().with_zw(other[e12345], other[e41]) * self.group8().with_w(self[e15]))
                 - (self.group0().yy().with_zw(self[e12345], other[e42]) * other.group8().with_w(self[e25]))
                 - (self.group3().zx().with_zw(self[e3215], self[e435]) * other.group9().yzz().with_w(other[e3]))
                 - (self.group9().ww().with_zw(self[e25], self[e425]) * other.group9().xyx().with_w(other[e2]))
+                - (Simd32x3::from(other[e5]) * self.group6().xyz()).with_w(other[e4] * self[e5])
+                - (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(other[e4235] * self[e23])
+                - (Simd32x3::from(self[e5]) * other.group6().xyz()).with_w(other[e1] * self[e415])
                 - (self.group5().yzx() * other.group3().zxy()).with_w(other[e12] * self[e4125])
                 - (self.group8().zyz() * other.group6().yww()).with_w(other[e125] * self[e412])
                 - (other.group3().zxy() * self.group9().yzx()).with_w(other[e4315] * self[e31])
@@ -21068,7 +20888,7 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (Simd32x3::from([other[e4315], other[e45], other[e45]]) * self.group4().zyz())
                 + (Simd32x3::from([self[e12], self[e4125], self[e31]]) * other.group4().yxx())
                 + (Simd32x3::from([self[e4315], self[e23], self[e4235]]) * other.group4().zzy())
-                + (Simd32x3::from([self[e1234], self[e1234], self[e42]]) * other.group5().xyx())
+                + (other.group5().xyx() * Simd32x2::from(self[e1234]).with_z(self[e42]))
                 + (other.group5().yzz() * self.group4().zx().with_z(self[e1234]))
                 + (other.group7().zxy() * self.group1().yzx())
                 + (other.group7().zxy() * self.group6().yzx())
@@ -21111,12 +20931,12 @@ impl Sandwich<MultiVector> for MultiVector {
                 - (Simd32x3::from(other[e321]) * self.group1().xyz())
                 - (Simd32x3::from(self[e12345]) * other.group6().xyz())
                 - (Simd32x3::from([self[e3], self[e1], self[e321]]) * other.group1().yzz())
-                - (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group8().xyx())
-                - (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group7().xyx())
                 - (Simd32x3::from([self[e321], self[e321], self[e2]]) * other.group1().xyx())
                 - (other.group4().zxy() * self.group3().yzx())
                 - (other.group5().zxy() * self.group5().yzx())
+                - (other.group7().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 - (other.group7().yzz() * self.group8().zx().with_z(self[e5]))
+                - (other.group8().xyx() * Simd32x2::from(self[e4]).with_z(self[e431]))
                 - (other.group8().yzz() * self.group7().zx().with_z(self[e4]))
                 - (self.group4().yzx() * other.group3().zxy())
                 - (other.group6().yzx() * self.group6().zxy())
@@ -21128,12 +20948,10 @@ impl Sandwich<MultiVector> for MultiVector {
                 (other[e2] * self[e4235]) + (other[e4] * self[e35]) + (other[e35] * self[e4]) + (other[e4315] * self[e1]),
                 -(other[e4] * self[e3215]) - (other[e25] * self[e431]) - (other[e35] * self[e412]) - (other[e1234] * self[e5]),
             ]) + (Simd32x4::from(other[scalar]) * self.group6())
-                + (Simd32x4::from([other[e5], other[e5], other[e5], self[e415]]) * self.group4().with_w(other[e4235]))
                 + (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e4]]) * self.group7().zyz().with_w(other[e3215]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], self[e435]]) * self.group7().xxy().with_w(other[e4125]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e1234]]) * self.group8().with_w(other[e5]))
-                + (Simd32x4::from([self[e5], self[e5], self[e315], self[e125]]) * other.group4().xyx().with_w(other[e43]))
-                + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4315]]) * other.group8().xyx().with_w(other[e425]))
+                + (Simd32x2::from(self[e5]).with_zw(self[e315], self[e125]) * other.group4().xyx().with_w(other[e43]))
+                + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4315]) * other.group8().xyx().with_w(other[e425]))
                 + (other.group0().yy().with_zw(other[e12345], self[scalar]) * self.group5().with_w(other[e321]))
                 + (self.group0().xx().with_zw(self[scalar], other[e41]) * other.group6().xyz().with_w(self[e235]))
                 + (self.group0().yy().with_zw(self[e12345], other[e42]) * other.group5().with_w(self[e315]))
@@ -21141,6 +20959,8 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (self.group8().zx().with_zw(self[e5], self[e15]) * other.group4().yzz().with_w(other[e423]))
                 + (self.group3().zx().with_zw(self[e3215], self[e4235]) * other.group7().yzz().with_w(other[e415]))
                 + (self.group9().ww().with_zw(self[e25], self[e35]) * other.group7().xyx().with_w(other[e412]))
+                + (Simd32x3::from(other[e5]) * self.group4()).with_w(other[e4235] * self[e415])
+                + (Simd32x3::from(other[e1234]) * self.group8()).with_w(other[e5] * self[e1234])
                 + (other.group5().yzx() * self.group6().zxy()).with_w(other[e431] * self[e25])
                 + (self.group5().zxy() * other.group6().yzx()).with_w(other[e4315] * self[e425])
                 - (self.group1().zx().with_zw(self[e321], other[e15]) * other.group9().yzz().with_w(self[e423]))
@@ -21170,11 +20990,11 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (Simd32x3::from([other[e425], other[e1], other[e415]]) * self.group4().zzy())
                 + (Simd32x3::from([other[e4315], other[e45], other[e45]]) * self.group7().zyz())
                 + (Simd32x3::from([self[e3], self[e1], self[e425]]) * other.group4().yzx())
-                + (Simd32x3::from([self[e4], self[e4], self[e431]]) * other.group5().xyx())
                 + (Simd32x3::from([self[e12], self[e4125], self[e31]]) * other.group7().yxx())
                 + (Simd32x3::from([self[e321], self[e321], self[e2]]) * other.group4().xyx())
                 + (Simd32x3::from([self[e4315], self[e23], self[e4235]]) * other.group7().zzy())
                 + (other.group4().yzz() * self.group6().zxw())
+                + (other.group5().xyx() * Simd32x2::from(self[e4]).with_z(self[e431]))
                 + (other.group5().yzz() * self.group7().zx().with_z(self[e4]))
                 - (Simd32x3::from(other[e4]) * self.group9().xyz())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
@@ -21198,15 +21018,15 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (Simd32x3::from(self[scalar]) * other.group8())
                 + (Simd32x3::from(self[e12345]) * other.group3().xyz())
                 + (Simd32x3::from([self[e2], self[e415], self[e1]]) * other.group3().zzy())
-                + (Simd32x3::from([self[e5], self[e5], self[e315]]) * other.group5().xyx())
                 + (Simd32x3::from([self[e35], self[e15], self[e3215]]) * other.group1().yzz())
                 + (Simd32x3::from([self[e35], self[e15], self[e3215]]) * other.group6().yzz())
-                + (Simd32x3::from([self[e45], self[e45], self[e31]]) * other.group8().xyx())
                 + (Simd32x3::from([self[e435], self[e3], self[e425]]) * other.group3().yxx())
                 + (Simd32x3::from([self[e4125], self[e4235], self[e45]]) * other.group8().yzz())
                 + (Simd32x3::from([self[e3215], self[e3215], self[e25]]) * other.group1().xyx())
                 + (Simd32x3::from([self[e3215], self[e3215], self[e25]]) * other.group6().xyx())
+                + (other.group5().xyx() * Simd32x2::from(self[e5]).with_z(self[e315]))
                 + (other.group5().yzz() * self.group8().zx().with_z(self[e5]))
+                + (other.group8().xyx() * Simd32x2::from(self[e45]).with_z(self[e31]))
                 + (other.group8().yzx() * self.group5().zx().with_z(self[e4315]))
                 + (self.group8().yzx() * other.group9().zxy())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
@@ -21228,7 +21048,6 @@ impl Sandwich<MultiVector> for MultiVector {
                 (other[e415] * self[e2]) + (other[e435] * self[e321]) + (other[e321] * self[e435]) + (other[e1234] * self[e35]),
                 -(other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]) - (other[e321] * self[e5]),
             ]) + (Simd32x4::from(other[scalar]) * self.group9())
-                + (Simd32x4::from([other[e5], other[e5], other[e5], self[e45]]) * self.group7().with_w(other[e3215]))
                 + (Simd32x4::from([other[e45], other[e4125], other[e4235], self[e25]]) * self.group5().xxy().with_w(other[e4315]))
                 + (Simd32x4::from([other[e4315], other[e45], other[e45], self[e35]]) * self.group5().zyz().with_w(other[e4125]))
                 + (other.group0().yy().with_zw(other[e12345], self[scalar]) * self.group1().xyz().with_w(other[e3215]))
@@ -21240,14 +21059,15 @@ impl Sandwich<MultiVector> for MultiVector {
                 + (self.group3().ww().with_zw(self[e4315], other[e415]) * other.group5().xyx().with_w(self[e235]))
                 + (self.group9().zx().with_zw(self[e45], other[e2]) * other.group5().yzz().with_w(self[e315]))
                 + (self.group9().ww().with_zw(self[e25], self[e435]) * other.group4().xyx().with_w(other[e125]))
+                + (Simd32x3::from(other[e5]) * self.group7()).with_w(other[e3215] * self[e45])
                 + (other.group7().zxy() * self.group8().yzx()).with_w(other[e425] * self[e315])
                 + (self.group4().yzx() * other.group3().zxy()).with_w(other[e4235] * self[e15])
                 + (other.group1().yzx() * self.group6().zxy()).with_w(other[e5] * self[e321])
                 - (Simd32x4::from([other[e25], other[e3215], other[e3215], self[e2]]) * self.group4().zyz().with_w(other[e315]))
                 - (Simd32x4::from([other[e3215], other[e35], other[e15], self[e1]]) * self.group4().xxy().with_w(other[e235]))
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e15]]) * other.group7().xyx().with_w(other[e23]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e35]]) * other.group3().xyz().with_w(self[e12]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e15]) * other.group7().xyx().with_w(other[e23]))
                 - (self.group8().zx().with_zw(self[e5], self[e25]) * other.group7().yzz().with_w(other[e31]))
+                - (Simd32x3::from(self[e1234]) * other.group3().xyz()).with_w(other[e35] * self[e12])
                 - (self.group8() * other.group1().www()).with_w(other[e15] * self[e23])
                 - (other.group4().zxy() * self.group3().yzx()).with_w(other[e12345] * self[e5])
                 - (other.group5().zxy() * self.group9().yzx()).with_w(other[e5] * self[e12345])
@@ -21296,12 +21116,12 @@ impl Sandwich<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      169      244        0
+    //      f32      169      253        0
     //    simd2       17       17        0
-    //    simd3      135      181        0
-    //    simd4      120       88        0
+    //    simd3      135      190        0
+    //    simd4      120       79        0
     // Totals...
-    // yes simd      441      530        0
+    // yes simd      441      539        0
     //  no simd     1088     1173        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
@@ -21367,12 +21187,12 @@ impl Sandwich<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      154      237        0
+    //      f32      154      249        0
     //    simd2       19       19        0
-    //    simd3      140      188        0
-    //    simd4      127       93        0
+    //    simd3      140      200        0
+    //    simd4      127       81        0
     // Totals...
-    // yes simd      440      537        0
+    // yes simd      440      549        0
     //  no simd     1120     1211        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -21385,17 +21205,17 @@ impl Sandwich<RoundPoint> for MultiVector {
             // e1, e2, e3, e4
             Simd32x4::from([self[e15] * other[e4] * -1.0, self[e25] * other[e4] * -1.0, self[e35] * other[e4] * -1.0, self[e43] * other[e3]])
                 + (Simd32x4::from(self[scalar]) * other.group0())
-                + (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group4().with_w(self[e41]))
                 + (other.group0().yzxy() * self.group5().zxy().with_w(self[e42]))
+                + (Simd32x3::from(other[e5]) * self.group4()).with_w(self[e41] * other[e1])
                 - (other.group0().zxyw() * self.group5().yzx().with_w(self[e45])),
             // e5
             (self[scalar] * other[e5]) + (self[e45] * other[e5]) - (self[e15] * other[e1]) - (self[e25] * other[e2]) - (self[e35] * other[e3]),
             // e15, e25, e35, e45
             Simd32x4::from([self[e1] * other[e5], self[e2] * other[e5], self[e3] * other[e5], self[e5] * other[e4] * -1.0])
                 + (self.group8().yzx() * other.group0().zxy()).with_w(self[e4] * other[e5])
-                - (Simd32x4::from([self[e5], self[e5], self[e5], other[e3]]) * other.group0().xyz().with_w(self[e435]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], other[e2]]) * self.group6().xyzy())
-                - (other.group0().yzxx() * self.group8().zxy().with_w(self[e415])),
+                - (self.group6().xyzy() * Simd32x3::from(other[e5]).with_w(other[e2]))
+                - (other.group0().yzxx() * self.group8().zxy().with_w(self[e415]))
+                - (Simd32x3::from(self[e5]) * other.group0().xyz()).with_w(self[e435] * other[e3]),
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group0().xyz()) + (self.group7().zxy() * other.group0().yzx())
                 - (Simd32x3::from(other[e4]) * self.group1().xyz())
@@ -21429,9 +21249,9 @@ impl Sandwich<RoundPoint> for MultiVector {
                 - (self.group3().yzx() * other.group0().zxy()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e425] * other[e3] * -1.0, self[e435] * other[e1] * -1.0, self[e415] * other[e2] * -1.0, self[e321] * other[e5]])
-                + (Simd32x4::from([other[e5], other[e5], other[e5], other[e2]]) * self.group7().with_w(self[e315]))
                 + (other.group0().xyzx() * self.group0().yy().with_zw(self[e12345], self[e235]))
                 + (other.group0().yzxz() * self.group6().zxy().with_w(self[e125]))
+                + (Simd32x3::from(other[e5]) * self.group7()).with_w(self[e315] * other[e2])
                 - (self.group8() * other.group0().www()).with_w(self[e12345] * other[e5]),
             // e1234
             -(self[e12345] * other[e4]) - (self[e321] * other[e4]) - (self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]),
@@ -21443,12 +21263,12 @@ impl Sandwich<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      196        0
+    //      f32      140      205        0
     //    simd2       16       17        0
-    //    simd3      124      170        0
-    //    simd4      112       84        0
+    //    simd3      124      179        0
+    //    simd4      112       75        0
     // Totals...
-    // yes simd      392      467        0
+    // yes simd      392      476        0
     //  no simd      992     1076        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -21483,12 +21303,12 @@ impl Sandwich<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      160      236        0
+    //      f32      160      247        0
     //    simd2       18       18        0
-    //    simd3      140      189        0
-    //    simd4      126       92        0
+    //    simd3      140      200        0
+    //    simd4      126       81        0
     // Totals...
-    // yes simd      444      535        0
+    // yes simd      444      546        0
     //  no simd     1120     1207        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -21501,9 +21321,9 @@ impl Sandwich<Sphere> for MultiVector {
                 + (Simd32x2::from([self[e1234], self[e1]]) * other.group0().wx()),
             // e1, e2, e3, e4
             (self.group6().yzxw() * other.group0().zxy().with_w(other[e1234])) + (self.group7() * other.group0().www()).with_w(self[e12345] * other[e1234])
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group8().with_w(self[e431]))
                 - (other.group0().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
-                - (other.group0().yzxz() * self.group6().zxy().with_w(self[e412])),
+                - (other.group0().yzxz() * self.group6().zxy().with_w(self[e412]))
+                - (Simd32x3::from(other[e1234]) * self.group8()).with_w(self[e431] * other[e4315]),
             // e5
             (self[e12345] * other[e3215]) + (self[e235] * other[e4235]) + (self[e315] * other[e4315]) + (self[e125] * other[e4125]) - (self[e321] * other[e3215]),
             // e15, e25, e35, e45
@@ -21532,8 +21352,8 @@ impl Sandwich<Sphere> for MultiVector {
                 self[e321] * other[e4125] * -1.0,
                 self[e435] * other[e4125],
             ]) + (Simd32x4::from(other[e3215]) * self.group7().with_w(self[e4]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4235]]) * self.group8().with_w(self[e415]))
                 + (other.group0().zxyy() * self.group1().yzx().with_w(self[e425]))
+                + (Simd32x3::from(other[e1234]) * self.group8()).with_w(self[e415] * other[e4235])
                 - (self.group1().zxy() * other.group0().yzx()).with_w(self[e5] * other[e1234]),
             // e423, e431, e412
             (Simd32x3::from(self[e4]) * other.group0().xyz())
@@ -21553,7 +21373,7 @@ impl Sandwich<Sphere> for MultiVector {
                 -(self[e43] * other[e3215]) - (self[e23] * other[e4315]),
                 (self[e35] * other[e4125]) + (self[e45] * other[e3215]),
             ]) + (Simd32x4::from(self[scalar]) * other.group0())
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], other[e4315]]) * self.group3().xyzy())
+                + (self.group3().xyzy() * Simd32x3::from(other[e1234]).with_w(other[e4315]))
                 + (other.group0().yzxx() * self.group5().zxy().with_w(self[e15])),
             // e1234
             (self[scalar] * other[e1234]) - (self[e45] * other[e1234]) - (self[e41] * other[e4235]) - (self[e42] * other[e4315]) - (self[e43] * other[e4125]),
@@ -21565,12 +21385,12 @@ impl Sandwich<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      188      268        0
+    //      f32      188      278        0
     //    simd2       24       24        0
-    //    simd3      184      248        0
-    //    simd4      171      124        0
+    //    simd3      184      258        0
+    //    simd4      171      114        0
     // Totals...
-    // yes simd      567      664        0
+    // yes simd      567      674        0
     //  no simd     1472     1556        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -21640,7 +21460,6 @@ impl Sandwich<VersorEven> for MultiVector {
                 + (self.group1().xxy() * other.group2().wzx()).with_w(self[e315] * other[e431])
                 + (self.group1().zyz() * other.group2().yww()).with_w(self[e125] * other[e412])
                 - (Simd32x4::from(self[e5]) * other.group3())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], other[e3]]) * other.group1().xyz().with_w(self[e435]))
                 - (Simd32x4::from([other[e12345], other[e435], other[e415], other[e315]]) * self.group8().xxy().with_w(self[e431]))
                 - (Simd32x4::from([other[e425], other[e12345], other[e12345], other[e415]]) * self.group8().zyz().with_w(self[e1]))
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e125]]) * self.group8().xxy().with_w(self[e412]))
@@ -21648,7 +21467,8 @@ impl Sandwich<VersorEven> for MultiVector {
                 - (self.group1().yzxz() * other.group2().zxy().with_w(other[e435]))
                 - (self.group6().xxyx() * other.group2().wzx().with_w(other[e1]))
                 - (self.group6().zyzy() * other.group2().yww().with_w(other[e2]))
-                - (other.group2().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423])),
+                - (other.group2().xyzx() * self.group0().yy().with_zw(self[e12345], self[e423]))
+                - (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(self[e435] * other[e3]),
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group3().xyz())
                 + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
@@ -21779,12 +21599,12 @@ impl Sandwich<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      301        0
+    //      f32      216      312        0
     //    simd2       28       28        0
-    //    simd3      184      241        0
-    //    simd4      162      119        0
+    //    simd3      184      252        0
+    //    simd4      162      108        0
     // Totals...
-    // yes simd      590      689        0
+    // yes simd      590      700        0
     //  no simd     1472     1556        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -21815,13 +21635,13 @@ impl Sandwich<VersorOdd> for MultiVector {
                 + (Simd32x4::from([other[e25], other[e3215], other[e3215], other[scalar]]) * self.group7().zyz().with_w(self[e4]))
                 + (Simd32x4::from([other[e3215], other[e35], other[e15], other[e1234]]) * self.group7().xxy().with_w(self[e12345]))
                 + (self.group8().yzx() * other.group0().zxy()).with_w(self[e4] * other[e45])
-                - (Simd32x4::from([self[e5], self[e5], self[e5], other[e42]]) * other.group0().xyz().with_w(self[e2]))
                 - (Simd32x4::from([other[e42], other[e1234], other[e1234], other[e4315]]) * self.group8().zyz().with_w(self[e431]))
                 - (Simd32x4::from([other[e45], other[e4125], other[e4235], other[e4125]]) * self.group6().xxy().with_w(self[e412]))
                 - (Simd32x4::from([other[e1234], other[e43], other[e41], other[e31]]) * self.group8().xxy().with_w(self[e431]))
                 - (Simd32x4::from([other[e4315], other[e45], other[e45], other[e41]]) * self.group6().zyz().with_w(self[e1]))
                 - (other.group1().zxyz() * self.group1().yzx().with_w(self[e412]))
                 - (self.group0().yy().with_zw(self[e12345], self[e423]) * other.group3().xyz().with_w(other[e23]))
+                - (Simd32x3::from(self[e5]) * other.group0().xyz()).with_w(self[e2] * other[e42])
                 - (self.group7().yzx() * other.group2().zxy()).with_w(self[e423] * other[e4235]),
             // e5
             (self[e12345] * other[e3215])
@@ -21958,11 +21778,11 @@ impl Sandwich<VersorOdd> for MultiVector {
                 + (Simd32x4::from([other[e1234], other[e43], other[e41], other[e3215]]) * self.group3().xxyw())
                 + (Simd32x4::from([other[e4315], other[e45], other[e45], other[e4125]]) * self.group5().zyz().with_w(self[e35]))
                 + (self.group4().yzx() * other.group2().zxy()).with_w(self[e15] * other[e4235])
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e12]]) * other.group2().xyz().with_w(self[e35]))
                 - (Simd32x4::from([other[e25], other[e3215], other[e3215], other[e25]]) * self.group4().zyz().with_w(self[e31]))
                 - (Simd32x4::from([other[e3215], other[e35], other[e15], other[e15]]) * self.group4().xxy().with_w(self[e23]))
                 - (self.group3().yzxx() * other.group0().zxy().with_w(other[e23]))
                 - (other.group1().zxyy() * self.group9().yzx().with_w(self[e25]))
+                - (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(self[e35] * other[e12])
                 - (self.group5().yzx() * other.group3().zxy()).with_w(self[e12] * other[e35]),
             // e1234
             (self[scalar] * other[e1234])
@@ -21985,10 +21805,10 @@ impl Sandwich<VersorOdd> for MultiVector {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Plane {
-    type Output = sandwich_partial<Plane>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Plane {
+    type Output = SandwichInfixPartial<Plane>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Plane {
@@ -22666,7 +22486,7 @@ impl Sandwich<RoundPoint> for Plane {
             // e415, e425, e435, e321
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(self[e3215] * other[e4] * -1.0),
             // e235, e315, e125, e12345
-            (Simd32x4::from([other[e5], other[e5], other[e5], other[e1]]) * self.group0().xyzx())
+            (self.group0().xyzx() * Simd32x3::from(other[e5]).with_w(other[e1]))
                 + (self.group0().wwwy() * other.group0().xyzy())
                 + Simd32x3::from(0.0).with_w((self[e4125] * other[e3]) + (self[e3215] * other[e4])),
         )
@@ -22805,21 +22625,21 @@ impl Sandwich<VersorOdd> for Plane {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for RoundPoint {
-    type Output = sandwich_partial<RoundPoint>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for RoundPoint {
+    type Output = SandwichInfixPartial<RoundPoint>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       42        0
-    //    simd3        2        5        0
-    //    simd4       21       20        0
+    //      f32       12       44        0
+    //    simd3        2        7        0
+    //    simd4       21       18        0
     // Totals...
-    // yes simd       35       67        0
+    // yes simd       35       69        0
     //  no simd      102      137        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -22834,7 +22654,7 @@ impl Sandwich<AntiCircleRotor> for RoundPoint {
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
             ]) - (other.group1().wwwx() * self.group0().xyzx()),
             // e235, e315, e125, e4
-            (Simd32x4::from([self[e5], self[e5], self[e5], self[e4]]) * other.group1())
+            (other.group1() * Simd32x3::from(self[e5]).with_w(self[e4]))
                 + (other.group2().zxyw() * self.group0().yzxw())
                 + Simd32x3::from(0.0).with_w(-(other[e42] * self[e2]) - (other[e43] * self[e3]))
                 - (self.group0().zxyx() * other.group2().yzx().with_w(other[e41])),
@@ -22852,11 +22672,11 @@ impl Sandwich<AntiDipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       64        0
-    //    simd3        0        3        0
-    //    simd4       24       22        0
+    //      f32       27       66        0
+    //    simd3        0        5        0
+    //    simd4       24       20        0
     // Totals...
-    // yes simd       51       89        0
+    // yes simd       51       91        0
     //  no simd      123      161        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -22869,9 +22689,9 @@ impl Sandwich<AntiDipoleInversion> for RoundPoint {
                 - (other.group0().yzx() * self.group0().zxy()).with_w(other[e4] * self[e5]),
             // e23, e31, e12, e45
             (other.group3().zxyw() * self.group0().yzxw())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().with_w(other[e415]))
                 - (other.group1().wwwy() * self.group0().xyzy())
                 - (self.group0().wwwz() * other.group2().xyz().with_w(other[e435]))
+                - (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e415] * self[e1])
                 - (other.group3().yzx() * self.group0().zxy()).with_w(other[e4] * self[e5]),
             // e15, e25, e35, e1234
             Simd32x4::from([
@@ -22897,11 +22717,11 @@ impl Sandwich<AntiDualNum> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       27        0
-    //    simd3        0        3        0
-    //    simd4       15       16        0
+    //      f32        4       30        0
+    //    simd3        0        6        0
+    //    simd4       15       13        0
     // Totals...
-    // yes simd       19       46        0
+    // yes simd       19       49        0
     //  no simd       64      100        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
@@ -22922,12 +22742,12 @@ impl Sandwich<AntiFlatPoint> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       44        0
-    //    simd3        2        5        0
-    //    simd4       10       10        0
+    //      f32       22       45        0
+    //    simd3        2        7        0
+    //    simd4       10        8        0
     // Totals...
-    // yes simd       34       59        0
-    //  no simd       68       99        0
+    // yes simd       34       60        0
+    //  no simd       68       98        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -22938,11 +22758,7 @@ impl Sandwich<AntiFlatPoint> for RoundPoint {
             // e15, e25, e35, e1234
             ((other.group0().yzx() * self.group0().zxy()) - (other.group0().zxy() * self.group0().yzx())).with_w(other[e321] * self[e4]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w(-(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * other.group0().xyz()).with_w(-(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -22951,21 +22767,17 @@ impl Sandwich<AntiFlector> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       46        0
-    //    simd3        6        9        0
-    //    simd4       12       13        0
+    //      f32       22       47        0
+    //    simd3        6       12        0
+    //    simd4       12       10        0
     // Totals...
-    // yes simd       40       68        0
-    //  no simd       88      125        0
+    // yes simd       40       69        0
+    //  no simd       88      123        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e5] * self[e4])),
+            (Simd32x3::from(self[e4]) * other.group1().xyz()).with_w((other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e5] * self[e4])),
             // e23, e31, e12, e45
             ((other.group1().zxy() * self.group0().yzx())
                 - (Simd32x3::from(other[e321]) * self.group0().xyz())
@@ -22978,11 +22790,7 @@ impl Sandwich<AntiFlector> for RoundPoint {
                 - (other.group0().zxy() * self.group0().yzx()))
             .with_w(other[e321] * self[e4]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w(-(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * other.group0().xyz()).with_w(-(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -22991,19 +22799,19 @@ impl Sandwich<AntiLine> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       35        0
-    //    simd3        0        6        0
-    //    simd4       17       15        0
+    //      f32        9       37        0
+    //    simd3        0        9        0
+    //    simd4       17       12        0
     // Totals...
-    // yes simd       26       56        0
-    //  no simd       77      113        0
+    // yes simd       26       58        0
+    //  no simd       77      112        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(self[e4]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0]) * other.group1().with_w(-(other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * other.group1()).with_w(-(other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3])),
             // e235, e315, e125, e4
             (Simd32x3::from(self[e5]) * other.group0()).with_w(0.0) + (other.group1().zxy() * self.group0().yzx()).with_w(0.0)
                 - (other.group1().yzx() * self.group0().zxy()).with_w(0.0),
@@ -23019,23 +22827,19 @@ impl Sandwich<AntiMotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       38        0
-    //    simd3        3        7        0
-    //    simd4       17       17        0
+    //      f32       11       41        0
+    //    simd3        3       11        0
+    //    simd4       17       13        0
     // Totals...
-    // yes simd       31       62        0
-    //  no simd       88      127        0
+    // yes simd       31       65        0
+    //  no simd       88      126        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(self[e4]) * other.group0().xyz().with_w(other[e3215]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e3215] * self[e4]) - (other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * other.group1().xyz()).with_w((other[e3215] * self[e4]) - (other[e23] * self[e1]) - (other[e31] * self[e2]) - (other[e12] * self[e3])),
             // e235, e315, e125, e5
             Simd32x4::from([
                 -(other[e25] * self[e3]) - (other[e3215] * self[e1]),
@@ -23056,11 +22860,11 @@ impl Sandwich<AntiPlane> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       19        0
-    //    simd3        3        7        0
-    //    simd4       10        9        0
+    //      f32        6       20        0
+    //    simd3        3        8        0
+    //    simd4       10        8        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       36        0
     //  no simd       55       76        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -23071,7 +22875,7 @@ impl Sandwich<AntiPlane> for RoundPoint {
             ((other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy())).with_w(other[e5] * self[e4]),
             // e15, e25, e35, scalar
             (other.group0().wwwx() * self.group0().xyzx()) + Simd32x3::from(0.0).with_w((other[e2] * self[e2]) + (other[e3] * self[e3]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e4]]) * other.group0()),
+                - (other.group0() * Simd32x3::from(self[e5]).with_w(self[e4])),
         )
         .geometric_product(self.reverse());
     }
@@ -23080,17 +22884,17 @@ impl Sandwich<AntiScalar> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        1        3        0
-    //    simd4        3        5        0
+    //      f32        2        9        0
+    //    simd3        1        5        0
+    //    simd4        3        2        0
     // Totals...
-    // yes simd        6       14        0
-    //  no simd       17       35        0
+    // yes simd        6       16        0
+    //  no simd       17       32        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e12345], other[e12345], other[e12345], self[e5]]) * self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (Simd32x3::from(other[e12345]) * self.group0().xyz()).with_w(other[e12345] * self[e5] * -1.0),
             // e1234
             other[e12345] * self[e4] * -1.0,
         )
@@ -23101,11 +22905,11 @@ impl Sandwich<Circle> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       56        0
-    //    simd3        2        4        0
-    //    simd4       15       15        0
+    //      f32       28       59        0
+    //    simd3        2        7        0
+    //    simd4       15       12        0
     // Totals...
-    // yes simd       45       75        0
+    // yes simd       45       78        0
     //  no simd       94      128        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -23113,9 +22917,9 @@ impl Sandwich<Circle> for RoundPoint {
             // e41, e42, e43
             (other.group0().zxy() * self.group0().yzx()) - (Simd32x3::from(self[e4]) * other.group1().xyz()) - (other.group0().yzx() * self.group0().zxy()),
             // e23, e31, e12, e45
-            -(Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().with_w(other[e415]))
-                - (other.group1().wwwz() * self.group0().xyzz())
-                - (self.group0().wwwy() * other.group2().with_w(other[e425])),
+            -(other.group1().wwwz() * self.group0().xyzz())
+                - (self.group0().wwwy() * other.group2().with_w(other[e425]))
+                - (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e415] * self[e1]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 -(other[e415] * self[e5]) - (other[e125] * self[e2]),
@@ -23129,8 +22933,8 @@ impl Sandwich<Circle> for RoundPoint {
                 (other[e435] * self[e1]) + (other[e315] * self[e4]),
                 (other[e415] * self[e2]) + (other[e125] * self[e4]),
                 -(other[e321] * self[e5]) - (other[e125] * self[e3]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().with_w(other[e235]))
-                - (self.group0().yzxy() * other.group1().zxy().with_w(other[e315])),
+            ]) - (self.group0().yzxy() * other.group1().zxy().with_w(other[e315]))
+                - (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e235] * self[e1]),
         )
         .geometric_product(self.reverse());
     }
@@ -23139,11 +22943,11 @@ impl Sandwich<CircleRotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       60        0
-    //    simd3        2        4        0
-    //    simd4       16       16        0
+    //      f32       29       63        0
+    //    simd3        2        7        0
+    //    simd4       16       13        0
     // Totals...
-    // yes simd       47       80        0
+    // yes simd       47       83        0
     //  no simd       99      136        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -23151,9 +22955,9 @@ impl Sandwich<CircleRotor> for RoundPoint {
             // e41, e42, e43
             (other.group0().zxy() * self.group0().yzx()) - (Simd32x3::from(self[e4]) * other.group1().xyz()) - (other.group0().yzx() * self.group0().zxy()),
             // e23, e31, e12, e45
-            -(Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().with_w(other[e415]))
-                - (other.group1().wwwy() * self.group0().xyzy())
-                - (self.group0().wwwz() * other.group2().xyz().with_w(other[e435])),
+            -(other.group1().wwwy() * self.group0().xyzy())
+                - (self.group0().wwwz() * other.group2().xyz().with_w(other[e435]))
+                - (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e415] * self[e1]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 other[e125] * self[e2] * -1.0,
@@ -23161,7 +22965,7 @@ impl Sandwich<CircleRotor> for RoundPoint {
                 other[e315] * self[e1] * -1.0,
                 (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]),
             ]) + (self.group0().zxyx() * other.group2().yzx().with_w(other[e423]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e4]]) * other.group1().xyz().with_w(other[e12345])),
+                - (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(other[e12345] * self[e4]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e425] * self[e3]) + (other[e235] * self[e4]) + (other[e12345] * self[e1]),
@@ -23178,11 +22982,11 @@ impl Sandwich<Dipole> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       45        0
-    //    simd3        2        5        0
-    //    simd4       19       18        0
+    //      f32       12       47        0
+    //    simd3        2        7        0
+    //    simd4       19       16        0
     // Totals...
-    // yes simd       33       68        0
+    // yes simd       33       70        0
     //  no simd       94      132        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -23213,11 +23017,11 @@ impl Sandwich<DipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       54        0
-    //    simd3        0        5        0
-    //    simd4       28       24        0
+    //      f32       11       60        0
+    //    simd3        0       11        0
+    //    simd4       28       18        0
     // Totals...
-    // yes simd       39       83        0
+    // yes simd       39       89        0
     //  no simd      123      165        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -23234,7 +23038,7 @@ impl Sandwich<DipoleInversion> for RoundPoint {
                 (other[e25] * self[e4]) + (other[e4235] * self[e3]),
                 (other[e35] * self[e4]) + (other[e4315] * self[e1]),
                 -(other[e12] * self[e3]) - (other[e1234] * self[e5]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e5], self[e4]]) * other.group0().with_w(other[e3215]))
+            ]) + (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e3215] * self[e4])
                 - (other.group1().wwwx() * self.group0().xyzx())
                 - (self.group0().zxyy() * other.group3().yzx().with_w(other[e31])),
             // e235, e315, e125, e5
@@ -23243,13 +23047,13 @@ impl Sandwich<DipoleInversion> for RoundPoint {
                 -(other[e4315] * self[e5]) - (other[e3215] * self[e2]),
                 -(other[e4125] * self[e5]) - (other[e3215] * self[e3]),
                 other[e35] * self[e3],
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group1().xyz().with_w(other[e15]))
-                + (other.group2().zxyy() * self.group0().yzxy())
+            ]) + (other.group2().zxyy() * self.group0().yzxy())
+                + (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(other[e15] * self[e1])
                 - (other.group2().yzx() * self.group0().zxy()).with_w(other[e45] * self[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([other[e15] * self[e4], other[e25] * self[e4], other[e35] * self[e4], other[e43] * self[e3] * -1.0]) + (other.group1().yzxw() * self.group0().zxyw())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group0().with_w(other[e41]))
-                - (self.group0().yzxy() * other.group1().zxy().with_w(other[e42])),
+                - (self.group0().yzxy() * other.group1().zxy().with_w(other[e42]))
+                - (Simd32x3::from(self[e5]) * other.group0()).with_w(other[e41] * self[e1]),
         )
         .geometric_product(self.reverse());
     }
@@ -23258,11 +23062,11 @@ impl Sandwich<DualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       39        0
-    //    simd3        0        1        0
-    //    simd4       12       15        0
+    //      f32       16       40        0
+    //    simd3        0        2        0
+    //    simd4       12       14        0
     // Totals...
-    // yes simd       28       55        0
+    // yes simd       28       56        0
     //  no simd       64      102        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -23283,12 +23087,12 @@ impl Sandwich<FlatPoint> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       30        0
-    //    simd3        2        6        0
-    //    simd4       13       13        0
+    //      f32       10       32        0
+    //    simd3        2        9        0
+    //    simd4       13       10        0
     // Totals...
-    // yes simd       25       49        0
-    //  no simd       68      100        0
+    // yes simd       25       51        0
+    //  no simd       68       99        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -23299,11 +23103,7 @@ impl Sandwich<FlatPoint> for RoundPoint {
             // e235, e315, e125, e4
             ((other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy())).with_w(other[e45] * self[e4]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w((other[e15] * self[e1]) + (other[e25] * self[e2]) + (other[e35] * self[e3]) - (other[e45] * self[e5])),
+            (Simd32x3::from(self[e4]) * other.group0().xyz()).with_w((other[e15] * self[e1]) + (other[e25] * self[e2]) + (other[e35] * self[e3]) - (other[e45] * self[e5])),
         )
         .geometric_product(self.reverse());
     }
@@ -23312,21 +23112,17 @@ impl Sandwich<Flector> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       38        0
-    //    simd3        3        7        0
-    //    simd4       17       17        0
+    //      f32       11       41        0
+    //    simd3        3       11        0
+    //    simd4       17       13        0
     // Totals...
-    // yes simd       31       62        0
-    //  no simd       88      127        0
+    // yes simd       31       65        0
+    //  no simd       88      126        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e4235] * self[e1]) + (other[e4315] * self[e2]) + (other[e4125] * self[e3]) + (other[e3215] * self[e4])),
+            (Simd32x3::from(self[e4]) * other.group1().xyz()).with_w((other[e4235] * self[e1]) + (other[e4315] * self[e2]) + (other[e4125] * self[e3]) + (other[e3215] * self[e4])),
             // e415, e425, e435, e321
             ((Simd32x3::from(self[e4]) * other.group0().xyz()) + (other.group1().zxy() * self.group0().yzx())
                 - (Simd32x3::from(other[e45]) * self.group0().xyz())
@@ -23350,21 +23146,19 @@ impl Sandwich<Line> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       50        0
-    //    simd3        0        6        0
-    //    simd4       13       12        0
+    //      f32       25       51        0
+    //    simd3        0        9        0
+    //    simd4       13        9        0
     // Totals...
-    // yes simd       38       68        0
-    //  no simd       77      116        0
+    // yes simd       38       69        0
+    //  no simd       77      114        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[e4]) * other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other.group1().with_w(-(other[e415] * self[e1]) - (other[e425] * self[e2]) - (other[e435] * self[e3]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e4]) * other.group1() * Simd32x3::from(-1.0)).with_w(-(other[e415] * self[e1]) - (other[e425] * self[e2]) - (other[e435] * self[e3])),
             // e15, e25, e35, e1234
             (other.group1().yzx() * self.group0().zxy()).with_w(0.0)
                 - (Simd32x3::from(self[e5]) * other.group0()).with_w(0.0)
@@ -23384,24 +23178,20 @@ impl Sandwich<Motor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       54        0
-    //    simd3        3        5        0
-    //    simd4       13       16        0
+    //      f32       27       55        0
+    //    simd3        3        8        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       43       75        0
-    //  no simd       88      133        0
+    // yes simd       43       76        0
+    //  no simd       88      131        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(self[e4]) * other.group0().xyz().with_w(other[e5]) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e5] * self[e4]) - (other[e415] * self[e1]) - (other[e425] * self[e2]) - (other[e435] * self[e3]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e4]) * other.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((other[e5] * self[e4]) - (other[e415] * self[e1]) - (other[e425] * self[e2]) - (other[e435] * self[e3])),
             // e15, e25, e35, e1234
             ((Simd32x3::from(other[e5]) * self.group0().xyz()) + (other.group1().yzx() * self.group0().zxy())
                 - (Simd32x3::from(self[e5]) * other.group0().xyz())
@@ -23422,12 +23212,12 @@ impl Sandwich<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       89        0
+    //      f32       36       95        0
     //    simd2        6        6        0
-    //    simd3       32       44        0
-    //    simd4       28       24        0
+    //    simd3       32       50        0
+    //    simd4       28       18        0
     // Totals...
-    // yes simd      102      163        0
+    // yes simd      102      169        0
     //  no simd      256      329        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -23441,15 +23231,15 @@ impl Sandwich<MultiVector> for RoundPoint {
             Simd32x4::from([other[e15] * self[e4], other[e25] * self[e4], other[e35] * self[e4], other[e43] * self[e3] * -1.0])
                 + (Simd32x4::from(other[scalar]) * self.group0())
                 + (self.group0().zxyw() * other.group5().yzx().with_w(other[e45]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group4().with_w(other[e41]))
-                - (self.group0().yzxy() * other.group5().zxy().with_w(other[e42])),
+                - (self.group0().yzxy() * other.group5().zxy().with_w(other[e42]))
+                - (Simd32x3::from(self[e5]) * other.group4()).with_w(other[e41] * self[e1]),
             // e5
             (other[scalar] * self[e5]) + (other[e15] * self[e1]) + (other[e25] * self[e2]) + (other[e35] * self[e3]) - (other[e45] * self[e5]),
             // e15, e25, e35, e45
             Simd32x4::from([other[e5] * self[e1], other[e5] * self[e2], other[e5] * self[e3], other[e435] * self[e3] * -1.0])
                 + (other.group8().yzx() * self.group0().zxy()).with_w(other[e5] * self[e4])
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * other.group1().xyz().with_w(other[e415]))
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e2]]) * other.group6().xyzy())
+                - (other.group6().xyzy() * Simd32x3::from(self[e5]).with_w(self[e2]))
+                - (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(other[e415] * self[e1])
                 - (other.group8().zxy() * self.group0().yzx()).with_w(other[e4] * self[e5]),
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group1().xyz()) + (other.group7().zxy() * self.group0().yzx())
@@ -23468,7 +23258,7 @@ impl Sandwich<MultiVector> for RoundPoint {
                 (other[e25] * self[e4]) + (other[e4235] * self[e3]),
                 (other[e35] * self[e4]) + (other[e4315] * self[e1]),
                 -(other[e12] * self[e3]) - (other[e1234] * self[e5]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e5], self[e4]]) * other.group4().with_w(other[e3215]))
+            ]) + (Simd32x3::from(self[e5]) * other.group4()).with_w(other[e3215] * self[e4])
                 - (self.group0().xyzx() * other.group3().www().with_w(other[e23]))
                 - (self.group0().zxyy() * other.group9().yzx().with_w(other[e31])),
             // e423, e431, e412
@@ -23500,11 +23290,11 @@ impl Sandwich<Plane> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       25        0
-    //    simd3        3        7        0
-    //    simd4        8        8        0
+    //      f32        8       27        0
+    //    simd3        3        9        0
+    //    simd4        8        6        0
     // Totals...
-    // yes simd       19       40        0
+    // yes simd       19       42        0
     //  no simd       49       78        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
@@ -23528,11 +23318,11 @@ impl Sandwich<RoundPoint> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       20        0
-    //    simd3        3        7        0
-    //    simd4       11       10        0
+    //      f32        7       22        0
+    //    simd3        3        9        0
+    //    simd4       11        8        0
     // Totals...
-    // yes simd       21       37        0
+    // yes simd       21       39        0
     //  no simd       60       81        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -23542,8 +23332,8 @@ impl Sandwich<RoundPoint> for RoundPoint {
             // e23, e31, e12, e45
             (other.group0().zxy() * self.group0().yzx()).with_w(other[e5] * self[e4]) - (other.group0().yzxw() * self.group0().zxy().with_w(self[e5])),
             // e15, e25, e35, scalar
-            (Simd32x4::from([other[e5], other[e5], other[e5], self[e1]]) * self.group0().xyz().with_w(other[e1]))
-                + Simd32x3::from(0.0).with_w((other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e5] * self[e4]))
+            Simd32x3::from(0.0).with_w((other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e5] * self[e4]))
+                + (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e1] * self[e1])
                 - (Simd32x4::from(self[e5]) * other.group0()),
         )
         .geometric_product(self.reverse());
@@ -23553,11 +23343,11 @@ impl Sandwich<Scalar> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        5        0
-    //    simd3        1        3        0
-    //    simd4        3        4        0
+    //      f32        2        6        0
+    //    simd3        1        4        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd        6       12        0
+    // yes simd        6       13        0
     //  no simd       17       30        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -23568,11 +23358,11 @@ impl Sandwich<Sphere> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       26        0
-    //    simd3        3        7        0
-    //    simd4        9        9        0
+    //      f32        9       28        0
+    //    simd3        3        9        0
+    //    simd4        9        7        0
     // Totals...
-    // yes simd       21       42        0
+    // yes simd       21       44        0
     //  no simd       54       83        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -23596,11 +23386,11 @@ impl Sandwich<VersorEven> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       63        0
-    //    simd3        0        1        0
-    //    simd4       25       25        0
+    //      f32       28       65        0
+    //    simd3        0        3        0
+    //    simd4       25       23        0
     // Totals...
-    // yes simd       53       89        0
+    // yes simd       53       91        0
     //  no simd      128      166        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -23632,8 +23422,8 @@ impl Sandwich<VersorEven> for RoundPoint {
                 (self[e1] * other[e435]) + (self[e2] * other[e12345]) + (self[e4] * other[e315]),
                 (self[e2] * other[e415]) + (self[e3] * other[e12345]) + (self[e4] * other[e125]),
                 -(self[e3] * other[e125]) - (self[e5] * other[e12345]) - (self[e5] * other[e321]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], other[e315]]) * other.group0().xyz().with_w(self[e2]))
-                - (self.group0().yzxx() * other.group1().zxy().with_w(other[e235])),
+            ]) - (self.group0().yzxx() * other.group1().zxy().with_w(other[e235]))
+                - (Simd32x3::from(self[e5]) * other.group0().xyz()).with_w(self[e2] * other[e315]),
         )
         .geometric_product(self.reverse());
     }
@@ -23642,11 +23432,11 @@ impl Sandwich<VersorOdd> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       53        0
-    //    simd3        0        3        0
-    //    simd4       29       27        0
+    //      f32       12       58        0
+    //    simd3        0        8        0
+    //    simd4       29       22        0
     // Totals...
-    // yes simd       41       83        0
+    // yes simd       41       88        0
     //  no simd      128      170        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -23672,23 +23462,23 @@ impl Sandwich<VersorOdd> for RoundPoint {
                 -(self[e2] * other[e3215]) - (self[e5] * other[e4315]),
                 -(self[e3] * other[e3215]) - (self[e5] * other[e4125]),
                 (self[e3] * other[e35]) + (self[e5] * other[scalar]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e5], other[e25]]) * other.group1().xyz().with_w(self[e2]))
-                + (self.group0().yzxx() * other.group2().zxyx())
+            ]) + (self.group0().yzxx() * other.group2().zxyx())
+                + (Simd32x3::from(self[e5]) * other.group1().xyz()).with_w(self[e2] * other[e25])
                 - (Simd32x4::from([other[e3215], other[e35], other[e15], self[e5]]) * self.group0().xxy().with_w(other[e45])),
             // e1, e2, e3, e4
             Simd32x4::from([self[e4] * other[e15], self[e4] * other[e25], self[e4] * other[e35], self[e3] * other[e43] * -1.0])
                 + (Simd32x4::from([other[scalar], other[e12], other[e23], other[scalar]]) * self.group0().xxyw())
                 + (Simd32x4::from([other[e31], other[scalar], other[scalar], other[e45]]) * self.group0().zyzw())
-                - (Simd32x4::from([self[e5], self[e5], self[e5], other[e42]]) * other.group0().xyz().with_w(self[e2]))
-                - (self.group0().yzxx() * other.group1().zxy().with_w(other[e41])),
+                - (self.group0().yzxx() * other.group1().zxy().with_w(other[e41]))
+                - (Simd32x3::from(self[e5]) * other.group0().xyz()).with_w(self[e2] * other[e42]),
         )
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Scalar {
-    type Output = sandwich_partial<Scalar>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Scalar {
+    type Output = SandwichInfixPartial<Scalar>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Scalar {
@@ -24131,10 +23921,10 @@ impl Sandwich<VersorOdd> for Scalar {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Sphere {
-    type Output = sandwich_partial<Sphere>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Sphere {
+    type Output = SandwichInfixPartial<Sphere>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for Sphere {
@@ -24174,8 +23964,8 @@ impl Sandwich<AntiCircleRotor> for Sphere {
                 (other[e23] * self[e4315]) + (other[scalar] * self[e4125]),
                 -(other[e25] * self[e4315]) - (other[e35] * self[e4125]),
             ]) + (Simd32x4::from(self[e3215]) * other.group0().with_w(other[scalar]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4235]]) * other.group2().xyzx())
-                - (other.group1().zxyw() * self.group0().yzxw()),
+                - (other.group1().zxyw() * self.group0().yzxw())
+                - (other.group2().xyzx() * Simd32x3::from(self[e1234]).with_w(self[e4235])),
         )
         .geometric_product(self.reverse());
     }
@@ -24184,11 +23974,11 @@ impl Sandwich<AntiDipoleInversion> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       62        0
-    //    simd3        0        3        0
-    //    simd4       26       24        0
+    //      f32       19       69        0
+    //    simd3        0       10        0
+    //    simd4       26       17        0
     // Totals...
-    // yes simd       45       89        0
+    // yes simd       45       96        0
     //  no simd      123      167        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -24199,13 +23989,13 @@ impl Sandwich<AntiDipoleInversion> for Sphere {
                 -(other[e412] * self[e4235]) - (other[e4] * self[e4315]) - (other[e2] * self[e1234]),
                 -(other[e423] * self[e4315]) - (other[e4] * self[e4125]) - (other[e3] * self[e1234]),
                 (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]),
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4235]]) * other.group1().xyz().with_w(other[e1]))
-                + (self.group0().yzxw() * other.group0().zxy().with_w(other[e4])),
+            ]) + (self.group0().yzxw() * other.group0().zxy().with_w(other[e4]))
+                + (Simd32x3::from(self[e1234]) * other.group1().xyz()).with_w(other[e1] * self[e4235]),
             // e415, e425, e435, e321
             Simd32x4::from([other[e2] * self[e4125] * -1.0, other[e3] * self[e4235] * -1.0, other[e1] * self[e4315] * -1.0, other[e5] * self[e1234]])
-                + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group2().xyz().with_w(other[e425]))
                 + (self.group0().yzxz() * other.group3().zxy().with_w(other[e435]))
                 + (self.group0().wwwx() * other.group0().with_w(other[e415]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e425] * self[e4315])
                 - (self.group0() * other.group1().www().with_w(other[e4])),
             // e235, e315, e125, e5
             Simd32x4::from([
@@ -24221,8 +24011,8 @@ impl Sandwich<AntiDipoleInversion> for Sphere {
                 other[e435] * self[e4235] * -1.0,
                 other[e415] * self[e4315] * -1.0,
                 other[e412] * self[e4125],
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group2().xyz().with_w(other[e431]))
-                + (self.group0().yzxx() * other.group1().zxy().with_w(other[e423]))
+            ]) + (self.group0().yzxx() * other.group1().zxy().with_w(other[e423]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e431] * self[e4315])
                 - (other.group0() * self.group0().www()).with_w(other[e321] * self[e1234]),
         )
         .geometric_product(self.reverse());
@@ -24232,11 +24022,11 @@ impl Sandwich<AntiDualNum> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       37        0
-    //    simd3        0        1        0
-    //    simd4       12       13        0
+    //      f32       16       39        0
+    //    simd3        0        3        0
+    //    simd4       12       11        0
     // Totals...
-    // yes simd       28       51        0
+    // yes simd       28       53        0
     //  no simd       64       92        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
@@ -24257,12 +24047,12 @@ impl Sandwich<AntiFlatPoint> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       34        0
-    //    simd3        2        6        0
-    //    simd4       14       13        0
+    //      f32        6       37        0
+    //    simd3        2       10        0
+    //    simd4       14        9        0
     // Totals...
-    // yes simd       22       53        0
-    //  no simd       68      104        0
+    // yes simd       22       56        0
+    //  no simd       68      103        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -24273,11 +24063,8 @@ impl Sandwich<AntiFlatPoint> for Sphere {
             // e235, e315, e125, e4
             ((other.group0().yzx() * self.group0().zxy()) - (other.group0().zxy() * self.group0().yzx())).with_w(other[e321] * self[e1234] * -1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w((other[e321] * self[e3215]) - (other[e235] * self[e4235]) - (other[e315] * self[e4315]) - (other[e125] * self[e4125])),
+            (Simd32x3::from(self[e1234]) * other.group0().xyz())
+                .with_w((other[e321] * self[e3215]) - (other[e235] * self[e4235]) - (other[e315] * self[e4315]) - (other[e125] * self[e4125])),
         )
         .geometric_product(self.reverse());
     }
@@ -24286,22 +24073,18 @@ impl Sandwich<AntiFlector> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       37        0
-    //    simd3        3        6        0
-    //    simd4       17       20        0
+    //      f32       11       41        0
+    //    simd3        3       12        0
+    //    simd4       17       14        0
     // Totals...
-    // yes simd       31       63        0
-    //  no simd       88      135        0
+    // yes simd       31       67        0
+    //  no simd       88      133        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e1234]) * other.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234])),
             // e415, e425, e435, e321
             ((Simd32x3::from(self[e1234]) * other.group0().xyz()) + (other.group1().zxy() * self.group0().yzx())
                 - (Simd32x3::from(other[e321]) * self.group0().xyz())
@@ -24325,27 +24108,26 @@ impl Sandwich<AntiLine> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       45        0
-    //    simd3        0        5        0
-    //    simd4       14       12        0
+    //      f32       21       46        0
+    //    simd3        0        7        0
+    //    simd4       14       10        0
     // Totals...
-    // yes simd       35       62        0
-    //  no simd       77      108        0
+    // yes simd       35       63        0
+    //  no simd       77      107        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[e1234]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other.group1().with_w(-(other[e23] * self[e4235]) - (other[e31] * self[e4315]) - (other[e12] * self[e4125])),
+            (Simd32x3::from(self[e1234]) * other.group1()).with_w(-(other[e23] * self[e4235]) - (other[e31] * self[e4315]) - (other[e12] * self[e4125])),
             // e15, e25, e35, e1234
             (Simd32x3::from(self[e3215]) * other.group0()).with_w(0.0) + (other.group1().yzx() * self.group0().zxy()).with_w(0.0)
                 - (other.group1().zxy() * self.group0().yzx()).with_w(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e31] * self[e4125], other[e12] * self[e4235], other[e23] * self[e4315], other[e35] * self[e4125] * -1.0])
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group1().with_w(other[e25]))
-                - (self.group0().yzxx() * other.group0().zxy().with_w(other[e15])),
+                - (self.group0().yzxx() * other.group0().zxy().with_w(other[e15]))
+                - (Simd32x3::from(self[e1234]) * other.group1()).with_w(other[e25] * self[e4315]),
         )
         .geometric_product(self.reverse());
     }
@@ -24354,23 +24136,20 @@ impl Sandwich<AntiMotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       44        0
-    //    simd3        3        5        0
-    //    simd4       15       16        0
+    //      f32       19       46        0
+    //    simd3        3        8        0
+    //    simd4       15       13        0
     // Totals...
-    // yes simd       37       65        0
-    //  no simd       88      123        0
+    // yes simd       37       67        0
+    //  no simd       88      122        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(self[e1234]) * other.group0().xyz().with_w(other[e3215]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w(-(other[e23] * self[e4235]) - (other[e31] * self[e4315]) - (other[e12] * self[e4125]) - (other[e3215] * self[e1234])),
+            (Simd32x3::from(self[e1234]) * other.group1().xyz())
+                .with_w(-(other[e23] * self[e4235]) - (other[e31] * self[e4315]) - (other[e12] * self[e4125]) - (other[e3215] * self[e1234])),
             // e15, e25, e35, e1234
             ((Simd32x3::from(other[e3215]) * self.group0().xyz()) + (Simd32x3::from(self[e3215]) * other.group0().xyz()) + (other.group1().yzx() * self.group0().zxy())
                 - (other.group1().zxy() * self.group0().yzx()))
@@ -24378,7 +24157,7 @@ impl Sandwich<AntiMotor> for Sphere {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[scalar] * self[e4235], other[scalar] * self[e4315], other[scalar] * self[e4125], other[e35] * self[e4125] * -1.0])
                 + (other.group0().yzxw() * self.group0().zxyw())
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group1().xyzy())
+                - (other.group1().xyzy() * Simd32x3::from(self[e1234]).with_w(self[e4315]))
                 - (self.group0().yzxx() * other.group0().zxy().with_w(other[e15])),
         )
         .geometric_product(self.reverse());
@@ -24388,11 +24167,11 @@ impl Sandwich<AntiPlane> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       20        0
-    //    simd3        3        7        0
-    //    simd4       10       10        0
+    //      f32        6       21        0
+    //    simd3        3        8        0
+    //    simd4       10        9        0
     // Totals...
-    // yes simd       19       37        0
+    // yes simd       19       38        0
     //  no simd       55       81        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -24413,17 +24192,17 @@ impl Sandwich<AntiScalar> for Sphere {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       13        0
-    //    simd3        1        3        0
-    //    simd4        1        3        0
+    //      f32        7       14        0
+    //    simd3        1        5        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       19        0
-    //  no simd       14       34        0
+    // yes simd        9       20        0
+    //  no simd       14       33        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e12345], other[e12345], other[e12345], self[e1234]]) * self.group0().xyz().with_w(other[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(other[e12345]) * self.group0().xyz() * Simd32x3::from(-1.0)).with_w(other[e12345] * self[e1234]),
             // e5
             other[e12345] * self[e3215],
         )
@@ -24434,11 +24213,11 @@ impl Sandwich<Circle> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       42        0
-    //    simd3        2        6        0
-    //    simd4       22       19        0
+    //      f32        3       47        0
+    //    simd3        2       11        0
+    //    simd4       22       14        0
     // Totals...
-    // yes simd       27       67        0
+    // yes simd       27       72        0
     //  no simd       97      136        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -24451,8 +24230,8 @@ impl Sandwich<Circle> for Sphere {
                 other[e321] * self[e4315] * -1.0,
                 other[e321] * self[e4125] * -1.0,
                 other[e435] * self[e4125],
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group2().with_w(other[e425]))
-                + (self.group0().wwwx() * other.group0().with_w(other[e415])),
+            ]) + (self.group0().wwwx() * other.group0().with_w(other[e415]))
+                + (Simd32x3::from(self[e1234]) * other.group2()).with_w(other[e425] * self[e4315]),
             // e235, e315, e125, e4
             (self.group0().zxyx() * other.group2().yzx().with_w(other[e423]))
                 + (self.group0().wwwy() * other.group1().xyz().with_w(other[e431]))
@@ -24460,7 +24239,7 @@ impl Sandwich<Circle> for Sphere {
                 - (other.group2().zxy() * self.group0().yzx()).with_w(other[e321] * self[e1234]),
             // e1, e2, e3, e5
             Simd32x4::from([other[e435] * self[e4315], other[e415] * self[e4125], other[e425] * self[e4235], other[e125] * self[e4125] * -1.0])
-                + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e3215]]) * other.group2().with_w(other[e321]))
+                + (Simd32x3::from(self[e1234]) * other.group2()).with_w(other[e321] * self[e3215])
                 - (self.group0().zxyy() * other.group1().yzx().with_w(other[e315]))
                 - (self.group0().wwwx() * other.group0().with_w(other[e235])),
         )
@@ -24471,11 +24250,11 @@ impl Sandwich<CircleRotor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       38        0
-    //    simd3        2        6        0
-    //    simd4       23       21        0
+    //      f32        4       42        0
+    //    simd3        2       10        0
+    //    simd4       23       17        0
     // Totals...
-    // yes simd       29       65        0
+    // yes simd       29       69        0
     //  no simd      102      140        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -24488,15 +24267,15 @@ impl Sandwich<CircleRotor> for Sphere {
                 other[e321] * self[e4315] * -1.0,
                 other[e321] * self[e4125] * -1.0,
                 other[e435] * self[e4125],
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group2().xyz().with_w(other[e425]))
-                + (self.group0().wwwx() * other.group0().with_w(other[e415])),
+            ]) + (self.group0().wwwx() * other.group0().with_w(other[e415]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(other[e425] * self[e4315]),
             // e235, e315, e125, e4
             (self.group0().zxyy() * other.group2().yzx().with_w(other[e431]))
                 + (self.group0().wwwx() * other.group1().xyz().with_w(other[e423]))
                 + Simd32x3::from(0.0).with_w((other[e412] * self[e4125]) + (other[e12345] * self[e1234]))
                 - (other.group2().zxy() * self.group0().yzx()).with_w(other[e321] * self[e1234]),
             // e1, e2, e3, e5
-            (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e3215]]) * other.group2()) + (other.group1().zxyw() * self.group0().yzxw())
+            (other.group2() * Simd32x3::from(self[e1234]).with_w(self[e3215])) + (other.group1().zxyw() * self.group0().yzxw())
                 - (other.group2().wwwz() * self.group0().xyzz())
                 - (self.group0().zxyy() * other.group1().yzx().with_w(other[e315]))
                 - (self.group0().wwwx() * other.group0().with_w(other[e235])),
@@ -24508,11 +24287,11 @@ impl Sandwich<Dipole> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       65        0
-    //    simd3        2        4        0
-    //    simd4       14       13        0
+    //      f32       32       66        0
+    //    simd3        2        5        0
+    //    simd4       14       12        0
     // Totals...
-    // yes simd       48       82        0
+    // yes simd       48       83        0
     //  no simd       94      129        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -24540,8 +24319,8 @@ impl Sandwich<Dipole> for Sphere {
                 (other[e42] * self[e3215]) + (other[e12] * self[e4235]),
                 (other[e43] * self[e3215]) + (other[e23] * self[e4315]),
                 -(other[e45] * self[e3215]) - (other[e35] * self[e4125]),
-            ]) - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4235]]) * other.group2().with_w(other[e15]))
-                - (self.group0().yzxy() * other.group1().zxy().with_w(other[e25])),
+            ]) - (self.group0().yzxy() * other.group1().zxy().with_w(other[e25]))
+                - (Simd32x3::from(self[e1234]) * other.group2()).with_w(other[e15] * self[e4235]),
         )
         .geometric_product(self.reverse());
     }
@@ -24550,11 +24329,11 @@ impl Sandwich<DipoleInversion> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       31       66        0
-    //    simd3        0        1        0
-    //    simd4       23       22        0
+    //      f32       31       68        0
+    //    simd3        0        3        0
+    //    simd4       23       20        0
     // Totals...
-    // yes simd       54       89        0
+    // yes simd       54       91        0
     //  no simd      123      157        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -24588,8 +24367,8 @@ impl Sandwich<DipoleInversion> for Sphere {
                 (other[e42] * self[e3215]) + (other[e12] * self[e4235]),
                 (other[e43] * self[e3215]) + (other[e23] * self[e4315]),
                 -(other[e25] * self[e4315]) - (other[e35] * self[e4125]),
-            ]) - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4235]]) * other.group2().xyzx())
-                - (other.group1().zxyw() * self.group0().yzxw()),
+            ]) - (other.group1().zxyw() * self.group0().yzxw())
+                - (other.group2().xyzx() * Simd32x3::from(self[e1234]).with_w(self[e4235])),
         )
         .geometric_product(self.reverse());
     }
@@ -24598,11 +24377,11 @@ impl Sandwich<DualNum> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       26        0
-    //    simd3        0        2        0
-    //    simd4       15       17        0
+    //      f32        4       30        0
+    //    simd3        0        6        0
+    //    simd4       15       13        0
     // Totals...
-    // yes simd       19       45        0
+    // yes simd       19       49        0
     //  no simd       64      100        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -24624,11 +24403,11 @@ impl Sandwich<FlatPoint> for Sphere {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       22       42        0
-    //    simd3        2        5        0
-    //    simd4       10       11        0
+    //    simd3        2        7        0
+    //    simd4       10        9        0
     // Totals...
     // yes simd       34       58        0
-    //  no simd       68      101        0
+    //  no simd       68       99        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -24639,12 +24418,8 @@ impl Sandwich<FlatPoint> for Sphere {
             // e15, e25, e35, e1234
             ((other.group0().yzx() * self.group0().zxy()) - (other.group0().zxy() * self.group0().yzx())).with_w(other[e45] * self[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w(-(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e1234]) * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -24653,21 +24428,18 @@ impl Sandwich<Flector> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       45        0
-    //    simd3        6        9        0
-    //    simd4       12       14        0
+    //      f32       22       47        0
+    //    simd3        6       14        0
+    //    simd4       12        9        0
     // Totals...
-    // yes simd       40       68        0
-    //  no simd       88      128        0
+    // yes simd       40       70        0
+    //  no simd       88      125        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e3215] * self[e1234]) - (other[e4235] * self[e4235]) - (other[e4315] * self[e4315]) - (other[e4125] * self[e4125])),
+            (Simd32x3::from(self[e1234]) * other.group1().xyz())
+                .with_w((other[e3215] * self[e1234]) - (other[e4235] * self[e4235]) - (other[e4315] * self[e4315]) - (other[e4125] * self[e4125])),
             // e23, e31, e12, e45
             ((Simd32x3::from(other[e45]) * self.group0().xyz()) + (Simd32x3::from(self[e1234]) * other.group0().xyz()) + (other.group1().yzx() * self.group0().zxy())
                 - (other.group1().zxy() * self.group0().yzx()))
@@ -24678,12 +24450,8 @@ impl Sandwich<Flector> for Sphere {
                 - (other.group0().zxy() * self.group0().yzx()))
             .with_w(other[e45] * self[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group0()
-                    .xyz()
-                    .with_w(-(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e1234]) * other.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(other[e15] * self[e4235]) - (other[e25] * self[e4315]) - (other[e35] * self[e4125]) - (other[e45] * self[e3215])),
         )
         .geometric_product(self.reverse());
     }
@@ -24692,20 +24460,19 @@ impl Sandwich<Line> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       39        0
-    //    simd3        0        6        0
-    //    simd4       17       14        0
+    //      f32        9       42        0
+    //    simd3        0       10        0
+    //    simd4       17       10        0
     // Totals...
-    // yes simd       26       59        0
-    //  no simd       77      113        0
+    // yes simd       26       62        0
+    //  no simd       77      112        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(self[e1234]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other.group1().with_w((other[e415] * self[e4235]) + (other[e425] * self[e4315]) + (other[e435] * self[e4125])),
+            (Simd32x3::from(self[e1234]) * other.group1()).with_w((other[e415] * self[e4235]) + (other[e425] * self[e4315]) + (other[e435] * self[e4125])),
             // e235, e315, e125, e4
             (Simd32x3::from(self[e3215]) * other.group0()).with_w(0.0) + (other.group1().yzx() * self.group0().zxy()).with_w(0.0)
                 - (other.group1().zxy() * self.group0().yzx()).with_w(0.0),
@@ -24724,23 +24491,20 @@ impl Sandwich<Motor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       37        0
-    //    simd3        3        6        0
-    //    simd4       17       18        0
+    //      f32       11       41        0
+    //    simd3        3       11        0
+    //    simd4       17       13        0
     // Totals...
-    // yes simd       31       61        0
-    //  no simd       88      127        0
+    // yes simd       31       65        0
+    //  no simd       88      126        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(self[e1234]) * other.group0().xyz().with_w(other[e5]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e415] * self[e4235]) + (other[e425] * self[e4315]) + (other[e435] * self[e4125]) + (other[e5] * self[e1234])),
+            (Simd32x3::from(self[e1234]) * other.group1().xyz())
+                .with_w((other[e415] * self[e4235]) + (other[e425] * self[e4315]) + (other[e435] * self[e4125]) + (other[e5] * self[e1234])),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other[e315] * self[e4125]) + (other[e5] * self[e4235]),
@@ -24762,12 +24526,12 @@ impl Sandwich<MultiVector> for Sphere {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       90        0
+    //      f32       44       93        0
     //    simd2        4        4        0
-    //    simd3       32       44        0
-    //    simd4       27       24        0
+    //    simd3       32       47        0
+    //    simd4       27       21        0
     // Totals...
-    // yes simd      107      162        0
+    // yes simd      107      165        0
     //  no simd      256      326        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -24814,9 +24578,9 @@ impl Sandwich<MultiVector> for Sphere {
                 other[e321] * self[e4315] * -1.0,
                 other[e321] * self[e4125] * -1.0,
                 other[e5] * self[e1234],
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group8().with_w(other[e425]))
-                + (self.group0().yzxz() * other.group1().zxy().with_w(other[e435]))
+            ]) + (self.group0().yzxz() * other.group1().zxy().with_w(other[e435]))
                 + (self.group0().wwwx() * other.group7().with_w(other[e415]))
+                + (Simd32x3::from(self[e1234]) * other.group8()).with_w(other[e425] * self[e4315])
                 - (other.group1().yzxw() * self.group0().zxyw()),
             // e423, e431, e412
             (Simd32x3::from(self[e1234]) * other.group6().xyz()) + (other.group7().zxy() * self.group0().yzx())
@@ -24836,7 +24600,7 @@ impl Sandwich<MultiVector> for Sphere {
                 (other[e43] * self[e3215]) + (other[e23] * self[e4315]),
                 -(other[e35] * self[e4125]) - (other[e45] * self[e3215]),
             ]) + (Simd32x4::from(other[scalar]) * self.group0())
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], self[e4315]]) * other.group3().xyzy())
+                - (other.group3().xyzy() * Simd32x3::from(self[e1234]).with_w(self[e4315]))
                 - (self.group0().yzxx() * other.group5().zxy().with_w(other[e15])),
             // e1234
             (other[scalar] * self[e1234]) + (other[e45] * self[e1234]) + (other[e41] * self[e4235]) + (other[e42] * self[e4315]) + (other[e43] * self[e4125]),
@@ -24872,11 +24636,11 @@ impl Sandwich<RoundPoint> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       21        0
-    //    simd3        3        6        0
-    //    simd4       11       11        0
+    //      f32        7       23        0
+    //    simd3        3        8        0
+    //    simd4       11        9        0
     // Totals...
-    // yes simd       21       38        0
+    // yes simd       21       40        0
     //  no simd       60       83        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -24886,9 +24650,9 @@ impl Sandwich<RoundPoint> for Sphere {
             // e415, e425, e435, e321
             (other.group0().zxy() * self.group0().yzx()).with_w(other[e5] * self[e1234]) - (other.group0().yzxw() * self.group0().zxyw()),
             // e235, e315, e125, e12345
-            (Simd32x4::from([other[e5], other[e5], other[e5], self[e4315]]) * self.group0().xyz().with_w(other[e2]))
-                + (other.group0().xyzx() * self.group0().wwwx())
-                + Simd32x3::from(0.0).with_w((other[e3] * self[e4125]) + (other[e4] * self[e3215]) + (other[e5] * self[e1234])),
+            (other.group0().xyzx() * self.group0().wwwx())
+                + Simd32x3::from(0.0).with_w((other[e3] * self[e4125]) + (other[e4] * self[e3215]) + (other[e5] * self[e1234]))
+                + (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e2] * self[e4315]),
         )
         .geometric_product(self.reverse());
     }
@@ -24943,11 +24707,11 @@ impl Sandwich<VersorEven> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       59        0
-    //    simd3        0        2        0
-    //    simd4       27       26        0
+    //      f32       20       66        0
+    //    simd3        0        9        0
+    //    simd4       27       19        0
     // Totals...
-    // yes simd       47       87        0
+    // yes simd       47       94        0
     //  no simd      128      169        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -24958,17 +24722,17 @@ impl Sandwich<VersorEven> for Sphere {
                 -(self[e4235] * other[e412]) - (self[e4315] * other[e4]) - (self[e1234] * other[e2]),
                 -(self[e4315] * other[e423]) - (self[e4125] * other[e4]) - (self[e1234] * other[e3]),
                 (self[e4125] * other[e3]) + (self[e3215] * other[e4]) + (self[e1234] * other[e5]),
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e2]]) * other.group1().xyz().with_w(self[e4315]))
-                + (self.group0().yzxx() * other.group0().zxy().with_w(other[e1])),
+            ]) + (self.group0().yzxx() * other.group0().zxy().with_w(other[e1]))
+                + (Simd32x3::from(self[e1234]) * other.group1().xyz()).with_w(self[e4315] * other[e2]),
             // e415, e425, e435, e321
             Simd32x4::from([
                 self[e4125] * other[e2] * -1.0,
                 self[e4315] * other[e321] * -1.0,
                 self[e4125] * other[e321] * -1.0,
                 self[e1234] * other[e5],
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e435]]) * other.group2().xyz().with_w(self[e4125]))
-                + (self.group0().yzxx() * other.group3().zxy().with_w(other[e415]))
+            ]) + (self.group0().yzxx() * other.group3().zxy().with_w(other[e415]))
                 + (self.group0().wwwy() * other.group0().xyz().with_w(other[e425]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(self[e4125] * other[e435])
                 - (Simd32x4::from([other[e321], other[e3], other[e1], other[e4]]) * self.group0().xxyw()),
             // e235, e315, e125, e5
             Simd32x4::from([
@@ -24985,8 +24749,8 @@ impl Sandwich<VersorEven> for Sphere {
                 -(self[e4315] * other[e12345]) - (self[e3215] * other[e431]),
                 -(self[e4125] * other[e12345]) - (self[e3215] * other[e412]),
                 (self[e4125] * other[e412]) + (self[e1234] * other[e12345]),
-            ]) + (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e431]]) * other.group2().xyz().with_w(self[e4315]))
-                + (self.group0().yzxx() * other.group1().zxy().with_w(other[e423]))
+            ]) + (self.group0().yzxx() * other.group1().zxy().with_w(other[e423]))
+                + (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(self[e4315] * other[e431])
                 - (Simd32x4::from([other[e12345], other[e435], other[e415], self[e1234]]) * self.group0().xxy().with_w(other[e321])),
         )
         .geometric_product(self.reverse());
@@ -24996,11 +24760,11 @@ impl Sandwich<VersorOdd> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       67        0
-    //    simd3        0        1        0
-    //    simd4       24       23        0
+    //      f32       32       70        0
+    //    simd3        0        4        0
+    //    simd4       24       20        0
     // Totals...
-    // yes simd       56       91        0
+    // yes simd       56       94        0
     //  no simd      128      162        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -25035,16 +24799,16 @@ impl Sandwich<VersorOdd> for Sphere {
                 (self[e4125] * other[scalar]) + (self[e3215] * other[e43]),
                 -(self[e4125] * other[e35]) - (self[e3215] * other[e45]),
             ]) + (Simd32x4::from([other[scalar], other[e12], other[e23], other[scalar]]) * self.group0().xxyw())
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], other[e25]]) * other.group2().xyz().with_w(self[e4315]))
-                - (self.group0().yzxx() * other.group1().zxy().with_w(other[e15])),
+                - (self.group0().yzxx() * other.group1().zxy().with_w(other[e15]))
+                - (Simd32x3::from(self[e1234]) * other.group2().xyz()).with_w(self[e4315] * other[e25]),
         )
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for VersorEven {
-    type Output = sandwich_partial<VersorEven>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for VersorEven {
+    type Output = SandwichInfixPartial<VersorEven>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for VersorEven {
@@ -25235,7 +24999,7 @@ impl Sandwich<AntiDualNum> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0]) * other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e4]) + (other[scalar] * self[e12345])),
+            other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e4]) + (other[scalar] * self[e12345])) * self.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             (Simd32x4::from(other[e3215]) * self.group0().xyz().with_w(self[e4])) + (Simd32x4::from(other[scalar]) * self.group1()),
             // e235, e315, e125, e5
@@ -25252,20 +25016,16 @@ impl Sandwich<AntiFlatPoint> for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       41       66        0
-    //    simd3        6       17        0
-    //    simd4       58       54        0
+    //    simd3        6       18        0
+    //    simd4       58       53        0
     // Totals...
     // yes simd      105      137        0
-    //  no simd      291      333        0
+    //  no simd      291      332        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
+            (other.group0().www() * self.group0().xyz()).with_w((other[e235] * self[e423]) + (other[e315] * self[e431]) + (other[e125] * self[e412]) - (other[e321] * self[e321])),
             // e23, e31, e12, e45
             (other.group0().zxyw() * self.group0().yzxw())
                 - (other.group0().xyxx() * self.group3().ww().with_zw(self[e431], self[e423]))
@@ -25908,8 +25668,8 @@ impl Sandwich<DualNum> for VersorEven {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * other.group0().yy().with_zw(other[e12345], -(other[e5] * self[e4]) - (other[e12345] * self[e12345]))
+            other.group0().yy().with_zw(other[e12345], -(other[e5] * self[e4]) - (other[e12345] * self[e12345]))
+                * self.group0().xyz().with_w(1.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             Simd32x4::from([
@@ -25937,20 +25697,16 @@ impl Sandwich<FlatPoint> for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       43       80        0
-    //    simd3        3       23        0
-    //    simd4       59       46        0
+    //    simd3        3       24        0
+    //    simd4       59       45        0
     // Totals...
     // yes simd      105      149        0
-    //  no simd      288      333        0
+    //  no simd      288      332        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w(-(other[e15] * self[e423]) - (other[e25] * self[e431]) - (other[e35] * self[e412]) - (other[e45] * self[e321])),
+            (other.group0().www() * self.group0().xyz()).with_w(-(other[e15] * self[e423]) - (other[e25] * self[e431]) - (other[e35] * self[e412]) - (other[e45] * self[e321])),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e15] * self[e4]) + (other[e25] * self[e412]),
@@ -26176,12 +25932,12 @@ impl Sandwich<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      108      159        0
+    //      f32      108      162        0
     //    simd2       16       16        0
-    //    simd3      120      159        0
-    //    simd4      115       92        0
+    //    simd3      120      162        0
+    //    simd4      115       89        0
     // Totals...
-    // yes simd      359      426        0
+    // yes simd      359      429        0
     //  no simd      960     1036        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -26222,10 +25978,10 @@ impl Sandwich<MultiVector> for VersorEven {
                 + (self.group1().ww().with_zw(self[e2], other[e1234]) * other.group5().xyx().with_w(self[e12345]))
                 + (self.group3().zx().with_zw(self[e321], other[e1234]) * other.group5().yzz().with_w(self[e321]))
                 + (other.group4().zxy() * self.group2().yzx()).with_w(other[e45] * self[e4])
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e431]]) * self.group2().xyz().with_w(other[e31]))
                 - (self.group1().xyzz() * other.group3().www().with_w(other[e43]))
                 - (self.group0().ww().with_zw(self[e425], self[e3]) * other.group9().xyx().with_w(other[e43]))
                 - (self.group1().zx().with_zw(self[e12345], self[e423]) * other.group9().yzz().with_w(other[e23]))
+                - (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(other[e31] * self[e431])
                 - (other.group4().xyx() * self.group2().wwy()).with_w(other[e41] * self[e415])
                 - (other.group4().yzz() * self.group2().zxw()).with_w(other[e41] * self[e1])
                 - (other.group5().zxy() * self.group3().yzx()).with_w(other[e42] * self[e425])
@@ -26254,7 +26010,6 @@ impl Sandwich<MultiVector> for VersorEven {
                 + (other.group6().zxyw() * self.group2().yzx().with_w(self[e12345]))
                 + (self.group2().yzxz() * other.group1().zxy().with_w(other[e412]))
                 + (self.group1().wz().with_zw(self[e2], self[e321]) * other.group8().xxx().with_w(other[e12345]))
-                - (Simd32x4::from([other[e5], other[e5], other[e5], self[e3]]) * self.group1().xyz().with_w(other[e435]))
                 - (Simd32x4::from([self[e12345], self[e3], self[e425], self[e431]]) * other.group8().xxx().with_w(other[e315]))
                 - (Simd32x4::from([self[e435], self[e12345], self[e1], self[e412]]) * other.group8().yyy().with_w(other[e125]))
                 - (Simd32x4::from([self[e2], self[e415], self[e12345], self[e415]]) * other.group8().zzz().with_w(other[e1]))
@@ -26263,7 +26018,8 @@ impl Sandwich<MultiVector> for VersorEven {
                 - (other.group6().yzzx() * self.group2().zxw().with_w(self[e1]))
                 - (other.group6().wwwy() * self.group2().xyz().with_w(self[e2]))
                 - (self.group2().wwyw() * other.group6().xyx().with_w(other[e4]))
-                - (other.group0().yy().with_zw(other[e12345], other[e235]) * self.group2().xyz().with_w(self[e423])),
+                - (other.group0().yy().with_zw(other[e12345], other[e235]) * self.group2().xyz().with_w(self[e423]))
+                - (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(other[e435] * self[e3]),
             // e41, e42, e43
             (Simd32x3::from(other[e321]) * self.group0().xyz())
                 + (Simd32x3::from([self[e412], self[e423], self[e4]]) * other.group1().yzz())
@@ -26444,11 +26200,11 @@ impl Sandwich<RoundPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       83        0
-    //    simd3        0       13        0
-    //    simd4       66       58        0
+    //      f32       40       86        0
+    //    simd3        0       16        0
+    //    simd4       66       55        0
     // Totals...
-    // yes simd      106      154        0
+    // yes simd      106      157        0
     //  no simd      304      354        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -26461,24 +26217,24 @@ impl Sandwich<RoundPoint> for VersorEven {
                 - (other.group0().www() * self.group1().xyz()).with_w(other[e5] * self[e4]),
             // e23, e31, e12, e45
             (other.group0().zxy() * self.group3().yzx()).with_w(other[e5] * self[e4])
-                - (Simd32x4::from([other[e5], other[e5], other[e5], self[e5]]) * self.group0().xyz().with_w(other[e4]))
                 - (other.group0().xyxx() * self.group1().ww().with_zw(self[e2], self[e415]))
                 - (other.group0().yzzy() * self.group3().zx().with_zw(self[e321], self[e425]))
-                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435])),
+                - (other.group0().wwwz() * self.group2().xyz().with_w(self[e435]))
+                - (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e4] * self[e5]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 (other[e3] * self[e315]) + (other[e5] * self[e1]),
                 (other[e1] * self[e125]) + (other[e5] * self[e2]),
                 (other[e2] * self[e235]) + (other[e5] * self[e3]),
                 -(other[e4] * self[e12345]) - (other[e4] * self[e321]),
-            ]) - (Simd32x4::from([other[e5], other[e5], other[e5], self[e412]]) * self.group1().xyz().with_w(other[e3]))
-                - (other.group0().xyxx() * self.group2().wwy().with_w(self[e423]))
-                - (other.group0().yzzy() * self.group2().zxw().with_w(self[e431])),
+            ]) - (other.group0().xyxx() * self.group2().wwy().with_w(self[e423]))
+                - (other.group0().yzzy() * self.group2().zxw().with_w(self[e431]))
+                - (Simd32x3::from(other[e5]) * self.group1().xyz()).with_w(other[e3] * self[e412]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4] * self[e235] * -1.0, other[e4] * self[e315] * -1.0, other[e4] * self[e125] * -1.0, other[e5] * self[e321]])
-                + (Simd32x4::from([other[e5], other[e5], other[e5], self[e125]]) * self.group0().xyz().with_w(other[e3]))
                 + (other.group0().xyxx() * self.group0().ww().with_zw(self[e425], self[e235]))
                 + (other.group0().yzzy() * self.group1().zx().with_zw(self[e12345], self[e315]))
+                + (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e3] * self[e125])
                 - (other.group0().zxy() * self.group1().yzx()).with_w(other[e5] * self[e12345]),
         )
         .geometric_product(self.reverse());
@@ -26513,11 +26269,11 @@ impl Sandwich<Sphere> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       91        0
-    //    simd3        0       21        0
-    //    simd4       66       50        0
+    //      f32       40       95        0
+    //    simd3        0       25        0
+    //    simd4       66       46        0
     // Totals...
-    // yes simd      106      162        0
+    // yes simd      106      166        0
     //  no simd      304      354        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -26528,19 +26284,19 @@ impl Sandwich<Sphere> for VersorEven {
                 other[e4235] * self[e412] * -1.0,
                 other[e4315] * self[e423] * -1.0,
                 other[e1234] * self[e5],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e3]]) * self.group1().xyz().with_w(other[e4125]))
-                + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e4]]) * self.group3().xyz().with_w(other[e3215]))
-                + (other.group0().xyxx() * self.group3().ww().with_zw(self[e431], self[e1]))
-                + (other.group0().yzzy() * self.group0().zx().with_zw(self[e4], self[e2])),
+            ]) + (other.group0().xyxx() * self.group3().ww().with_zw(self[e431], self[e1]))
+                + (other.group0().yzzy() * self.group0().zx().with_zw(self[e4], self[e2]))
+                + (Simd32x3::from(other[e1234]) * self.group1().xyz()).with_w(other[e4125] * self[e3])
+                + (Simd32x3::from(other[e1234]) * self.group3().xyz()).with_w(other[e3215] * self[e4]),
             // e415, e425, e435, e321
             Simd32x4::from([
                 other[e4315] * self[e3] * -1.0,
                 other[e4125] * self[e1] * -1.0,
                 other[e4125] * self[e321] * -1.0,
                 other[e3215] * self[e4],
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e435]]) * self.group2().xyz().with_w(other[e4125]))
-                + (other.group0().zxyx() * self.group3().yzx().with_w(self[e415]))
+            ]) + (other.group0().zxyx() * self.group3().yzx().with_w(self[e415]))
                 + (other.group0().wwwy() * self.group0().xyz().with_w(self[e425]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(other[e4125] * self[e435])
                 - (self.group1().ww().with_zw(self[e2], other[e1234]) * other.group0().xyx().with_w(self[e5])),
             // e235, e315, e125, e5
             Simd32x4::from([
@@ -26553,9 +26309,9 @@ impl Sandwich<Sphere> for VersorEven {
                 - (other.group0().xyxw() * self.group2().wwy().with_w(self[e321])),
             // e1, e2, e3, e4
             (other.group0().zxy() * self.group1().yzx()).with_w(other[e1234] * self[e12345]) + (other.group0().www() * self.group0().xyz()).with_w(other[e1234] * self[e321])
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e412]]) * self.group2().xyz().with_w(other[e4125]))
                 - (other.group0().xyxx() * self.group0().ww().with_zw(self[e425], self[e423]))
-                - (other.group0().yzzy() * self.group1().zx().with_zw(self[e12345], self[e431])),
+                - (other.group0().yzzy() * self.group1().zx().with_zw(self[e12345], self[e431]))
+                - (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(other[e4125] * self[e412]),
         )
         .geometric_product(self.reverse());
     }
@@ -26756,10 +26512,10 @@ impl Sandwich<VersorOdd> for VersorEven {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for VersorOdd {
-    type Output = sandwich_partial<VersorOdd>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for VersorOdd {
+    type Output = SandwichInfixPartial<VersorOdd>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiCircleRotor> for VersorOdd {
@@ -26974,7 +26730,7 @@ impl Sandwich<AntiDualNum> for VersorOdd {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0]) * other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e1234]) + (other[scalar] * self[scalar])),
+            other.group0().yy().with_zw(other[scalar], (other[e3215] * self[e1234]) + (other[scalar] * self[scalar])) * self.group0().xyz().with_w(1.0),
             // e23, e31, e12, e45
             Simd32x4::from([other[scalar] * self[e23], other[scalar] * self[e31], other[scalar] * self[e12], other[e3215] * self[e1234] * -1.0])
                 + (other.group0().xx().with_zw(other[e3215], other[scalar]) * self.group0().xyz().with_w(self[e45])),
@@ -26997,21 +26753,17 @@ impl Sandwich<AntiFlatPoint> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       51       86        0
-    //    simd3        3       15        0
-    //    simd4       57       52        0
+    //    simd3        3       17        0
+    //    simd4       57       50        0
     // Totals...
     // yes simd      111      153        0
-    //  no simd      288      339        0
+    //  no simd      288      337        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (other.group0().www() * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w(-(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]) - (other[e321] * self[e45])),
             // e415, e425, e435, e321
             Simd32x4::from([other[e315] * self[e43], other[e125] * self[e41], other[e125] * self[e1234], other[e125] * self[e43] * -1.0])
                 + (other.group0().xyxw() * self.group2().ww().with_zw(self[e42], self[scalar]))
@@ -27693,7 +27445,7 @@ impl Sandwich<DualNum> for VersorOdd {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0]) * other.group0().yy().with_zw(other[e12345], (other[e5] * self[e1234]) + (other[e12345] * self[scalar])),
+            other.group0().yy().with_zw(other[e12345], (other[e5] * self[e1234]) + (other[e12345] * self[scalar])) * self.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from([other[e12345] * self[e23], other[e12345] * self[e31], other[e12345] * self[e12], other[e12345] * self[e45] * -1.0])
                 + (Simd32x4::from(other[e5]) * self.group0().xyz().with_w(self[e1234])),
@@ -27712,20 +27464,16 @@ impl Sandwich<FlatPoint> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       74      114        0
-    //    simd3        6       18        0
-    //    simd4       49       42        0
+    //    simd3        6       19        0
+    //    simd4       49       41        0
     // Totals...
     // yes simd      129      174        0
-    //  no simd      288      336        0
+    //  no simd      288      335        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0])
-                * other
-                    .group0()
-                    .www()
-                    .with_w((other[e45] * self[e45]) - (other[e15] * self[e41]) - (other[e25] * self[e42]) - (other[e35] * self[e43])),
+            (other.group0().www() * self.group0().xyz()).with_w((other[e45] * self[e45]) - (other[e15] * self[e41]) - (other[e25] * self[e42]) - (other[e35] * self[e43])),
             // e23, e31, e12, e45
             Simd32x4::from([other[e35] * self[e42] * -1.0, other[e15] * self[e43] * -1.0, other[e25] * self[e41] * -1.0, other[e45] * self[scalar]])
                 + (other.group0().xyxx() * self.group2().ww().with_zw(self[e42], self[e41]))
@@ -27984,12 +27732,12 @@ impl Sandwich<MultiVector> for VersorOdd {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      202        0
+    //      f32      140      205        0
     //    simd2       24       24        0
-    //    simd3      120      154        0
-    //    simd4      103       81        0
+    //    simd3      120      157        0
+    //    simd4      103       78        0
     // Totals...
-    // yes simd      387      461        0
+    // yes simd      387      464        0
     //  no simd      960     1036        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -28011,12 +27759,12 @@ impl Sandwich<MultiVector> for VersorOdd {
                 - (Simd32x2::from(self[e25]) * Simd32x2::from([other[e42], other[e431]]))
                 - (Simd32x2::from(self[e35]) * Simd32x2::from([other[e43], other[e412]])),
             // e1, e2, e3, e4
-            (Simd32x4::from([other[e5], other[e5], other[e5], self[scalar]]) * self.group0().xyz().with_w(other[e4]))
-                + (other.group1().yzzx() * self.group1().zx().with_zw(self[scalar], self[e41]))
+            (other.group1().yzzx() * self.group1().zx().with_zw(self[scalar], self[e41]))
                 + (self.group2().yzxw() * other.group7().zxy().with_w(other[e12345]))
                 + (self.group0().zx().with_zw(self[e1234], self[e4315]) * other.group8().yzz().with_w(other[e431]))
                 + (self.group0().ww().with_zw(self[e31], self[e4125]) * other.group1().xyx().with_w(other[e412]))
                 + (self.group2().ww().with_zw(self[e42], self[e4235]) * other.group8().xyx().with_w(other[e423]))
+                + (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e4] * self[scalar])
                 + (other.group6().zxy() * self.group3().yzx()).with_w(other[e2] * self[e42])
                 + (other.group6().www() * self.group1().xyz()).with_w(other[e3] * self[e43])
                 - (other.group6().xyxz() * self.group1().ww().with_zw(self[e4315], self[e43]))
@@ -28238,11 +27986,11 @@ impl Sandwich<RoundPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       95        0
-    //    simd3        0       12        0
-    //    simd4       63       55        0
+    //      f32       52       96        0
+    //    simd3        0       13        0
+    //    simd4       63       54        0
     // Totals...
-    // yes simd      115      162        0
+    // yes simd      115      163        0
     //  no simd      304      351        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -28275,9 +28023,9 @@ impl Sandwich<RoundPoint> for VersorOdd {
                 - (other.group0().zxyx() * self.group2().yzxx()),
             // e1, e2, e3, e4
             Simd32x4::from([other[e4] * self[e15] * -1.0, other[e4] * self[e25] * -1.0, other[e4] * self[e35] * -1.0, other[e4] * self[scalar]])
-                + (Simd32x4::from([other[e5], other[e5], other[e5], self[e43]]) * self.group0().xyz().with_w(other[e3]))
                 + (other.group0().xyxx() * self.group0().ww().with_zw(self[e31], self[e41]))
                 + (other.group0().yzzy() * self.group1().zx().with_zw(self[scalar], self[e42]))
+                + (Simd32x3::from(other[e5]) * self.group0().xyz()).with_w(other[e3] * self[e43])
                 - (other.group0().zxyw() * self.group1().yzxw()),
         )
         .geometric_product(self.reverse());
@@ -28312,11 +28060,11 @@ impl Sandwich<Sphere> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      125        0
-    //    simd3        0       12        0
-    //    simd4       56       47        0
+    //      f32       80      127        0
+    //    simd3        0       14        0
+    //    simd4       56       45        0
     // Totals...
-    // yes simd      136      184        0
+    // yes simd      136      186        0
     //  no simd      304      349        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -28325,8 +28073,8 @@ impl Sandwich<Sphere> for VersorOdd {
             Simd32x4::from([other[e1234] * self[e23], other[e1234] * self[e31], other[e1234] * self[e12], other[e4125] * self[e4125] * -1.0])
                 + (other.group0().xyxw() * self.group2().ww().with_zw(self[e42], self[e1234]))
                 + (self.group0().zx().with_zw(self[e1234], other[e1234]) * other.group0().yzz().with_w(self[e3215]))
-                - (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e4315]]) * self.group3().xyz().with_w(other[e4315]))
-                - (other.group0().zxyx() * self.group0().yzx().with_w(self[e4235])),
+                - (other.group0().zxyx() * self.group0().yzx().with_w(self[e4235]))
+                - (Simd32x3::from(other[e1234]) * self.group3().xyz()).with_w(other[e4315] * self[e4315]),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e4315] * self[e4125]) + (other[e3215] * self[e41]) + (other[e1234] * self[e15]),
@@ -28350,9 +28098,9 @@ impl Sandwich<Sphere> for VersorOdd {
                 -(other[e4235] * self[e12]) - (other[e3215] * self[e42]),
                 -(other[e4315] * self[e23]) - (other[e3215] * self[e43]),
                 (other[e3215] * self[scalar]) + (other[e3215] * self[e45]),
-            ]) + (Simd32x4::from([other[e1234], other[e1234], other[e1234], self[e35]]) * self.group2().xyz().with_w(other[e4125]))
-                + (other.group0().xyxx() * self.group0().ww().with_zw(self[e31], self[e15]))
-                + (other.group0().yzzy() * self.group1().zx().with_zw(self[scalar], self[e25])),
+            ]) + (other.group0().xyxx() * self.group0().ww().with_zw(self[e31], self[e15]))
+                + (other.group0().yzzy() * self.group1().zx().with_zw(self[scalar], self[e25]))
+                + (Simd32x3::from(other[e1234]) * self.group2().xyz()).with_w(other[e4125] * self[e35]),
         )
         .geometric_product(self.reverse());
     }

@@ -11,17 +11,17 @@
 //  Minimum:         0       1       0
 //   Median:         4      10       0
 //  Average:         6      14       0
-//  Maximum:       111     145       0
+//  Maximum:       111     146       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         5      22       0
 //  Average:        11      28       0
 //  Maximum:       211     265       0
-impl std::ops::Div<bulk_expansion> for AntiCircleRotor {
-    type Output = bulk_expansion_partial<AntiCircleRotor>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiCircleRotor {
+    type Output = BulkExpansionInfixPartial<AntiCircleRotor>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiCircleRotor {
@@ -29,11 +29,11 @@ impl BulkExpansion<AntiCircleRotor> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       11        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd       10       17        0
-    //  no simd       10       33        0
+    //  no simd       10       32        0
     fn bulk_expansion(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = CircleRotor::from_groups(
@@ -50,20 +50,19 @@ impl BulkExpansion<AntiCircleRotor> for AntiCircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[e235], right_dual[e315], right_dual[e125], 1.0])
-                * self.group2().www().with_w(
-                    (self[scalar] * right_dual[e12345])
-                        - (self[e41] * right_dual[e235])
-                        - (self[e42] * right_dual[e315])
-                        - (self[e43] * right_dual[e125])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435])
-                        - (self[e45] * right_dual[e321])
-                        - (self[e15] * right_dual[e423])
-                        - (self[e25] * right_dual[e431])
-                        - (self[e35] * right_dual[e412]),
-                ),
+            (self.group2().www() * right_dual.group2().xyz()).with_w(
+                (self[scalar] * right_dual[e12345])
+                    - (self[e41] * right_dual[e235])
+                    - (self[e42] * right_dual[e315])
+                    - (self[e43] * right_dual[e125])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435])
+                    - (self[e45] * right_dual[e321])
+                    - (self[e15] * right_dual[e423])
+                    - (self[e25] * right_dual[e431])
+                    - (self[e35] * right_dual[e412]),
+            ),
         );
     }
 }
@@ -72,11 +71,11 @@ impl BulkExpansion<AntiDipoleInversion> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       25        0
-    //    simd3        0        3        0
-    //    simd4        3        6        0
+    //    simd3        0        4        0
+    //    simd4        3        5        0
     // Totals...
     // yes simd       21       34        0
-    //  no simd       30       58        0
+    //  no simd       30       57        0
     fn bulk_expansion(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = DipoleInversion::from_groups(
@@ -95,16 +94,15 @@ impl BulkExpansion<AntiDipoleInversion> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[e15], right_dual[e25], right_dual[e35], 1.0])
-                * self.group2().www().with_w(
-                    (self[scalar] * right_dual[e1234])
-                        - (self[e41] * right_dual[e23])
-                        - (self[e42] * right_dual[e31])
-                        - (self[e43] * right_dual[e12])
-                        - (self[e23] * right_dual[e41])
-                        - (self[e31] * right_dual[e42])
-                        - (self[e12] * right_dual[e43]),
-                ),
+            (self.group2().www() * right_dual.group2().xyz()).with_w(
+                (self[scalar] * right_dual[e1234])
+                    - (self[e41] * right_dual[e23])
+                    - (self[e42] * right_dual[e31])
+                    - (self[e43] * right_dual[e12])
+                    - (self[e23] * right_dual[e41])
+                    - (self[e31] * right_dual[e42])
+                    - (self[e12] * right_dual[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * right_dual[e45]) + (self[e45] * right_dual[e23]) + (self[e35] * right_dual[e42]) + (self[scalar] * right_dual[e4235]),
@@ -196,11 +194,11 @@ impl BulkExpansion<AntiLine> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       28        0
+    //  no simd        5       27        0
     fn bulk_expansion(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let right_dual = Line::from_groups(
@@ -211,15 +209,14 @@ impl BulkExpansion<AntiLine> for AntiCircleRotor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group0().with_w(
-                    -(self[e41] * right_dual[e235])
-                        - (self[e42] * right_dual[e315])
-                        - (self[e43] * right_dual[e125])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group0()).with_w(
+                -(self[e41] * right_dual[e235])
+                    - (self[e42] * right_dual[e315])
+                    - (self[e43] * right_dual[e125])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group1().with_w(0.0) * self.group2().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -272,10 +269,7 @@ impl BulkExpansion<AntiPlane> for AntiCircleRotor {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e5] * -1.0));
     }
 }
 impl BulkExpansion<AntiScalar> for AntiCircleRotor {
@@ -306,11 +300,11 @@ impl BulkExpansion<Circle> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       24        0
-    //    simd3        0        3        0
-    //    simd4        2        3        0
+    //    simd3        0        4        0
+    //    simd4        2        2        0
     // Totals...
     // yes simd       19       30        0
-    //  no simd       25       45        0
+    //  no simd       25       44        0
     fn bulk_expansion(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let right_dual = Dipole::from_groups(
@@ -327,15 +321,14 @@ impl BulkExpansion<Circle> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().with_w(
-                    -(self[e41] * right_dual[e23])
-                        - (self[e42] * right_dual[e31])
-                        - (self[e43] * right_dual[e12])
-                        - (self[e23] * right_dual[e41])
-                        - (self[e31] * right_dual[e42])
-                        - (self[e12] * right_dual[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(
+                -(self[e41] * right_dual[e23])
+                    - (self[e42] * right_dual[e31])
+                    - (self[e43] * right_dual[e12])
+                    - (self[e23] * right_dual[e41])
+                    - (self[e31] * right_dual[e42])
+                    - (self[e12] * right_dual[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * right_dual[e35]) + (self[e23] * right_dual[e45]) + (self[e45] * right_dual[e23]) + (self[e35] * right_dual[e42]),
@@ -400,11 +393,11 @@ impl BulkExpansion<Dipole> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       10        0
-    //    simd3        0        3        0
-    //    simd4        0        3        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        9       16        0
-    //  no simd        9       31        0
+    //  no simd        9       30        0
     fn bulk_expansion(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let right_dual = Circle::from_groups(
@@ -421,19 +414,18 @@ impl BulkExpansion<Dipole> for AntiCircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().with_w(
-                    -(self[e41] * right_dual[e235])
-                        - (self[e42] * right_dual[e315])
-                        - (self[e43] * right_dual[e125])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435])
-                        - (self[e45] * right_dual[e321])
-                        - (self[e15] * right_dual[e423])
-                        - (self[e25] * right_dual[e431])
-                        - (self[e35] * right_dual[e412]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(
+                -(self[e41] * right_dual[e235])
+                    - (self[e42] * right_dual[e315])
+                    - (self[e43] * right_dual[e125])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435])
+                    - (self[e45] * right_dual[e321])
+                    - (self[e15] * right_dual[e423])
+                    - (self[e25] * right_dual[e431])
+                    - (self[e35] * right_dual[e412]),
+            ),
         );
     }
 }
@@ -524,10 +516,11 @@ impl BulkExpansion<FlatPoint> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        7        0
-    //  no simd        3       13        0
+    //  no simd        3       12        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
@@ -537,11 +530,8 @@ impl BulkExpansion<FlatPoint> for AntiCircleRotor {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(self[scalar] * right_dual[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[e235], right_dual[e315], right_dual[e125], 1.0])
-                * self
-                    .group2()
-                    .www()
-                    .with_w(-(self[e41] * right_dual[e235]) - (self[e42] * right_dual[e315]) - (self[e43] * right_dual[e125]) - (self[e45] * right_dual[e321])),
+            (self.group2().www() * right_dual.group0().xyz())
+                .with_w(-(self[e41] * right_dual[e235]) - (self[e42] * right_dual[e315]) - (self[e43] * right_dual[e125]) - (self[e45] * right_dual[e321])),
         );
     }
 }
@@ -591,11 +581,11 @@ impl BulkExpansion<Line> for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        1        4        0
+    //    simd3        0        2        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       13       34        0
+    //  no simd       13       33        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -605,10 +595,7 @@ impl BulkExpansion<Line> for AntiCircleRotor {
             // e23, e31, e12, e45
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().with_w(0.0) * self.group2().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual
-                    .group1()
-                    .with_w(-(self[e41] * right_dual[e23]) - (self[e42] * right_dual[e31]) - (self[e43] * right_dual[e12])),
+            (Simd32x3::from(self[scalar]) * right_dual.group1()).with_w(-(self[e41] * right_dual[e23]) - (self[e42] * right_dual[e31]) - (self[e43] * right_dual[e12])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * right_dual[e35]) + (self[e45] * right_dual[e23]),
@@ -664,12 +651,12 @@ impl BulkExpansion<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       48        0
+    //      f32       32       49        0
     //    simd2        0        1        0
-    //    simd3        8       16        0
-    //    simd4        6        9        0
+    //    simd3        8       17        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       46       74        0
+    // yes simd       46       75        0
     //  no simd       80      134        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -729,7 +716,7 @@ impl BulkExpansion<MultiVector> for AntiCircleRotor {
                 (self[e25] * right_dual[e4]) + (self[scalar] * right_dual[e425]),
                 (self[e35] * right_dual[e4]) + (self[scalar] * right_dual[e435]),
                 -(self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3]),
-            ]) + (Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], right_dual[e321]]) * self.group0().with_w(self[scalar]))
+            ]) + (Simd32x3::from(right_dual[e5]) * self.group0()).with_w(self[scalar] * right_dual[e321])
                 - (self.group1().wwwx() * right_dual.group1().xyzx()),
             // e423, e431, e412
             (Simd32x3::from(self[scalar]) * right_dual.group7()) + (Simd32x3::from(right_dual[e4]) * self.group1().xyz()) + (self.group0().yzx() * right_dual.group1().zxy())
@@ -968,10 +955,10 @@ impl BulkExpansion<VersorOdd> for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiDipoleInversion {
-    type Output = bulk_expansion_partial<AntiDipoleInversion>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiDipoleInversion {
+    type Output = BulkExpansionInfixPartial<AntiDipoleInversion>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiDipoleInversion {
@@ -1452,20 +1439,18 @@ impl BulkExpansion<FlatPoint> for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        7        0
-    //  no simd        3       13        0
+    //  no simd        3       12        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e235], right_dual[e315], right_dual[e125], 1.0])
-                * self
-                    .group2()
-                    .www()
-                    .with_w(-(self[e1] * right_dual[e235]) - (self[e2] * right_dual[e315]) - (self[e3] * right_dual[e125]) - (self[e5] * right_dual[e321])),
+            (self.group2().www() * right_dual.group0().xyz())
+                .with_w(-(self[e1] * right_dual[e235]) - (self[e2] * right_dual[e315]) - (self[e3] * right_dual[e125]) - (self[e5] * right_dual[e321])),
             // e1234
             self[e4] * right_dual[e321],
         );
@@ -1512,11 +1497,11 @@ impl BulkExpansion<Line> for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
+    //    simd3        0        3        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd       10       18        0
-    //  no simd       13       25        0
+    //  no simd       13       24        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -1524,8 +1509,7 @@ impl BulkExpansion<Line> for AntiDipoleInversion {
             // e423, e431, e412
             Simd32x3::from(self[e4]) * right_dual.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual.group1().with_w(-(self[e1] * right_dual[e23]) - (self[e2] * right_dual[e31]) - (self[e3] * right_dual[e12])),
+            (Simd32x3::from(self[e4]) * right_dual.group1()).with_w(-(self[e1] * right_dual[e23]) - (self[e2] * right_dual[e31]) - (self[e3] * right_dual[e12])),
             // e235, e315, e125, e12345
             Simd32x4::from([
                 (self[e2] * right_dual[e35]) + (self[e5] * right_dual[e23]),
@@ -1886,10 +1870,10 @@ impl BulkExpansion<VersorOdd> for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiDualNum {
-    type Output = bulk_expansion_partial<AntiDualNum>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiDualNum {
+    type Output = BulkExpansionInfixPartial<AntiDualNum>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiDualNum {
@@ -1976,10 +1960,7 @@ impl BulkExpansion<AntiFlatPoint> for AntiDualNum {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e321] * -1.0));
     }
 }
 impl BulkExpansion<AntiFlector> for AntiDualNum {
@@ -2059,10 +2040,7 @@ impl BulkExpansion<AntiPlane> for AntiDualNum {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e5] * -1.0));
     }
 }
 impl BulkExpansion<AntiScalar> for AntiDualNum {
@@ -2296,8 +2274,7 @@ impl BulkExpansion<Motor> for AntiDualNum {
             // e23, e31, e12, scalar
             Simd32x4::from(self[scalar]) * right_dual.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from([right_dual[e15], right_dual[e25], right_dual[e35], 1.0])
-                * self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])) * right_dual.group1().xyz().with_w(1.0),
         );
     }
 }
@@ -2358,8 +2335,7 @@ impl BulkExpansion<MultiVector> for AntiDualNum {
             // e235, e315, e125
             Simd32x3::from(self[scalar]) * right_dual.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4235], right_dual[e4315], right_dual[e4125], 1.0])
-                * self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])) * right_dual.group9().xyz().with_w(1.0),
             // e1234
             self[scalar] * right_dual[e1234],
         );
@@ -2475,8 +2451,7 @@ impl BulkExpansion<VersorEven> for AntiDualNum {
             // e15, e25, e35, e1234
             Simd32x4::from(self[scalar]) * right_dual.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4235], right_dual[e4315], right_dual[e4125], 1.0])
-                * self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[scalar]) + (self[scalar] * right_dual[e3215])) * right_dual.group3().xyz().with_w(1.0),
         );
     }
 }
@@ -2503,8 +2478,7 @@ impl BulkExpansion<VersorOdd> for AntiDualNum {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([right_dual[e423], right_dual[e431], right_dual[e412], 1.0])
-                * self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[e4]) + (self[scalar] * right_dual[e12345])),
+            self.group0().yy().with_zw(self[scalar], (self[e3215] * right_dual[e4]) + (self[scalar] * right_dual[e12345])) * right_dual.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e5
@@ -2514,10 +2488,10 @@ impl BulkExpansion<VersorOdd> for AntiDualNum {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiFlatPoint {
-    type Output = bulk_expansion_partial<AntiFlatPoint>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiFlatPoint {
+    type Output = BulkExpansionInfixPartial<AntiFlatPoint>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiDipoleInversion> for AntiFlatPoint {
@@ -2565,20 +2539,20 @@ impl BulkExpansion<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        0
+    // f32        0        3        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ other[e321] * self[e321]);
+        return AntiScalar::from_groups(/* e12345 */ other.group0().xyz().with_w(other[e321] * -1.0)[3] * self[e321] * -1.0);
     }
 }
 impl BulkExpansion<AntiFlector> for AntiFlatPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        0
+    // f32        0        3        0
     fn bulk_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ self[e321] * other[e321]);
+        return AntiScalar::from_groups(/* e12345 */ other.group0().xyz().with_w(other[e321] * -1.0)[3] * self[e321] * -1.0);
     }
 }
 impl BulkExpansion<AntiMotor> for AntiFlatPoint {
@@ -2639,10 +2613,11 @@ impl BulkExpansion<CircleRotor> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        8        0
-    //  no simd        3       17        0
+    //  no simd        3       16        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -2659,11 +2634,8 @@ impl BulkExpansion<CircleRotor> for AntiFlatPoint {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(right_dual[scalar] * self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], 1.0])
-                * right_dual
-                    .group2()
-                    .www()
-                    .with_w(-(right_dual[e41] * self[e235]) - (right_dual[e42] * self[e315]) - (right_dual[e43] * self[e125]) - (right_dual[e45] * self[e321])),
+            (right_dual.group2().www() * self.group0().xyz())
+                .with_w(-(right_dual[e41] * self[e235]) - (right_dual[e42] * self[e315]) - (right_dual[e43] * self[e125]) - (right_dual[e45] * self[e321])),
         );
     }
 }
@@ -2672,11 +2644,11 @@ impl BulkExpansion<DipoleInversion> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        6        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        3       12        0
-    //  no simd        3       29        0
+    //  no simd        3       27        0
     fn bulk_expansion(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiDipoleInversion::from_groups(
@@ -2691,12 +2663,8 @@ impl BulkExpansion<DipoleInversion> for AntiFlatPoint {
         );
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e235], self[e315], self[e125], 1.0])
-                * right_dual
-                    .group2()
-                    .www()
-                    .with_w((right_dual[e1] * self[e235]) + (right_dual[e2] * self[e315]) + (right_dual[e3] * self[e125]) + (right_dual[e5] * self[e321]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (right_dual.group2().www() * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((right_dual[e1] * self[e235]) + (right_dual[e2] * self[e315]) + (right_dual[e3] * self[e125]) + (right_dual[e5] * self[e321])),
             // e1234
             right_dual[e4] * self[e321] * -1.0,
         );
@@ -2750,7 +2718,7 @@ impl BulkExpansion<Motor> for AntiFlatPoint {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(other.group0().xyz().with_w(other[e12345] * -1.0)[3]) * self.group0());
     }
 }
 impl BulkExpansion<MultiVector> for AntiFlatPoint {
@@ -2759,11 +2727,11 @@ impl BulkExpansion<MultiVector> for AntiFlatPoint {
     //           add/sub      mul      div
     //      f32        6       13        0
     //    simd2        0        1        0
-    //    simd3        0        3        0
-    //    simd4        0        5        0
+    //    simd3        0        5        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        6       22        0
-    //  no simd        6       44        0
+    //  no simd        6       42        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let right_dual = MultiVector::from_groups(
@@ -2813,12 +2781,8 @@ impl BulkExpansion<MultiVector> for AntiFlatPoint {
             // e235, e315, e125
             Simd32x3::from(right_dual[scalar]) * self.group0().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5])),
             // e1234
             self[e321] * right_dual[e4] * -1.0,
         );
@@ -2847,10 +2811,11 @@ impl BulkExpansion<Sphere> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        6        0
-    //    simd4        0        3        0
+    //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        9        0
-    //  no simd        3       18        0
+    //  no simd        3       16        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let right_dual = RoundPoint::from_groups(
@@ -2861,12 +2826,8 @@ impl BulkExpansion<Sphere> for AntiFlatPoint {
         );
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5])),
             // e1234
             self[e321] * right_dual[e4] * -1.0,
         );
@@ -2877,10 +2838,11 @@ impl BulkExpansion<VersorEven> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        5        0
+    //    simd3        0        1        0
+    //    simd4        0        4        0
     // Totals...
     // yes simd        3       10        0
-    //  no simd        3       25        0
+    //  no simd        3       24        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -2899,11 +2861,8 @@ impl BulkExpansion<VersorEven> for AntiFlatPoint {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(self[e321] * right_dual[scalar]),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w(-(self[e235] * right_dual[e41]) - (self[e315] * right_dual[e42]) - (self[e125] * right_dual[e43]) - (self[e321] * right_dual[e45])),
+            (Simd32x3::from(right_dual[scalar]) * self.group0().xyz())
+                .with_w(-(self[e235] * right_dual[e41]) - (self[e315] * right_dual[e42]) - (self[e125] * right_dual[e43]) - (self[e321] * right_dual[e45])),
         );
     }
 }
@@ -2912,10 +2871,11 @@ impl BulkExpansion<VersorOdd> for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        6        0
-    //    simd4        0        6        0
+    //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
     // yes simd        3       12        0
-    //  no simd        3       30        0
+    //  no simd        3       28        0
     fn bulk_expansion(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorEven::from_groups(
@@ -2930,21 +2890,17 @@ impl BulkExpansion<VersorOdd> for AntiFlatPoint {
         );
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5])),
             // e1234
             self[e321] * right_dual[e4] * -1.0,
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiFlector {
-    type Output = bulk_expansion_partial<AntiFlector>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiFlector {
+    type Output = BulkExpansionInfixPartial<AntiFlector>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiFlector {
@@ -3071,11 +3027,11 @@ impl BulkExpansion<AntiFlector> for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        4        0
-    //    simd3        1        2        0
-    //    simd4        0        4        0
+    //    simd3        1        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        4       10        0
-    //  no simd        6       26        0
+    //  no simd        6       24        0
     fn bulk_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let right_dual = Flector::from_groups(
@@ -3086,12 +3042,8 @@ impl BulkExpansion<AntiFlector> for AntiFlector {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e45], right_dual[e45], right_dual[e45], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w((self[e1] * right_dual[e4235]) + (self[e2] * right_dual[e4315]) + (self[e3] * right_dual[e4125]) - (self[e321] * right_dual[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e45]) * self.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e1] * right_dual[e4235]) + (self[e2] * right_dual[e4315]) + (self[e3] * right_dual[e4125]) - (self[e321] * right_dual[e45])),
             // e235, e315, e125, e5
             ((self.group1().yzx() * right_dual.group0().zxy()) - (self.group1().zxy() * right_dual.group0().yzx())).with_w(0.0),
         );
@@ -3601,11 +3553,11 @@ impl BulkExpansion<Sphere> for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        8        0
-    //    simd3        2        6        0
-    //    simd4        0        3        0
+    //    simd3        2        8        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        5       17        0
-    //  no simd        9       38        0
+    //  no simd        9       36        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let right_dual = RoundPoint::from_groups(
@@ -3622,12 +3574,8 @@ impl BulkExpansion<Sphere> for AntiFlector {
             // e15, e25, e35, e1234
             ((Simd32x3::from(right_dual[e5]) * self.group1().xyz()) - (Simd32x3::from(self[e5]) * right_dual.group0().xyz())).with_w(self[e321] * right_dual[e4] * -1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e235] * right_dual[e1]) + (self[e315] * right_dual[e2]) + (self[e125] * right_dual[e3]) + (self[e321] * right_dual[e5])),
         );
     }
 }
@@ -3716,10 +3664,10 @@ impl BulkExpansion<VersorOdd> for AntiFlector {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiLine {
-    type Output = bulk_expansion_partial<AntiLine>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiLine {
+    type Output = BulkExpansionInfixPartial<AntiLine>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiLine {
@@ -3808,17 +3756,17 @@ impl BulkExpansion<AntiFlatPoint> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        2        5        0
-    //  no simd        2       11        0
+    //  no simd        2       10        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e45], right_dual[e45], right_dual[e45], 1.0])
-                * self.group0().with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
+            (Simd32x3::from(right_dual[e45]) * self.group0()).with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
         );
     }
 }
@@ -3827,10 +3775,11 @@ impl BulkExpansion<AntiFlector> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        2        6        0
-    //  no simd        2       15        0
+    //  no simd        2       14        0
     fn bulk_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let right_dual = Flector::from_groups(
@@ -3841,8 +3790,7 @@ impl BulkExpansion<AntiFlector> for AntiLine {
         );
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e45], right_dual[e45], right_dual[e45], 1.0])
-                * self.group0().with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
+            (Simd32x3::from(right_dual[e45]) * self.group0()).with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
         );
     }
 }
@@ -3949,11 +3897,11 @@ impl BulkExpansion<CircleRotor> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        1        6        0
+    //    simd3        0        2        0
+    //    simd4        1        5        0
     // Totals...
     // yes simd       10       22        0
-    //  no simd       13       42        0
+    //  no simd       13       41        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -3970,8 +3918,7 @@ impl BulkExpansion<CircleRotor> for AntiLine {
             // e23, e31, e12, e45
             Simd32x3::from(1.0).with_w(0.0) * self.group0().with_w(0.0) * right_dual.group2().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group1().with_w(-(right_dual[e41] * self[e23]) - (right_dual[e42] * self[e31]) - (right_dual[e43] * self[e12])),
+            (Simd32x3::from(right_dual[scalar]) * self.group1()).with_w(-(right_dual[e41] * self[e23]) - (right_dual[e42] * self[e31]) - (right_dual[e43] * self[e12])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e42] * self[e35]) + (right_dual[e45] * self[e23]),
@@ -4018,11 +3965,11 @@ impl BulkExpansion<DipoleInversion> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        3        0
-    //    simd4        1        4        0
+    //    simd3        0        4        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       10       22        0
-    //  no simd       13       40        0
+    //  no simd       13       39        0
     fn bulk_expansion(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiDipoleInversion::from_groups(
@@ -4039,8 +3986,7 @@ impl BulkExpansion<DipoleInversion> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(right_dual[e4]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self.group1().with_w(-(right_dual[e1] * self[e23]) - (right_dual[e2] * self[e31]) - (right_dual[e3] * self[e12])),
+            (Simd32x3::from(right_dual[e4]) * self.group1()).with_w(-(right_dual[e1] * self[e23]) - (right_dual[e2] * self[e31]) - (right_dual[e3] * self[e12])),
             // e235, e315, e125, e12345
             Simd32x4::from([
                 (right_dual[e2] * self[e35]) + (right_dual[e5] * self[e23]),
@@ -4123,10 +4069,11 @@ impl BulkExpansion<Motor> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        6        0
+    //    simd3        0        1        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       30        0
+    //  no simd        5       29        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -4139,15 +4086,14 @@ impl BulkExpansion<Motor> for AntiLine {
             // e23, e31, e12, scalar
             Simd32x3::from(1.0).with_w(0.0) * self.group0().with_w(0.0) * right_dual.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group1().with_w(
-                    -(self[e23] * right_dual[e15])
-                        - (self[e31] * right_dual[e25])
-                        - (self[e12] * right_dual[e35])
-                        - (self[e15] * right_dual[e23])
-                        - (self[e25] * right_dual[e31])
-                        - (self[e35] * right_dual[e12]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group1()).with_w(
+                -(self[e23] * right_dual[e15])
+                    - (self[e31] * right_dual[e25])
+                    - (self[e12] * right_dual[e35])
+                    - (self[e15] * right_dual[e23])
+                    - (self[e25] * right_dual[e31])
+                    - (self[e35] * right_dual[e12]),
+            ),
         );
     }
 }
@@ -4157,11 +4103,11 @@ impl BulkExpansion<MultiVector> for AntiLine {
     //           add/sub      mul      div
     //      f32       16       26        0
     //    simd2        0        1        0
-    //    simd3        2        8        0
-    //    simd4        1        7        0
+    //    simd3        2        9        0
+    //    simd4        1        6        0
     // Totals...
     // yes simd       19       42        0
-    //  no simd       26       80        0
+    //  no simd       26       79        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let right_dual = MultiVector::from_groups(
@@ -4210,8 +4156,7 @@ impl BulkExpansion<MultiVector> for AntiLine {
             // e23, e31, e12
             Simd32x3::from(right_dual[scalar]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self.group1().with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
+            (Simd32x3::from(right_dual[e4]) * self.group1()).with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
             // e423, e431, e412
             Simd32x3::from(right_dual[e4]) * self.group0(),
             // e235, e315, e125
@@ -4256,11 +4201,11 @@ impl BulkExpansion<Sphere> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        2        4        0
-    //    simd4        0        2        0
+    //    simd3        2        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        4        9        0
-    //  no simd        8       23        0
+    //  no simd        8       22        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let right_dual = RoundPoint::from_groups(
@@ -4273,8 +4218,7 @@ impl BulkExpansion<Sphere> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(right_dual[e4]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self.group1().with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
+            (Simd32x3::from(right_dual[e4]) * self.group1()).with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
             // e235, e315, e125
             (Simd32x3::from(right_dual[e5]) * self.group0()) + (self.group1().zxy() * right_dual.group0().yzx()) - (self.group1().yzx() * right_dual.group0().zxy()),
         );
@@ -4285,11 +4229,11 @@ impl BulkExpansion<VersorEven> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        1        8        0
+    //    simd3        0        2        0
+    //    simd4        1        7        0
     // Totals...
     // yes simd       10       24        0
-    //  no simd       13       50        0
+    //  no simd       13       49        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -4308,8 +4252,7 @@ impl BulkExpansion<VersorEven> for AntiLine {
             // e23, e31, e12, e45
             Simd32x3::from(1.0).with_w(0.0) * self.group0().with_w(0.0) * right_dual.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group1().with_w(-(self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
+            (Simd32x3::from(right_dual[scalar]) * self.group1()).with_w(-(self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * right_dual[e45]) + (self[e35] * right_dual[e42]),
@@ -4325,11 +4268,11 @@ impl BulkExpansion<VersorOdd> for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        1        5        0
+    //    simd3        0        3        0
+    //    simd4        1        4        0
     // Totals...
     // yes simd       10       22        0
-    //  no simd       13       41        0
+    //  no simd       13       40        0
     fn bulk_expansion(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorEven::from_groups(
@@ -4346,8 +4289,7 @@ impl BulkExpansion<VersorOdd> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(right_dual[e4]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self.group1().with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
+            (Simd32x3::from(right_dual[e4]) * self.group1()).with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
             // e235, e315, e125, e12345
             Simd32x4::from([
                 (self[e23] * right_dual[e5]) + (self[e35] * right_dual[e2]),
@@ -4358,10 +4300,10 @@ impl BulkExpansion<VersorOdd> for AntiLine {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiMotor {
-    type Output = bulk_expansion_partial<AntiMotor>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiMotor {
+    type Output = BulkExpansionInfixPartial<AntiMotor>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiMotor {
@@ -4369,11 +4311,11 @@ impl BulkExpansion<AntiCircleRotor> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6        7        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        6       13        0
-    //  no simd        6       29        0
+    //  no simd        6       28        0
     fn bulk_expansion(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = CircleRotor::from_groups(
@@ -4390,16 +4332,15 @@ impl BulkExpansion<AntiCircleRotor> for AntiMotor {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[e235], right_dual[e315], right_dual[e125], 1.0])
-                * self.group0().www().with_w(
-                    (self[scalar] * right_dual[e12345])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435])
-                        - (self[e15] * right_dual[e423])
-                        - (self[e25] * right_dual[e431])
-                        - (self[e35] * right_dual[e412]),
-                ),
+            (self.group0().www() * right_dual.group2().xyz()).with_w(
+                (self[scalar] * right_dual[e12345])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435])
+                    - (self[e15] * right_dual[e423])
+                    - (self[e25] * right_dual[e431])
+                    - (self[e35] * right_dual[e412]),
+            ),
         );
     }
 }
@@ -4408,11 +4349,11 @@ impl BulkExpansion<AntiDipoleInversion> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       17        0
-    //    simd3        0        3        0
-    //    simd4        2        5        0
+    //    simd3        0        4        0
+    //    simd4        2        4        0
     // Totals...
     // yes simd       12       25        0
-    //  no simd       18       46        0
+    //  no simd       18       45        0
     fn bulk_expansion(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = DipoleInversion::from_groups(
@@ -4431,11 +4372,8 @@ impl BulkExpansion<AntiDipoleInversion> for AntiMotor {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[e15], right_dual[e25], right_dual[e35], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[scalar] * right_dual[e1234]) - (self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
+            (self.group0().www() * right_dual.group2().xyz())
+                .with_w((self[scalar] * right_dual[e1234]) - (self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * right_dual[e45]) + (self[scalar] * right_dual[e4235]),
@@ -4472,10 +4410,11 @@ impl BulkExpansion<AntiFlatPoint> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        2        6        0
-    //  no simd        2       15        0
+    //  no simd        2       14        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = FlatPoint::from_groups(/* e15, e25, e35, e45 */ other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
@@ -4483,11 +4422,7 @@ impl BulkExpansion<AntiFlatPoint> for AntiMotor {
             // e15, e25, e35, e45
             Simd32x4::from(self[scalar]) * right_dual.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([right_dual[e45], right_dual[e45], right_dual[e45], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
+            (Simd32x3::from(right_dual[e45]) * self.group0().xyz()).with_w(-(self[e23] * right_dual[e15]) - (self[e31] * right_dual[e25]) - (self[e12] * right_dual[e35])),
         );
     }
 }
@@ -4526,11 +4461,11 @@ impl BulkExpansion<AntiLine> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        2        9        0
-    //  no simd        2       25        0
+    //  no simd        2       24        0
     fn bulk_expansion(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let right_dual = Line::from_groups(
@@ -4541,10 +4476,7 @@ impl BulkExpansion<AntiLine> for AntiMotor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual
-                    .group0()
-                    .with_w(-(self[e23] * right_dual[e415]) - (self[e31] * right_dual[e425]) - (self[e12] * right_dual[e435])),
+            (Simd32x3::from(self[scalar]) * right_dual.group0()).with_w(-(self[e23] * right_dual[e415]) - (self[e31] * right_dual[e425]) - (self[e12] * right_dual[e435])),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group1().with_w(0.0) * self.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -4555,11 +4487,11 @@ impl BulkExpansion<AntiMotor> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        1        2        0
-    //    simd4        0        3        0
+    //    simd3        1        3        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        4       10        0
-    //  no simd        6       23        0
+    //  no simd        6       22        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = Motor::from_groups(
@@ -4570,11 +4502,8 @@ impl BulkExpansion<AntiMotor> for AntiMotor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e415], right_dual[e425], right_dual[e435], 1.0])
-                * self
-                    .group0()
-                    .www()
-                    .with_w((self[scalar] * right_dual[e12345]) - (self[e23] * right_dual[e415]) - (self[e31] * right_dual[e425]) - (self[e12] * right_dual[e435])),
+            (self.group0().www() * right_dual.group0().xyz())
+                .with_w((self[scalar] * right_dual[e12345]) - (self[e23] * right_dual[e415]) - (self[e31] * right_dual[e425]) - (self[e12] * right_dual[e435])),
             // e235, e315, e125, e5
             ((Simd32x3::from(self[scalar]) * right_dual.group1().xyz()) + (Simd32x3::from(right_dual[e5]) * self.group0().xyz())).with_w(self[scalar] * right_dual[e5]),
         );
@@ -4591,10 +4520,7 @@ impl BulkExpansion<AntiPlane> for AntiMotor {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e5] * -1.0));
     }
 }
 impl BulkExpansion<AntiScalar> for AntiMotor {
@@ -4622,11 +4548,11 @@ impl BulkExpansion<Circle> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        1        3        0
+    //    simd3        0        3        0
+    //    simd4        1        2        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       13       33        0
+    //  no simd       13       32        0
     fn bulk_expansion(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let right_dual = Dipole::from_groups(
@@ -4643,10 +4569,7 @@ impl BulkExpansion<Circle> for AntiMotor {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual
-                    .group2()
-                    .with_w(-(self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(-(self[e23] * right_dual[e41]) - (self[e31] * right_dual[e42]) - (self[e12] * right_dual[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * right_dual[e45]) + (self[e35] * right_dual[e42]),
@@ -4705,11 +4628,11 @@ impl BulkExpansion<Dipole> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd3        0        3        0
-    //    simd4        0        3        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       27        0
+    //  no simd        5       26        0
     fn bulk_expansion(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let right_dual = Circle::from_groups(
@@ -4726,15 +4649,14 @@ impl BulkExpansion<Dipole> for AntiMotor {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().with_w(
-                    -(self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435])
-                        - (self[e15] * right_dual[e423])
-                        - (self[e25] * right_dual[e431])
-                        - (self[e35] * right_dual[e412]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(
+                -(self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435])
+                    - (self[e15] * right_dual[e423])
+                    - (self[e25] * right_dual[e431])
+                    - (self[e35] * right_dual[e412]),
+            ),
         );
     }
 }
@@ -4808,11 +4730,11 @@ impl BulkExpansion<DualNum> for AntiMotor {
             // e23, e31, e12, scalar
             Simd32x4::from(right_dual[scalar]) * self.group0(),
             // e15, e25, e35, e3215
-            Simd32x4::from([self[e15], self[e25], self[e35], 1.0])
-                * right_dual
-                    .group0()
-                    .yy()
-                    .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215])),
+            right_dual
+                .group0()
+                .yy()
+                .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215]))
+                * self.group1().xyz().with_w(1.0),
         );
     }
 }
@@ -4869,10 +4791,11 @@ impl BulkExpansion<Line> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        5       10        0
-    //  no simd        5       22        0
+    //  no simd        5       21        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -4880,15 +4803,14 @@ impl BulkExpansion<Line> for AntiMotor {
             // e23, e31, e12, scalar
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().with_w(0.0) * self.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group1().with_w(
-                    -(right_dual[e23] * self[e15])
-                        - (right_dual[e31] * self[e25])
-                        - (right_dual[e12] * self[e35])
-                        - (right_dual[e15] * self[e23])
-                        - (right_dual[e25] * self[e31])
-                        - (right_dual[e35] * self[e12]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group1()).with_w(
+                -(right_dual[e23] * self[e15])
+                    - (right_dual[e31] * self[e25])
+                    - (right_dual[e12] * self[e35])
+                    - (right_dual[e15] * self[e23])
+                    - (right_dual[e25] * self[e31])
+                    - (right_dual[e35] * self[e12]),
+            ),
         );
     }
 }
@@ -5077,11 +4999,11 @@ impl BulkExpansion<Sphere> for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        4        0
-    //    simd3        2        3        0
-    //    simd4        0        4        0
+    //    simd3        2        4        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        4       11        0
-    //  no simd        8       29        0
+    //  no simd        8       28        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let right_dual = RoundPoint::from_groups(
@@ -5094,8 +5016,7 @@ impl BulkExpansion<Sphere> for AntiMotor {
             // e423, e431, e412, e12345
             Simd32x4::from(right_dual[e4]) * self.group0().xyz().with_w(self[e3215]),
             // e415, e425, e435, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 1.0])
-                * self.group1().xyz().with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
+            (Simd32x3::from(right_dual[e4]) * self.group1().xyz()).with_w(-(self[e23] * right_dual[e1]) - (self[e31] * right_dual[e2]) - (self[e12] * right_dual[e3])),
             // e235, e315, e125, e5
             ((Simd32x3::from(right_dual[e5]) * self.group0().xyz()) + (self.group1().zxy() * right_dual.group0().yzx()) - (self.group1().yzx() * right_dual.group0().zxy()))
                 .with_w(self[scalar] * right_dual[e5]),
@@ -5202,10 +5123,10 @@ impl BulkExpansion<VersorOdd> for AntiMotor {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiPlane {
-    type Output = bulk_expansion_partial<AntiPlane>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiPlane {
+    type Output = BulkExpansionInfixPartial<AntiPlane>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for AntiPlane {
@@ -5325,11 +5246,11 @@ impl BulkExpansion<AntiFlector> for AntiPlane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        1        2        0
-    //    simd4        0        4        0
+    //    simd3        1        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        9        0
-    //  no simd        5       25        0
+    //  no simd        5       23        0
     fn bulk_expansion(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let right_dual = Flector::from_groups(
@@ -5340,12 +5261,8 @@ impl BulkExpansion<AntiFlector> for AntiPlane {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e45], right_dual[e45], right_dual[e45], 1.0])
-                * self
-                    .group0()
-                    .xyz()
-                    .with_w((self[e1] * right_dual[e4235]) + (self[e2] * right_dual[e4315]) + (self[e3] * right_dual[e4125]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(right_dual[e45]) * self.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((self[e1] * right_dual[e4235]) + (self[e2] * right_dual[e4315]) + (self[e3] * right_dual[e4125])),
             // e235, e315, e125, e5
             ((self.group0().yzx() * right_dual.group0().zxy()) - (self.group0().zxy() * right_dual.group0().yzx())).with_w(0.0),
         );
@@ -5945,10 +5862,10 @@ impl BulkExpansion<VersorOdd> for AntiPlane {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for AntiScalar {
-    type Output = bulk_expansion_partial<AntiScalar>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for AntiScalar {
+    type Output = BulkExpansionInfixPartial<AntiScalar>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiScalar> for AntiScalar {
@@ -5968,7 +5885,7 @@ impl BulkExpansion<CircleRotor> for AntiScalar {
     // f32        0        2        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other.group2().xyz().with_w(other[e12345] * -1.0)[3] * self[e12345]);
     }
 }
 impl BulkExpansion<DualNum> for AntiScalar {
@@ -5988,7 +5905,7 @@ impl BulkExpansion<Motor> for AntiScalar {
     // f32        0        2        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other.group0().xyz().with_w(other[e12345] * -1.0)[3] * self[e12345]);
     }
 }
 impl BulkExpansion<MultiVector> for AntiScalar {
@@ -6008,13 +5925,13 @@ impl BulkExpansion<VersorEven> for AntiScalar {
     // f32        0        2        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ self[e12345] * other[e12345] * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ other.group0().xyz().with_w(other[e12345] * -1.0)[3] * self[e12345]);
     }
 }
-impl std::ops::Div<bulk_expansion> for Circle {
-    type Output = bulk_expansion_partial<Circle>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Circle {
+    type Output = BulkExpansionInfixPartial<Circle>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiDipoleInversion> for Circle {
@@ -6178,11 +6095,11 @@ impl BulkExpansion<CircleRotor> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       10        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        2        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        9       15        0
-    //  no simd        9       29        0
+    //  no simd        9       28        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -6199,19 +6116,18 @@ impl BulkExpansion<CircleRotor> for Circle {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(
-                    -(right_dual[e41] * self[e235])
-                        - (right_dual[e42] * self[e315])
-                        - (right_dual[e43] * self[e125])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435])
-                        - (right_dual[e45] * self[e321])
-                        - (right_dual[e15] * self[e423])
-                        - (right_dual[e25] * self[e431])
-                        - (right_dual[e35] * self[e412]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(
+                -(right_dual[e41] * self[e235])
+                    - (right_dual[e42] * self[e315])
+                    - (right_dual[e43] * self[e125])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435])
+                    - (right_dual[e45] * self[e321])
+                    - (right_dual[e15] * self[e423])
+                    - (right_dual[e25] * self[e431])
+                    - (right_dual[e35] * self[e412]),
+            ),
         );
     }
 }
@@ -6330,11 +6246,11 @@ impl BulkExpansion<Motor> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        2        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        5       11        0
-    //  no simd        5       25        0
+    //  no simd        5       24        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -6349,15 +6265,14 @@ impl BulkExpansion<Motor> for Circle {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(
-                    -(right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435])
-                        - (right_dual[e15] * self[e423])
-                        - (right_dual[e25] * self[e431])
-                        - (right_dual[e35] * self[e412]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(
+                -(right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435])
+                    - (right_dual[e15] * self[e423])
+                    - (right_dual[e25] * self[e431])
+                    - (right_dual[e35] * self[e412]),
+            ),
         );
     }
 }
@@ -6365,12 +6280,12 @@ impl BulkExpansion<MultiVector> for Circle {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       24        0
+    //      f32       16       25        0
     //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        2        6        0
+    //    simd3        0        5        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       35        0
+    // yes simd       18       36        0
     //  no simd       24       62        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -6435,8 +6350,8 @@ impl BulkExpansion<MultiVector> for Circle {
                 -(self[e435] * right_dual[e1]) - (self[e315] * right_dual[e4]),
                 -(self[e415] * right_dual[e2]) - (self[e125] * right_dual[e4]),
                 (self[e321] * right_dual[e5]) + (self[e125] * right_dual[e3]),
-            ]) + (Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], right_dual[e1]]) * self.group0().with_w(self[e235]))
-                + (right_dual.group1().yzxy() * self.group1().zxy().with_w(self[e315])),
+            ]) + (right_dual.group1().yzxy() * self.group1().zxy().with_w(self[e315]))
+                + (Simd32x3::from(right_dual[e5]) * self.group0()).with_w(self[e235] * right_dual[e1]),
             // e1234
             -(self[e423] * right_dual[e1]) - (self[e431] * right_dual[e2]) - (self[e412] * right_dual[e3]) - (self[e321] * right_dual[e4]),
         );
@@ -6473,10 +6388,11 @@ impl BulkExpansion<Sphere> for Circle {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        2        3        0
+    //      f32        7       13        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd        9       15        0
+    // yes simd        9       16        0
     //  no simd       15       24        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -6493,8 +6409,8 @@ impl BulkExpansion<Sphere> for Circle {
                 -(self[e435] * right_dual[e1]) - (self[e315] * right_dual[e4]),
                 -(self[e415] * right_dual[e2]) - (self[e125] * right_dual[e4]),
                 (self[e321] * right_dual[e5]) + (self[e125] * right_dual[e3]),
-            ]) + (Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], right_dual[e1]]) * self.group0().with_w(self[e235]))
-                + (right_dual.group0().yzxy() * self.group1().zxy().with_w(self[e315])),
+            ]) + (right_dual.group0().yzxy() * self.group1().zxy().with_w(self[e315]))
+                + (Simd32x3::from(right_dual[e5]) * self.group0()).with_w(self[e235] * right_dual[e1]),
             // e1234
             -(self[e423] * right_dual[e1]) - (self[e431] * right_dual[e2]) - (self[e412] * right_dual[e3]) - (self[e321] * right_dual[e4]),
         );
@@ -6505,11 +6421,11 @@ impl BulkExpansion<VersorEven> for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       10        0
-    //    simd3        0        1        0
-    //    simd4        0        6        0
+    //    simd3        0        2        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        9       17        0
-    //  no simd        9       37        0
+    //  no simd        9       36        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -6528,19 +6444,18 @@ impl BulkExpansion<VersorEven> for Circle {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(
-                    -(self[e423] * right_dual[e15])
-                        - (self[e431] * right_dual[e25])
-                        - (self[e412] * right_dual[e35])
-                        - (self[e415] * right_dual[e23])
-                        - (self[e425] * right_dual[e31])
-                        - (self[e435] * right_dual[e12])
-                        - (self[e321] * right_dual[e45])
-                        - (self[e235] * right_dual[e41])
-                        - (self[e315] * right_dual[e42])
-                        - (self[e125] * right_dual[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(
+                -(self[e423] * right_dual[e15])
+                    - (self[e431] * right_dual[e25])
+                    - (self[e412] * right_dual[e35])
+                    - (self[e415] * right_dual[e23])
+                    - (self[e425] * right_dual[e31])
+                    - (self[e435] * right_dual[e12])
+                    - (self[e321] * right_dual[e45])
+                    - (self[e235] * right_dual[e41])
+                    - (self[e315] * right_dual[e42])
+                    - (self[e125] * right_dual[e43]),
+            ),
         );
     }
 }
@@ -6580,10 +6495,10 @@ impl BulkExpansion<VersorOdd> for Circle {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for CircleRotor {
-    type Output = bulk_expansion_partial<CircleRotor>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for CircleRotor {
+    type Output = BulkExpansionInfixPartial<CircleRotor>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiDipoleInversion> for CircleRotor {
@@ -6747,11 +6662,11 @@ impl BulkExpansion<CircleRotor> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       11        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        2        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd       10       16        0
-    //  no simd       10       30        0
+    //  no simd       10       29        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -6768,20 +6683,19 @@ impl BulkExpansion<CircleRotor> for CircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], 1.0])
-                * right_dual.group2().www().with_w(
-                    (right_dual[scalar] * self[e12345])
-                        - (right_dual[e41] * self[e235])
-                        - (right_dual[e42] * self[e315])
-                        - (right_dual[e43] * self[e125])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435])
-                        - (right_dual[e45] * self[e321])
-                        - (right_dual[e15] * self[e423])
-                        - (right_dual[e25] * self[e431])
-                        - (right_dual[e35] * self[e412]),
-                ),
+            (right_dual.group2().www() * self.group2().xyz()).with_w(
+                (right_dual[scalar] * self[e12345])
+                    - (right_dual[e41] * self[e235])
+                    - (right_dual[e42] * self[e315])
+                    - (right_dual[e43] * self[e125])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435])
+                    - (right_dual[e45] * self[e321])
+                    - (right_dual[e15] * self[e423])
+                    - (right_dual[e25] * self[e431])
+                    - (right_dual[e35] * self[e412]),
+            ),
         );
     }
 }
@@ -6900,11 +6814,11 @@ impl BulkExpansion<Motor> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6        7        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        2        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        6       12        0
-    //  no simd        6       26        0
+    //  no simd        6       25        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -6919,16 +6833,15 @@ impl BulkExpansion<Motor> for CircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], 1.0])
-                * right_dual.group0().www().with_w(
-                    (right_dual[scalar] * self[e12345])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435])
-                        - (right_dual[e15] * self[e423])
-                        - (right_dual[e25] * self[e431])
-                        - (right_dual[e35] * self[e412]),
-                ),
+            (right_dual.group0().www() * self.group2().xyz()).with_w(
+                (right_dual[scalar] * self[e12345])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435])
+                    - (right_dual[e15] * self[e423])
+                    - (right_dual[e25] * self[e431])
+                    - (right_dual[e35] * self[e412]),
+            ),
         );
     }
 }
@@ -7077,11 +6990,11 @@ impl BulkExpansion<VersorEven> for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       11        0
-    //    simd3        0        1        0
-    //    simd4        0        6        0
+    //    simd3        0        2        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd       10       18        0
-    //  no simd       10       38        0
+    //  no simd       10       37        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -7100,20 +7013,19 @@ impl BulkExpansion<VersorEven> for CircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().xyz().with_w(
-                    (self[e12345] * right_dual[scalar])
-                        - (self[e423] * right_dual[e15])
-                        - (self[e431] * right_dual[e25])
-                        - (self[e412] * right_dual[e35])
-                        - (self[e415] * right_dual[e23])
-                        - (self[e425] * right_dual[e31])
-                        - (self[e435] * right_dual[e12])
-                        - (self[e321] * right_dual[e45])
-                        - (self[e235] * right_dual[e41])
-                        - (self[e315] * right_dual[e42])
-                        - (self[e125] * right_dual[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2().xyz()).with_w(
+                (self[e12345] * right_dual[scalar])
+                    - (self[e423] * right_dual[e15])
+                    - (self[e431] * right_dual[e25])
+                    - (self[e412] * right_dual[e35])
+                    - (self[e415] * right_dual[e23])
+                    - (self[e425] * right_dual[e31])
+                    - (self[e435] * right_dual[e12])
+                    - (self[e321] * right_dual[e45])
+                    - (self[e235] * right_dual[e41])
+                    - (self[e315] * right_dual[e42])
+                    - (self[e125] * right_dual[e43]),
+            ),
         );
     }
 }
@@ -7152,10 +7064,10 @@ impl BulkExpansion<VersorOdd> for CircleRotor {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Dipole {
-    type Output = bulk_expansion_partial<Dipole>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Dipole {
+    type Output = BulkExpansionInfixPartial<Dipole>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for Dipole {
@@ -7335,10 +7247,11 @@ impl BulkExpansion<AntiMotor> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        6        0
+    //    simd3        0        1        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       30        0
+    //  no simd        5       29        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = Motor::from_groups(
@@ -7349,15 +7262,14 @@ impl BulkExpansion<AntiMotor> for Dipole {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], 1.0])
-                * self.group0().with_w(
-                    -(self[e41] * right_dual[e235])
-                        - (self[e42] * right_dual[e315])
-                        - (self[e43] * right_dual[e125])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435]),
-                ),
+            (Simd32x3::from(right_dual[e5]) * self.group0()).with_w(
+                -(self[e41] * right_dual[e235])
+                    - (self[e42] * right_dual[e315])
+                    - (self[e43] * right_dual[e125])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group1().www().with_w(0.0) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -7430,11 +7342,11 @@ impl BulkExpansion<CircleRotor> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       24        0
-    //    simd3        0        3        0
-    //    simd4        2        4        0
+    //    simd3        0        4        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       25       49        0
+    //  no simd       25       48        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -7451,15 +7363,14 @@ impl BulkExpansion<CircleRotor> for Dipole {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(
-                    -(right_dual[e41] * self[e23])
-                        - (right_dual[e42] * self[e31])
-                        - (right_dual[e43] * self[e12])
-                        - (right_dual[e23] * self[e41])
-                        - (right_dual[e31] * self[e42])
-                        - (right_dual[e12] * self[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(
+                -(right_dual[e41] * self[e23])
+                    - (right_dual[e42] * self[e31])
+                    - (right_dual[e43] * self[e12])
+                    - (right_dual[e23] * self[e41])
+                    - (right_dual[e31] * self[e42])
+                    - (right_dual[e12] * self[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e42] * self[e35]) + (right_dual[e23] * self[e45]) + (right_dual[e45] * self[e23]) + (right_dual[e35] * self[e42]),
@@ -7666,11 +7577,11 @@ impl BulkExpansion<Motor> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        1        4        0
+    //    simd3        0        3        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       10       21        0
-    //  no simd       13       37        0
+    //  no simd       13       36        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -7685,8 +7596,7 @@ impl BulkExpansion<Motor> for Dipole {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(-(right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(-(right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e23] * self[e45]) + (right_dual[e35] * self[e42]),
@@ -7854,11 +7764,11 @@ impl BulkExpansion<VersorEven> for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       24        0
-    //    simd3        0        3        0
-    //    simd4        2        6        0
+    //    simd3        0        4        0
+    //    simd4        2        5        0
     // Totals...
     // yes simd       19       33        0
-    //  no simd       25       57        0
+    //  no simd       25       56        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -7877,15 +7787,14 @@ impl BulkExpansion<VersorEven> for Dipole {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().with_w(
-                    -(self[e41] * right_dual[e23])
-                        - (self[e42] * right_dual[e31])
-                        - (self[e43] * right_dual[e12])
-                        - (self[e23] * right_dual[e41])
-                        - (self[e31] * right_dual[e42])
-                        - (self[e12] * right_dual[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2()).with_w(
+                -(self[e41] * right_dual[e23])
+                    - (self[e42] * right_dual[e31])
+                    - (self[e43] * right_dual[e12])
+                    - (self[e23] * right_dual[e41])
+                    - (self[e31] * right_dual[e42])
+                    - (self[e12] * right_dual[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * right_dual[e35]) + (self[e23] * right_dual[e45]) + (self[e45] * right_dual[e23]) + (self[e35] * right_dual[e42]),
@@ -7947,10 +7856,10 @@ impl BulkExpansion<VersorOdd> for Dipole {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for DipoleInversion {
-    type Output = bulk_expansion_partial<DipoleInversion>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for DipoleInversion {
+    type Output = BulkExpansionInfixPartial<DipoleInversion>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for DipoleInversion {
@@ -8130,10 +8039,11 @@ impl BulkExpansion<AntiMotor> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6        7        0
-    //    simd4        0        6        0
+    //    simd3        0        1        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        6       13        0
-    //  no simd        6       31        0
+    //  no simd        6       30        0
     fn bulk_expansion(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = Motor::from_groups(
@@ -8144,16 +8054,15 @@ impl BulkExpansion<AntiMotor> for DipoleInversion {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], 1.0])
-                * self.group0().with_w(
-                    (self[e1234] * right_dual[e5])
-                        - (self[e41] * right_dual[e235])
-                        - (self[e42] * right_dual[e315])
-                        - (self[e43] * right_dual[e125])
-                        - (self[e23] * right_dual[e415])
-                        - (self[e31] * right_dual[e425])
-                        - (self[e12] * right_dual[e435]),
-                ),
+            (Simd32x3::from(right_dual[e5]) * self.group0()).with_w(
+                (self[e1234] * right_dual[e5])
+                    - (self[e41] * right_dual[e235])
+                    - (self[e42] * right_dual[e315])
+                    - (self[e43] * right_dual[e125])
+                    - (self[e23] * right_dual[e415])
+                    - (self[e31] * right_dual[e425])
+                    - (self[e12] * right_dual[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group1().www().with_w(0.0) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -8228,11 +8137,11 @@ impl BulkExpansion<CircleRotor> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       25        0
-    //    simd3        0        3        0
-    //    simd4        3        5        0
+    //    simd3        0        4        0
+    //    simd4        3        4        0
     // Totals...
     // yes simd       21       33        0
-    //  no simd       30       54        0
+    //  no simd       30       53        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -8249,16 +8158,15 @@ impl BulkExpansion<CircleRotor> for DipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 1.0])
-                * right_dual.group2().www().with_w(
-                    (right_dual[scalar] * self[e1234])
-                        - (right_dual[e41] * self[e23])
-                        - (right_dual[e42] * self[e31])
-                        - (right_dual[e43] * self[e12])
-                        - (right_dual[e23] * self[e41])
-                        - (right_dual[e31] * self[e42])
-                        - (right_dual[e12] * self[e43]),
-                ),
+            (right_dual.group2().www() * self.group2().xyz()).with_w(
+                (right_dual[scalar] * self[e1234])
+                    - (right_dual[e41] * self[e23])
+                    - (right_dual[e42] * self[e31])
+                    - (right_dual[e43] * self[e12])
+                    - (right_dual[e23] * self[e41])
+                    - (right_dual[e31] * self[e42])
+                    - (right_dual[e12] * self[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e23] * self[e45]) + (right_dual[e45] * self[e23]) + (right_dual[e35] * self[e42]) + (right_dual[scalar] * self[e4235]),
@@ -8472,11 +8380,11 @@ impl BulkExpansion<Motor> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       17        0
-    //    simd3        0        3        0
-    //    simd4        2        4        0
+    //    simd3        0        4        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       12       24        0
-    //  no simd       18       42        0
+    //  no simd       18       41        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -8491,11 +8399,8 @@ impl BulkExpansion<Motor> for DipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 1.0])
-                * right_dual
-                    .group0()
-                    .www()
-                    .with_w((right_dual[scalar] * self[e1234]) - (right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
+            (right_dual.group0().www() * self.group2().xyz())
+                .with_w((right_dual[scalar] * self[e1234]) - (right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e23] * self[e45]) + (right_dual[scalar] * self[e4235]),
@@ -8679,11 +8584,11 @@ impl BulkExpansion<VersorEven> for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       25        0
-    //    simd3        0        3        0
-    //    simd4        3        7        0
+    //    simd3        0        4        0
+    //    simd4        3        6        0
     // Totals...
     // yes simd       21       35        0
-    //  no simd       30       62        0
+    //  no simd       30       61        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -8702,16 +8607,15 @@ impl BulkExpansion<VersorEven> for DipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group2().xyz().with_w(
-                    (self[e1234] * right_dual[scalar])
-                        - (self[e41] * right_dual[e23])
-                        - (self[e42] * right_dual[e31])
-                        - (self[e43] * right_dual[e12])
-                        - (self[e23] * right_dual[e41])
-                        - (self[e31] * right_dual[e42])
-                        - (self[e12] * right_dual[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group2().xyz()).with_w(
+                (self[e1234] * right_dual[scalar])
+                    - (self[e41] * right_dual[e23])
+                    - (self[e42] * right_dual[e31])
+                    - (self[e43] * right_dual[e12])
+                    - (self[e23] * right_dual[e41])
+                    - (self[e31] * right_dual[e42])
+                    - (self[e12] * right_dual[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * right_dual[e45]) + (self[e45] * right_dual[e23]) + (self[e35] * right_dual[e42]) + (self[e4235] * right_dual[scalar]),
@@ -8775,10 +8679,10 @@ impl BulkExpansion<VersorOdd> for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for DualNum {
-    type Output = bulk_expansion_partial<DualNum>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for DualNum {
+    type Output = BulkExpansionInfixPartial<DualNum>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for DualNum {
@@ -9176,8 +9080,7 @@ impl BulkExpansion<VersorEven> for DualNum {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[e41], right_dual[e42], right_dual[e43], 1.0])
-                * self.group0().xx().with_zw(self[e5], (self[e5] * right_dual[e1234]) + (self[e12345] * right_dual[scalar])),
+            self.group0().xx().with_zw(self[e5], (self[e5] * right_dual[e1234]) + (self[e12345] * right_dual[scalar])) * right_dual.group0().xyz().with_w(1.0),
             // e235, e315, e125, e5
             Simd32x4::from(self[e5]) * right_dual.group1().xyz().with_w(right_dual[scalar]),
         );
@@ -9209,10 +9112,10 @@ impl BulkExpansion<VersorOdd> for DualNum {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for FlatPoint {
-    type Output = bulk_expansion_partial<FlatPoint>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for FlatPoint {
+    type Output = BulkExpansionInfixPartial<FlatPoint>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for FlatPoint {
@@ -9464,19 +9367,16 @@ impl BulkExpansion<Line> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        2        4        0
-    //  no simd        2        7        0
+    //  no simd        2        6        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * right_dual
-                    .group0()
-                    .with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
+            (Simd32x3::from(self[e45]) * right_dual.group0()).with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
         );
     }
 }
@@ -9485,10 +9385,11 @@ impl BulkExpansion<Motor> for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        2        7        0
-    //  no simd        2       19        0
+    //  no simd        2       18        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -9501,11 +9402,7 @@ impl BulkExpansion<Motor> for FlatPoint {
             // e15, e25, e35, e45
             Simd32x4::from(right_dual[scalar]) * self.group0(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
+            (Simd32x3::from(self[e45]) * right_dual.group0().xyz()).with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
         );
     }
 }
@@ -9694,10 +9591,10 @@ impl BulkExpansion<VersorOdd> for FlatPoint {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Flector {
-    type Output = bulk_expansion_partial<Flector>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Flector {
+    type Output = BulkExpansionInfixPartial<Flector>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for Flector {
@@ -9940,11 +9837,11 @@ impl BulkExpansion<Flector> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        4        0
-    //    simd3        1        2        0
-    //    simd4        0        4        0
+    //    simd3        1        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        4       10        0
-    //  no simd        6       26        0
+    //  no simd        6       24        0
     fn bulk_expansion(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlector::from_groups(
@@ -9955,12 +9852,8 @@ impl BulkExpansion<Flector> for Flector {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * right_dual
-                    .group1()
-                    .xyz()
-                    .with_w((right_dual[e1] * self[e4235]) + (right_dual[e2] * self[e4315]) + (right_dual[e3] * self[e4125]) - (right_dual[e321] * self[e45]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * right_dual.group1().xyz() * Simd32x3::from(-1.0))
+                .with_w((right_dual[e1] * self[e4235]) + (right_dual[e2] * self[e4315]) + (right_dual[e3] * self[e4125]) - (right_dual[e321] * self[e45])),
             // e235, e315, e125, e5
             ((right_dual.group1().yzx() * self.group0().zxy()) - (right_dual.group1().zxy() * self.group0().yzx())).with_w(0.0),
         );
@@ -9971,19 +9864,16 @@ impl BulkExpansion<Line> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        2        4        0
-    //  no simd        2        7        0
+    //  no simd        2        6        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * right_dual
-                    .group0()
-                    .with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
+            (Simd32x3::from(self[e45]) * right_dual.group0()).with_w(-(right_dual[e23] * self[e15]) - (right_dual[e31] * self[e25]) - (right_dual[e12] * self[e35])),
         );
     }
 }
@@ -10098,22 +9988,18 @@ impl BulkExpansion<Plane> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        1        2        0
-    //    simd4        0        3        0
+    //    simd3        1        4        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        8        0
-    //  no simd        5       21        0
+    //  no simd        5       19        0
     fn bulk_expansion(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiPlane::from_groups(/* e1, e2, e3, e5 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e45], self[e45], self[e45], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w((right_dual[e1] * self[e4235]) + (right_dual[e2] * self[e4315]) + (right_dual[e3] * self[e4125]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (Simd32x3::from(self[e45]) * right_dual.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((right_dual[e1] * self[e4235]) + (right_dual[e2] * self[e4315]) + (right_dual[e3] * self[e4125])),
             // e235, e315, e125, e5
             ((right_dual.group0().yzx() * self.group0().zxy()) - (right_dual.group0().zxy() * self.group0().yzx())).with_w(0.0),
         );
@@ -10222,10 +10108,10 @@ impl BulkExpansion<VersorOdd> for Flector {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Line {
-    type Output = bulk_expansion_partial<Line>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Line {
+    type Output = BulkExpansionInfixPartial<Line>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiDipoleInversion> for Line {
@@ -10315,10 +10201,11 @@ impl BulkExpansion<CircleRotor> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        6        0
+    //    simd3        0        1        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       30        0
+    //  no simd        5       29        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiCircleRotor::from_groups(
@@ -10331,15 +10218,14 @@ impl BulkExpansion<CircleRotor> for Line {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group0().with_w(
-                    -(right_dual[e41] * self[e235])
-                        - (right_dual[e42] * self[e315])
-                        - (right_dual[e43] * self[e125])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group0()).with_w(
+                -(right_dual[e41] * self[e235])
+                    - (right_dual[e42] * self[e315])
+                    - (right_dual[e43] * self[e125])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * self.group1().with_w(0.0) * right_dual.group2().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -10442,10 +10328,11 @@ impl BulkExpansion<Motor> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd4        0        6        0
+    //    simd3        0        1        0
+    //    simd4        0        5        0
     // Totals...
     // yes simd        2        9        0
-    //  no simd        2       27        0
+    //  no simd        2       26        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -10456,8 +10343,7 @@ impl BulkExpansion<Motor> for Line {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group0().with_w(-(right_dual[e23] * self[e415]) - (right_dual[e31] * self[e425]) - (right_dual[e12] * self[e435])),
+            (Simd32x3::from(right_dual[scalar]) * self.group0()).with_w(-(right_dual[e23] * self[e415]) - (right_dual[e31] * self[e425]) - (right_dual[e12] * self[e435])),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * self.group1().with_w(0.0) * right_dual.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -10595,10 +10481,11 @@ impl BulkExpansion<VersorEven> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        8        0
+    //    simd3        0        1        0
+    //    simd4        0        7        0
     // Totals...
     // yes simd        5       14        0
-    //  no simd        5       38        0
+    //  no simd        5       37        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let right_dual = VersorOdd::from_groups(
@@ -10613,15 +10500,14 @@ impl BulkExpansion<VersorEven> for Line {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([right_dual[scalar], right_dual[scalar], right_dual[scalar], 1.0])
-                * self.group0().with_w(
-                    -(self[e415] * right_dual[e23])
-                        - (self[e425] * right_dual[e31])
-                        - (self[e435] * right_dual[e12])
-                        - (self[e235] * right_dual[e41])
-                        - (self[e315] * right_dual[e42])
-                        - (self[e125] * right_dual[e43]),
-                ),
+            (Simd32x3::from(right_dual[scalar]) * self.group0()).with_w(
+                -(self[e415] * right_dual[e23])
+                    - (self[e425] * right_dual[e31])
+                    - (self[e435] * right_dual[e12])
+                    - (self[e235] * right_dual[e41])
+                    - (self[e315] * right_dual[e42])
+                    - (self[e125] * right_dual[e43]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * self.group1().with_w(0.0) * right_dual.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -10659,10 +10545,10 @@ impl BulkExpansion<VersorOdd> for Line {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Motor {
-    type Output = bulk_expansion_partial<Motor>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Motor {
+    type Output = BulkExpansionInfixPartial<Motor>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for Motor {
@@ -10695,10 +10581,11 @@ impl BulkExpansion<AntiDipoleInversion> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6        7        0
-    //    simd4        0        7        0
+    //    simd3        0        1        0
+    //    simd4        0        6        0
     // Totals...
     // yes simd        6       14        0
-    //  no simd        6       35        0
+    //  no simd        6       34        0
     fn bulk_expansion(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = DipoleInversion::from_groups(
@@ -10713,16 +10600,15 @@ impl BulkExpansion<AntiDipoleInversion> for Motor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e5], self[e5], self[e5], 1.0])
-                * right_dual.group0().with_w(
-                    (right_dual[e1234] * self[e5])
-                        - (right_dual[e41] * self[e235])
-                        - (right_dual[e42] * self[e315])
-                        - (right_dual[e43] * self[e125])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435]),
-                ),
+            (Simd32x3::from(self[e5]) * right_dual.group0()).with_w(
+                (right_dual[e1234] * self[e5])
+                    - (right_dual[e41] * self[e235])
+                    - (right_dual[e42] * self[e315])
+                    - (right_dual[e43] * self[e125])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * self.group1().www().with_w(0.0) * right_dual.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -10753,10 +10639,11 @@ impl BulkExpansion<Circle> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd4        0        5        0
+    //    simd3        0        1        0
+    //    simd4        0        4        0
     // Totals...
     // yes simd        5       11        0
-    //  no simd        5       26        0
+    //  no simd        5       25        0
     fn bulk_expansion(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let right_dual = Dipole::from_groups(
@@ -10769,15 +10656,14 @@ impl BulkExpansion<Circle> for Motor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e5], self[e5], self[e5], 1.0])
-                * right_dual.group0().with_w(
-                    -(right_dual[e41] * self[e235])
-                        - (right_dual[e42] * self[e315])
-                        - (right_dual[e43] * self[e125])
-                        - (right_dual[e23] * self[e415])
-                        - (right_dual[e31] * self[e425])
-                        - (right_dual[e12] * self[e435]),
-                ),
+            (Simd32x3::from(self[e5]) * right_dual.group0()).with_w(
+                -(right_dual[e41] * self[e235])
+                    - (right_dual[e42] * self[e315])
+                    - (right_dual[e43] * self[e125])
+                    - (right_dual[e23] * self[e415])
+                    - (right_dual[e31] * self[e425])
+                    - (right_dual[e12] * self[e435]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * self.group1().www().with_w(0.0) * right_dual.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -10968,11 +10854,11 @@ impl BulkExpansion<Motor> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        1        2        0
-    //    simd4        0        3        0
+    //    simd3        1        3        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        4       10        0
-    //  no simd        6       23        0
+    //  no simd        6       22        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -10983,11 +10869,8 @@ impl BulkExpansion<Motor> for Motor {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e415], self[e425], self[e435], 1.0])
-                * right_dual
-                    .group0()
-                    .www()
-                    .with_w((right_dual[scalar] * self[e12345]) - (right_dual[e23] * self[e415]) - (right_dual[e31] * self[e425]) - (right_dual[e12] * self[e435])),
+            (right_dual.group0().www() * self.group0().xyz())
+                .with_w((right_dual[scalar] * self[e12345]) - (right_dual[e23] * self[e415]) - (right_dual[e31] * self[e425]) - (right_dual[e12] * self[e435])),
             // e235, e315, e125, e5
             ((Simd32x3::from(right_dual[scalar]) * self.group1().xyz()) + (Simd32x3::from(self[e5]) * right_dual.group0().xyz())).with_w(right_dual[scalar] * self[e5]),
         );
@@ -11211,10 +11094,10 @@ impl BulkExpansion<VersorOdd> for Motor {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for MultiVector {
-    type Output = bulk_expansion_partial<MultiVector>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for MultiVector {
+    type Output = BulkExpansionInfixPartial<MultiVector>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for MultiVector {
@@ -11779,11 +11662,11 @@ impl BulkExpansion<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       46        0
-    //    simd3        8       14        0
-    //    simd4        6        8        0
+    //      f32       32       47        0
+    //    simd3        8       15        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       46       68        0
+    // yes simd       46       69        0
     //  no simd       80      120        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -11827,7 +11710,7 @@ impl BulkExpansion<CircleRotor> for MultiVector {
                 (right_dual[e25] * self[e4]) + (right_dual[scalar] * self[e425]),
                 (right_dual[e35] * self[e4]) + (right_dual[scalar] * self[e435]),
                 -(right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3]),
-            ]) + (Simd32x4::from([self[e5], self[e5], self[e5], self[e321]]) * right_dual.group0().with_w(right_dual[scalar]))
+            ]) + (Simd32x3::from(self[e5]) * right_dual.group0()).with_w(right_dual[scalar] * self[e321])
                 - (right_dual.group1().wwwx() * self.group1().xyzx()),
             // e423, e431, e412
             (Simd32x3::from(right_dual[scalar]) * self.group7()) + (Simd32x3::from(self[e4]) * right_dual.group1().xyz()) + (right_dual.group0().yzx() * self.group1().zxy())
@@ -11859,11 +11742,11 @@ impl BulkExpansion<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       22        0
-    //    simd3        0        4        0
-    //    simd4        2        4        0
+    //      f32       16       23        0
+    //    simd3        0        5        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       18       30        0
+    // yes simd       18       31        0
     //  no simd       24       50        0
     fn bulk_expansion(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -11912,8 +11795,8 @@ impl BulkExpansion<Dipole> for MultiVector {
                 (right_dual[e435] * self[e1]) + (right_dual[e315] * self[e4]),
                 (right_dual[e415] * self[e2]) + (right_dual[e125] * self[e4]),
                 -(right_dual[e321] * self[e5]) - (right_dual[e125] * self[e3]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * right_dual.group0().with_w(right_dual[e235]))
-                - (self.group1().yzxy() * right_dual.group1().zxy().with_w(right_dual[e315])),
+            ]) - (self.group1().yzxy() * right_dual.group1().zxy().with_w(right_dual[e315]))
+                - (Simd32x3::from(self[e5]) * right_dual.group0()).with_w(right_dual[e235] * self[e1]),
             // e1234
             (right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]) + (right_dual[e321] * self[e4]),
         );
@@ -12033,11 +11916,11 @@ impl BulkExpansion<DualNum> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(right_dual[scalar]) * self.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 1.0])
-                * right_dual
-                    .group0()
-                    .yy()
-                    .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215])),
+            right_dual
+                .group0()
+                .yy()
+                .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215]))
+                * self.group9().xyz().with_w(1.0),
             // e1234
             right_dual[scalar] * self[e1234],
         );
@@ -12048,11 +11931,11 @@ impl BulkExpansion<FlatPoint> for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       10        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        6       13        0
-    //  no simd        6       21        0
+    //  no simd        6       20        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
@@ -12079,11 +11962,8 @@ impl BulkExpansion<FlatPoint> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(self[scalar]) * right_dual.group0().xyz(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * right_dual.group0().xyz())
+                .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
             // e1234
             right_dual[e321] * self[e4],
         );
@@ -12152,11 +12032,11 @@ impl BulkExpansion<Line> for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       16       24        0
-    //    simd3        2        6        0
-    //    simd4        1        4        0
+    //    simd3        2        7        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       19       34        0
-    //  no simd       26       58        0
+    //  no simd       26       57        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -12182,8 +12062,7 @@ impl BulkExpansion<Line> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(self[scalar]) * right_dual.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual.group1().with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * right_dual.group1()).with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
             // e423, e431, e412
             Simd32x3::from(self[e4]) * right_dual.group0(),
             // e235, e315, e125
@@ -12270,12 +12149,12 @@ impl BulkExpansion<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71       93        0
+    //      f32       71       94        0
     //    simd2        0        1        0
-    //    simd3       20       34        0
-    //    simd4       20       17        0
+    //    simd3       20       35        0
+    //    simd4       20       16        0
     // Totals...
-    // yes simd      111      145        0
+    // yes simd      111      146        0
     //  no simd      211      265        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -12393,9 +12272,9 @@ impl BulkExpansion<MultiVector> for MultiVector {
                 + (right_dual.group8() * self.group1().www()).with_w(right_dual[e3] * self[e125])
                 + (right_dual.group4().yzx() * self.group3().zxy()).with_w(right_dual[e1] * self[e235])
                 + (self.group4().yzx() * right_dual.group3().zxy()).with_w(right_dual[e5] * self[e321])
-                - (Simd32x4::from([self[e5], self[e5], self[e5], self[e25]]) * right_dual.group7().with_w(right_dual[e31]))
                 - (self.group1().yzxz() * right_dual.group6().zxy().with_w(right_dual[e125]))
                 - (self.group3().yzxx() * right_dual.group4().zxy().with_w(right_dual[e23]))
+                - (Simd32x3::from(self[e5]) * right_dual.group7()).with_w(right_dual[e31] * self[e25])
                 - (self.group8() * right_dual.group1().www()).with_w(right_dual[e235] * self[e1])
                 - (self.group4().zxy() * right_dual.group3().yzx()).with_w(right_dual[e12] * self[e35])
                 - (right_dual.group1().zxy() * self.group6().yzx()).with_w(right_dual[e315] * self[e2]),
@@ -12532,11 +12411,11 @@ impl BulkExpansion<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       26        0
-    //    simd3        6       10        0
-    //    simd4        4        7        0
+    //      f32       15       27        0
+    //    simd3        6       11        0
+    //    simd4        4        6        0
     // Totals...
-    // yes simd       25       43        0
+    // yes simd       25       44        0
     //  no simd       49       84        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -12579,8 +12458,8 @@ impl BulkExpansion<Sphere> for MultiVector {
                 -(self[e435] * right_dual[e1]) - (self[e315] * right_dual[e4]),
                 -(self[e415] * right_dual[e2]) - (self[e125] * right_dual[e4]),
                 (self[e321] * right_dual[e5]) + (self[e125] * right_dual[e3]),
-            ]) + (Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], right_dual[e1]]) * self.group7().with_w(self[e235]))
-                + (right_dual.group0().yzxy() * self.group6().zxy().with_w(self[e315])),
+            ]) + (right_dual.group0().yzxy() * self.group6().zxy().with_w(self[e315]))
+                + (Simd32x3::from(right_dual[e5]) * self.group7()).with_w(self[e235] * right_dual[e1]),
             // e1234
             -(self[e321] * right_dual[e4]) - (self[e423] * right_dual[e1]) - (self[e431] * right_dual[e2]) - (self[e412] * right_dual[e3]),
         );
@@ -12759,10 +12638,10 @@ impl BulkExpansion<VersorOdd> for MultiVector {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Plane {
-    type Output = bulk_expansion_partial<Plane>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Plane {
+    type Output = BulkExpansionInfixPartial<Plane>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiScalar> for Plane {
@@ -12790,7 +12669,10 @@ impl BulkExpansion<CircleRotor> for Plane {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other.group2().xyz().with_w(other[e12345] * -1.0)[3]) * self.group0(),
+        );
     }
 }
 impl BulkExpansion<DipoleInversion> for Plane {
@@ -12866,7 +12748,10 @@ impl BulkExpansion<Motor> for Plane {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other.group0().xyz().with_w(other[e12345] * -1.0)[3]) * self.group0(),
+        );
     }
 }
 impl BulkExpansion<MultiVector> for Plane {
@@ -12984,7 +12869,10 @@ impl BulkExpansion<VersorEven> for Plane {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(other[e12345] * -1.0) * self.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(other.group0().xyz().with_w(other[e12345] * -1.0)[3]) * self.group0(),
+        );
     }
 }
 impl BulkExpansion<VersorOdd> for Plane {
@@ -13014,10 +12902,10 @@ impl BulkExpansion<VersorOdd> for Plane {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for RoundPoint {
-    type Output = bulk_expansion_partial<RoundPoint>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for RoundPoint {
+    type Output = BulkExpansionInfixPartial<RoundPoint>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for RoundPoint {
@@ -13333,11 +13221,11 @@ impl BulkExpansion<Dipole> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd3        0        2        0
-    //    simd4        2        3        0
+    //      f32        7       13        0
+    //    simd3        0        3        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd        9       17        0
+    // yes simd        9       18        0
     //  no simd       15       30        0
     fn bulk_expansion(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -13356,8 +13244,8 @@ impl BulkExpansion<Dipole> for RoundPoint {
                 (right_dual[e435] * self[e1]) + (right_dual[e315] * self[e4]),
                 (right_dual[e415] * self[e2]) + (right_dual[e125] * self[e4]),
                 -(right_dual[e321] * self[e5]) - (right_dual[e125] * self[e3]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * right_dual.group0().with_w(right_dual[e235]))
-                - (self.group0().yzxy() * right_dual.group1().zxy().with_w(right_dual[e315])),
+            ]) - (self.group0().yzxy() * right_dual.group1().zxy().with_w(right_dual[e315]))
+                - (Simd32x3::from(self[e5]) * right_dual.group0()).with_w(right_dual[e235] * self[e1]),
             // e1234
             (right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]) + (right_dual[e321] * self[e4]),
         );
@@ -13438,20 +13326,18 @@ impl BulkExpansion<FlatPoint> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        7        0
-    //  no simd        3       13        0
+    //  no simd        3       12        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * right_dual.group0().xyz())
+                .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
             // e1234
             right_dual[e321] * self[e4],
         );
@@ -13462,11 +13348,11 @@ impl BulkExpansion<Flector> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        6        0
-    //    simd3        2        5        0
-    //    simd4        0        3        0
+    //    simd3        2        6        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        5       14        0
-    //  no simd        9       33        0
+    //  no simd        9       32        0
     fn bulk_expansion(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlector::from_groups(
@@ -13483,11 +13369,8 @@ impl BulkExpansion<Flector> for RoundPoint {
             // e15, e25, e35, e1234
             ((Simd32x3::from(right_dual[e5]) * self.group0().xyz()) - (Simd32x3::from(self[e5]) * right_dual.group1().xyz())).with_w(right_dual[e321] * self[e4]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * right_dual.group0().xyz())
+                .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
         );
     }
 }
@@ -13496,11 +13379,10 @@ impl BulkExpansion<Line> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        2        4        0
-    //    simd4        0        1        0
+    //    simd3        2        5        0
     // Totals...
     // yes simd        4        8        0
-    //  no simd        8       19        0
+    //  no simd        8       18        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -13508,8 +13390,7 @@ impl BulkExpansion<Line> for RoundPoint {
             // e423, e431, e412
             Simd32x3::from(self[e4]) * right_dual.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual.group1().with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * right_dual.group1()).with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
             // e235, e315, e125
             (Simd32x3::from(self[e5]) * right_dual.group0()) + (right_dual.group1().zxy() * self.group0().yzx()) - (right_dual.group1().yzx() * self.group0().zxy()),
         );
@@ -13520,11 +13401,11 @@ impl BulkExpansion<Motor> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        4        0
-    //    simd3        2        3        0
-    //    simd4        0        5        0
+    //    simd3        2        4        0
+    //    simd4        0        4        0
     // Totals...
     // yes simd        4       12        0
-    //  no simd        8       33        0
+    //  no simd        8       32        0
     fn bulk_expansion(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiMotor::from_groups(
@@ -13537,11 +13418,7 @@ impl BulkExpansion<Motor> for RoundPoint {
             // e423, e431, e412, e12345
             Simd32x4::from(self[e4]) * right_dual.group0().xyz().with_w(right_dual[e3215]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual
-                    .group1()
-                    .xyz()
-                    .with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * right_dual.group1().xyz()).with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
             // e235, e315, e125, e5
             ((Simd32x3::from(self[e5]) * right_dual.group0().xyz()) + (right_dual.group1().zxy() * self.group0().yzx()) - (right_dual.group1().yzx() * self.group0().zxy()))
                 .with_w(right_dual[scalar] * self[e5]),
@@ -13554,12 +13431,12 @@ impl BulkExpansion<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       28        0
+    //      f32       15       29        0
     //    simd2        0        1        0
-    //    simd3        6       12        0
-    //    simd4        4        9        0
+    //    simd3        6       13        0
+    //    simd4        4        8        0
     // Totals...
-    // yes simd       25       50        0
+    // yes simd       25       51        0
     //  no simd       49      102        0
     fn bulk_expansion(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -13620,8 +13497,8 @@ impl BulkExpansion<MultiVector> for RoundPoint {
                 (right_dual[e435] * self[e1]) + (right_dual[e315] * self[e4]),
                 (right_dual[e415] * self[e2]) + (right_dual[e125] * self[e4]),
                 -(right_dual[e321] * self[e5]) - (right_dual[e125] * self[e3]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], self[e1]]) * right_dual.group7().with_w(right_dual[e235]))
-                - (self.group0().yzxy() * right_dual.group6().zxy().with_w(right_dual[e315])),
+            ]) - (self.group0().yzxy() * right_dual.group6().zxy().with_w(right_dual[e315]))
+                - (Simd32x3::from(self[e5]) * right_dual.group7()).with_w(right_dual[e235] * self[e1]),
             // e1234
             (right_dual[e321] * self[e4]) + (right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]),
         );
@@ -13751,11 +13628,11 @@ impl BulkExpansion<VersorOdd> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        1        3        0
-    //    simd4        4        8        0
+    //      f32        6       19        0
+    //    simd3        1        4        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       11       29        0
+    // yes simd       11       30        0
     //  no simd       25       59        0
     fn bulk_expansion(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -13787,15 +13664,15 @@ impl BulkExpansion<VersorOdd> for RoundPoint {
                 (self[e1] * right_dual[e435]) + (self[e4] * right_dual[e315]),
                 (self[e2] * right_dual[e415]) + (self[e4] * right_dual[e125]),
                 -(self[e3] * right_dual[e125]) - (self[e5] * right_dual[e321]),
-            ]) - (Simd32x4::from([self[e5], self[e5], self[e5], right_dual[e315]]) * right_dual.group0().xyz().with_w(self[e2]))
-                - (self.group0().yzxx() * right_dual.group1().zxy().with_w(right_dual[e235])),
+            ]) - (self.group0().yzxx() * right_dual.group1().zxy().with_w(right_dual[e235]))
+                - (Simd32x3::from(self[e5]) * right_dual.group0().xyz()).with_w(self[e2] * right_dual[e315]),
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Scalar {
-    type Output = bulk_expansion_partial<Scalar>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Scalar {
+    type Output = BulkExpansionInfixPartial<Scalar>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for Scalar {
@@ -13882,10 +13759,7 @@ impl BulkExpansion<AntiFlatPoint> for Scalar {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e321] * -1.0]),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e321] * -1.0));
     }
 }
 impl BulkExpansion<AntiFlector> for Scalar {
@@ -13965,10 +13839,7 @@ impl BulkExpansion<AntiPlane> for Scalar {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e5] * -1.0));
     }
 }
 impl BulkExpansion<AntiScalar> for Scalar {
@@ -14393,10 +14264,10 @@ impl BulkExpansion<VersorOdd> for Scalar {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for Sphere {
-    type Output = bulk_expansion_partial<Sphere>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for Sphere {
+    type Output = BulkExpansionInfixPartial<Sphere>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiDualNum> for Sphere {
@@ -14726,10 +14597,10 @@ impl BulkExpansion<VersorOdd> for Sphere {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for VersorEven {
-    type Output = bulk_expansion_partial<VersorEven>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for VersorEven {
+    type Output = BulkExpansionInfixPartial<VersorEven>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for VersorEven {
@@ -15197,11 +15068,11 @@ impl BulkExpansion<DualNum> for VersorEven {
         let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ other.group0() * Simd32x2::from(-1.0));
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * right_dual
-                    .group0()
-                    .yy()
-                    .with_zw(right_dual[scalar], (right_dual[e3215] * self[e4]) + (right_dual[scalar] * self[e12345])),
+            right_dual
+                .group0()
+                .yy()
+                .with_zw(right_dual[scalar], (right_dual[e3215] * self[e4]) + (right_dual[scalar] * self[e12345]))
+                * self.group0().xyz().with_w(1.0),
             // e415, e425, e435, e321
             Simd32x4::from(right_dual[scalar]) * self.group1(),
             // e235, e315, e125, e5
@@ -15216,20 +15087,18 @@ impl BulkExpansion<FlatPoint> for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        7        0
-    //  no simd        3       13        0
+    //  no simd        3       12        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
+            (Simd32x3::from(self[e4]) * right_dual.group0().xyz())
+                .with_w(-(right_dual[e235] * self[e1]) - (right_dual[e315] * self[e2]) - (right_dual[e125] * self[e3]) - (right_dual[e321] * self[e5])),
             // e1234
             right_dual[e321] * self[e4],
         );
@@ -15275,11 +15144,11 @@ impl BulkExpansion<Line> for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
+    //    simd3        0        3        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd       10       18        0
-    //  no simd       13       25        0
+    //  no simd       13       24        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -15287,8 +15156,7 @@ impl BulkExpansion<Line> for VersorEven {
             // e423, e431, e412
             Simd32x3::from(self[e4]) * right_dual.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
-                * right_dual.group1().with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
+            (Simd32x3::from(self[e4]) * right_dual.group1()).with_w(-(right_dual[e23] * self[e1]) - (right_dual[e31] * self[e2]) - (right_dual[e12] * self[e3])),
             // e235, e315, e125, e12345
             Simd32x4::from([
                 (right_dual[e23] * self[e5]) + (right_dual[e35] * self[e2]),
@@ -15510,11 +15378,11 @@ impl BulkExpansion<Sphere> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        1        3        0
-    //    simd4        4        5        0
+    //      f32        6       16        0
+    //    simd3        1        4        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       11       23        0
+    // yes simd       11       24        0
     //  no simd       25       44        0
     fn bulk_expansion(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -15542,8 +15410,8 @@ impl BulkExpansion<Sphere> for VersorEven {
                 -(right_dual[e1] * self[e435]) - (right_dual[e4] * self[e315]),
                 -(right_dual[e2] * self[e415]) - (right_dual[e4] * self[e125]),
                 (right_dual[e3] * self[e125]) + (right_dual[e5] * self[e321]),
-            ]) + (Simd32x4::from([right_dual[e5], right_dual[e5], right_dual[e5], self[e315]]) * self.group0().xyz().with_w(right_dual[e2]))
-                + (right_dual.group0().yzxx() * self.group1().zxy().with_w(self[e235])),
+            ]) + (right_dual.group0().yzxx() * self.group1().zxy().with_w(self[e235]))
+                + (Simd32x3::from(right_dual[e5]) * self.group0().xyz()).with_w(right_dual[e2] * self[e315]),
         );
     }
 }
@@ -15654,10 +15522,10 @@ impl BulkExpansion<VersorOdd> for VersorEven {
         );
     }
 }
-impl std::ops::Div<bulk_expansion> for VersorOdd {
-    type Output = bulk_expansion_partial<VersorOdd>;
-    fn div(self, _rhs: bulk_expansion) -> Self::Output {
-        bulk_expansion_partial(self)
+impl std::ops::Div<BulkExpansionInfix> for VersorOdd {
+    type Output = BulkExpansionInfixPartial<VersorOdd>;
+    fn div(self, _rhs: BulkExpansionInfix) -> Self::Output {
+        BulkExpansionInfixPartial(self)
     }
 }
 impl BulkExpansion<AntiCircleRotor> for VersorOdd {
@@ -15665,11 +15533,11 @@ impl BulkExpansion<AntiCircleRotor> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       11        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd       10       17        0
-    //  no simd       10       33        0
+    //  no simd       10       32        0
     fn bulk_expansion(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let right_dual = CircleRotor::from_groups(
@@ -15686,20 +15554,19 @@ impl BulkExpansion<AntiCircleRotor> for VersorOdd {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().xyz().with_w(
-                    (right_dual[e12345] * self[scalar])
-                        - (right_dual[e423] * self[e15])
-                        - (right_dual[e431] * self[e25])
-                        - (right_dual[e412] * self[e35])
-                        - (right_dual[e415] * self[e23])
-                        - (right_dual[e425] * self[e31])
-                        - (right_dual[e435] * self[e12])
-                        - (right_dual[e321] * self[e45])
-                        - (right_dual[e235] * self[e41])
-                        - (right_dual[e315] * self[e42])
-                        - (right_dual[e125] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2().xyz()).with_w(
+                (right_dual[e12345] * self[scalar])
+                    - (right_dual[e423] * self[e15])
+                    - (right_dual[e431] * self[e25])
+                    - (right_dual[e412] * self[e35])
+                    - (right_dual[e415] * self[e23])
+                    - (right_dual[e425] * self[e31])
+                    - (right_dual[e435] * self[e12])
+                    - (right_dual[e321] * self[e45])
+                    - (right_dual[e235] * self[e41])
+                    - (right_dual[e315] * self[e42])
+                    - (right_dual[e125] * self[e43]),
+            ),
         );
     }
 }
@@ -15708,11 +15575,11 @@ impl BulkExpansion<AntiDipoleInversion> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       25        0
-    //    simd3        0        3        0
-    //    simd4        3        6        0
+    //    simd3        0        4        0
+    //    simd4        3        5        0
     // Totals...
     // yes simd       21       34        0
-    //  no simd       30       58        0
+    //  no simd       30       57        0
     fn bulk_expansion(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let right_dual = DipoleInversion::from_groups(
@@ -15731,16 +15598,15 @@ impl BulkExpansion<AntiDipoleInversion> for VersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().xyz().with_w(
-                    (right_dual[e1234] * self[scalar])
-                        - (right_dual[e41] * self[e23])
-                        - (right_dual[e42] * self[e31])
-                        - (right_dual[e43] * self[e12])
-                        - (right_dual[e23] * self[e41])
-                        - (right_dual[e31] * self[e42])
-                        - (right_dual[e12] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2().xyz()).with_w(
+                (right_dual[e1234] * self[scalar])
+                    - (right_dual[e41] * self[e23])
+                    - (right_dual[e42] * self[e31])
+                    - (right_dual[e43] * self[e12])
+                    - (right_dual[e23] * self[e41])
+                    - (right_dual[e31] * self[e42])
+                    - (right_dual[e12] * self[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e23] * self[e45]) + (right_dual[e45] * self[e23]) + (right_dual[e35] * self[e42]) + (right_dual[e4235] * self[scalar]),
@@ -15767,8 +15633,7 @@ impl BulkExpansion<AntiDualNum> for VersorOdd {
         let right_dual = DualNum::from_groups(/* e5, e12345 */ other.group0());
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0])
-                * right_dual.group0().xx().with_zw(right_dual[e5], (right_dual[e5] * self[e1234]) + (right_dual[e12345] * self[scalar])),
+            right_dual.group0().xx().with_zw(right_dual[e5], (right_dual[e5] * self[e1234]) + (right_dual[e12345] * self[scalar])) * self.group0().xyz().with_w(1.0),
             // e235, e315, e125, e5
             Simd32x4::from(right_dual[e5]) * self.group1().xyz().with_w(self[scalar]),
         );
@@ -15835,11 +15700,11 @@ impl BulkExpansion<AntiLine> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        6        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        5       12        0
-    //  no simd        5       28        0
+    //  no simd        5       27        0
     fn bulk_expansion(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let right_dual = Line::from_groups(
@@ -15850,15 +15715,14 @@ impl BulkExpansion<AntiLine> for VersorOdd {
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group0().with_w(
-                    -(right_dual[e415] * self[e23])
-                        - (right_dual[e425] * self[e31])
-                        - (right_dual[e435] * self[e12])
-                        - (right_dual[e235] * self[e41])
-                        - (right_dual[e315] * self[e42])
-                        - (right_dual[e125] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group0()).with_w(
+                -(right_dual[e415] * self[e23])
+                    - (right_dual[e425] * self[e31])
+                    - (right_dual[e435] * self[e12])
+                    - (right_dual[e235] * self[e41])
+                    - (right_dual[e315] * self[e42])
+                    - (right_dual[e125] * self[e43]),
+            ),
             // e235, e315, e125, e5
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group1().with_w(0.0) * self.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -15910,10 +15774,7 @@ impl BulkExpansion<AntiPlane> for VersorOdd {
     //  no simd        0        5        0
     fn bulk_expansion(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(self[scalar]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5] * -1.0]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * other.group0().xyz().with_w(other[e5] * -1.0));
     }
 }
 impl BulkExpansion<AntiScalar> for VersorOdd {
@@ -15945,11 +15806,11 @@ impl BulkExpansion<Circle> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       24        0
-    //    simd3        0        3        0
-    //    simd4        2        3        0
+    //    simd3        0        4        0
+    //    simd4        2        2        0
     // Totals...
     // yes simd       19       30        0
-    //  no simd       25       45        0
+    //  no simd       25       44        0
     fn bulk_expansion(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let right_dual = Dipole::from_groups(
@@ -15966,15 +15827,14 @@ impl BulkExpansion<Circle> for VersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().with_w(
-                    -(right_dual[e41] * self[e23])
-                        - (right_dual[e42] * self[e31])
-                        - (right_dual[e43] * self[e12])
-                        - (right_dual[e23] * self[e41])
-                        - (right_dual[e31] * self[e42])
-                        - (right_dual[e12] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(
+                -(right_dual[e41] * self[e23])
+                    - (right_dual[e42] * self[e31])
+                    - (right_dual[e43] * self[e12])
+                    - (right_dual[e23] * self[e41])
+                    - (right_dual[e31] * self[e42])
+                    - (right_dual[e12] * self[e43]),
+            ),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e42] * self[e35]) + (right_dual[e23] * self[e45]) + (right_dual[e45] * self[e23]) + (right_dual[e35] * self[e42]),
@@ -16040,11 +15900,11 @@ impl BulkExpansion<Dipole> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       10        0
-    //    simd3        0        3        0
-    //    simd4        0        3        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        9       16        0
-    //  no simd        9       31        0
+    //  no simd        9       30        0
     fn bulk_expansion(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let right_dual = Circle::from_groups(
@@ -16061,19 +15921,18 @@ impl BulkExpansion<Dipole> for VersorOdd {
             // e415, e425, e435, e321
             Simd32x4::from(self[scalar]) * right_dual.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group2().with_w(
-                    -(right_dual[e423] * self[e15])
-                        - (right_dual[e431] * self[e25])
-                        - (right_dual[e412] * self[e35])
-                        - (right_dual[e415] * self[e23])
-                        - (right_dual[e425] * self[e31])
-                        - (right_dual[e435] * self[e12])
-                        - (right_dual[e321] * self[e45])
-                        - (right_dual[e235] * self[e41])
-                        - (right_dual[e315] * self[e42])
-                        - (right_dual[e125] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group2()).with_w(
+                -(right_dual[e423] * self[e15])
+                    - (right_dual[e431] * self[e25])
+                    - (right_dual[e412] * self[e35])
+                    - (right_dual[e415] * self[e23])
+                    - (right_dual[e425] * self[e31])
+                    - (right_dual[e435] * self[e12])
+                    - (right_dual[e321] * self[e45])
+                    - (right_dual[e235] * self[e41])
+                    - (right_dual[e315] * self[e42])
+                    - (right_dual[e125] * self[e43]),
+            ),
         );
     }
 }
@@ -16157,11 +16016,11 @@ impl BulkExpansion<DualNum> for VersorOdd {
             // e15, e25, e35, e1234
             Simd32x4::from(right_dual[scalar]) * self.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 1.0])
-                * right_dual
-                    .group0()
-                    .yy()
-                    .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215])),
+            right_dual
+                .group0()
+                .yy()
+                .with_zw(right_dual[scalar], (right_dual[e3215] * self[scalar]) + (right_dual[scalar] * self[e3215]))
+                * self.group3().xyz().with_w(1.0),
         );
     }
 }
@@ -16170,10 +16029,11 @@ impl BulkExpansion<FlatPoint> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3        7        0
-    //  no simd        3       13        0
+    //  no simd        3       12        0
     fn bulk_expansion(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
@@ -16183,11 +16043,8 @@ impl BulkExpansion<FlatPoint> for VersorOdd {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(right_dual[e321] * self[scalar]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual
-                    .group0()
-                    .xyz()
-                    .with_w(-(right_dual[e235] * self[e41]) - (right_dual[e315] * self[e42]) - (right_dual[e125] * self[e43]) - (right_dual[e321] * self[e45])),
+            (Simd32x3::from(self[scalar]) * right_dual.group0().xyz())
+                .with_w(-(right_dual[e235] * self[e41]) - (right_dual[e315] * self[e42]) - (right_dual[e125] * self[e43]) - (right_dual[e321] * self[e45])),
         );
     }
 }
@@ -16238,11 +16095,11 @@ impl BulkExpansion<Line> for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        1        4        0
+    //    simd3        0        2        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       13       34        0
+    //  no simd       13       33        0
     fn bulk_expansion(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ other.group1());
@@ -16252,10 +16109,7 @@ impl BulkExpansion<Line> for VersorOdd {
             // e23, e31, e12, e45
             Simd32x3::from(1.0).with_w(0.0) * right_dual.group0().with_w(0.0) * self.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual
-                    .group1()
-                    .with_w(-(right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
+            (Simd32x3::from(self[scalar]) * right_dual.group1()).with_w(-(right_dual[e23] * self[e41]) - (right_dual[e31] * self[e42]) - (right_dual[e12] * self[e43])),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (right_dual[e23] * self[e45]) + (right_dual[e35] * self[e42]),

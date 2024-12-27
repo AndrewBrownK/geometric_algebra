@@ -19,9 +19,9 @@ use crate::traits::UnitizedCenterNormSquared;
 //   Median:         9      20       1
 //  Average:        17      30       1
 //  Maximum:        95     123       1
-impl std::ops::Div<unitized_center_norm> for AntiCircleRotor {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -37,9 +37,9 @@ impl UnitizedCenterNorm for AntiCircleRotor {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for AntiDipoleInversion {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -55,9 +55,9 @@ impl UnitizedCenterNorm for AntiDipoleInversion {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for Circle {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for Circle {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -73,9 +73,9 @@ impl UnitizedCenterNorm for Circle {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for CircleRotor {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for CircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -91,9 +91,9 @@ impl UnitizedCenterNorm for CircleRotor {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for Dipole {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for Dipole {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -109,9 +109,9 @@ impl UnitizedCenterNorm for Dipole {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for DipoleInversion {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for DipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -127,9 +127,9 @@ impl UnitizedCenterNorm for DipoleInversion {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for MultiVector {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for MultiVector {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -146,9 +146,9 @@ impl UnitizedCenterNorm for MultiVector {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for VersorEven {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for VersorEven {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }
@@ -164,9 +164,9 @@ impl UnitizedCenterNorm for VersorEven {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_center_norm> for VersorOdd {
+impl std::ops::Div<UnitizedCenterNormPrefixOrPostfix> for VersorOdd {
     type Output = f32;
-    fn div(self, _rhs: unitized_center_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedCenterNormPrefixOrPostfix) -> Self::Output {
         self.unitized_center_norm()
     }
 }

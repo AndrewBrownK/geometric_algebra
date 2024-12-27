@@ -20,9 +20,9 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         2       3       0
 //  Average:         3       4       0
 //  Maximum:        31      32       0
-impl std::ops::Div<flat_weight_norm> for AntiCircleRotor {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -34,9 +34,9 @@ impl FlatWeightNorm for AntiCircleRotor {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for AntiDipoleInversion {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -48,14 +48,14 @@ impl FlatWeightNorm for AntiDipoleInversion {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for AntiScalar {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
-impl std::ops::DivAssign<flat_weight_norm> for AntiScalar {
-    fn div_assign(&mut self, _rhs: flat_weight_norm) {
+impl std::ops::DivAssign<FlatWeightNormPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: FlatWeightNormPrefixOrPostfix) {
         *self = self.flat_weight_norm()
     }
 }
@@ -67,9 +67,9 @@ impl FlatWeightNorm for AntiScalar {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Circle {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Circle {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -81,9 +81,9 @@ impl FlatWeightNorm for Circle {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for CircleRotor {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for CircleRotor {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -95,9 +95,9 @@ impl FlatWeightNorm for CircleRotor {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Dipole {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Dipole {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -109,9 +109,9 @@ impl FlatWeightNorm for Dipole {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for DipoleInversion {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for DipoleInversion {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -123,9 +123,9 @@ impl FlatWeightNorm for DipoleInversion {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for DualNum {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for DualNum {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -137,9 +137,9 @@ impl FlatWeightNorm for DualNum {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for FlatPoint {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for FlatPoint {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -151,9 +151,9 @@ impl FlatWeightNorm for FlatPoint {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Flector {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Flector {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -165,9 +165,9 @@ impl FlatWeightNorm for Flector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Line {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Line {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -179,9 +179,9 @@ impl FlatWeightNorm for Line {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Motor {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Motor {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -193,9 +193,9 @@ impl FlatWeightNorm for Motor {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for MultiVector {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for MultiVector {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -207,9 +207,9 @@ impl FlatWeightNorm for MultiVector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Plane {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Plane {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -221,9 +221,9 @@ impl FlatWeightNorm for Plane {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Sphere {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Sphere {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -235,9 +235,9 @@ impl FlatWeightNorm for Sphere {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for VersorEven {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for VersorEven {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -249,9 +249,9 @@ impl FlatWeightNorm for VersorEven {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for VersorOdd {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for VersorOdd {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }

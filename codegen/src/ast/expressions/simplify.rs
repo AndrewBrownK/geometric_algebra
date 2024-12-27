@@ -2104,7 +2104,6 @@ impl Vec4Expr {
                     (Literal(x), Literal(y), z, w) if *x == *y => {
                         *self = Vec4Expr::Extend2to4(Vec2Expr::Gather1(Literal(*x)), z.take_as_owned(), w.take_as_owned())
                     }
-                    // TODO impl AntiProjectOrthogonallyOnto<Point> for AntiScalar {
                     (
                         AccessMultiVecFlat(x_mve, x_idx),
                         AccessMultiVecFlat(y_mve, y_idx),

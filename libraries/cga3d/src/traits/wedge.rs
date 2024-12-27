@@ -8,11 +8,11 @@ pub trait Wedge<T> {
     type Output;
     fn wedge(self, other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct wedge;
-#[allow(non_camel_case_types)]
-pub struct wedge_partial<A>(A);
-impl<A: Wedge<B>, B> std::ops::Div<B> for wedge_partial<A> {
+#[allow(non_upper_case_globals, dead_code)]
+pub static wedge: WedgeInfix = WedgeInfix;
+pub struct WedgeInfix;
+pub struct WedgeInfixPartial<A>(A);
+impl<A: Wedge<B>, B> std::ops::Div<B> for WedgeInfixPartial<A> {
     type Output = <A as Wedge<B>>::Output;
     fn div(self, rhs: B) -> Self::Output {
         self.0.wedge(rhs)

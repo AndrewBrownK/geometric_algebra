@@ -18,14 +18,14 @@
 //   Median:         3      12       0
 //  Average:         4      17       0
 //  Maximum:        23      68       1
-impl std::ops::Div<anti_inverse> for AntiCircleRotor {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiCircleRotor {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiCircleRotor {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -69,14 +69,14 @@ impl AntiInverse for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiDipoleInversion {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -127,14 +127,14 @@ impl AntiInverse for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiDualNum {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiDualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiDualNum {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -151,14 +151,14 @@ impl AntiInverse for AntiDualNum {
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(f32::powi(self[scalar], -2) * -1.0) * self.group0());
     }
 }
-impl std::ops::Div<anti_inverse> for AntiFlatPoint {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiFlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiFlatPoint {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -178,14 +178,14 @@ impl AntiInverse for AntiFlatPoint {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiFlector {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiFlector {
     type Output = AntiFlector;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiFlector {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiFlector {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -209,14 +209,14 @@ impl AntiInverse for AntiFlector {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiLine {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiLine {
     type Output = AntiLine;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiLine {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiLine {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -245,14 +245,14 @@ impl AntiInverse for AntiLine {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiMotor {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiMotor {
     type Output = AntiMotor;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiMotor {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiMotor {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -284,14 +284,14 @@ impl AntiInverse for AntiMotor {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiPlane {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiPlane {
     type Output = AntiPlane;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiPlane {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiPlane {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -311,14 +311,14 @@ impl AntiInverse for AntiPlane {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for AntiScalar {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -331,14 +331,14 @@ impl AntiInverse for AntiScalar {
         return AntiScalar::from_groups(/* e12345 */ 1.0 / self[e12345]);
     }
 }
-impl std::ops::Div<anti_inverse> for Circle {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Circle {
     type Output = Circle;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Circle {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Circle {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -381,14 +381,14 @@ impl AntiInverse for Circle {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for CircleRotor {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for CircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for CircleRotor {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for CircleRotor {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -432,14 +432,14 @@ impl AntiInverse for CircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for Dipole {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Dipole {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -482,14 +482,14 @@ impl AntiInverse for Dipole {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for DipoleInversion {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for DipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for DipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -537,14 +537,14 @@ impl AntiInverse for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for DualNum {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for DualNum {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -558,14 +558,14 @@ impl AntiInverse for DualNum {
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(f32::powi(self[e12345], -2)) * self.group0());
     }
 }
-impl std::ops::Div<anti_inverse> for FlatPoint {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for FlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for FlatPoint {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for FlatPoint {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -585,14 +585,14 @@ impl AntiInverse for FlatPoint {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for Flector {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Flector {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -619,14 +619,14 @@ impl AntiInverse for Flector {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for Line {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Line {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -655,14 +655,14 @@ impl AntiInverse for Line {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for Motor {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Motor {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -694,14 +694,14 @@ impl AntiInverse for Motor {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for MultiVector {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -794,14 +794,14 @@ impl AntiInverse for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for Plane {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Plane {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -821,14 +821,14 @@ impl AntiInverse for Plane {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for RoundPoint {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for RoundPoint {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -846,14 +846,14 @@ impl AntiInverse for RoundPoint {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[e12345]) * self.group0(), /* e5 */ other[e12345] * self[e5]);
     }
 }
-impl std::ops::Div<anti_inverse> for Scalar {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -866,14 +866,14 @@ impl AntiInverse for Scalar {
         return Scalar::from_groups(/* scalar */ 1.0 / self[scalar] * -1.0);
     }
 }
-impl std::ops::Div<anti_inverse> for Sphere {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for Sphere {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -899,14 +899,14 @@ impl AntiInverse for Sphere {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for VersorEven {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for VersorEven {
     type Output = VersorEven;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for VersorEven {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for VersorEven {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }
@@ -957,14 +957,14 @@ impl AntiInverse for VersorEven {
         );
     }
 }
-impl std::ops::Div<anti_inverse> for VersorOdd {
+impl std::ops::Div<AntiInversePrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
+    fn div(self, _rhs: AntiInversePrefixOrPostfix) -> Self::Output {
         self.anti_inverse()
     }
 }
-impl std::ops::DivAssign<anti_inverse> for VersorOdd {
-    fn div_assign(&mut self, _rhs: anti_inverse) {
+impl std::ops::DivAssign<AntiInversePrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: AntiInversePrefixOrPostfix) {
         *self = self.anti_inverse()
     }
 }

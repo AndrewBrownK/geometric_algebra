@@ -18,9 +18,9 @@
 //   Median:         0       4       0
 //  Average:         0       5       0
 //  Maximum:         0      22       0
-impl std::ops::Div<right_anti_dual> for AntiCircleOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleOnOrigin {
     type Output = CircleOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -39,9 +39,9 @@ impl RightAntiDual for AntiCircleOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiCircleRotor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -65,9 +65,9 @@ impl RightAntiDual for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiCircleRotorAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleRotorAligningOrigin {
     type Output = CircleRotorAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -91,9 +91,9 @@ impl RightAntiDual for AntiCircleRotorAligningOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiCircleRotorAligningOriginAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = CircleRotorAligningOriginAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -115,9 +115,9 @@ impl RightAntiDual for AntiCircleRotorAligningOriginAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiCircleRotorAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleRotorAtInfinity {
     type Output = CircleRotorAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -136,9 +136,9 @@ impl RightAntiDual for AntiCircleRotorAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiCircleRotorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiCircleRotorOnOrigin {
     type Output = CircleRotorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -160,9 +160,9 @@ impl RightAntiDual for AntiCircleRotorOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDipoleInversion {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -185,9 +185,9 @@ impl RightAntiDual for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDipoleInversionAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDipoleInversionAtInfinity {
     type Output = DipoleInversionAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -208,9 +208,9 @@ impl RightAntiDual for AntiDipoleInversionAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDipoleInversionOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDipoleInversionOnOrigin {
     type Output = DipoleInversionOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -229,9 +229,9 @@ impl RightAntiDual for AntiDipoleInversionOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDipoleInversionOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDipoleInversionOrthogonalOrigin {
     type Output = DipoleInversionOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -252,9 +252,9 @@ impl RightAntiDual for AntiDipoleInversionOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDipoleOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDipoleOnOrigin {
     type Output = DipoleOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -268,9 +268,9 @@ impl RightAntiDual for AntiDipoleOnOrigin {
         return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiDualNum {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiDualNum {
     type Output = DualNum;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -280,9 +280,9 @@ impl RightAntiDual for AntiDualNum {
         return DualNum::from_groups(/* e4, e12345 */ self.group0());
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiFlatOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiFlatOrigin {
     type Output = FlatOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -296,9 +296,9 @@ impl RightAntiDual for AntiFlatOrigin {
         return FlatOrigin::from_groups(/* e45 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiFlatPoint {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiFlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -312,9 +312,9 @@ impl RightAntiDual for AntiFlatPoint {
         return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiFlector {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiFlector {
     type Output = Flector;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -333,9 +333,9 @@ impl RightAntiDual for AntiFlector {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiFlectorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiFlectorOnOrigin {
     type Output = FlectorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -349,9 +349,9 @@ impl RightAntiDual for AntiFlectorOnOrigin {
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiLine {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiLine {
     type Output = Line;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -370,9 +370,9 @@ impl RightAntiDual for AntiLine {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiLineOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiLineOnOrigin {
     type Output = LineOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -386,9 +386,9 @@ impl RightAntiDual for AntiLineOnOrigin {
         return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiMotor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiMotor {
     type Output = Motor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -407,9 +407,9 @@ impl RightAntiDual for AntiMotor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiMotorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiMotorOnOrigin {
     type Output = MotorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -423,9 +423,9 @@ impl RightAntiDual for AntiMotorOnOrigin {
         return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiMysteryCircleRotor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiMysteryCircleRotor {
     type Output = MysteryCircleRotor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -445,9 +445,9 @@ impl RightAntiDual for AntiMysteryCircleRotor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiMysteryDipoleInversion {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiMysteryDipoleInversion {
     type Output = MysteryDipoleInversion;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -466,9 +466,9 @@ impl RightAntiDual for AntiMysteryDipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiPlane {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiPlane {
     type Output = Plane;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -482,9 +482,9 @@ impl RightAntiDual for AntiPlane {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiPlaneOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiPlaneOnOrigin {
     type Output = PlaneOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -494,9 +494,9 @@ impl RightAntiDual for AntiPlaneOnOrigin {
         return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiScalar {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -510,9 +510,9 @@ impl RightAntiDual for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e12345] * -1.0);
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiSphereOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiSphereOnOrigin {
     type Output = SphereOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -526,9 +526,9 @@ impl RightAntiDual for AntiSphereOnOrigin {
         return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for AntiVersorEvenOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for AntiVersorEvenOnOrigin {
     type Output = VersorEvenOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -547,9 +547,9 @@ impl RightAntiDual for AntiVersorEvenOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for Circle {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Circle {
     type Output = Dipole;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -570,9 +570,9 @@ impl RightAntiDual for Circle {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleAligningOrigin {
     type Output = DipoleOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -582,9 +582,9 @@ impl RightAntiDual for CircleAligningOrigin {
         return DipoleOrthogonalOrigin::from_groups(/* e41, e42, e43 */ self.group0(), /* e23, e31, e12 */ self.group1(), /* e15, e25, e35 */ self.group2());
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleAtInfinity {
     type Output = DipoleAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -603,9 +603,9 @@ impl RightAntiDual for CircleAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleAtOrigin {
     type Output = DipoleAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -615,9 +615,9 @@ impl RightAntiDual for CircleAtOrigin {
         return DipoleAtOrigin::from_groups(/* e41, e42, e43 */ self.group0(), /* e15, e25, e35 */ self.group1());
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleOnOrigin {
     type Output = AntiCircleOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -627,9 +627,9 @@ impl RightAntiDual for CircleOnOrigin {
         return AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ self.group0(), /* e23, e31, e12 */ self.group1());
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleOrthogonalOrigin {
     type Output = DipoleAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -648,9 +648,9 @@ impl RightAntiDual for CircleOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleRotor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -671,9 +671,9 @@ impl RightAntiDual for CircleRotor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleRotorAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleRotorAligningOrigin {
     type Output = AntiCircleRotorAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -694,9 +694,9 @@ impl RightAntiDual for CircleRotorAligningOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleRotorAligningOriginAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleRotorAligningOriginAtInfinity {
     type Output = AntiCircleRotorAligningOriginAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -715,9 +715,9 @@ impl RightAntiDual for CircleRotorAligningOriginAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleRotorAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleRotorAtInfinity {
     type Output = AntiCircleRotorAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -736,9 +736,9 @@ impl RightAntiDual for CircleRotorAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for CircleRotorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for CircleRotorOnOrigin {
     type Output = AntiCircleRotorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -757,9 +757,9 @@ impl RightAntiDual for CircleRotorOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for Dipole {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Dipole {
     type Output = Circle;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -783,9 +783,9 @@ impl RightAntiDual for Dipole {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleAligningOrigin {
     type Output = CircleOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -807,9 +807,9 @@ impl RightAntiDual for DipoleAligningOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleAtInfinity {
     type Output = CircleAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -831,9 +831,9 @@ impl RightAntiDual for DipoleAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleAtOrigin {
     type Output = CircleAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -852,9 +852,9 @@ impl RightAntiDual for DipoleAtOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversion {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -880,9 +880,9 @@ impl RightAntiDual for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversionAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversionAligningOrigin {
     type Output = VersorEvenOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -904,9 +904,9 @@ impl RightAntiDual for DipoleInversionAligningOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversionAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversionAtInfinity {
     type Output = AntiDipoleInversionAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -930,9 +930,9 @@ impl RightAntiDual for DipoleInversionAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversionAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversionAtOrigin {
     type Output = VersorEvenAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -952,9 +952,9 @@ impl RightAntiDual for DipoleInversionAtOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversionOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversionOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -973,9 +973,9 @@ impl RightAntiDual for DipoleInversionOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleInversionOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleInversionOrthogonalOrigin {
     type Output = AntiDipoleInversionOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -999,9 +999,9 @@ impl RightAntiDual for DipoleInversionOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleOnOrigin {
     type Output = AntiDipoleOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1015,9 +1015,9 @@ impl RightAntiDual for DipoleOnOrigin {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for DipoleOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DipoleOrthogonalOrigin {
     type Output = CircleAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1038,9 +1038,9 @@ impl RightAntiDual for DipoleOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for DualNum {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for DualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1054,9 +1054,9 @@ impl RightAntiDual for DualNum {
         return AntiDualNum::from_groups(/* e1234, scalar */ self.group0() * Simd32x2::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for FlatOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for FlatOrigin {
     type Output = AntiFlatOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1067,9 +1067,9 @@ impl RightAntiDual for FlatOrigin {
         return AntiFlatOrigin::from_groups(/* e321 */ self[e45]);
     }
 }
-impl std::ops::Div<right_anti_dual> for FlatPoint {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for FlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1083,9 +1083,9 @@ impl RightAntiDual for FlatPoint {
         return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for FlatPointAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for FlatPointAtInfinity {
     type Output = LineAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1099,9 +1099,9 @@ impl RightAntiDual for FlatPointAtInfinity {
         return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for Flector {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Flector {
     type Output = AntiFlector;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1120,9 +1120,9 @@ impl RightAntiDual for Flector {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for FlectorAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for FlectorAtInfinity {
     type Output = MotorAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1136,9 +1136,9 @@ impl RightAntiDual for FlectorAtInfinity {
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for FlectorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for FlectorOnOrigin {
     type Output = AntiFlectorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1152,9 +1152,9 @@ impl RightAntiDual for FlectorOnOrigin {
         return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for Horizon {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Horizon {
     type Output = Infinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1165,9 +1165,9 @@ impl RightAntiDual for Horizon {
         return Infinity::from_groups(/* e5 */ self[e3215]);
     }
 }
-impl std::ops::Div<right_anti_dual> for Infinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Infinity {
     type Output = Horizon;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1181,9 +1181,9 @@ impl RightAntiDual for Infinity {
         return Horizon::from_groups(/* e3215 */ self[e5] * -1.0);
     }
 }
-impl std::ops::Div<right_anti_dual> for Line {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Line {
     type Output = AntiLine;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1193,9 +1193,9 @@ impl RightAntiDual for Line {
         return AntiLine::from_groups(/* e23, e31, e12 */ self.group0(), /* e15, e25, e35 */ self.group1());
     }
 }
-impl std::ops::Div<right_anti_dual> for LineAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for LineAtInfinity {
     type Output = FlatPointAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1205,9 +1205,9 @@ impl RightAntiDual for LineAtInfinity {
         return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.group0());
     }
 }
-impl std::ops::Div<right_anti_dual> for LineOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for LineOnOrigin {
     type Output = AntiLineOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1217,9 +1217,9 @@ impl RightAntiDual for LineOnOrigin {
         return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ self.group0());
     }
 }
-impl std::ops::Div<right_anti_dual> for Motor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Motor {
     type Output = AntiMotor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1238,9 +1238,9 @@ impl RightAntiDual for Motor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for MotorAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MotorAtInfinity {
     type Output = FlectorAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1254,9 +1254,9 @@ impl RightAntiDual for MotorAtInfinity {
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for MotorOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MotorOnOrigin {
     type Output = AntiMotorOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1270,14 +1270,14 @@ impl RightAntiDual for MotorOnOrigin {
         return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for MultiVector {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
-impl std::ops::DivAssign<right_anti_dual> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_anti_dual) {
+impl std::ops::DivAssign<RightAntiDualPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: RightAntiDualPrefixOrPostfix) {
         *self = self.right_anti_dual()
     }
 }
@@ -1320,9 +1320,9 @@ impl RightAntiDual for MultiVector {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryCircle {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryCircle {
     type Output = MysteryDipole;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1336,9 +1336,9 @@ impl RightAntiDual for MysteryCircle {
         return MysteryDipole::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryCircleRotor {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryCircleRotor {
     type Output = AntiMysteryCircleRotor;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1361,9 +1361,9 @@ impl RightAntiDual for MysteryCircleRotor {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryDipole {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryDipole {
     type Output = MysteryCircle;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1377,9 +1377,9 @@ impl RightAntiDual for MysteryDipole {
         return MysteryCircle::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryDipoleInversion {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryDipoleInversion {
     type Output = AntiMysteryDipoleInversion;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1401,9 +1401,9 @@ impl RightAntiDual for MysteryDipoleInversion {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryVersorEven {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryVersorEven {
     type Output = MysteryVersorOdd;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1422,9 +1422,9 @@ impl RightAntiDual for MysteryVersorEven {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for MysteryVersorOdd {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for MysteryVersorOdd {
     type Output = MysteryVersorEven;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1443,9 +1443,9 @@ impl RightAntiDual for MysteryVersorOdd {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for NullCircleAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for NullCircleAtOrigin {
     type Output = NullDipoleAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1455,9 +1455,9 @@ impl RightAntiDual for NullCircleAtOrigin {
         return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ self.group0());
     }
 }
-impl std::ops::Div<right_anti_dual> for NullDipoleAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for NullDipoleAtOrigin {
     type Output = NullCircleAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1471,9 +1471,9 @@ impl RightAntiDual for NullDipoleAtOrigin {
         return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for NullDipoleInversionAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for NullDipoleInversionAtOrigin {
     type Output = NullVersorEvenAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1487,9 +1487,9 @@ impl RightAntiDual for NullDipoleInversionAtOrigin {
         return NullVersorEvenAtOrigin::from_groups(/* e423, e431, e412, e4 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for NullSphereAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for NullSphereAtOrigin {
     type Output = Origin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1500,9 +1500,9 @@ impl RightAntiDual for NullSphereAtOrigin {
         return Origin::from_groups(/* e4 */ self[e1234]);
     }
 }
-impl std::ops::Div<right_anti_dual> for NullVersorEvenAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for NullVersorEvenAtOrigin {
     type Output = NullDipoleInversionAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1516,9 +1516,9 @@ impl RightAntiDual for NullVersorEvenAtOrigin {
         return NullDipoleInversionAtOrigin::from_groups(/* e41, e42, e43, e1234 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for Origin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Origin {
     type Output = NullSphereAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1532,9 +1532,9 @@ impl RightAntiDual for Origin {
         return NullSphereAtOrigin::from_groups(/* e1234 */ self[e4] * -1.0);
     }
 }
-impl std::ops::Div<right_anti_dual> for Plane {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Plane {
     type Output = AntiPlane;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1548,9 +1548,9 @@ impl RightAntiDual for Plane {
         return AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for PlaneOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for PlaneOnOrigin {
     type Output = AntiPlaneOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1564,9 +1564,9 @@ impl RightAntiDual for PlaneOnOrigin {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for RoundPoint {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for RoundPoint {
     type Output = Sphere;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1589,9 +1589,9 @@ impl RightAntiDual for RoundPoint {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for RoundPointAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for RoundPointAtOrigin {
     type Output = SphereAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1605,9 +1605,9 @@ impl RightAntiDual for RoundPointAtOrigin {
         return SphereAtOrigin::from_groups(/* e3215, e1234 */ self.group0().yx() * Simd32x2::from(-1.0));
     }
 }
-impl std::ops::Div<right_anti_dual> for Scalar {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1618,9 +1618,9 @@ impl RightAntiDual for Scalar {
         return AntiScalar::from_groups(/* e12345 */ self[scalar]);
     }
 }
-impl std::ops::Div<right_anti_dual> for Sphere {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Sphere {
     type Output = RoundPoint;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1640,9 +1640,9 @@ impl RightAntiDual for Sphere {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for SphereAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for SphereAtOrigin {
     type Output = RoundPointAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1652,9 +1652,9 @@ impl RightAntiDual for SphereAtOrigin {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ self.group0().yx());
     }
 }
-impl std::ops::Div<right_anti_dual> for SphereOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for SphereOnOrigin {
     type Output = AntiSphereOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1668,9 +1668,9 @@ impl RightAntiDual for SphereOnOrigin {
         return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEven {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEven {
     type Output = VersorOdd;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1694,9 +1694,9 @@ impl RightAntiDual for VersorEven {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEvenAligningOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEvenAligningOrigin {
     type Output = VersorOddOrthogonalOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1718,9 +1718,9 @@ impl RightAntiDual for VersorEvenAligningOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEvenAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEvenAtInfinity {
     type Output = VersorOddAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1742,9 +1742,9 @@ impl RightAntiDual for VersorEvenAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEvenAtOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEvenAtOrigin {
     type Output = DipoleInversionAtOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1764,9 +1764,9 @@ impl RightAntiDual for VersorEvenAtOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEvenOnOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEvenOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1785,9 +1785,9 @@ impl RightAntiDual for VersorEvenOnOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorEvenOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorEvenOrthogonalOrigin {
     type Output = DipoleInversionAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1809,9 +1809,9 @@ impl RightAntiDual for VersorEvenOrthogonalOrigin {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorOdd {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorOdd {
     type Output = VersorEven;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1835,9 +1835,9 @@ impl RightAntiDual for VersorOdd {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorOddAtInfinity {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorOddAtInfinity {
     type Output = VersorEvenAtInfinity;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }
@@ -1859,9 +1859,9 @@ impl RightAntiDual for VersorOddAtInfinity {
         );
     }
 }
-impl std::ops::Div<right_anti_dual> for VersorOddOrthogonalOrigin {
+impl std::ops::Div<RightAntiDualPrefixOrPostfix> for VersorOddOrthogonalOrigin {
     type Output = VersorEvenAligningOrigin;
-    fn div(self, _rhs: right_anti_dual) -> Self::Output {
+    fn div(self, _rhs: RightAntiDualPrefixOrPostfix) -> Self::Output {
         self.right_anti_dual()
     }
 }

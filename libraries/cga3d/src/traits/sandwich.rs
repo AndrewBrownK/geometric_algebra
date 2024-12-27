@@ -8,11 +8,11 @@ pub trait Sandwich<T> {
     type Output;
     fn sandwich(self, other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct sandwich;
-#[allow(non_camel_case_types)]
-pub struct sandwich_partial<A>(A);
-impl<A: Sandwich<B>, B> std::ops::Div<B> for sandwich_partial<A> {
+#[allow(non_upper_case_globals, dead_code)]
+pub static sandwich: SandwichInfix = SandwichInfix;
+pub struct SandwichInfix;
+pub struct SandwichInfixPartial<A>(A);
+impl<A: Sandwich<B>, B> std::ops::Div<B> for SandwichInfixPartial<A> {
     type Output = <A as Sandwich<B>>::Output;
     fn div(self, rhs: B) -> Self::Output {
         self.0.sandwich(rhs)

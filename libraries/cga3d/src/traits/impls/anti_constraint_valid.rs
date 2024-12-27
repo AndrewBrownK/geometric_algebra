@@ -18,14 +18,14 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
-impl std::ops::Div<anti_constraint_valid> for AntiFlatPoint {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for AntiFlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for AntiFlatPoint {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -34,14 +34,14 @@ impl AntiConstraintValid for AntiFlatPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for AntiPlane {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for AntiPlane {
     type Output = AntiPlane;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for AntiPlane {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for AntiPlane {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -50,14 +50,14 @@ impl AntiConstraintValid for AntiPlane {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for AntiScalar {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -66,14 +66,14 @@ impl AntiConstraintValid for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for FlatPoint {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for FlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for FlatPoint {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for FlatPoint {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -82,14 +82,14 @@ impl AntiConstraintValid for FlatPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Plane {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Plane {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -98,14 +98,14 @@ impl AntiConstraintValid for Plane {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for RoundPoint {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for RoundPoint {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -114,14 +114,14 @@ impl AntiConstraintValid for RoundPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Scalar {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -130,14 +130,14 @@ impl AntiConstraintValid for Scalar {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Sphere {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Sphere {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }

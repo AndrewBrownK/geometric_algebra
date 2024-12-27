@@ -20,9 +20,9 @@ use crate::traits::SquareRoot;
 //   Median:         3       5       0
 //  Average:         6       8       0
 //  Maximum:        31      33       0
-impl std::ops::Div<radius_norm> for AntiCircleRotor {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -34,9 +34,9 @@ impl RadiusNorm for AntiCircleRotor {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiDipoleInversion {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -48,9 +48,9 @@ impl RadiusNorm for AntiDipoleInversion {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiDualNum {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiDualNum {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -62,9 +62,9 @@ impl RadiusNorm for AntiDualNum {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiFlatPoint {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiFlatPoint {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -76,9 +76,9 @@ impl RadiusNorm for AntiFlatPoint {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiFlector {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiFlector {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -90,9 +90,9 @@ impl RadiusNorm for AntiFlector {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiLine {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiLine {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -104,9 +104,9 @@ impl RadiusNorm for AntiLine {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiMotor {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiMotor {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -118,9 +118,9 @@ impl RadiusNorm for AntiMotor {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiPlane {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiPlane {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -132,9 +132,9 @@ impl RadiusNorm for AntiPlane {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for AntiScalar {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -146,9 +146,9 @@ impl RadiusNorm for AntiScalar {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Circle {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Circle {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -160,9 +160,9 @@ impl RadiusNorm for Circle {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for CircleRotor {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for CircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -174,9 +174,9 @@ impl RadiusNorm for CircleRotor {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Dipole {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Dipole {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -188,9 +188,9 @@ impl RadiusNorm for Dipole {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for DipoleInversion {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for DipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -202,9 +202,9 @@ impl RadiusNorm for DipoleInversion {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for DualNum {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for DualNum {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -216,9 +216,9 @@ impl RadiusNorm for DualNum {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for FlatPoint {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for FlatPoint {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -230,9 +230,9 @@ impl RadiusNorm for FlatPoint {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Flector {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -244,9 +244,9 @@ impl RadiusNorm for Flector {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Line {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -258,9 +258,9 @@ impl RadiusNorm for Line {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Motor {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -272,9 +272,9 @@ impl RadiusNorm for Motor {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for MultiVector {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -286,9 +286,9 @@ impl RadiusNorm for MultiVector {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Plane {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Plane {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -300,9 +300,9 @@ impl RadiusNorm for Plane {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for RoundPoint {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for RoundPoint {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -314,14 +314,14 @@ impl RadiusNorm for RoundPoint {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Scalar {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
-impl std::ops::DivAssign<radius_norm> for Scalar {
-    fn div_assign(&mut self, _rhs: radius_norm) {
+impl std::ops::DivAssign<RadiusNormPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: RadiusNormPrefixOrPostfix) {
         *self = self.radius_norm()
     }
 }
@@ -333,9 +333,9 @@ impl RadiusNorm for Scalar {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for Sphere {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for Sphere {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -347,9 +347,9 @@ impl RadiusNorm for Sphere {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for VersorEven {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for VersorEven {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }
@@ -361,9 +361,9 @@ impl RadiusNorm for VersorEven {
         return self.radius_norm_squared().square_root();
     }
 }
-impl std::ops::Div<radius_norm> for VersorOdd {
+impl std::ops::Div<RadiusNormPrefixOrPostfix> for VersorOdd {
     type Output = Scalar;
-    fn div(self, _rhs: radius_norm) -> Self::Output {
+    fn div(self, _rhs: RadiusNormPrefixOrPostfix) -> Self::Output {
         self.radius_norm()
     }
 }

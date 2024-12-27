@@ -20,9 +20,9 @@ use crate::traits::RoundWeightNormSquared;
 //   Median:         5      16       1
 //  Average:        10      21       1
 //  Maximum:        63      90       1
-impl std::ops::Div<unitized_round_norm_squared> for AntiCircleRotor {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for AntiCircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -39,9 +39,9 @@ impl UnitizedRoundNormSquared for AntiCircleRotor {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for AntiDipoleInversion {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for AntiDipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -58,9 +58,9 @@ impl UnitizedRoundNormSquared for AntiDipoleInversion {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for Circle {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for Circle {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -77,9 +77,9 @@ impl UnitizedRoundNormSquared for Circle {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for CircleRotor {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for CircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -96,9 +96,9 @@ impl UnitizedRoundNormSquared for CircleRotor {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for Dipole {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for Dipole {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -115,9 +115,9 @@ impl UnitizedRoundNormSquared for Dipole {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for DipoleInversion {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for DipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -134,9 +134,9 @@ impl UnitizedRoundNormSquared for DipoleInversion {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for MultiVector {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -154,9 +154,9 @@ impl UnitizedRoundNormSquared for MultiVector {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for RoundPoint {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for RoundPoint {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -173,9 +173,9 @@ impl UnitizedRoundNormSquared for RoundPoint {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for VersorEven {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for VersorEven {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }
@@ -192,9 +192,9 @@ impl UnitizedRoundNormSquared for VersorEven {
         return self.round_bulk_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]);
     }
 }
-impl std::ops::Div<unitized_round_norm_squared> for VersorOdd {
+impl std::ops::Div<UnitizedRoundNormSquaredPrefixOrPostfix> for VersorOdd {
     type Output = f32;
-    fn div(self, _rhs: unitized_round_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedRoundNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_round_norm_squared()
     }
 }

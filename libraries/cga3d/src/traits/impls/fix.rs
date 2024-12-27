@@ -18,14 +18,14 @@
 //   Median:         2       7       0
 //  Average:         1       4       0
 //  Maximum:         3       9       0
-impl std::ops::Div<fix> for AntiFlatPoint {
+impl std::ops::Div<FixPrefixOrPostfix> for AntiFlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for AntiFlatPoint {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -45,14 +45,14 @@ impl Fix for AntiFlatPoint {
         );
     }
 }
-impl std::ops::Div<fix> for AntiPlane {
+impl std::ops::Div<FixPrefixOrPostfix> for AntiPlane {
     type Output = AntiPlane;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for AntiPlane {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for AntiPlane {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -72,14 +72,14 @@ impl Fix for AntiPlane {
         );
     }
 }
-impl std::ops::Div<fix> for AntiScalar {
+impl std::ops::Div<FixPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for AntiScalar {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -88,14 +88,14 @@ impl Fix for AntiScalar {
         return AntiScalar::from_groups(/* e12345 */ -1.0);
     }
 }
-impl std::ops::Div<fix> for FlatPoint {
+impl std::ops::Div<FixPrefixOrPostfix> for FlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for FlatPoint {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for FlatPoint {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -112,14 +112,14 @@ impl Fix for FlatPoint {
         );
     }
 }
-impl std::ops::Div<fix> for Plane {
+impl std::ops::Div<FixPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for Plane {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -139,14 +139,14 @@ impl Fix for Plane {
         );
     }
 }
-impl std::ops::Div<fix> for RoundPoint {
+impl std::ops::Div<FixPrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for RoundPoint {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -169,14 +169,14 @@ impl Fix for RoundPoint {
         );
     }
 }
-impl std::ops::Div<fix> for Scalar {
+impl std::ops::Div<FixPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for Scalar {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }
@@ -185,14 +185,14 @@ impl Fix for Scalar {
         return Scalar::from_groups(/* scalar */ 1.0);
     }
 }
-impl std::ops::Div<fix> for Sphere {
+impl std::ops::Div<FixPrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: fix) -> Self::Output {
+    fn div(self, _rhs: FixPrefixOrPostfix) -> Self::Output {
         self.fix()
     }
 }
-impl std::ops::DivAssign<fix> for Sphere {
-    fn div_assign(&mut self, _rhs: fix) {
+impl std::ops::DivAssign<FixPrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: FixPrefixOrPostfix) {
         *self = self.fix()
     }
 }

@@ -20,14 +20,14 @@ use crate::traits::RoundWeightNormSquared;
 //   Median:         2      20       1
 //  Average:         4      27       1
 //  Maximum:        32      90       1
-impl std::ops::Div<unitize> for AntiCircleRotor {
+impl std::ops::Div<UnitizePrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for AntiCircleRotor {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for AntiCircleRotor {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -53,14 +53,14 @@ impl Unitize for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<unitize> for AntiDipoleInversion {
+impl std::ops::Div<UnitizePrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -88,14 +88,14 @@ impl Unitize for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<unitize> for Circle {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Circle {
     type Output = Circle;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Circle {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Circle {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -121,14 +121,14 @@ impl Unitize for Circle {
         );
     }
 }
-impl std::ops::Div<unitize> for CircleRotor {
+impl std::ops::Div<UnitizePrefixOrPostfix> for CircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for CircleRotor {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for CircleRotor {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -154,14 +154,14 @@ impl Unitize for CircleRotor {
         );
     }
 }
-impl std::ops::Div<unitize> for Dipole {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Dipole {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -187,14 +187,14 @@ impl Unitize for Dipole {
         );
     }
 }
-impl std::ops::Div<unitize> for DipoleInversion {
+impl std::ops::Div<UnitizePrefixOrPostfix> for DipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for DipoleInversion {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -222,14 +222,14 @@ impl Unitize for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<unitize> for MultiVector {
+impl std::ops::Div<UnitizePrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for MultiVector {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -272,14 +272,14 @@ impl Unitize for MultiVector {
         );
     }
 }
-impl std::ops::Div<unitize> for RoundPoint {
+impl std::ops::Div<UnitizePrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for RoundPoint {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -302,14 +302,14 @@ impl Unitize for RoundPoint {
         );
     }
 }
-impl std::ops::Div<unitize> for Sphere {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Sphere {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -332,14 +332,14 @@ impl Unitize for Sphere {
         );
     }
 }
-impl std::ops::Div<unitize> for VersorEven {
+impl std::ops::Div<UnitizePrefixOrPostfix> for VersorEven {
     type Output = VersorEven;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for VersorEven {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for VersorEven {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -366,14 +366,14 @@ impl Unitize for VersorEven {
         );
     }
 }
-impl std::ops::Div<unitize> for VersorOdd {
+impl std::ops::Div<UnitizePrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for VersorOdd {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }

@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,18 +7,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 108
+// Total Implementations: 84
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       3       0
-//  Average:         4       8       0
-//  Maximum:        54      82       0
+//   Median:         0       2       0
+//  Average:         3       7       0
+//  Maximum:        54      85       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       8       0
-//  Average:        10      17       0
+//   Median:         0       5       0
+//  Average:         9      15       0
 //  Maximum:       128     162       0
 impl std::ops::Add<AntiCircleRotor> for RoundPoint {
     type Output = MultiVector;
@@ -111,7 +110,7 @@ impl std::ops::Add<AntiFlatPoint> for RoundPoint {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], self[e4]]),
+            other.group0().xyz().with_w(self[e4]),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]),
         );
@@ -131,7 +130,7 @@ impl std::ops::Add<AntiFlector> for RoundPoint {
             // e415, e425, e435, e321
             Simd32x3::from(0.0).with_w(other[e321]),
             // e235, e315, e125, e4
-            Simd32x4::from([other[e235], other[e315], other[e125], self[e4]]),
+            other.group0().xyz().with_w(self[e4]),
             // e1, e2, e3, e5
             other.group1() + self.group0().xyz().with_w(self[e5]),
         );
@@ -179,7 +178,7 @@ impl std::ops::Add<AntiMotor> for RoundPoint {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
+            other.group1().xyz().with_w(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -202,15 +201,15 @@ impl std::ops::Add<AntiPlane> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        1        0        0
+    //    simd3        1        0        0
     // Totals...
     // yes simd        2        0        0
-    //  no simd        5        0        0
+    //  no simd        4        0        0
     fn add(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().xyz().with_w(self[e4]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[e4]),
             // e5
             other[e5] + self[e5],
         );
@@ -221,7 +220,7 @@ impl std::ops::AddAssign<AntiPlane> for RoundPoint {
         use crate::elements::*;
         *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().xyz().with_w(self[e4]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[e4]),
             // e5
             other[e5] + self[e5],
         );
@@ -269,7 +268,7 @@ impl std::ops::Add<CircleRotor> for RoundPoint {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235], other[e315], other[e125], self[e5]]),
+            other.group2().xyz().with_w(self[e5]),
             // e1, e2, e3, e4
             self.group0(),
         );
@@ -442,7 +441,7 @@ impl std::ops::Add<Motor> for RoundPoint {
             // e423, e431, e412, e12345
             Simd32x3::from(0.0).with_w(other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e235, e315, e125, e5
             other.group1() + Simd32x3::from(0.0).with_w(self[e5]),
             // e1, e2, e3, e4
@@ -647,331 +646,11 @@ impl std::ops::Add<VersorOdd> for RoundPoint {
         );
     }
 }
-impl std::ops::BitXor<AntiCircleRotor> for RoundPoint {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        9        0
-    //    simd3        4        6        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        9       17        0
-    //  no simd       20       35        0
-    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversion> for RoundPoint {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        1        3        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       11       25        0
-    //  no simd       25       43        0
-    fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDualNum> for RoundPoint {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
-    fn bitxor(self, other: AntiDualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlatPoint> for RoundPoint {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        5        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3        6        0
-    //  no simd        3        9        0
-    fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlector> for RoundPoint {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        2        5        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5       12        0
-    //  no simd        9       25        0
-    fn bitxor(self, other: AntiFlector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiLine> for RoundPoint {
-    type Output = Circle;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd3        2        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4        8        0
-    //  no simd        8       19        0
-    fn bitxor(self, other: AntiLine) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotor> for RoundPoint {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        4        0
-    //    simd3        2        3        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        4       10        0
-    //  no simd        8       25        0
-    fn bitxor(self, other: AntiMotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiPlane> for RoundPoint {
-    type Output = Dipole;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd3        2        5        0
-    // Totals...
-    // yes simd        2        6        0
-    //  no simd        6       16        0
-    fn bitxor(self, other: AntiPlane) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Circle> for RoundPoint {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        9       14        0
-    //  no simd       15       20        0
-    fn bitxor(self, other: Circle) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotor> for RoundPoint {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        9       14        0
-    //  no simd       15       20        0
-    fn bitxor(self, other: CircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Dipole> for RoundPoint {
-    type Output = Circle;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd3        4        6        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        9       15        0
-    //  no simd       20       30        0
-    fn bitxor(self, other: Dipole) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversion> for RoundPoint {
-    type Output = CircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       17        0
-    //    simd3        2        3        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       11       23        0
-    //  no simd       24       38        0
-    fn bitxor(self, other: DipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DualNum> for RoundPoint {
-    type Output = FlatPoint;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatPoint> for RoundPoint {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        2        4        0
-    // no simd        6       12        0
-    fn bitxor(self, other: FlatPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Flector> for RoundPoint {
-    type Output = Motor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        9        0
-    //    simd3        1        2        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        4       12        0
-    //  no simd        9       19        0
-    fn bitxor(self, other: Flector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Line> for RoundPoint {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
-    fn bitxor(self, other: Line) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for RoundPoint {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        8       16        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for RoundPoint {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       15       26        0
-    //    simd3        6       10        0
-    //    simd4        4        6        0
-    // Totals...
-    // yes simd       25       42        0
-    //  no simd       49       80        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Plane> for RoundPoint {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        4        0
-    fn bitxor(self, other: Plane) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPoint> for RoundPoint {
-    type Output = Dipole;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd3        2        5        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        3        7        0
-    //  no simd       10       20        0
-    fn bitxor(self, other: RoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for RoundPoint {
-    type Output = RoundPoint;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for RoundPoint {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Sphere> for RoundPoint {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        5        0
-    fn bitxor(self, other: Sphere) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEven> for RoundPoint {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        1        3        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       11       25        0
-    //  no simd       25       43        0
-    fn bitxor(self, other: VersorEven) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOdd> for RoundPoint {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        2        3        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       11       25        0
-    //  no simd       24       43        0
-    fn bitxor(self, other: VersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
 
 impl From<AntiPlane> for RoundPoint {
     fn from(from_anti_plane: AntiPlane) -> Self {
         use crate::elements::*;
-        return RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([from_anti_plane[e1], from_anti_plane[e2], from_anti_plane[e3], 0.0]),
-            // e5
-            from_anti_plane[e5],
-        );
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ from_anti_plane.group0().xyz().with_w(0.0), /* e5 */ from_anti_plane[e5]);
     }
 }
 impl std::ops::Mul<AntiCircleRotor> for RoundPoint {
@@ -992,11 +671,11 @@ impl std::ops::Mul<AntiDipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       28        0
-    //    simd3        0        2        0
-    //    simd4       12       11        0
+    //      f32       11       29        0
+    //    simd3        0        3        0
+    //    simd4       12       10        0
     // Totals...
-    // yes simd       23       41        0
+    // yes simd       23       42        0
     //  no simd       59       78        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -1020,11 +699,10 @@ impl std::ops::Mul<AntiFlatPoint> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        2        4        0
-    //    simd4        0        1        0
+    //    simd3        2        5        0
     // Totals...
     // yes simd        5       10        0
-    //  no simd        9       21        0
+    //  no simd        9       20        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1034,11 +712,10 @@ impl std::ops::Mul<AntiFlector> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       10        0
-    //    simd3        6        8        0
-    //    simd4        0        2        0
+    //    simd3        6       10        0
     // Totals...
     // yes simd       12       20        0
-    //  no simd       24       42        0
+    //  no simd       24       40        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1048,11 +725,11 @@ impl std::ops::Mul<AntiLine> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2       10        0
-    //    simd3        0        4        0
-    //    simd4        4        3        0
+    //    simd3        0        5        0
+    //    simd4        4        2        0
     // Totals...
     // yes simd        6       17        0
-    //  no simd       18       34        0
+    //  no simd       18       33        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1062,11 +739,11 @@ impl std::ops::Mul<AntiMotor> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        4        0
+    //    simd3        3        5        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       12       21        0
-    //  no simd       24       41        0
+    //  no simd       24       40        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1089,11 +766,11 @@ impl std::ops::Mul<AntiScalar> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
+    //      f32        0        4        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        5        0
+    //  no simd        0        7        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1102,11 +779,11 @@ impl std::ops::Mul<Circle> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       17        0
-    //    simd3        2        3        0
-    //    simd4        5        6        0
+    //      f32        9       19        0
+    //    simd3        2        5        0
+    //    simd4        5        4        0
     // Totals...
-    // yes simd       16       26        0
+    // yes simd       16       28        0
     //  no simd       35       50        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
@@ -1116,11 +793,11 @@ impl std::ops::Mul<CircleRotor> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       21        0
-    //    simd3        2        3        0
-    //    simd4        6        7        0
+    //      f32       10       23        0
+    //    simd3        2        5        0
+    //    simd4        6        5        0
     // Totals...
-    // yes simd       18       31        0
+    // yes simd       18       33        0
     //  no simd       40       58        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
@@ -1144,11 +821,11 @@ impl std::ops::Mul<DipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       29        0
-    //    simd3        0        2        0
-    //    simd4       13       11        0
+    //      f32        7       32        0
+    //    simd3        0        5        0
+    //    simd4       13        8        0
     // Totals...
-    // yes simd       20       42        0
+    // yes simd       20       45        0
     //  no simd       59       79        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -1172,11 +849,10 @@ impl std::ops::Mul<FlatPoint> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        2        4        0
-    //    simd4        0        1        0
+    //    simd3        2        5        0
     // Totals...
     // yes simd        5       10        0
-    //  no simd        9       21        0
+    //  no simd        9       20        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1186,11 +862,11 @@ impl std::ops::Mul<Flector> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       13        0
-    //    simd3        3        4        0
-    //    simd4        2        4        0
+    //    simd3        3        5        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       12       21        0
-    //  no simd       24       41        0
+    //  no simd       24       40        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1200,11 +876,11 @@ impl std::ops::Mul<Line> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd3        0        5        0
-    //    simd4        3        3        0
+    //    simd3        0        7        0
+    //    simd4        3        1        0
     // Totals...
     // yes simd        9       19        0
-    //  no simd       18       38        0
+    //  no simd       18       36        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1214,11 +890,11 @@ impl std::ops::Mul<Motor> for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       18        0
-    //    simd3        3        4        0
-    //    simd4        1        5        0
+    //    simd3        3        6        0
+    //    simd4        1        3        0
     // Totals...
     // yes simd       15       27        0
-    //  no simd       24       50        0
+    //  no simd       24       48        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1227,12 +903,12 @@ impl std::ops::Mul<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       46        0
+    //      f32       22       49        0
     //    simd2        3        3        0
-    //    simd3       16       22        0
-    //    simd4       13       11        0
+    //    simd3       16       25        0
+    //    simd4       13        8        0
     // Totals...
-    // yes simd       54       82        0
+    // yes simd       54       85        0
     //  no simd      128      162        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
@@ -1255,11 +931,11 @@ impl std::ops::Mul<RoundPoint> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        4        0
-    //    simd3        1        3        0
-    //    simd4        3        3        0
+    //      f32        2        5        0
+    //    simd3        1        4        0
+    //    simd4        3        2        0
     // Totals...
-    // yes simd        6       10        0
+    // yes simd        6       11        0
     //  no simd       17       25        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
@@ -1301,10 +977,11 @@ impl std::ops::Mul<VersorEven> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       27        0
-    //    simd4       13       14        0
+    //      f32       12       28        0
+    //    simd3        0        1        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       25       41        0
+    // yes simd       25       42        0
     //  no simd       64       83        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -1314,10 +991,11 @@ impl std::ops::Mul<VersorOdd> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       28        0
-    //    simd4       14       14        0
+    //      f32        8       30        0
+    //    simd3        0        2        0
+    //    simd4       14       12        0
     // Totals...
-    // yes simd       22       42        0
+    // yes simd       22       44        0
     //  no simd       64       84        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
@@ -2228,7 +1906,7 @@ impl TryFrom<AntiFlector> for RoundPoint {
         }
         return Ok(RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([anti_flector[e1], anti_flector[e2], anti_flector[e3], 0.0]),
+            anti_flector.group1().xyz().with_w(0.0),
             // e5
             anti_flector[e5],
         ));

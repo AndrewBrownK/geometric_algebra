@@ -18,14 +18,14 @@
 //   Median:         0       1       0
 //  Average:         0       4       0
 //  Maximum:         0      17       0
-impl std::ops::Div<anti_auto_morphism> for AntiCircleRotor {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiCircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiCircleRotor {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiCircleRotor {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -48,14 +48,14 @@ impl AntiAutoMorphism for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiDipoleInversion {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -64,14 +64,14 @@ impl AntiAutoMorphism for AntiDipoleInversion {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiDualNum {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiDualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiDualNum {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -84,14 +84,14 @@ impl AntiAutoMorphism for AntiDualNum {
         return AntiDualNum::from_groups(/* e3215, scalar */ self.group0() * Simd32x2::from(-1.0));
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiFlatPoint {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiFlatPoint {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiFlatPoint {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -100,14 +100,14 @@ impl AntiAutoMorphism for AntiFlatPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiFlector {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiFlector {
     type Output = AntiFlector;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiFlector {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiFlector {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -116,14 +116,14 @@ impl AntiAutoMorphism for AntiFlector {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiLine {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiLine {
     type Output = AntiLine;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiLine {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiLine {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -141,14 +141,14 @@ impl AntiAutoMorphism for AntiLine {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiMotor {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiMotor {
     type Output = AntiMotor;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiMotor {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiMotor {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -166,14 +166,14 @@ impl AntiAutoMorphism for AntiMotor {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiPlane {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiPlane {
     type Output = AntiPlane;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiPlane {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiPlane {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -182,14 +182,14 @@ impl AntiAutoMorphism for AntiPlane {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for AntiScalar {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -198,14 +198,14 @@ impl AntiAutoMorphism for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Circle {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Circle {
     type Output = Circle;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Circle {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Circle {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -214,14 +214,14 @@ impl AntiAutoMorphism for Circle {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for CircleRotor {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for CircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for CircleRotor {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for CircleRotor {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -230,14 +230,14 @@ impl AntiAutoMorphism for CircleRotor {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Dipole {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Dipole {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -260,14 +260,14 @@ impl AntiAutoMorphism for Dipole {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for DipoleInversion {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for DipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for DipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -292,14 +292,14 @@ impl AntiAutoMorphism for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for DualNum {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for DualNum {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -308,14 +308,14 @@ impl AntiAutoMorphism for DualNum {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for FlatPoint {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for FlatPoint {
     type Output = FlatPoint;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for FlatPoint {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for FlatPoint {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -328,14 +328,14 @@ impl AntiAutoMorphism for FlatPoint {
         return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Flector {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Flector {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -353,14 +353,14 @@ impl AntiAutoMorphism for Flector {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Line {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Line {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -369,14 +369,14 @@ impl AntiAutoMorphism for Line {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Motor {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Motor {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -385,14 +385,14 @@ impl AntiAutoMorphism for Motor {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for MultiVector {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -434,14 +434,14 @@ impl AntiAutoMorphism for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Plane {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Plane {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -454,14 +454,14 @@ impl AntiAutoMorphism for Plane {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<anti_auto_morphism> for RoundPoint {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for RoundPoint {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -470,14 +470,14 @@ impl AntiAutoMorphism for RoundPoint {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Scalar {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -490,14 +490,14 @@ impl AntiAutoMorphism for Scalar {
         return Scalar::from_groups(/* scalar */ self[scalar] * -1.0);
     }
 }
-impl std::ops::Div<anti_auto_morphism> for Sphere {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for Sphere {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -514,14 +514,14 @@ impl AntiAutoMorphism for Sphere {
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0), /* e1234 */ self[e1234] * -1.0);
     }
 }
-impl std::ops::Div<anti_auto_morphism> for VersorEven {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for VersorEven {
     type Output = VersorEven;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for VersorEven {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for VersorEven {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }
@@ -530,14 +530,14 @@ impl AntiAutoMorphism for VersorEven {
         return self;
     }
 }
-impl std::ops::Div<anti_auto_morphism> for VersorOdd {
+impl std::ops::Div<AntiAutoMorphismPrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AntiAutoMorphismPrefixOrPostfix) -> Self::Output {
         self.anti_auto_morphism()
     }
 }
-impl std::ops::DivAssign<anti_auto_morphism> for VersorOdd {
-    fn div_assign(&mut self, _rhs: anti_auto_morphism) {
+impl std::ops::DivAssign<AntiAutoMorphismPrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: AntiAutoMorphismPrefixOrPostfix) {
         *self = self.anti_auto_morphism()
     }
 }

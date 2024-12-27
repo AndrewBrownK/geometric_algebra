@@ -21,9 +21,9 @@ use crate::traits::RoundBulkNormSquared;
 //   Median:         6       8       0
 //  Average:        11      13       0
 //  Maximum:        63      65       0
-impl std::ops::Div<center_norm_squared> for AntiCircleRotor {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for AntiCircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -36,9 +36,9 @@ impl CenterNormSquared for AntiCircleRotor {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for AntiDipoleInversion {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for AntiDipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -51,9 +51,9 @@ impl CenterNormSquared for AntiDipoleInversion {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for Circle {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for Circle {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -66,9 +66,9 @@ impl CenterNormSquared for Circle {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for CircleRotor {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for CircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -81,9 +81,9 @@ impl CenterNormSquared for CircleRotor {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for Dipole {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for Dipole {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -96,9 +96,9 @@ impl CenterNormSquared for Dipole {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for DipoleInversion {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for DipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -111,9 +111,9 @@ impl CenterNormSquared for DipoleInversion {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for MultiVector {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -126,9 +126,9 @@ impl CenterNormSquared for MultiVector {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for VersorEven {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for VersorEven {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }
@@ -141,9 +141,9 @@ impl CenterNormSquared for VersorEven {
         return Scalar::from_groups(/* scalar */ self.flat_weight_norm_squared().right_anti_dual()[scalar] + self.round_bulk_norm_squared()[scalar]);
     }
 }
-impl std::ops::Div<center_norm_squared> for VersorOdd {
+impl std::ops::Div<CenterNormSquaredPrefixOrPostfix> for VersorOdd {
     type Output = Scalar;
-    fn div(self, _rhs: center_norm_squared) -> Self::Output {
+    fn div(self, _rhs: CenterNormSquaredPrefixOrPostfix) -> Self::Output {
         self.center_norm_squared()
     }
 }

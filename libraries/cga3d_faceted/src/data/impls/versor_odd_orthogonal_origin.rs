@@ -1,6 +1,5 @@
 use crate::traits::GeometricProduct;
 use crate::traits::RightDual;
-use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -8,32 +7,32 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 426
+// Total Implementations: 331
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         2       4       0
+//   Median:         1       2       0
 //  Average:         9      14       0
 //  Maximum:       154     184       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         5       7       0
-//  Average:        19      25       0
+//   Median:         4       4       0
+//  Average:        21      25       0
 //  Maximum:       352     384       0
 impl std::ops::Add<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -44,9 +43,9 @@ impl std::ops::AddAssign<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -55,18 +54,21 @@ impl std::ops::AddAssign<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<AntiCircleRotor> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0() + other.group0().with_w(other[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().xyz().with_w(self[e1234]),
+            (other.group2().xyz() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -75,18 +77,21 @@ impl std::ops::Add<AntiCircleRotor> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       10        0        0
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0() + other.group0().with_w(other[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().xyz().with_w(self[e1234]),
+            (other.group2().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -97,9 +102,9 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOrigin> for VersorOddOrthogonalO
             // e41, e42, e43, scalar
             self.group0() + other.group0().with_w(other[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().xyz().with_w(self[e1234]),
+            (other.group2().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -108,19 +113,19 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for VersorOddOrthogo
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        2        0        0
+    //    simd3        2        0        0
     // Totals...
     // yes simd        3        0        0
-    //  no simd        9        0        0
+    //  no simd        7        0        0
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
+            (other.group1().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -131,9 +136,9 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOriginAtInfinity> for VersorOddO
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
+            (other.group1().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -142,19 +147,20 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        2        0        0
+    //    simd3        1        0        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        3        0        0
-    //  no simd        9        0        0
+    //  no simd        8        0        0
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
+            (other.group1().xyz() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -163,16 +169,19 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<AntiCircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             other.group0() + self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -185,7 +194,7 @@ impl std::ops::AddAssign<AntiCircleRotorOnOrigin> for VersorOddOrthogonalOrigin 
             // e41, e42, e43, scalar
             other.group0() + self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -203,7 +212,7 @@ impl std::ops::Add<AntiDipoleInversion> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -229,11 +238,11 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for VersorOddOrthogonalOrigin 
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group2().xyz().with_w(0.0),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -263,7 +272,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -293,7 +302,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for VersorOddOrthogonalO
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -323,7 +332,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -383,7 +392,7 @@ impl std::ops::Add<AntiFlatOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -413,7 +422,7 @@ impl std::ops::Add<AntiFlatPoint> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -439,11 +448,11 @@ impl std::ops::Add<AntiFlector> for VersorOddOrthogonalOrigin {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -473,7 +482,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -495,17 +504,17 @@ impl std::ops::Add<AntiLine> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -516,9 +525,9 @@ impl std::ops::AddAssign<AntiLine> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -526,15 +535,15 @@ impl std::ops::Add<AntiLineOnOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -547,7 +556,7 @@ impl std::ops::AddAssign<AntiLineOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().with_w(self[e3215]),
+            (other.group0() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -558,10 +567,11 @@ impl std::ops::Add<AntiMotor> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        2        0        0
+    //    simd3        1        0        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        3        0        0
-    //  no simd        9        0        0
+    //  no simd        8        0        0
     fn add(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
@@ -570,7 +580,7 @@ impl std::ops::Add<AntiMotor> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1() + other.group0().xyz().with_w(other[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
+            (other.group1().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -583,7 +593,7 @@ impl std::ops::AddAssign<AntiMotor> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1() + other.group0().xyz().with_w(other[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().xyz().with_w(self[e1234]),
+            (other.group1().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -592,17 +602,17 @@ impl std::ops::Add<AntiMotorOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        1        0        0
+    //    simd3        1        0        0
     // Totals...
     // yes simd        2        0        0
-    //  no simd        5        0        0
+    //  no simd        4        0        0
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().xyz().with_w(self[e3215]),
+            (other.group0().xyz() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -615,7 +625,7 @@ impl std::ops::AddAssign<AntiMotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0().xyz().with_w(self[e3215]),
+            (other.group0().xyz() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2(),
         );
@@ -633,7 +643,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0() + Simd32x3::from(0.0).with_w(other[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -653,7 +663,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -679,11 +689,11 @@ impl std::ops::Add<AntiPlane> for VersorOddOrthogonalOrigin {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -713,7 +723,7 @@ impl std::ops::Add<AntiPlaneOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -743,7 +753,7 @@ impl std::ops::Add<AntiScalar> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -773,7 +783,7 @@ impl std::ops::Add<AntiSphereOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -796,17 +806,18 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        2        0        0
+    //    simd3        1        0        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        3        0        0
-    //  no simd        9        0        0
+    //  no simd        8        0        0
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             other.group0() + self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().xyz().with_w(self[e3215]),
+            (other.group1().xyz() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2().xyz().with_w(other[e1234] + self[e1234]),
         );
@@ -819,7 +830,7 @@ impl std::ops::AddAssign<AntiVersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             other.group0() + self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().xyz().with_w(self[e3215]),
+            (other.group1().xyz() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
             self.group2().xyz().with_w(other[e1234] + self[e1234]),
         );
@@ -837,7 +848,7 @@ impl std::ops::Add<Circle> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -867,7 +878,7 @@ impl std::ops::Add<CircleAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -897,7 +908,7 @@ impl std::ops::Add<CircleAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -927,7 +938,7 @@ impl std::ops::Add<CircleAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -957,7 +968,7 @@ impl std::ops::Add<CircleOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -987,7 +998,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1017,7 +1028,7 @@ impl std::ops::Add<CircleRotor> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1047,7 +1058,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1077,7 +1088,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalO
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1107,7 +1118,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1137,7 +1148,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1158,18 +1169,21 @@ impl std::ops::Add<CircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<Dipole> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       10        0        0
     fn add(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[e1234]),
+            (other.group2() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1179,17 +1193,17 @@ impl std::ops::Add<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1198,18 +1212,21 @@ impl std::ops::Add<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<DipoleAtInfinity> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1219,17 +1236,17 @@ impl std::ops::Add<DipoleAtOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1238,27 +1255,30 @@ impl std::ops::AddAssign<DipoleAtOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
 impl std::ops::Add<DipoleInversion> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        4        0        0
-    // no simd       16        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        3        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd       15        0        0
     fn add(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1269,16 +1289,19 @@ impl std::ops::Add<DipoleInversion> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<DipoleInversionAligningOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
             other.group1() + self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1289,18 +1312,21 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for VersorOddOrthogonalOrigin 
 impl std::ops::Add<DipoleInversionAtInfinity> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group1().with_w(self[e1234]),
+            (other.group1() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             other.group2() + Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1311,15 +1337,16 @@ impl std::ops::Add<DipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        2        0        0
+    //    simd3        1        0        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        3        0        0
-    //  no simd        9        0        0
+    //  no simd        8        0        0
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1().xyz().with_w(other[e3215] + self[e3215]),
             // e15, e25, e35, e1234
@@ -1332,7 +1359,7 @@ impl std::ops::AddAssign<DipoleInversionAtOrigin> for VersorOddOrthogonalOrigin 
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1().xyz().with_w(other[e3215] + self[e3215]),
             // e15, e25, e35, e1234
@@ -1345,17 +1372,17 @@ impl std::ops::Add<DipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        1        0        0
+    //    simd3        1        0        0
     // Totals...
     // yes simd        2        0        0
-    //  no simd        5        0        0
+    //  no simd        4        0        0
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group2().xyz().with_w(other[e1234] + self[e1234]),
             // e4235, e4315, e4125, e3215
@@ -1366,14 +1393,17 @@ impl std::ops::Add<DipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1() + other.group1().with_w(other[e3215]),
             // e15, e25, e35, e1234
@@ -1386,7 +1416,7 @@ impl std::ops::AddAssign<DipoleInversionOrthogonalOrigin> for VersorOddOrthogona
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1() + other.group1().with_w(other[e3215]),
             // e15, e25, e35, e1234
@@ -1398,15 +1428,15 @@ impl std::ops::Add<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1418,17 +1448,17 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        3        0        0
-    // no simd       12        0        0
+    //   simd3        3        0        0
+    // no simd        9        0        0
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[e1234]),
+            (other.group2() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1437,11 +1467,11 @@ impl std::ops::AddAssign<DipoleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[e3215]),
+            (other.group1() + self.group1().xyz()).with_w(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group2().with_w(self[e1234]),
+            (other.group2() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1457,7 +1487,7 @@ impl std::ops::Add<DualNum> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1483,7 +1513,7 @@ impl std::ops::Add<FlatOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1495,17 +1525,17 @@ impl std::ops::Add<FlatPoint> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().xyz().with_w(self[e1234]),
+            (other.group0().xyz() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1515,8 +1545,8 @@ impl std::ops::Add<FlatPointAtInfinity> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
@@ -1525,7 +1555,7 @@ impl std::ops::Add<FlatPointAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[e1234]),
+            (other.group0() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1538,25 +1568,28 @@ impl std::ops::AddAssign<FlatPointAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().with_w(self[e1234]),
+            (other.group0() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
 impl std::ops::Add<Flector> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().xyz().with_w(self[e1234]),
+            (other.group0().xyz() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             other.group1() + Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -1567,10 +1600,10 @@ impl std::ops::Add<FlectorAtInfinity> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        1        0        0
+    //    simd3        1        0        0
     // Totals...
     // yes simd        2        0        0
-    //  no simd        5        0        0
+    //  no simd        4        0        0
     fn add(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
@@ -1579,7 +1612,7 @@ impl std::ops::Add<FlectorAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1().xyz().with_w(other[e3215] + self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().xyz().with_w(self[e1234]),
+            (other.group0().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1592,7 +1625,7 @@ impl std::ops::AddAssign<FlectorAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             self.group1().xyz().with_w(other[e3215] + self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().xyz().with_w(self[e1234]),
+            (other.group0().xyz() + self.group2().xyz()).with_w(self[e1234]),
         );
     }
 }
@@ -1604,7 +1637,7 @@ impl std::ops::Add<FlectorOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], other[e45]]),
+            self.group1().xyz().with_w(other[e45]),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1655,7 +1688,7 @@ impl std::ops::Add<Infinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1685,7 +1718,7 @@ impl std::ops::Add<Line> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1715,7 +1748,7 @@ impl std::ops::Add<LineAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1745,7 +1778,7 @@ impl std::ops::Add<LineOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1775,13 +1808,13 @@ impl std::ops::Add<Motor> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
             self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1805,7 +1838,7 @@ impl std::ops::Add<MotorAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1835,13 +1868,13 @@ impl std::ops::Add<MotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
             self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
+            other.group0().xyz().with_w(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1874,7 +1907,7 @@ impl std::ops::Add<MultiVector> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group3(),
+            other.group3() + self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             other.group4() + self.group2().xyz(),
             // e23, e31, e12
@@ -1904,7 +1937,7 @@ impl std::ops::Add<MysteryCircle> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1934,7 +1967,7 @@ impl std::ops::Add<MysteryCircleRotor> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -1964,7 +1997,7 @@ impl std::ops::Add<MysteryDipole> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -1984,7 +2017,7 @@ impl std::ops::Add<MysteryDipoleInversion> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group0(),
+            other.group0() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -2004,7 +2037,7 @@ impl std::ops::Add<MysteryVersorEven> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2037,7 +2070,7 @@ impl std::ops::Add<MysteryVersorOdd> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -2057,7 +2090,7 @@ impl std::ops::Add<NullCircleAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2079,13 +2112,13 @@ impl std::ops::Add<NullDipoleAtOrigin> for VersorOddOrthogonalOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        1        0        0
-    // no simd        4        0        0
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
@@ -2098,7 +2131,7 @@ impl std::ops::AddAssign<NullDipoleAtOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[scalar]),
+            (other.group0() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
@@ -2111,15 +2144,15 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        1        0        0
+    //    simd3        1        0        0
     // Totals...
     // yes simd        2        0        0
-    //  no simd        5        0        0
+    //  no simd        4        0        0
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
@@ -2132,7 +2165,7 @@ impl std::ops::AddAssign<NullDipoleInversionAtOrigin> for VersorOddOrthogonalOri
         use crate::elements::*;
         *self = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().xyz().with_w(self[scalar]),
+            (other.group0().xyz() + self.group0().xyz()).with_w(self[scalar]),
             // e23, e31, e12, e3215
             self.group1(),
             // e15, e25, e35, e1234
@@ -2183,7 +2216,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2213,7 +2246,7 @@ impl std::ops::Add<Origin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2243,7 +2276,7 @@ impl std::ops::Add<Plane> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -2259,7 +2292,7 @@ impl std::ops::Add<PlaneOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -2279,7 +2312,7 @@ impl std::ops::Add<RoundPoint> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2309,7 +2342,7 @@ impl std::ops::Add<RoundPointAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2370,7 +2403,7 @@ impl std::ops::Add<Sphere> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2() + Simd32x3::from(0.0).with_w(other[e1234]),
             // e4235, e4315, e4125, e3215
@@ -2419,11 +2452,11 @@ impl std::ops::Add<SphereOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2().xyz().with_w(other[e1234] + self[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], self[e3215]]),
+            other.group0().xyz().with_w(self[e3215]),
         );
     }
 }
@@ -2439,7 +2472,7 @@ impl std::ops::Add<VersorEven> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2469,13 +2502,13 @@ impl std::ops::Add<VersorEvenAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
             self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
+            other.group1().xyz().with_w(0.0),
             // e423, e431, e412
             other.group0().xyz(),
             // e235, e315, e125
@@ -2499,7 +2532,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2529,7 +2562,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2559,13 +2592,13 @@ impl std::ops::Add<VersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
             self.group1().xyz(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
+            other.group1().xyz().with_w(0.0),
             // e423, e431, e412
             other.group0().xyz(),
             // e235, e315, e125
@@ -2589,7 +2622,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -2619,7 +2652,7 @@ impl std::ops::Add<VersorOdd> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             other.group0() + self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
@@ -2632,19 +2665,20 @@ impl std::ops::Add<VersorOddAtInfinity> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        3        0        0
+    //    simd3        1        0        0
+    //    simd4        2        0        0
     // Totals...
     // yes simd        4        0        0
-    //  no simd       13        0        0
+    //  no simd       12        0        0
     fn add(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0().xyz().with_w(other[scalar] + self[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1(),
+            other.group1() + self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]) + other.group0().yzw().with_w(self[e1234]),
+            (other.group0().yzw() + self.group2().xyz()).with_w(self[e1234]),
             // e4235, e4315, e4125, e3215
             other.group2() + Simd32x3::from(0.0).with_w(self[e3215]),
         );
@@ -2679,1270 +2713,6 @@ impl std::ops::AddAssign<VersorOddOrthogonalOrigin> for VersorOddOrthogonalOrigi
         );
     }
 }
-impl std::ops::BitXor<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       11        0
-    //    simd3        0        1        0
-    //    simd4        1        4        0
-    // Totals...
-    // yes simd        7       16        0
-    //  no simd       10       30        0
-    fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotor> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       23        0
-    //    simd3        2        6        0
-    //    simd4        4        2        0
-    // Totals...
-    // yes simd       17       31        0
-    //  no simd       33       49        0
-    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       19        0
-    //    simd3        2        6        0
-    //    simd4        4        2        0
-    // Totals...
-    // yes simd       14       27        0
-    //  no simd       30       45        0
-    fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       12        0
-    //    simd3        1        3        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       10       18        0
-    //  no simd       21       33        0
-    fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       16        0
-    //    simd3        1        3        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       10       22        0
-    //  no simd       21       37        0
-    fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiCircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       10        0
-    //    simd3        2        4        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       11       17        0
-    //  no simd       21       34        0
-    fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversion> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       24        0
-    //    simd3        3        7        0
-    //    simd4        4        2        0
-    // Totals...
-    // yes simd       19       33        0
-    //  no simd       37       53        0
-    fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       12        0
-    //    simd3        3        4        0
-    //    simd4        3        6        0
-    // Totals...
-    // yes simd       12       22        0
-    //  no simd       27       48        0
-    fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd3        1        4        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       10       20        0
-    //  no simd       18       34        0
-    fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       11        0
-    //    simd3        3        5        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       13       18        0
-    //  no simd       25       34        0
-    fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDipoleOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        4        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        5        0
-    //  no simd        2        7        0
-    fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDualNum> for VersorOddOrthogonalOrigin {
-    type Output = VersorOddOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        1        5        0
-    //  no simd        1       14        0
-    fn bitxor(self, other: AntiDualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum> for VersorOddOrthogonalOrigin {
-    fn bitxor_assign(&mut self, other: AntiDualNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlatOrigin> for VersorOddOrthogonalOrigin {
-    type Output = AntiFlatOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiFlatOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlatPoint> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        2        5        0
-    //  no simd        2        8        0
-    fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlector> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        7        0
-    //    simd3        3        4        0
-    //    simd4        2        6        0
-    // Totals...
-    // yes simd        9       17        0
-    //  no simd       21       43        0
-    fn bitxor(self, other: AntiFlector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlectorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd3        1        2        0
-    //    simd4        2        5        0
-    // Totals...
-    // yes simd        4        9        0
-    //  no simd       12       28        0
-    fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiLine> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       12        0
-    //    simd3        0        1        0
-    //    simd4        1        4        0
-    // Totals...
-    // yes simd        7       17        0
-    //  no simd       10       31        0
-    fn bitxor(self, other: AntiLine) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiLineOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        4        7        0
-    //  no simd        4        9        0
-    fn bitxor(self, other: AntiLineOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotor> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd3        1        4        0
-    //    simd4        3        2        0
-    // Totals...
-    // yes simd       11       20        0
-    //  no simd       22       34        0
-    fn bitxor(self, other: AntiMotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMotorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorOddOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       10        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        6       13        0
-    //  no simd        9       22        0
-    fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMotorOnOrigin> for VersorOddOrthogonalOrigin {
-    fn bitxor_assign(&mut self, other: AntiMotorOnOrigin) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMysteryCircleRotor> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        9        0
-    //    simd3        1        2        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        7       14        0
-    //  no simd        9       27        0
-    fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiMysteryDipoleInversion> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       10        0
-    //    simd3        1        3        0
-    //    simd4        1        4        0
-    // Totals...
-    // yes simd        6       17        0
-    //  no simd       11       35        0
-    fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiPlane> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        5        0
-    //    simd3        3        5        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        5       14        0
-    //  no simd       11       36        0
-    fn bitxor(self, other: AntiPlane) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiPlaneOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        6        0
-    //    simd3        1        3        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        3       12        0
-    //  no simd        8       27        0
-    fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiScalar> for VersorOddOrthogonalOrigin {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiScalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiSphereOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        4        0
-    //    simd3        3        5        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5       11        0
-    //  no simd       11       27        0
-    fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       11        0
-    //    simd3        2        4        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       12       18        0
-    //  no simd       22       35        0
-    fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Circle> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8        9        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        8       12        0
-    //  no simd        8       20        0
-    fn bitxor(self, other: Circle) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8        9        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        8       12        0
-    //  no simd        8       19        0
-    fn bitxor(self, other: CircleAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: CircleAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       13        0
-    fn bitxor(self, other: CircleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       13        0
-    fn bitxor(self, other: CircleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        7        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        5       14        0
-    fn bitxor(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotor> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       10        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        9       13        0
-    //  no simd        9       21        0
-    fn bitxor(self, other: CircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       10        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        9       13        0
-    //  no simd        9       20        0
-    fn bitxor(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        7        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        6        9        0
-    //  no simd        6       14        0
-    fn bitxor(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        6        9        0
-    //  no simd        6       15        0
-    fn bitxor(self, other: CircleRotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<CircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        7        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        6        9        0
-    //  no simd        6       14        0
-    fn bitxor(self, other: CircleRotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Dipole> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       21        0
-    //    simd3        0        3        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       16       26        0
-    //  no simd       22       38        0
-    fn bitxor(self, other: Dipole) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       10       20        0
-    //  no simd       16       30        0
-    fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd       10       18        0
-    //  no simd       13       26        0
-    fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd3        0        2        0
-    //    simd4        2        4        0
-    // Totals...
-    // yes simd        7       19        0
-    //  no simd       13       35        0
-    fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversion> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       15       22        0
-    //    simd3        0        3        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       18       28        0
-    //  no simd       27       43        0
-    fn bitxor(self, other: DipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       17        0
-    //    simd3        0        2        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       12       22        0
-    //  no simd       21       35        0
-    fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       15        0
-    //    simd3        0        1        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       11       19        0
-    //  no simd       17       30        0
-    fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       10        0
-    //    simd3        0        1        0
-    //    simd4        3        6        0
-    // Totals...
-    // yes simd        6       17        0
-    //  no simd       15       37        0
-    fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       10        0
-    //    simd2        0        1        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        6       13        0
-    //  no simd       12       20        0
-    fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       15        0
-    //    simd3        0        2        0
-    //    simd4        3        6        0
-    // Totals...
-    // yes simd       12       23        0
-    //  no simd       21       45        0
-    fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        8       16        0
-    fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DipoleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       17        0
-    //    simd3        0        2        0
-    //    simd4        2        5        0
-    // Totals...
-    // yes simd       13       24        0
-    //  no simd       19       43        0
-    fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DualNum> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        1        4        0
-    //  no simd        1       10        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatOrigin> for VersorOddOrthogonalOrigin {
-    type Output = FlectorOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: FlatOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatPoint> for VersorOddOrthogonalOrigin {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        8       16        0
-    fn bitxor(self, other: FlatPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatPointAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        6        0
-    //    simd3        0        1        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        2       10        0
-    //  no simd        5       21        0
-    fn bitxor(self, other: FlatPointAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Flector> for VersorOddOrthogonalOrigin {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd        6       11        0
-    //  no simd       12       20        0
-    fn bitxor(self, other: Flector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlectorAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd4        2        5        0
-    // Totals...
-    // yes simd        3        7        0
-    //  no simd        9       22        0
-    fn bitxor(self, other: FlectorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlectorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = FlectorOnOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        7        0
-    fn bitxor(self, other: FlectorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Horizon> for VersorOddOrthogonalOrigin {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: Horizon) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Infinity> for VersorOddOrthogonalOrigin {
-    type Output = Motor;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: Infinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Line> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        6        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5        8        0
-    //  no simd        5       13        0
-    fn bitxor(self, other: Line) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<LineAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        7        0
-    fn bitxor(self, other: LineAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<LineOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = MotorOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        7        0
-    fn bitxor(self, other: LineOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Motor> for VersorOddOrthogonalOrigin {
-    type Output = Motor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        7        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        8       11        0
-    //  no simd       16       21        0
-    fn bitxor(self, other: Motor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MotorAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = Motor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        5        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4        8        0
-    //  no simd        6       15        0
-    fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MotorOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = MotorOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
-    fn bitxor(self, other: MotorOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MultiVector> for VersorOddOrthogonalOrigin {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       29       43        0
-    //    simd3        9       15        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       43       63        0
-    //  no simd       76      108        0
-    fn bitxor(self, other: MultiVector) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryCircle> for VersorOddOrthogonalOrigin {
-    type Output = MysteryCircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        7        0
-    fn bitxor(self, other: MysteryCircle) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryCircleRotor> for VersorOddOrthogonalOrigin {
-    type Output = MysteryCircleRotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
-    fn bitxor(self, other: MysteryCircleRotor) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryDipole> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        4        8        0
-    //  no simd        4       14        0
-    fn bitxor(self, other: MysteryDipole) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryDipoleInversion> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        7       13        0
-    //  no simd        7       16        0
-    fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorEven> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        7        0
-    //    simd3        1        3        0
-    //    simd4        2        5        0
-    // Totals...
-    // yes simd        7       15        0
-    //  no simd       15       36        0
-    fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorOdd> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       11        0
-    //    simd3        1        2        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        7       16        0
-    //  no simd       12       29        0
-    fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullCircleAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = CircleRotorOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        7        0
-    fn bitxor(self, other: NullCircleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullDipoleAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        5        0
-    //    simd4        1        4        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       21        0
-    fn bitxor(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullDipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = DipoleInversionOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd4        2        5        0
-    // Totals...
-    // yes simd        3        7        0
-    //  no simd        9       22        0
-    fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullSphereAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = NullSphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: NullSphereAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<NullVersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        3        8        0
-    //  no simd        6       14        0
-    fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Origin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
-    fn bitxor(self, other: Origin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Plane> for VersorOddOrthogonalOrigin {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: Plane) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<PlaneOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = PlaneOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
-    fn bitxor(self, other: PlaneOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPoint> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       17        0
-    //    simd3        2        4        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        9       23        0
-    //  no simd       19       37        0
-    fn bitxor(self, other: RoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPointAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        3        0
-    //    simd3        1        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        4       17        0
-    fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Scalar> for VersorOddOrthogonalOrigin {
-    type Output = VersorOddOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        3        0
-    // no simd        0       12        0
-    fn bitxor(self, other: Scalar) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<Scalar> for VersorOddOrthogonalOrigin {
-    fn bitxor_assign(&mut self, other: Scalar) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Sphere> for VersorOddOrthogonalOrigin {
-    type Output = Sphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
-    fn bitxor(self, other: Sphere) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<SphereAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = SphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn bitxor(self, other: SphereAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<SphereOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = SphereOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn bitxor(self, other: SphereOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEven> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       20        0
-    //    simd3        3        6        0
-    //    simd4        5        4        0
-    // Totals...
-    // yes simd       20       30        0
-    //  no simd       41       54        0
-    fn bitxor(self, other: VersorEven) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAligningOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       12        0
-    //    simd3        3        5        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       14       19        0
-    //  no simd       26       35        0
-    fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd3        3        5        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd       13       24        0
-    //  no simd       28       49        0
-    fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        2        5        0
-    //    simd4        2        1        0
-    // Totals...
-    // yes simd        9       15        0
-    //  no simd       19       28        0
-    fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEvenOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        7        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        8       11        0
-    //  no simd       16       21        0
-    fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       17        0
-    //    simd3        3        6        0
-    //    simd4        4        3        0
-    // Totals...
-    // yes simd       13       26        0
-    //  no simd       31       47        0
-    fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOdd> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       20        0
-    //    simd3        2        6        0
-    //    simd4        6        4        0
-    // Totals...
-    // yes simd       19       30        0
-    //  no simd       41       54        0
-    fn bitxor(self, other: VersorOdd) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddAtInfinity> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       16        0
-    //    simd3        1        3        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       11       23        0
-    //  no simd       25       41        0
-    fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorOddOrthogonalOrigin> for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd3        2        5        0
-    //    simd4        6        5        0
-    // Totals...
-    // yes simd       16       22        0
-    //  no simd       38       47        0
-    fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
 
 impl From<AntiCircleOnOrigin> for VersorOddOrthogonalOrigin {
     fn from(from_anti_circle_on_origin: AntiCircleOnOrigin) -> Self {
@@ -3966,12 +2736,7 @@ impl From<AntiCircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             from_anti_circle_rotor_aligning_origin.group1().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin[e15],
-                from_anti_circle_rotor_aligning_origin[e25],
-                from_anti_circle_rotor_aligning_origin[e35],
-                0.0,
-            ]),
+            from_anti_circle_rotor_aligning_origin.group2().xyz().with_w(0.0),
         );
     }
 }
@@ -3985,12 +2750,7 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalOrigin
             // e23, e31, e12, e3215
             from_anti_circle_rotor_aligning_origin_at_infinity.group0().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin_at_infinity[e15],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e25],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e35],
-                0.0,
-            ]),
+            from_anti_circle_rotor_aligning_origin_at_infinity.group1().xyz().with_w(0.0),
         );
     }
 }
@@ -4057,7 +2817,7 @@ impl From<AntiMotor> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x4::from([from_anti_motor[e23], from_anti_motor[e31], from_anti_motor[e12], from_anti_motor[e3215]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_anti_motor[e15], from_anti_motor[e25], from_anti_motor[e35], 0.0]),
+            from_anti_motor.group1().xyz().with_w(0.0),
         );
     }
 }
@@ -4069,7 +2829,7 @@ impl From<AntiMotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(from_anti_motor_on_origin[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_motor_on_origin[e23], from_anti_motor_on_origin[e31], from_anti_motor_on_origin[e12], 0.0]),
+            from_anti_motor_on_origin.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
@@ -4083,7 +2843,7 @@ impl From<AntiVersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             from_anti_versor_even_on_origin.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([from_anti_versor_even_on_origin[e23], from_anti_versor_even_on_origin[e31], from_anti_versor_even_on_origin[e12], 0.0]),
+            from_anti_versor_even_on_origin.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).with_w(from_anti_versor_even_on_origin[e1234]),
         );
@@ -4108,7 +2868,7 @@ impl From<DipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([from_dipole_inversion_at_origin[e41], from_dipole_inversion_at_origin[e42], from_dipole_inversion_at_origin[e43], 0.0]),
+            from_dipole_inversion_at_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x3::from(0.0).with_w(from_dipole_inversion_at_origin[e3215]),
             // e15, e25, e35, e1234
@@ -4122,12 +2882,7 @@ impl From<DipoleInversionOrthogonalOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([
-                from_dipole_inversion_orthogonal_origin[e41],
-                from_dipole_inversion_orthogonal_origin[e42],
-                from_dipole_inversion_orthogonal_origin[e43],
-                0.0,
-            ]),
+            from_dipole_inversion_orthogonal_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             from_dipole_inversion_orthogonal_origin.group1().with_w(from_dipole_inversion_orthogonal_origin[e3215]),
             // e15, e25, e35, e1234
@@ -4171,7 +2926,7 @@ impl From<FlectorAtInfinity> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x3::from(0.0).with_w(from_flector_at_infinity[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([from_flector_at_infinity[e15], from_flector_at_infinity[e25], from_flector_at_infinity[e35], 0.0]),
+            from_flector_at_infinity.group0().xyz().with_w(0.0),
         );
     }
 }
@@ -4208,12 +2963,7 @@ impl From<NullDipoleInversionAtOrigin> for VersorOddOrthogonalOrigin {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([
-                from_null_dipole_inversion_at_origin[e41],
-                from_null_dipole_inversion_at_origin[e42],
-                from_null_dipole_inversion_at_origin[e43],
-                0.0,
-            ]),
+            from_null_dipole_inversion_at_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -4445,11 +3195,11 @@ impl std::ops::Mul<AntiFlatPoint> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       18        0
-    //    simd3        3        4        0
-    //    simd4        4        6        0
+    //    simd3        3        6        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       14       28        0
-    //  no simd       32       54        0
+    //  no simd       32       52        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4551,11 +3301,11 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       22        0
-    //    simd3        3        4        0
-    //    simd4        6        7        0
+    //    simd3        3        5        0
+    //    simd4        6        6        0
     // Totals...
     // yes simd       20       33        0
-    //  no simd       44       62        0
+    //  no simd       44       61        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4579,11 +3329,11 @@ impl std::ops::Mul<AntiPlane> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       19        0
-    //    simd3        2        3        0
-    //    simd4        5        6        0
+    //    simd3        2        4        0
+    //    simd4        5        5        0
     // Totals...
     // yes simd       14       28        0
-    //  no simd       33       52        0
+    //  no simd       33       51        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4616,11 +3366,11 @@ impl std::ops::Mul<AntiSphereOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       21        0
-    //    simd3        3        4        0
-    //    simd4        3        4        0
+    //    simd3        3        5        0
+    //    simd4        3        3        0
     // Totals...
     // yes simd       17       29        0
-    //  no simd       32       49        0
+    //  no simd       32       48        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4938,11 +3688,11 @@ impl std::ops::Mul<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       22        0
-    //    simd3        3        4        0
-    //    simd4        3        5        0
+    //    simd3        3        6        0
+    //    simd4        3        3        0
     // Totals...
     // yes simd       17       31        0
-    //  no simd       32       54        0
+    //  no simd       32       52        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4990,11 +3740,11 @@ impl std::ops::Mul<FlatPoint> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       20        0
-    //    simd3        3        4        0
-    //    simd4        4        5        0
+    //    simd3        3        5        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       14       29        0
-    //  no simd       32       52        0
+    //  no simd       32       51        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5173,11 +3923,11 @@ impl std::ops::Mul<MysteryCircle> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       21        0
-    //    simd3        2        3        0
-    //    simd4        4        5        0
+    //    simd3        2        4        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       16       29        0
-    //  no simd       32       50        0
+    //  no simd       32       49        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5187,11 +3937,11 @@ impl std::ops::Mul<MysteryCircleRotor> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       11       22        0
-    //    simd3        3        4        0
-    //    simd4        6        7        0
+    //    simd3        3        5        0
+    //    simd4        6        6        0
     // Totals...
     // yes simd       20       33        0
-    //  no simd       44       62        0
+    //  no simd       44       61        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5201,11 +3951,11 @@ impl std::ops::Mul<MysteryDipole> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       21        0
-    //    simd3        2        3        0
-    //    simd4        4        5        0
+    //    simd3        2        4        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       16       29        0
-    //  no simd       32       50        0
+    //  no simd       32       49        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5299,10 +4049,11 @@ impl std::ops::Mul<NullSphereAtOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       17        0
+    // yes simd        0        4        0
+    //  no simd        0       12        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5335,11 +4086,11 @@ impl std::ops::Mul<Plane> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       21        0
-    //    simd3        2        3        0
-    //    simd4        4        5        0
+    //    simd3        2        4        0
+    //    simd4        4        4        0
     // Totals...
     // yes simd       16       29        0
-    //  no simd       32       50        0
+    //  no simd       32       49        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5362,11 +4113,11 @@ impl std::ops::Mul<RoundPoint> for VersorOddOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       30        0
-    //    simd3        0        2        0
-    //    simd4        8        6        0
+    //      f32       13       31        0
+    //    simd3        0        3        0
+    //    simd4        8        5        0
     // Totals...
-    // yes simd       21       38        0
+    // yes simd       21       39        0
     //  no simd       45       60        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
@@ -5405,11 +4156,11 @@ impl std::ops::Mul<Sphere> for VersorOddOrthogonalOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       27        0
-    //    simd3        0        2        0
-    //    simd4        9        7        0
+    //      f32        9       28        0
+    //    simd3        0        3        0
+    //    simd4        9        6        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       37        0
     //  no simd       45       61        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
@@ -5434,11 +4185,11 @@ impl std::ops::Mul<SphereOnOrigin> for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3       13        0
-    //    simd3        3        4        0
-    //    simd4        6        7        0
+    //    simd3        3        5        0
+    //    simd4        6        6        0
     // Totals...
     // yes simd       12       24        0
-    //  no simd       36       53        0
+    //  no simd       36       52        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5799,7 +4550,7 @@ impl std::ops::Sub<AntiDipoleInversion> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -5837,7 +4588,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for VersorOddOrthogonalOrigin 
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -5875,7 +4626,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -5912,7 +4663,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for VersorOddOrthogonalO
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -5949,7 +4700,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6016,7 +4767,7 @@ impl std::ops::Sub<AntiFlatOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6053,7 +4804,7 @@ impl std::ops::Sub<AntiFlatPoint> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6090,7 +4841,7 @@ impl std::ops::Sub<AntiFlector> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6127,7 +4878,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6324,7 +5075,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6361,7 +5112,7 @@ impl std::ops::Sub<AntiPlane> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6395,7 +5146,7 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6429,7 +5180,7 @@ impl std::ops::Sub<AntiScalar> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6463,7 +5214,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6534,7 +5285,7 @@ impl std::ops::Sub<Circle> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6568,7 +5319,7 @@ impl std::ops::Sub<CircleAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6605,7 +5356,7 @@ impl std::ops::Sub<CircleAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6639,7 +5390,7 @@ impl std::ops::Sub<CircleAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6673,7 +5424,7 @@ impl std::ops::Sub<CircleOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6710,7 +5461,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6748,7 +5499,7 @@ impl std::ops::Sub<CircleRotor> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6785,7 +5536,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6822,7 +5573,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for VersorOddOrthogonalO
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6860,7 +5611,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -6897,7 +5648,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7258,7 +6009,7 @@ impl std::ops::Sub<DualNum> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7479,7 +6230,7 @@ impl std::ops::Sub<Infinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7513,7 +6264,7 @@ impl std::ops::Sub<Line> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7547,7 +6298,7 @@ impl std::ops::Sub<LineAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7581,7 +6332,7 @@ impl std::ops::Sub<LineOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7619,7 +6370,7 @@ impl std::ops::Sub<Motor> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7656,7 +6407,7 @@ impl std::ops::Sub<MotorAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7693,7 +6444,7 @@ impl std::ops::Sub<MotorOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7766,7 +6517,7 @@ impl std::ops::Sub<MysteryCircle> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7803,7 +6554,7 @@ impl std::ops::Sub<MysteryCircleRotor> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7887,7 +6638,7 @@ impl std::ops::Sub<MysteryVersorEven> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -7945,7 +6696,7 @@ impl std::ops::Sub<NullCircleAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8084,7 +6835,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8117,7 +6868,7 @@ impl std::ops::Sub<Origin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8150,7 +6901,7 @@ impl std::ops::Sub<Plane> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -8170,7 +6921,7 @@ impl std::ops::Sub<PlaneOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
@@ -8197,7 +6948,7 @@ impl std::ops::Sub<RoundPoint> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8230,7 +6981,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8297,7 +7048,7 @@ impl std::ops::Sub<Sphere> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
@@ -8354,7 +7105,7 @@ impl std::ops::Sub<SphereOnOrigin> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             self.group2() + Simd32x3::from(0.0).with_w(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
@@ -8383,7 +7134,7 @@ impl std::ops::Sub<VersorEven> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8421,7 +7172,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8460,7 +7211,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8497,7 +7248,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8535,7 +7286,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for VersorOddOrthogonalOrigin {
             // e5
             0.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8573,7 +7324,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for VersorOddOrthogonalOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e15, e25, e35
             self.group2().xyz(),
             // e23, e31, e12
@@ -8692,9 +7443,9 @@ impl TryFrom<AntiCircleRotor> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             anti_circle_rotor.group0().with_w(anti_circle_rotor[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([anti_circle_rotor[e23], anti_circle_rotor[e31], anti_circle_rotor[e12], 0.0]),
+            anti_circle_rotor.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([anti_circle_rotor[e15], anti_circle_rotor[e25], anti_circle_rotor[e35], 0.0]),
+            anti_circle_rotor.group2().xyz().with_w(0.0),
         ));
     }
 }
@@ -8722,9 +7473,9 @@ impl TryFrom<AntiCircleRotorAtInfinity> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(anti_circle_rotor_at_infinity[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([anti_circle_rotor_at_infinity[e23], anti_circle_rotor_at_infinity[e31], anti_circle_rotor_at_infinity[e12], 0.0]),
+            anti_circle_rotor_at_infinity.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([anti_circle_rotor_at_infinity[e15], anti_circle_rotor_at_infinity[e25], anti_circle_rotor_at_infinity[e35], 0.0]),
+            anti_circle_rotor_at_infinity.group1().xyz().with_w(0.0),
         ));
     }
 }
@@ -8752,7 +7503,7 @@ impl TryFrom<AntiMysteryCircleRotor> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(anti_mystery_circle_rotor[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([anti_mystery_circle_rotor[e23], anti_mystery_circle_rotor[e31], anti_mystery_circle_rotor[e12], 0.0]),
+            anti_mystery_circle_rotor.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         ));
@@ -8762,7 +7513,6 @@ impl TryFrom<AntiMysteryCircleRotor> for VersorOddOrthogonalOrigin {
 impl TryFrom<Dipole> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole[6];
@@ -8782,7 +7532,7 @@ impl TryFrom<Dipole> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             dipole.group0().with_w(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([dipole[e23], dipole[e31], dipole[e12], 0.0]),
+            dipole.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             dipole.group2().with_w(0.0),
         ));
@@ -8792,7 +7542,6 @@ impl TryFrom<Dipole> for VersorOddOrthogonalOrigin {
 impl TryFrom<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(dipole_aligning_origin: DipoleAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_aligning_origin[3];
@@ -8810,7 +7559,7 @@ impl TryFrom<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_aligning_origin[e41], dipole_aligning_origin[e42], dipole_aligning_origin[e43], 0.0]),
+            dipole_aligning_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -8822,7 +7571,6 @@ impl TryFrom<DipoleAligningOrigin> for VersorOddOrthogonalOrigin {
 impl TryFrom<DipoleAtInfinity> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(dipole_at_infinity: DipoleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_at_infinity[3];
@@ -8842,7 +7590,7 @@ impl TryFrom<DipoleAtInfinity> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([dipole_at_infinity[e23], dipole_at_infinity[e31], dipole_at_infinity[e12], 0.0]),
+            dipole_at_infinity.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             dipole_at_infinity.group1().with_w(0.0),
         ));
@@ -8942,7 +7690,7 @@ impl TryFrom<DipoleInversionAligningOrigin> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_inversion_aligning_origin[e41], dipole_inversion_aligning_origin[e42], dipole_inversion_aligning_origin[e43], 0.0]),
+            dipole_inversion_aligning_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x3::from(0.0).with_w(dipole_inversion_aligning_origin[e3215]),
             // e15, e25, e35, e1234
@@ -9049,7 +7797,7 @@ impl TryFrom<DipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_inversion_on_origin[e41], dipole_inversion_on_origin[e42], dipole_inversion_on_origin[e43], 0.0]),
+            dipole_inversion_on_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -9061,7 +7809,6 @@ impl TryFrom<DipoleInversionOnOrigin> for VersorOddOrthogonalOrigin {
 impl TryFrom<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(dipole_on_origin: DipoleOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_on_origin[3];
@@ -9079,7 +7826,7 @@ impl TryFrom<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
         }
         return Ok(VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_on_origin[e41], dipole_on_origin[e42], dipole_on_origin[e43], 0.0]),
+            dipole_on_origin.group0().xyz().with_w(0.0),
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -9091,7 +7838,6 @@ impl TryFrom<DipoleOnOrigin> for VersorOddOrthogonalOrigin {
 impl TryFrom<FlatPoint> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(flat_point: FlatPoint) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = flat_point[3];
@@ -9113,7 +7859,7 @@ impl TryFrom<FlatPoint> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([flat_point[e15], flat_point[e25], flat_point[e35], 0.0]),
+            flat_point.group0().xyz().with_w(0.0),
         ));
     }
 }
@@ -9164,7 +7910,7 @@ impl TryFrom<Flector> for VersorOddOrthogonalOrigin {
             // e23, e31, e12, e3215
             Simd32x3::from(0.0).with_w(flector[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([flector[e15], flector[e25], flector[e35], 0.0]),
+            flector.group0().xyz().with_w(0.0),
         ));
     }
 }
@@ -9335,7 +8081,6 @@ impl TryFrom<MultiVector> for VersorOddOrthogonalOrigin {
 impl TryFrom<MysteryDipole> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(mystery_dipole: MysteryDipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_dipole[3];
@@ -9355,7 +8100,7 @@ impl TryFrom<MysteryDipole> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([mystery_dipole[e23], mystery_dipole[e31], mystery_dipole[e12], 0.0]),
+            mystery_dipole.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         ));
@@ -9365,7 +8110,6 @@ impl TryFrom<MysteryDipole> for VersorOddOrthogonalOrigin {
 impl TryFrom<MysteryDipoleInversion> for VersorOddOrthogonalOrigin {
     type Error = String;
     fn try_from(mystery_dipole_inversion: MysteryDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_dipole_inversion[3];
@@ -9406,7 +8150,7 @@ impl TryFrom<MysteryDipoleInversion> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e3215
-            Simd32x4::from([mystery_dipole_inversion[e23], mystery_dipole_inversion[e31], mystery_dipole_inversion[e12], 0.0]),
+            mystery_dipole_inversion.group0().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         ));
@@ -9457,7 +8201,7 @@ impl TryFrom<MysteryVersorOdd> for VersorOddOrthogonalOrigin {
             // e41, e42, e43, scalar
             Simd32x3::from(0.0).with_w(mystery_versor_odd[scalar]),
             // e23, e31, e12, e3215
-            Simd32x4::from([mystery_versor_odd[e23], mystery_versor_odd[e31], mystery_versor_odd[e12], 0.0]),
+            mystery_versor_odd.group1().xyz().with_w(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         ));

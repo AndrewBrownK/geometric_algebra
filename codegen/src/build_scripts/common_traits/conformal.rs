@@ -3,6 +3,8 @@ use crate::ast::impls::Elaborated;
 use crate::ast::traits::{NameTrait};
 use impls::*;
 
+// TODO carrier, cocarrier
+
 pub const fn conformal_conjugate(infinity: BasisElement) -> Elaborated<ConformalConjugateImpl> {
     ConformalConjugateImpl { infinity }
         .new_trait_named("ConformalConjugate")

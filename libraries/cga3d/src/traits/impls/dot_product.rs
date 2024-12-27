@@ -18,10 +18,10 @@
 //   Median:         3       4       0
 //  Average:         4       5       0
 //  Maximum:        31      32       0
-impl std::ops::Div<dot_product> for AntiCircleRotor {
-    type Output = dot_product_partial<AntiCircleRotor>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiCircleRotor {
+    type Output = DotProductInfixPartial<AntiCircleRotor>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for AntiCircleRotor {
@@ -204,10 +204,10 @@ impl DotProduct<VersorOdd> for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiDipoleInversion {
-    type Output = dot_product_partial<AntiDipoleInversion>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiDipoleInversion {
+    type Output = DotProductInfixPartial<AntiDipoleInversion>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for AntiDipoleInversion {
@@ -414,10 +414,10 @@ impl DotProduct<VersorEven> for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiDualNum {
-    type Output = dot_product_partial<AntiDualNum>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiDualNum {
+    type Output = DotProductInfixPartial<AntiDualNum>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for AntiDualNum {
@@ -492,10 +492,10 @@ impl DotProduct<VersorOdd> for AntiDualNum {
         return Scalar::from_groups(/* scalar */ (self[e3215] * other[e1234]) + (self[scalar] * other[scalar]));
     }
 }
-impl std::ops::Div<dot_product> for AntiFlatPoint {
-    type Output = dot_product_partial<AntiFlatPoint>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiFlatPoint {
+    type Output = DotProductInfixPartial<AntiFlatPoint>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for AntiFlatPoint {
@@ -576,10 +576,10 @@ impl DotProduct<VersorEven> for AntiFlatPoint {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiFlector {
-    type Output = dot_product_partial<AntiFlector>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiFlector {
+    type Output = DotProductInfixPartial<AntiFlector>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for AntiFlector {
@@ -690,10 +690,10 @@ impl DotProduct<VersorEven> for AntiFlector {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiLine {
-    type Output = dot_product_partial<AntiLine>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiLine {
+    type Output = DotProductInfixPartial<AntiLine>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for AntiLine {
@@ -774,10 +774,10 @@ impl DotProduct<VersorOdd> for AntiLine {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiMotor {
-    type Output = dot_product_partial<AntiMotor>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiMotor {
+    type Output = DotProductInfixPartial<AntiMotor>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for AntiMotor {
@@ -914,10 +914,10 @@ impl DotProduct<VersorOdd> for AntiMotor {
         );
     }
 }
-impl std::ops::Div<dot_product> for AntiPlane {
-    type Output = dot_product_partial<AntiPlane>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiPlane {
+    type Output = DotProductInfixPartial<AntiPlane>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for AntiPlane {
@@ -974,10 +974,10 @@ impl DotProduct<VersorEven> for AntiPlane {
         return Scalar::from_groups(/* scalar */ (self[e1] * other[e1]) + (self[e2] * other[e2]) + (self[e3] * other[e3]) - (self[e5] * other[e4]));
     }
 }
-impl std::ops::Div<dot_product> for AntiScalar {
-    type Output = dot_product_partial<AntiScalar>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for AntiScalar {
+    type Output = DotProductInfixPartial<AntiScalar>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiScalar> for AntiScalar {
@@ -1034,10 +1034,10 @@ impl DotProduct<VersorEven> for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e12345] * other[e12345] * -1.0);
     }
 }
-impl std::ops::Div<dot_product> for Circle {
-    type Output = dot_product_partial<Circle>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Circle {
+    type Output = DotProductInfixPartial<Circle>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for Circle {
@@ -1203,10 +1203,10 @@ impl DotProduct<VersorEven> for Circle {
         );
     }
 }
-impl std::ops::Div<dot_product> for CircleRotor {
-    type Output = dot_product_partial<CircleRotor>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for CircleRotor {
+    type Output = DotProductInfixPartial<CircleRotor>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for CircleRotor {
@@ -1394,10 +1394,10 @@ impl DotProduct<VersorEven> for CircleRotor {
         );
     }
 }
-impl std::ops::Div<dot_product> for Dipole {
-    type Output = dot_product_partial<Dipole>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Dipole {
+    type Output = DotProductInfixPartial<Dipole>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for Dipole {
@@ -1553,10 +1553,10 @@ impl DotProduct<VersorOdd> for Dipole {
         );
     }
 }
-impl std::ops::Div<dot_product> for DipoleInversion {
-    type Output = dot_product_partial<DipoleInversion>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for DipoleInversion {
+    type Output = DotProductInfixPartial<DipoleInversion>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for DipoleInversion {
@@ -1770,10 +1770,10 @@ impl DotProduct<VersorOdd> for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<dot_product> for DualNum {
-    type Output = dot_product_partial<DualNum>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for DualNum {
+    type Output = DotProductInfixPartial<DualNum>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for DualNum {
@@ -1848,10 +1848,10 @@ impl DotProduct<VersorEven> for DualNum {
         return Scalar::from_groups(/* scalar */ -(self[e5] * other[e4]) - (self[e12345] * other[e12345]));
     }
 }
-impl std::ops::Div<dot_product> for FlatPoint {
-    type Output = dot_product_partial<FlatPoint>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for FlatPoint {
+    type Output = DotProductInfixPartial<FlatPoint>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for FlatPoint {
@@ -1932,10 +1932,10 @@ impl DotProduct<VersorOdd> for FlatPoint {
         );
     }
 }
-impl std::ops::Div<dot_product> for Flector {
-    type Output = dot_product_partial<Flector>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Flector {
+    type Output = DotProductInfixPartial<Flector>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for Flector {
@@ -2052,10 +2052,10 @@ impl DotProduct<VersorOdd> for Flector {
         );
     }
 }
-impl std::ops::Div<dot_product> for Line {
-    type Output = dot_product_partial<Line>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Line {
+    type Output = DotProductInfixPartial<Line>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for Line {
@@ -2161,10 +2161,10 @@ impl DotProduct<VersorEven> for Line {
         );
     }
 }
-impl std::ops::Div<dot_product> for Motor {
-    type Output = dot_product_partial<Motor>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Motor {
+    type Output = DotProductInfixPartial<Motor>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for Motor {
@@ -2306,10 +2306,10 @@ impl DotProduct<VersorEven> for Motor {
         );
     }
 }
-impl std::ops::Div<dot_product> for MultiVector {
-    type Output = dot_product_partial<MultiVector>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for MultiVector {
+    type Output = DotProductInfixPartial<MultiVector>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for MultiVector {
@@ -2745,10 +2745,10 @@ impl DotProduct<VersorOdd> for MultiVector {
         );
     }
 }
-impl std::ops::Div<dot_product> for Plane {
-    type Output = dot_product_partial<Plane>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Plane {
+    type Output = DotProductInfixPartial<Plane>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<DipoleInversion> for Plane {
@@ -2817,10 +2817,10 @@ impl DotProduct<VersorOdd> for Plane {
         );
     }
 }
-impl std::ops::Div<dot_product> for RoundPoint {
-    type Output = dot_product_partial<RoundPoint>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for RoundPoint {
+    type Output = DotProductInfixPartial<RoundPoint>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for RoundPoint {
@@ -2907,10 +2907,10 @@ impl DotProduct<VersorEven> for RoundPoint {
         );
     }
 }
-impl std::ops::Div<dot_product> for Scalar {
-    type Output = dot_product_partial<Scalar>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Scalar {
+    type Output = DotProductInfixPartial<Scalar>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for Scalar {
@@ -2967,10 +2967,10 @@ impl DotProduct<VersorOdd> for Scalar {
         return Scalar::from_groups(/* scalar */ self[scalar] * other[scalar]);
     }
 }
-impl std::ops::Div<dot_product> for Sphere {
-    type Output = dot_product_partial<Sphere>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Sphere {
+    type Output = DotProductInfixPartial<Sphere>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDualNum> for Sphere {
@@ -3063,10 +3063,10 @@ impl DotProduct<VersorOdd> for Sphere {
         );
     }
 }
-impl std::ops::Div<dot_product> for VersorEven {
-    type Output = dot_product_partial<VersorEven>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for VersorEven {
+    type Output = DotProductInfixPartial<VersorEven>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiDipoleInversion> for VersorEven {
@@ -3286,10 +3286,10 @@ impl DotProduct<VersorEven> for VersorEven {
         );
     }
 }
-impl std::ops::Div<dot_product> for VersorOdd {
-    type Output = dot_product_partial<VersorOdd>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for VersorOdd {
+    type Output = DotProductInfixPartial<VersorOdd>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<AntiCircleRotor> for VersorOdd {

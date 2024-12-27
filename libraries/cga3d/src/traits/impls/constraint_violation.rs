@@ -11,16 +11,16 @@
 //  Minimum:         0       2       0
 //   Median:        29      39       0
 //  Average:        35      42       0
-//  Maximum:       188     224       0
+//  Maximum:       188     228       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:        44      56       0
 //  Average:        58      68       0
 //  Maximum:       372     404       0
-impl std::ops::Div<constraint_violation> for AntiCircleRotor {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiCircleRotor {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -100,9 +100,9 @@ impl ConstraintViolation for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for AntiDipoleInversion {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiDipoleInversion {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -210,14 +210,14 @@ impl ConstraintViolation for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for AntiDualNum {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiDualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
-impl std::ops::DivAssign<constraint_violation> for AntiDualNum {
-    fn div_assign(&mut self, _rhs: constraint_violation) {
+impl std::ops::DivAssign<ConstraintViolationPrefixOrPostfix> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: ConstraintViolationPrefixOrPostfix) {
         *self = self.constraint_violation()
     }
 }
@@ -231,9 +231,9 @@ impl ConstraintViolation for AntiDualNum {
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e3215] * self[scalar] * 2.0, 0.0]));
     }
 }
-impl std::ops::Div<constraint_violation> for AntiFlector {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiFlector {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -259,9 +259,9 @@ impl ConstraintViolation for AntiFlector {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for AntiLine {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiLine {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -293,9 +293,9 @@ impl ConstraintViolation for AntiLine {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for AntiMotor {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for AntiMotor {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -328,9 +328,9 @@ impl ConstraintViolation for AntiMotor {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for Circle {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Circle {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -411,9 +411,9 @@ impl ConstraintViolation for Circle {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for CircleRotor {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for CircleRotor {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -496,9 +496,9 @@ impl ConstraintViolation for CircleRotor {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for Dipole {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Dipole {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -577,9 +577,9 @@ impl ConstraintViolation for Dipole {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for DipoleInversion {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for DipoleInversion {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -677,9 +677,9 @@ impl ConstraintViolation for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for DualNum {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for DualNum {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -693,9 +693,9 @@ impl ConstraintViolation for DualNum {
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e5] * self[e12345] * -2.0, 0.0]));
     }
 }
-impl std::ops::Div<constraint_violation> for Flector {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Flector {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -721,9 +721,9 @@ impl ConstraintViolation for Flector {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for Line {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Line {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -755,9 +755,9 @@ impl ConstraintViolation for Line {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for Motor {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Motor {
     type Output = AntiDualNum;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -791,14 +791,14 @@ impl ConstraintViolation for Motor {
         ]));
     }
 }
-impl std::ops::Div<constraint_violation> for MultiVector {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
-impl std::ops::DivAssign<constraint_violation> for MultiVector {
-    fn div_assign(&mut self, _rhs: constraint_violation) {
+impl std::ops::DivAssign<ConstraintViolationPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: ConstraintViolationPrefixOrPostfix) {
         *self = self.constraint_violation()
     }
 }
@@ -806,12 +806,12 @@ impl ConstraintViolation for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      146        0
+    //      f32      116      150        0
     //    simd2       16       16        0
-    //    simd3        0       22        0
-    //    simd4       56       40        0
+    //    simd3        0       26        0
+    //    simd4       56       36        0
     // Totals...
-    // yes simd      188      224        0
+    // yes simd      188      228        0
     //  no simd      372      404        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
@@ -898,19 +898,18 @@ impl ConstraintViolation for MultiVector {
                 -(reverse[e4] * self[e45]) - (reverse[e321] * self[e1234]) - (reverse[e4315] * self[e431]) - (reverse[e4125] * self[e412]),
             ]) + (Simd32x4::from(reverse[scalar]) * self.group1())
                 + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], self[e4]]) * self.group5().zyz().with_w(reverse[e45]))
-                + (Simd32x4::from([reverse[e5], reverse[e5], reverse[e5], reverse[e2]]) * self.group4().with_w(self[e42]))
                 + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e3]]) * self.group5().xxy().with_w(self[e43]))
                 + (Simd32x4::from([reverse[e3215], reverse[e35], reverse[e15], reverse[e1234]]) * self.group7().xxy().with_w(self[e321]))
-                + (Simd32x4::from([self[e1234], self[e1234], self[e42], self[e4125]]) * reverse.group8().xyx().with_w(reverse[e412]))
+                + (Simd32x2::from(self[e1234]).with_zw(self[e42], self[e4125]) * reverse.group8().xyx().with_w(reverse[e412]))
                 + (self.group0().xx().with_zw(self[scalar], reverse[e12345]) * reverse.group1().xyz().with_w(self[e1234]))
                 + (self.group4().zx().with_zw(self[e1234], reverse[e1]) * reverse.group8().yzz().with_w(self[e41]))
                 + (self.group1().zx().with_zw(self[e321], self[e4235]) * reverse.group5().yzz().with_w(reverse[e423]))
                 + (self.group6().ww().with_zw(self[e2], reverse[e1234]) * reverse.group5().xyx().with_w(self[e12345]))
+                + (Simd32x3::from(reverse[e5]) * self.group4()).with_w(reverse[e2] * self[e42])
                 + (reverse.group4().zxy() * self.group8().yzx()).with_w(reverse[e4] * self[scalar])
                 + (reverse.group7().zxy() * self.group3().yzx()).with_w(reverse[e431] * self[e4315])
-                - (Simd32x4::from([reverse[e1234], reverse[e1234], reverse[e1234], self[e31]]) * self.group8().with_w(reverse[e431]))
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e2]]) * reverse.group4().xyx().with_w(reverse[e42]))
                 - (self.group1().yzxz() * reverse.group5().zxy().with_w(reverse[e43]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e2]) * reverse.group4().xyx().with_w(reverse[e42]))
                 - (reverse.group0().yy().with_zw(reverse[e12345], reverse[e41]) * self.group9().xyz().with_w(self[e1]))
                 - (self.group0().yy().with_zw(self[e12345], reverse[e41]) * reverse.group9().xyz().with_w(self[e415]))
                 - (self.group8().zx().with_zw(self[e5], self[e425]) * reverse.group4().yzz().with_w(reverse[e42]))
@@ -918,6 +917,7 @@ impl ConstraintViolation for MultiVector {
                 - (self.group3().ww().with_zw(self[e4315], reverse[e425]) * reverse.group6().xyx().with_w(self[e42]))
                 - (self.group9().zx().with_zw(self[e45], reverse[e435]) * reverse.group6().yzz().with_w(self[e43]))
                 - (self.group9().ww().with_zw(self[e25], self[e435]) * reverse.group7().xyx().with_w(reverse[e43]))
+                - (Simd32x3::from(reverse[e1234]) * self.group8()).with_w(reverse[e431] * self[e31])
                 - (reverse.group8().zxy() * self.group4().yzx()).with_w(reverse[e31] * self[e431])
                 - (self.group5().yzx() * reverse.group1().zxy()).with_w(reverse[e12] * self[e412])
                 - (self.group7().yzx() * reverse.group3().zxy()).with_w(reverse[e423] * self[e23])
@@ -976,7 +976,6 @@ impl ConstraintViolation for MultiVector {
                 (reverse[e415] * self[e2]) + (reverse[e435] * self[e321]) + (reverse[e321] * self[e435]) + (reverse[e1234] * self[e35]),
                 -(reverse[e25] * self[e4315]) - (reverse[e35] * self[e4125]) - (reverse[e45] * self[e3215]) - (reverse[e321] * self[e5]),
             ]) + (Simd32x4::from(reverse[scalar]) * self.group9())
-                + (Simd32x4::from([reverse[e5], reverse[e5], reverse[e5], self[e45]]) * self.group7().with_w(reverse[e3215]))
                 + (Simd32x4::from([reverse[e45], reverse[e4125], reverse[e4235], self[e25]]) * self.group5().xxy().with_w(reverse[e4315]))
                 + (Simd32x4::from([reverse[e4315], reverse[e45], reverse[e45], self[e35]]) * self.group5().zyz().with_w(reverse[e4125]))
                 + (reverse.group0().yy().with_zw(reverse[e12345], self[scalar]) * self.group1().xyz().with_w(reverse[e3215]))
@@ -988,14 +987,15 @@ impl ConstraintViolation for MultiVector {
                 + (self.group3().ww().with_zw(self[e4315], reverse[e415]) * reverse.group5().xyx().with_w(self[e235]))
                 + (self.group9().zx().with_zw(self[e45], reverse[e2]) * reverse.group5().yzz().with_w(self[e315]))
                 + (self.group9().ww().with_zw(self[e25], self[e435]) * reverse.group4().xyx().with_w(reverse[e125]))
+                + (Simd32x3::from(reverse[e5]) * self.group7()).with_w(reverse[e3215] * self[e45])
                 + (reverse.group7().zxy() * self.group8().yzx()).with_w(reverse[e425] * self[e315])
                 + (self.group4().yzx() * reverse.group3().zxy()).with_w(reverse[e4235] * self[e15])
                 + (reverse.group1().yzx() * self.group6().zxy()).with_w(reverse[e5] * self[e321])
                 - (Simd32x4::from([reverse[e25], reverse[e3215], reverse[e3215], self[e2]]) * self.group4().zyz().with_w(reverse[e315]))
                 - (Simd32x4::from([reverse[e3215], reverse[e35], reverse[e15], self[e1]]) * self.group4().xxy().with_w(reverse[e235]))
-                - (Simd32x4::from([self[e5], self[e5], self[e315], self[e15]]) * reverse.group7().xyx().with_w(reverse[e23]))
-                - (Simd32x4::from([self[e1234], self[e1234], self[e1234], reverse[e35]]) * reverse.group3().xyz().with_w(self[e12]))
+                - (Simd32x2::from(self[e5]).with_zw(self[e315], self[e15]) * reverse.group7().xyx().with_w(reverse[e23]))
                 - (self.group8().zx().with_zw(self[e5], self[e25]) * reverse.group7().yzz().with_w(reverse[e31]))
+                - (Simd32x3::from(self[e1234]) * reverse.group3().xyz()).with_w(reverse[e35] * self[e12])
                 - (self.group8() * reverse.group1().www()).with_w(reverse[e15] * self[e23])
                 - (reverse.group4().zxy() * self.group3().yzx()).with_w(reverse[e12345] * self[e5])
                 - (reverse.group5().zxy() * self.group9().yzx()).with_w(reverse[e5] * self[e12345])
@@ -1063,9 +1063,9 @@ impl ConstraintViolation for MultiVector {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for VersorEven {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for VersorEven {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -1176,14 +1176,14 @@ impl ConstraintViolation for VersorEven {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for VersorOdd {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
-impl std::ops::DivAssign<constraint_violation> for VersorOdd {
-    fn div_assign(&mut self, _rhs: constraint_violation) {
+impl std::ops::DivAssign<ConstraintViolationPrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: ConstraintViolationPrefixOrPostfix) {
         *self = self.constraint_violation()
     }
 }

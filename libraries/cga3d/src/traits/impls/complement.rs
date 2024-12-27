@@ -18,9 +18,9 @@
 //   Median:         0       6       0
 //  Average:         0       6       0
 //  Maximum:         0      20       0
-impl std::ops::Div<complement> for AntiCircleRotor {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiCircleRotor {
     type Output = CircleRotor;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -45,9 +45,9 @@ impl Complement for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<complement> for AntiDipoleInversion {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiDipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -74,9 +74,9 @@ impl Complement for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<complement> for AntiDualNum {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiDualNum {
     type Output = VersorEven;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -96,9 +96,9 @@ impl Complement for AntiDualNum {
         );
     }
 }
-impl std::ops::Div<complement> for AntiFlatPoint {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiFlatPoint {
     type Output = Dipole;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -123,9 +123,9 @@ impl Complement for AntiFlatPoint {
         );
     }
 }
-impl std::ops::Div<complement> for AntiFlector {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiFlector {
     type Output = DipoleInversion;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -148,13 +148,13 @@ impl Complement for AntiFlector {
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).with_w(self[e5]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
+            self.group1().xyz().with_w(0.0),
         );
     }
 }
-impl std::ops::Div<complement> for AntiLine {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiLine {
     type Output = Circle;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -175,9 +175,9 @@ impl Complement for AntiLine {
         );
     }
 }
-impl std::ops::Div<complement> for AntiMotor {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiMotor {
     type Output = VersorEven;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -204,9 +204,9 @@ impl Complement for AntiMotor {
         );
     }
 }
-impl std::ops::Div<complement> for AntiPlane {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiPlane {
     type Output = Sphere;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -214,12 +214,12 @@ impl Complement for AntiPlane {
     type Output = Sphere;
     fn complement(self) -> Self::Output {
         use crate::elements::*;
-        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]), /* e1234 */ self[e5]);
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0().xyz().with_w(0.0), /* e1234 */ self[e5]);
     }
 }
-impl std::ops::Div<complement> for AntiScalar {
+impl std::ops::Div<ComplementPrefixOrPostfix> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -230,9 +230,9 @@ impl Complement for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e12345]);
     }
 }
-impl std::ops::Div<complement> for Circle {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Circle {
     type Output = Dipole;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -256,9 +256,9 @@ impl Complement for Circle {
         );
     }
 }
-impl std::ops::Div<complement> for CircleRotor {
+impl std::ops::Div<ComplementPrefixOrPostfix> for CircleRotor {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -283,9 +283,9 @@ impl Complement for CircleRotor {
         );
     }
 }
-impl std::ops::Div<complement> for Dipole {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Dipole {
     type Output = Circle;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -309,9 +309,9 @@ impl Complement for Dipole {
         );
     }
 }
-impl std::ops::Div<complement> for DipoleInversion {
+impl std::ops::Div<ComplementPrefixOrPostfix> for DipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -338,9 +338,9 @@ impl Complement for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<complement> for DualNum {
+impl std::ops::Div<ComplementPrefixOrPostfix> for DualNum {
     type Output = VersorOdd;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -360,9 +360,9 @@ impl Complement for DualNum {
         );
     }
 }
-impl std::ops::Div<complement> for FlatPoint {
+impl std::ops::Div<ComplementPrefixOrPostfix> for FlatPoint {
     type Output = Circle;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -387,9 +387,9 @@ impl Complement for FlatPoint {
         );
     }
 }
-impl std::ops::Div<complement> for Flector {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Flector {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -412,13 +412,13 @@ impl Complement for Flector {
             // e235, e315, e125, e4
             Simd32x3::from(0.0).with_w(self[e3215]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]),
+            self.group1().xyz().with_w(0.0),
         );
     }
 }
-impl std::ops::Div<complement> for Line {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Line {
     type Output = Dipole;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -439,9 +439,9 @@ impl Complement for Line {
         );
     }
 }
-impl std::ops::Div<complement> for Motor {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Motor {
     type Output = VersorOdd;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -468,14 +468,14 @@ impl Complement for Motor {
         );
     }
 }
-impl std::ops::Div<complement> for MultiVector {
+impl std::ops::Div<ComplementPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
-impl std::ops::DivAssign<complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: complement) {
+impl std::ops::DivAssign<ComplementPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: ComplementPrefixOrPostfix) {
         *self = self.complement()
     }
 }
@@ -516,9 +516,9 @@ impl Complement for MultiVector {
         );
     }
 }
-impl std::ops::Div<complement> for Plane {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Plane {
     type Output = RoundPoint;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -528,9 +528,9 @@ impl Complement for Plane {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ 0.0);
     }
 }
-impl std::ops::Div<complement> for RoundPoint {
+impl std::ops::Div<ComplementPrefixOrPostfix> for RoundPoint {
     type Output = Sphere;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -541,9 +541,9 @@ impl Complement for RoundPoint {
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0(), /* e1234 */ self[e5]);
     }
 }
-impl std::ops::Div<complement> for Scalar {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -554,9 +554,9 @@ impl Complement for Scalar {
         return AntiScalar::from_groups(/* e12345 */ self[scalar]);
     }
 }
-impl std::ops::Div<complement> for Sphere {
+impl std::ops::Div<ComplementPrefixOrPostfix> for Sphere {
     type Output = RoundPoint;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -567,9 +567,9 @@ impl Complement for Sphere {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ self[e1234]);
     }
 }
-impl std::ops::Div<complement> for VersorEven {
+impl std::ops::Div<ComplementPrefixOrPostfix> for VersorEven {
     type Output = VersorOdd;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }
@@ -593,9 +593,9 @@ impl Complement for VersorEven {
         );
     }
 }
-impl std::ops::Div<complement> for VersorOdd {
+impl std::ops::Div<ComplementPrefixOrPostfix> for VersorOdd {
     type Output = VersorEven;
-    fn div(self, _rhs: complement) -> Self::Output {
+    fn div(self, _rhs: ComplementPrefixOrPostfix) -> Self::Output {
         self.complement()
     }
 }

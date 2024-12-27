@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait Fix {
     fn fix(self) -> Self;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct fix;
-impl<A: Fix> std::ops::Div<A> for fix {
+#[allow(non_upper_case_globals, dead_code)]
+pub static fix: FixPrefixOrPostfix = FixPrefixOrPostfix;
+pub struct FixPrefixOrPostfix;
+impl<A: Fix> std::ops::Div<A> for FixPrefixOrPostfix {
     type Output = A;
     fn div(self, rhs: A) -> Self::Output {
         rhs.fix()

@@ -19,9 +19,9 @@ use crate::traits::UnitizedRadiusNormSquared;
 //   Median:        12      21       1
 //  Average:        17      28       1
 //  Maximum:        63      91       1
-impl std::ops::Div<unitized_radius_norm> for AntiCircleRotor {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -37,9 +37,9 @@ impl UnitizedRadiusNorm for AntiCircleRotor {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for AntiDipoleInversion {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -55,9 +55,9 @@ impl UnitizedRadiusNorm for AntiDipoleInversion {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for Circle {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for Circle {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -73,9 +73,9 @@ impl UnitizedRadiusNorm for Circle {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for CircleRotor {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for CircleRotor {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -91,9 +91,9 @@ impl UnitizedRadiusNorm for CircleRotor {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for Dipole {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for Dipole {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -109,9 +109,9 @@ impl UnitizedRadiusNorm for Dipole {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for DipoleInversion {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for DipoleInversion {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -127,9 +127,9 @@ impl UnitizedRadiusNorm for DipoleInversion {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for MultiVector {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for MultiVector {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -146,9 +146,9 @@ impl UnitizedRadiusNorm for MultiVector {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for RoundPoint {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for RoundPoint {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -164,9 +164,9 @@ impl UnitizedRadiusNorm for RoundPoint {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for Sphere {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for Sphere {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -178,9 +178,9 @@ impl UnitizedRadiusNorm for Sphere {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for VersorEven {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for VersorEven {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }
@@ -196,9 +196,9 @@ impl UnitizedRadiusNorm for VersorEven {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_radius_norm> for VersorOdd {
+impl std::ops::Div<UnitizedRadiusNormPrefixOrPostfix> for VersorOdd {
     type Output = f32;
-    fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedRadiusNormPrefixOrPostfix) -> Self::Output {
         self.unitized_radius_norm()
     }
 }

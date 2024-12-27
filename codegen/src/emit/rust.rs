@@ -723,7 +723,6 @@ postgres-types = "0.2.7""#
                         }
                         TraitArity::Two => {
                             writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
-                            writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
                         }
                     }
                 }

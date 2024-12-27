@@ -18,9 +18,9 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
-impl std::ops::Div<round_weight> for AntiCircleRotor {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for AntiCircleRotor {
     type Output = Dipole;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
@@ -37,14 +37,14 @@ impl RoundWeight for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<round_weight> for AntiDipoleInversion {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -64,14 +64,14 @@ impl RoundWeight for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<round_weight> for Circle {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for Circle {
     type Output = Circle;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for Circle {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for Circle {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -88,9 +88,9 @@ impl RoundWeight for Circle {
         );
     }
 }
-impl std::ops::Div<round_weight> for CircleRotor {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for CircleRotor {
     type Output = Circle;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
@@ -107,14 +107,14 @@ impl RoundWeight for CircleRotor {
         );
     }
 }
-impl std::ops::Div<round_weight> for Dipole {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for Dipole {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -131,14 +131,14 @@ impl RoundWeight for Dipole {
         );
     }
 }
-impl std::ops::Div<round_weight> for DipoleInversion {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for DipoleInversion {
     type Output = DipoleInversion;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for DipoleInversion {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -158,14 +158,14 @@ impl RoundWeight for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<round_weight> for MultiVector {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for MultiVector {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -199,14 +199,14 @@ impl RoundWeight for MultiVector {
         );
     }
 }
-impl std::ops::Div<round_weight> for RoundPoint {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for RoundPoint {
     type Output = RoundPoint;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for RoundPoint {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for RoundPoint {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -217,14 +217,14 @@ impl RoundWeight for RoundPoint {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).with_w(self[e4]), /* e5 */ 0.0);
     }
 }
-impl std::ops::Div<round_weight> for Sphere {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for Sphere {
     type Output = Sphere;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
-impl std::ops::DivAssign<round_weight> for Sphere {
-    fn div_assign(&mut self, _rhs: round_weight) {
+impl std::ops::DivAssign<RoundWeightPrefixOrPostfix> for Sphere {
+    fn div_assign(&mut self, _rhs: RoundWeightPrefixOrPostfix) {
         *self = self.round_weight()
     }
 }
@@ -235,9 +235,9 @@ impl RoundWeight for Sphere {
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234 */ self[e1234]);
     }
 }
-impl std::ops::Div<round_weight> for VersorEven {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for VersorEven {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }
@@ -257,9 +257,9 @@ impl RoundWeight for VersorEven {
         );
     }
 }
-impl std::ops::Div<round_weight> for VersorOdd {
+impl std::ops::Div<RoundWeightPrefixOrPostfix> for VersorOdd {
     type Output = DipoleInversion;
-    fn div(self, _rhs: round_weight) -> Self::Output {
+    fn div(self, _rhs: RoundWeightPrefixOrPostfix) -> Self::Output {
         self.round_weight()
     }
 }

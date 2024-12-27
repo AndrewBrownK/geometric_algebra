@@ -7,6 +7,4 @@ use crate::simd::*;
 pub trait AntiGrade {
     fn anti_grade() -> usize;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_grade;
 include!("./impls/anti_grade.rs");

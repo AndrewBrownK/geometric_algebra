@@ -4,9 +4,10 @@
 #![feature(effects)]
 #![feature(adt_const_params)]
 
-use crate::custom_traits::{Carrier, CoCarrier, ConformalConjugate};
 use codegen::algebra::multivector::DeclareMultiVecs;
+use codegen::build_scripts::common_traits::conformal::{RadiusNorm, RadiusNormSquared};
 use codegen::elements::e12345;
+use custom_traits::*;
 
 codegen::multi_vecs! { e12345;
 
@@ -60,19 +61,64 @@ fn main() {
     };
     let repo = generate_variants(base_documentation(register_multi_vecs(cga3d))).finished();
     let traits = codegen::register_all! { repo;
-        // specialized::Plane_BulkExpansion_Plane
-        // |
         Zero One AntiOne Unit
         Grade AntiGrade Into TryInto
         RightDual RightAntiDual Reverse AntiReverse
-        |
-        Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
-        // BulkExpansion BulkContraction WeightExpansion WeightContraction
-        Carrier CoCarrier
-        ConformalConjugate
+        Wedge AntiWedge
+        GeometricProduct GeometricAntiProduct
+        Sandwich AntiSandwich
+        DotProduct AntiDotProduct
+        Inverse AntiInverse
+        GeometricQuotient GeometricAntiQuotient
+
+        BulkExpansion BulkContraction WeightExpansion WeightContraction
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
+        AutoMorphism AntiAutoMorphism
+        Conjugation ConformalConjugate
+
+        Complement DoubleComplement
+        |
+        RoundBulk
+        RoundWeight
+        FlatBulk
+        FlatWeight
+        |
+        RoundNormSquared
+            RoundBulkNormSquared
+            RoundWeightNormSquared
+            UnitizedRoundNormSquared
+        FlatNormSquared
+            FlatBulkNormSquared
+            FlatWeightNormSquared
+            UnitizedFlatNormSquared
+        |
+        RoundNorm
+            RoundBulkNorm
+            RoundWeightNorm
+            UnitizedRoundNorm
+        FlatNorm
+            FlatBulkNorm
+            FlatWeightNorm
+            UnitizedFlatNorm
+        |
+        RadiusNormSquared
+        UnitizedRadiusNormSquared
+        CenterNormSquared
+        UnitizedCenterNormSquared
+        |
+        RadiusNorm
+        UnitizedRadiusNorm
+        CenterNorm
+        UnitizedCenterNorm
+        |
+        ProjectOrthogonallyOnto AntiProjectOrthogonallyOnto
+        ProjectViaOriginOnto AntiProjectViaHorizonOnto
+        RejectOrthogonallyFrom AntiRejectOrthogonallyFrom
+        RejectViaOriginFrom AntiRejectViaHorizonFrom
+        Support AntiSupport
+        Unitize
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -80,7 +126,7 @@ fn main() {
         binary
         Add => Addition,
         Sub => Subtraction,
-        BitXor => Wedge,
+        // BitXor => Wedge,
         Mul => GeometricProduct;
 
         unary
@@ -139,7 +185,7 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
-    use codegen::algebra::basis::filter::{allow_all_signatures, signatures_containing, SigFilter};
+    use codegen::algebra::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
     use codegen::elements::*;
 
     let origin = signatures_containing(e4);
@@ -197,72 +243,77 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMulti
     declarations
 }
 
-pub mod specialized_traits {
-    use codegen::ast::datatype::MultiVector;
-    use codegen::ast::impls::{Specialize_22, Specialized_22};
-    use codegen::build_scripts::common_traits::BulkExpansion;
-    use codegen::elements::e12345;
+//     pub static Carrier: Elaborated<CarrierImpl> = CarrierImpl.new_trait_named("Carrier").blurb("TODO");
+//
+//     trait_impl_1_type_1_arg!(CarrierImpl(builder, slf) -> MultiVector {
+//         let mut result = DynamicMultiVector::zero();
+//         for (mut fe, el) in slf.elements() {
+//             let (f, el) = builder.ga.wedge(el, e5);
+//             result += (fe * f, el);
+//         }
+//         let result = result.construct(&builder)?;
+//         builder.return_expr(result)
+//     });
+//
+//     pub static CoCarrier: Elaborated<CoCarrierImpl> = CoCarrierImpl.new_trait_named("CoCarrier").blurb("TODO");
+//
+//     trait_impl_1_type_1_arg!(CoCarrierImpl(builder, slf) -> MultiVector {
+//         let slf = RightAntiDual.invoke(&mut builder, slf).await?;
+//         let mut result = DynamicMultiVector::zero();
+//         for (mut fe, el) in slf.elements() {
+//             let (f, el) = builder.ga.wedge(el, e5);
+//             result += (fe * f, el);
+//         }
+//         let result = result.construct(&builder)?;
+//         builder.return_expr(result)
+//     });
 
-    use crate::Plane;
 
-    // TODO I might not need this, with how advanced simplification has gotten
-    pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector> = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| {
-        Box::pin(async move {
-            // TODO actually implement
-            b.return_expr(slf)
-        })
-    });
-}
 
 // noinspection DuplicatedCode
 pub mod custom_traits {
-    use async_trait::async_trait;
+    #![allow(non_upper_case_globals)]
 
-    use codegen::algebra::multivector::DynamicMultiVector;
-    use codegen::ast::datatype::MultiVector;
+    use codegen::algebra::basis::BasisElement;
     use codegen::ast::impls::Elaborated;
-    use codegen::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg};
-    use codegen::build_scripts::common_traits::RightAntiDual;
-    use codegen::elements::e5;
-    use codegen::trait_impl_1_type_1_arg;
+    use codegen::build_scripts::common_traits::{anti_support, support, unitize};
+    use codegen::build_scripts::common_traits::conformal::*;
+    use codegen::build_scripts::common_traits::conformal::impls::*;
+    use codegen::build_scripts::common_traits::impls::{AntiSupportImpl, SupportImpl, UnitizeImpl};
 
-    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl.new_trait_named("ConformalConjugate").blurb("TODO");
+    const origin: BasisElement = codegen::elements::e4;
+    const infinity: BasisElement = codegen::elements::e5;
+    const option_infinity: Option<BasisElement> = Some(codegen::elements::e5);
 
-    trait_impl_1_type_1_arg!(ConformalConjugateImpl(builder, slf) -> MultiVector {
-        let infinity_sig = e5.signature();
-        let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements() {
-            if el.signature().contains(infinity_sig) {
-                fe = fe * -1.0;
-            }
-            result += (fe, el);
-        }
-        let result = result.construct(&builder)?;
-        builder.return_expr(result)
-    });
+    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = conformal_conjugate(infinity);
+    pub static RoundBulk: Elaborated<RoundBulkImpl> = round_bulk(origin, infinity);
+    pub static RoundWeight: Elaborated<RoundWeightImpl> = round_weight(origin, infinity);
+    pub static FlatBulk: Elaborated<FlatBulkImpl> = flat_bulk(origin, option_infinity);
+    pub static FlatWeight: Elaborated<FlatWeightImpl> = flat_weight(origin, option_infinity);
+    pub static CenterNorm: Elaborated<CenterNormImpl> = center_norm(origin, infinity);
+    pub static CenterNormSquared: Elaborated<CenterNormSquaredImpl> = center_norm_squared(origin, infinity);
+    pub static FlatBulkNorm: Elaborated<FlatBulkNormImpl> = flat_bulk_norm(origin, option_infinity);
+    pub static FlatBulkNormSquared: Elaborated<FlatBulkNormSquaredImpl> = flat_bulk_norm_squared(origin, option_infinity);
+    pub static FlatNorm: Elaborated<FlatNormImpl> = flat_norm(origin, option_infinity);
+    pub static FlatNormSquared: Elaborated<FlatNormSquaredImpl> = flat_norm_squared(origin, option_infinity);
+    pub static FlatWeightNorm: Elaborated<FlatWeightNormImpl> = flat_weight_norm(origin, option_infinity);
+    pub static FlatWeightNormSquared: Elaborated<FlatWeightNormSquaredImpl> = flat_weight_norm_squared(origin, option_infinity);
+    pub static RoundBulkNorm: Elaborated<RoundBulkNormImpl> = round_bulk_norm(origin, infinity);
+    pub static RoundBulkNormSquared: Elaborated<RoundBulkNormSquaredImpl> = round_bulk_norm_squared(origin, infinity);
+    pub static RoundNorm: Elaborated<RoundNormImpl> = round_norm(origin, infinity);
+    pub static RoundNormSquared: Elaborated<RoundNormSquaredImpl> = round_norm_squared(origin, infinity);
+    pub static RoundWeightNorm: Elaborated<RoundWeightNormImpl> = round_weight_norm(origin, infinity);
+    pub static RoundWeightNormSquared: Elaborated<RoundWeightNormSquaredImpl> = round_weight_norm_squared(origin, infinity);
+    pub static UnitizedCenterNorm: Elaborated<UnitizedCenterNormImpl> = unitized_center_norm(origin, infinity);
+    pub static UnitizedCenterNormSquared: Elaborated<UnitizedCenterNormSquaredImpl> = unitized_center_norm_squared(origin, infinity);
+    pub static UnitizedFlatNorm: Elaborated<UnitizedFlatNormImpl> = unitized_flat_norm(origin, option_infinity);
+    pub static UnitizedFlatNormSquared: Elaborated<UnitizedFlatNormSquaredImpl> = unitized_flat_norm_squared(origin, option_infinity);
+    pub static UnitizedRadiusNorm: Elaborated<UnitizedRadiusNormImpl> = unitized_radius_norm(origin, infinity);
+    pub static UnitizedRadiusNormSquared: Elaborated<UnitizedRadiusNormSquaredImpl> = unitized_radius_norm_squared(origin, infinity);
+    pub static UnitizedRoundNorm: Elaborated<UnitizedRoundNormImpl> = unitized_round_norm(origin, infinity);
+    pub static UnitizedRoundNormSquared: Elaborated<UnitizedRoundNormSquaredImpl> = unitized_round_norm_squared(origin, infinity);
 
-    pub static Carrier: Elaborated<CarrierImpl> = CarrierImpl.new_trait_named("Carrier").blurb("TODO");
-
-    trait_impl_1_type_1_arg!(CarrierImpl(builder, slf) -> MultiVector {
-        let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements() {
-            let (f, el) = builder.ga.wedge(el, e5);
-            result += (fe * f, el);
-        }
-        let result = result.construct(&builder)?;
-        builder.return_expr(result)
-    });
-
-    pub static CoCarrier: Elaborated<CoCarrierImpl> = CoCarrierImpl.new_trait_named("CoCarrier").blurb("TODO");
-
-    trait_impl_1_type_1_arg!(CoCarrierImpl(builder, slf) -> MultiVector {
-        let slf = RightAntiDual.invoke(&mut builder, slf).await?;
-        let mut result = DynamicMultiVector::zero();
-        for (mut fe, el) in slf.elements() {
-            let (f, el) = builder.ga.wedge(el, e5);
-            result += (fe * f, el);
-        }
-        let result = result.construct(&builder)?;
-        builder.return_expr(result)
-    });
+    pub static Support: Elaborated<SupportImpl> = support(origin);
+    pub static AntiSupport: Elaborated<AntiSupportImpl> = anti_support(origin);
+    pub static Unitize: Elaborated<UnitizeImpl<Elaborated<RoundWeightNormImpl>>> = unitize(RoundWeightNorm);
 }

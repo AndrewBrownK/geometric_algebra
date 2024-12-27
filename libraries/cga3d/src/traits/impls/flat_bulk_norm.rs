@@ -13,16 +13,16 @@ use crate::traits::SquareRoot;
 //  Minimum:         0       4       0
 //   Median:         7      16       0
 //  Average:        10      17       0
-//  Maximum:        56      74       0
+//  Maximum:        56      75       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0      10       0
 //   Median:        12      22       0
-//  Average:        14      27       0
+//  Average:        14      26       0
 //  Maximum:        80     112       0
-impl std::ops::Div<flat_bulk_norm> for AntiCircleRotor {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -38,9 +38,9 @@ impl FlatBulkNorm for AntiCircleRotor {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiDipoleInversion {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -48,18 +48,17 @@ impl FlatBulkNorm for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       23        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       23       49        0
+    //  no simd       23       47        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiDualNum {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiDualNum {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -75,9 +74,9 @@ impl FlatBulkNorm for AntiDualNum {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiFlatPoint {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiFlatPoint {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -85,17 +84,17 @@ impl FlatBulkNorm for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       11        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd        7       19        0
+    //  no simd        7       17        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiFlector {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiFlector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -103,18 +102,17 @@ impl FlatBulkNorm for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       23        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       23       49        0
+    //  no simd       23       47        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiLine {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiLine {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -130,9 +128,9 @@ impl FlatBulkNorm for AntiLine {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiMotor {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiMotor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -149,9 +147,9 @@ impl FlatBulkNorm for AntiMotor {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for AntiPlane {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for AntiPlane {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -167,9 +165,9 @@ impl FlatBulkNorm for AntiPlane {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Circle {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Circle {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -177,17 +175,17 @@ impl FlatBulkNorm for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       11        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd        7       19        0
+    //  no simd        7       17        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for CircleRotor {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for CircleRotor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -195,17 +193,17 @@ impl FlatBulkNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       11        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd        7       19        0
+    //  no simd        7       17        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Dipole {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Dipole {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -221,9 +219,9 @@ impl FlatBulkNorm for Dipole {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for DipoleInversion {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for DipoleInversion {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -240,9 +238,9 @@ impl FlatBulkNorm for DipoleInversion {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for DualNum {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for DualNum {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -258,9 +256,9 @@ impl FlatBulkNorm for DualNum {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for FlatPoint {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for FlatPoint {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -276,9 +274,9 @@ impl FlatBulkNorm for FlatPoint {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Flector {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -295,9 +293,9 @@ impl FlatBulkNorm for Flector {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Line {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -305,17 +303,17 @@ impl FlatBulkNorm for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       11        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd        7       19        0
+    //  no simd        7       17        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Motor {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -323,37 +321,36 @@ impl FlatBulkNorm for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       23        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       23       49        0
+    //  no simd       23       47        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for MultiVector {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
 impl FlatBulkNorm for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       46       58        0
-    //    simd3        6       10        0
-    //    simd4        4        6        0
+    //      f32       46       59        0
+    //    simd3        6       11        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       56       74        0
+    // yes simd       56       75        0
     //  no simd       80      112        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Plane {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Plane {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -369,9 +366,9 @@ impl FlatBulkNorm for Plane {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for RoundPoint {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for RoundPoint {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -387,9 +384,9 @@ impl FlatBulkNorm for RoundPoint {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Sphere {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Sphere {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -405,9 +402,9 @@ impl FlatBulkNorm for Sphere {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for VersorEven {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for VersorEven {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -415,18 +412,17 @@ impl FlatBulkNorm for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       23        0
-    //    simd3        2        6        0
-    //    simd4        0        2        0
+    //    simd3        2        8        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       23       49        0
+    //  no simd       23       47        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for VersorOdd {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for VersorOdd {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }

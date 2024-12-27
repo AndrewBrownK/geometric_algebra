@@ -18,9 +18,9 @@
 //   Median:         8      24       0
 //  Average:         9      26       0
 //  Maximum:        34      90       0
-impl std::ops::Div<anti_support> for AntiCircleRotor {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiCircleRotor {
     type Output = DipoleInversion;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -63,14 +63,14 @@ impl AntiSupport for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_support> for AntiDipoleInversion {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
-impl std::ops::DivAssign<anti_support> for AntiDipoleInversion {
-    fn div_assign(&mut self, _rhs: anti_support) {
+impl std::ops::DivAssign<AntiSupportPrefixOrPostfix> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: AntiSupportPrefixOrPostfix) {
         *self = self.anti_support()
     }
 }
@@ -121,9 +121,9 @@ impl AntiSupport for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_support> for AntiDualNum {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiDualNum {
     type Output = Plane;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -138,9 +138,9 @@ impl AntiSupport for AntiDualNum {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * Simd32x3::from(0.0).with_w(1.0));
     }
 }
-impl std::ops::Div<anti_support> for AntiFlatPoint {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiFlatPoint {
     type Output = DualNum;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -166,9 +166,9 @@ impl AntiSupport for AntiFlatPoint {
         ]));
     }
 }
-impl std::ops::Div<anti_support> for AntiFlector {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiFlector {
     type Output = Motor;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -204,9 +204,9 @@ impl AntiSupport for AntiFlector {
         );
     }
 }
-impl std::ops::Div<anti_support> for AntiLine {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiLine {
     type Output = FlatPoint;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -240,9 +240,9 @@ impl AntiSupport for AntiLine {
         );
     }
 }
-impl std::ops::Div<anti_support> for AntiMotor {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiMotor {
     type Output = Flector;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -277,9 +277,9 @@ impl AntiSupport for AntiMotor {
         );
     }
 }
-impl std::ops::Div<anti_support> for AntiPlane {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for AntiPlane {
     type Output = Line;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -304,9 +304,9 @@ impl AntiSupport for AntiPlane {
         );
     }
 }
-impl std::ops::Div<anti_support> for Circle {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Circle {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -346,9 +346,9 @@ impl AntiSupport for Circle {
         );
     }
 }
-impl std::ops::Div<anti_support> for CircleRotor {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for CircleRotor {
     type Output = RoundPoint;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -388,14 +388,14 @@ impl AntiSupport for CircleRotor {
         );
     }
 }
-impl std::ops::Div<anti_support> for Dipole {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Dipole {
     type Output = Dipole;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
-impl std::ops::DivAssign<anti_support> for Dipole {
-    fn div_assign(&mut self, _rhs: anti_support) {
+impl std::ops::DivAssign<AntiSupportPrefixOrPostfix> for Dipole {
+    fn div_assign(&mut self, _rhs: AntiSupportPrefixOrPostfix) {
         *self = self.anti_support()
     }
 }
@@ -436,9 +436,9 @@ impl AntiSupport for Dipole {
         );
     }
 }
-impl std::ops::Div<anti_support> for DipoleInversion {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for DipoleInversion {
     type Output = AntiCircleRotor;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -486,9 +486,9 @@ impl AntiSupport for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<anti_support> for DualNum {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for DualNum {
     type Output = AntiFlatPoint;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -506,16 +506,13 @@ impl AntiSupport for DualNum {
         let right_dual = AntiDualNum::from_groups(/* e3215, scalar */ self.group0() * Simd32x2::from(-1.0));
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
-            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0)
-                * Simd32x3::from(1.0).with_w(0.0)
-                * Simd32x3::from(0.0).with_w(1.0).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            right_dual.group0().xx().with_zw(right_dual[e3215], 0.0) * Simd32x3::from(0.0).with_w(0.0) * Simd32x3::from(1.0).with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
-impl std::ops::Div<anti_support> for FlatPoint {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for FlatPoint {
     type Output = AntiLine;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -540,9 +537,9 @@ impl AntiSupport for FlatPoint {
         );
     }
 }
-impl std::ops::Div<anti_support> for Flector {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Flector {
     type Output = AntiMotor;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -551,11 +548,11 @@ impl AntiSupport for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        1        2        0
-    //    simd4        0        4        0
+    //    simd3        1        4        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        9        0
-    //  no simd        5       25        0
+    //  no simd        5       23        0
     fn anti_support(self) -> Self::Output {
         use crate::elements::*;
         let right_complement = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x3::from(0.0).with_w(1.0));
@@ -567,20 +564,16 @@ impl AntiSupport for Flector {
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([right_complement[e4235], right_complement[e4315], right_complement[e4125], 1.0])
-                * right_dual
-                    .group0()
-                    .www()
-                    .with_w((right_dual[e1] * right_complement[e4235]) + (right_dual[e2] * right_complement[e4315]) + (right_dual[e3] * right_complement[e4125]))
-                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            (right_dual.group0().www() * right_complement.group0().xyz() * Simd32x3::from(-1.0))
+                .with_w((right_dual[e1] * right_complement[e4235]) + (right_dual[e2] * right_complement[e4315]) + (right_dual[e3] * right_complement[e4125])),
             // e15, e25, e35, e3215
             ((right_dual.group0().yzx() * right_complement.group0().zxy()) - (right_dual.group0().zxy() * right_complement.group0().yzx())).with_w(0.0),
         );
     }
 }
-impl std::ops::Div<anti_support> for Line {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Line {
     type Output = AntiPlane;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -608,9 +601,9 @@ impl AntiSupport for Line {
         );
     }
 }
-impl std::ops::Div<anti_support> for Motor {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Motor {
     type Output = AntiFlector;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -645,14 +638,14 @@ impl AntiSupport for Motor {
         );
     }
 }
-impl std::ops::Div<anti_support> for MultiVector {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
-impl std::ops::DivAssign<anti_support> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_support) {
+impl std::ops::DivAssign<AntiSupportPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiSupportPrefixOrPostfix) {
         *self = self.anti_support()
     }
 }
@@ -740,9 +733,9 @@ impl AntiSupport for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_support> for Plane {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Plane {
     type Output = Scalar;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -765,9 +758,9 @@ impl AntiSupport for Plane {
         );
     }
 }
-impl std::ops::Div<anti_support> for RoundPoint {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for RoundPoint {
     type Output = Circle;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -801,9 +794,9 @@ impl AntiSupport for RoundPoint {
         );
     }
 }
-impl std::ops::Div<anti_support> for Scalar {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Scalar {
     type Output = Plane;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -818,9 +811,9 @@ impl AntiSupport for Scalar {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(self[scalar]) * Simd32x3::from(0.0).with_w(1.0));
     }
 }
-impl std::ops::Div<anti_support> for Sphere {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Sphere {
     type Output = Scalar;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -851,9 +844,9 @@ impl AntiSupport for Sphere {
         );
     }
 }
-impl std::ops::Div<anti_support> for VersorEven {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for VersorEven {
     type Output = AntiDipoleInversion;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -904,14 +897,14 @@ impl AntiSupport for VersorEven {
         );
     }
 }
-impl std::ops::Div<anti_support> for VersorOdd {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for VersorOdd {
     type Output = VersorOdd;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
-impl std::ops::DivAssign<anti_support> for VersorOdd {
-    fn div_assign(&mut self, _rhs: anti_support) {
+impl std::ops::DivAssign<AntiSupportPrefixOrPostfix> for VersorOdd {
+    fn div_assign(&mut self, _rhs: AntiSupportPrefixOrPostfix) {
         *self = self.anti_support()
     }
 }

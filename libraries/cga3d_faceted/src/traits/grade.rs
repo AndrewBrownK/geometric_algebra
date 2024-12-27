@@ -7,6 +7,4 @@ use crate::simd::*;
 pub trait Grade {
     fn grade() -> usize;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct grade;
 include!("./impls/grade.rs");

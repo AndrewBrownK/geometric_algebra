@@ -20,9 +20,9 @@ use crate::traits::RoundWeightNorm;
 //   Median:         5      16       0
 //  Average:        10      21       0
 //  Maximum:        63      90       0
-impl std::ops::Div<round_norm> for AntiCircleRotor {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for AntiCircleRotor {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -62,9 +62,9 @@ impl RoundNorm for AntiCircleRotor {
         );
     }
 }
-impl std::ops::Div<round_norm> for AntiDipoleInversion {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for AntiDipoleInversion {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -104,9 +104,9 @@ impl RoundNorm for AntiDipoleInversion {
         );
     }
 }
-impl std::ops::Div<round_norm> for Circle {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for Circle {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -146,9 +146,9 @@ impl RoundNorm for Circle {
         );
     }
 }
-impl std::ops::Div<round_norm> for CircleRotor {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for CircleRotor {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -188,9 +188,9 @@ impl RoundNorm for CircleRotor {
         );
     }
 }
-impl std::ops::Div<round_norm> for Dipole {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for Dipole {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -230,9 +230,9 @@ impl RoundNorm for Dipole {
         );
     }
 }
-impl std::ops::Div<round_norm> for DipoleInversion {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for DipoleInversion {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -272,14 +272,14 @@ impl RoundNorm for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<round_norm> for MultiVector {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
-impl std::ops::DivAssign<round_norm> for MultiVector {
-    fn div_assign(&mut self, _rhs: round_norm) {
+impl std::ops::DivAssign<RoundNormPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: RoundNormPrefixOrPostfix) {
         *self = self.round_norm()
     }
 }
@@ -320,9 +320,9 @@ impl RoundNorm for MultiVector {
         );
     }
 }
-impl std::ops::Div<round_norm> for RoundPoint {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for RoundPoint {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -362,9 +362,9 @@ impl RoundNorm for RoundPoint {
         );
     }
 }
-impl std::ops::Div<round_norm> for VersorEven {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for VersorEven {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }
@@ -404,9 +404,9 @@ impl RoundNorm for VersorEven {
         );
     }
 }
-impl std::ops::Div<round_norm> for VersorOdd {
+impl std::ops::Div<RoundNormPrefixOrPostfix> for VersorOdd {
     type Output = MultiVector;
-    fn div(self, _rhs: round_norm) -> Self::Output {
+    fn div(self, _rhs: RoundNormPrefixOrPostfix) -> Self::Output {
         self.round_norm()
     }
 }

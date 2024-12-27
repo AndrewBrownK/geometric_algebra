@@ -8,11 +8,11 @@ pub trait GeometricAntiProduct<T> {
     type Output;
     fn geometric_anti_product(self, other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct geometric_anti_product;
-#[allow(non_camel_case_types)]
-pub struct geometric_anti_product_partial<A>(A);
-impl<A: GeometricAntiProduct<B>, B> std::ops::Div<B> for geometric_anti_product_partial<A> {
+#[allow(non_upper_case_globals, dead_code)]
+pub static geometric_anti_product: GeometricAntiProductInfix = GeometricAntiProductInfix;
+pub struct GeometricAntiProductInfix;
+pub struct GeometricAntiProductInfixPartial<A>(A);
+impl<A: GeometricAntiProduct<B>, B> std::ops::Div<B> for GeometricAntiProductInfixPartial<A> {
     type Output = <A as GeometricAntiProduct<B>>::Output;
     fn div(self, rhs: B) -> Self::Output {
         self.0.geometric_anti_product(rhs)
