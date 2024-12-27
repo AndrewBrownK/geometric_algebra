@@ -18,14 +18,14 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
-impl std::ops::Div<weight> for AntiScalar {
+impl std::ops::Div<WeightPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for AntiScalar {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -35,9 +35,9 @@ impl Weight for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<weight> for DualNum {
+impl std::ops::Div<WeightPrefixOrPostfix> for DualNum {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
@@ -48,14 +48,14 @@ impl Weight for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[e1234]);
     }
 }
-impl std::ops::Div<weight> for Flector {
+impl std::ops::Div<WeightPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for Flector {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -71,14 +71,14 @@ impl Weight for Flector {
         );
     }
 }
-impl std::ops::Div<weight> for Line {
+impl std::ops::Div<WeightPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for Line {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -88,14 +88,14 @@ impl Weight for Line {
         return Line::from_groups(/* e41, e42, e43 */ self.group0(), /* e23, e31, e12 */ Simd32x3::from(0.0));
     }
 }
-impl std::ops::Div<weight> for Motor {
+impl std::ops::Div<WeightPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for Motor {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -105,14 +105,14 @@ impl Weight for Motor {
         return Motor::from_groups(/* e41, e42, e43, e1234 */ self.group0(), /* e23, e31, e12, scalar */ Simd32x4::from(0.0));
     }
 }
-impl std::ops::Div<weight> for MultiVector {
+impl std::ops::Div<WeightPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for MultiVector {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -134,14 +134,14 @@ impl Weight for MultiVector {
         );
     }
 }
-impl std::ops::Div<weight> for Origin {
+impl std::ops::Div<WeightPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for Origin {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -151,14 +151,14 @@ impl Weight for Origin {
         return self;
     }
 }
-impl std::ops::Div<weight> for Plane {
+impl std::ops::Div<WeightPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }
-impl std::ops::DivAssign<weight> for Plane {
-    fn div_assign(&mut self, _rhs: weight) {
+impl std::ops::DivAssign<WeightPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: WeightPrefixOrPostfix) {
         *self = self.weight()
     }
 }
@@ -169,9 +169,9 @@ impl Weight for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self[e423], self[e431], self[e412], 0.0]));
     }
 }
-impl std::ops::Div<weight> for Point {
+impl std::ops::Div<WeightPrefixOrPostfix> for Point {
     type Output = Origin;
-    fn div(self, _rhs: weight) -> Self::Output {
+    fn div(self, _rhs: WeightPrefixOrPostfix) -> Self::Output {
         self.weight()
     }
 }

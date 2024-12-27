@@ -20,14 +20,14 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         2       7       1
 //  Average:         1       8       1
 //  Maximum:         7      24       1
-impl std::ops::Div<unitize> for AntiScalar {
+impl std::ops::Div<UnitizePrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for AntiScalar {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -40,14 +40,14 @@ impl Unitize for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] / (self.flat_weight_norm_squared().anti_square_root()[e1234]));
     }
 }
-impl std::ops::Div<unitize> for DualNum {
+impl std::ops::Div<UnitizePrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for DualNum {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -64,14 +64,14 @@ impl Unitize for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(1.0 / self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0());
     }
 }
-impl std::ops::Div<unitize> for Flector {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Flector {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -94,14 +94,14 @@ impl Unitize for Flector {
         );
     }
 }
-impl std::ops::Div<unitize> for Line {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Line {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -124,14 +124,14 @@ impl Unitize for Line {
         );
     }
 }
-impl std::ops::Div<unitize> for Motor {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Motor {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -154,14 +154,14 @@ impl Unitize for Motor {
         );
     }
 }
-impl std::ops::Div<unitize> for MultiVector {
+impl std::ops::Div<UnitizePrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for MultiVector {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -192,14 +192,14 @@ impl Unitize for MultiVector {
         );
     }
 }
-impl std::ops::Div<unitize> for Origin {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Origin {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -212,14 +212,14 @@ impl Unitize for Origin {
         return Origin::from_groups(/* e4 */ self[e4] / (self.flat_weight_norm_squared().anti_square_root()[e1234]));
     }
 }
-impl std::ops::Div<unitize> for Plane {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Plane {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }
@@ -239,14 +239,14 @@ impl Unitize for Plane {
         );
     }
 }
-impl std::ops::Div<unitize> for Point {
+impl std::ops::Div<UnitizePrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: unitize) -> Self::Output {
+    fn div(self, _rhs: UnitizePrefixOrPostfix) -> Self::Output {
         self.unitize()
     }
 }
-impl std::ops::DivAssign<unitize> for Point {
-    fn div_assign(&mut self, _rhs: unitize) {
+impl std::ops::DivAssign<UnitizePrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: UnitizePrefixOrPostfix) {
         *self = self.unitize()
     }
 }

@@ -6,9 +6,9 @@ public interface LeftComplement {
     associatedtype Output;
     func left_complement() -> Output;
 }
-public const static left_complement: LeftComplementInfix = LeftComplementInfix {}
-public struct LeftComplementInfix {}
-extension LeftComplementInfix for A: LeftComplement {
+public static const left_complement: LeftComplementPrefixOrPostfix = LeftComplementPrefixOrPostfix {};
+public struct LeftComplementPrefixOrPostfix {}
+extension LeftComplementPrefixOrPostfix for A: LeftComplement {
     func operator/(rhs: A) -> A.Output {
         return rhs.left_complement();
     }

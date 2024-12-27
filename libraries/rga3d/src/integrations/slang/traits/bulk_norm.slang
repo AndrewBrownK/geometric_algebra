@@ -5,9 +5,9 @@ using data::*;
 public interface BulkNorm {
     func bulk_norm() -> Scalar;
 }
-public const static bulk_norm: BulkNormInfix = BulkNormInfix {}
-public struct BulkNormInfix {}
-extension BulkNormInfix for A: BulkNorm {
+public static const bulk_norm: BulkNormPrefixOrPostfix = BulkNormPrefixOrPostfix {};
+public struct BulkNormPrefixOrPostfix {}
+extension BulkNormPrefixOrPostfix for A: BulkNorm {
     func operator/(rhs: A) -> A.Output {
         return rhs.bulk_norm();
     }

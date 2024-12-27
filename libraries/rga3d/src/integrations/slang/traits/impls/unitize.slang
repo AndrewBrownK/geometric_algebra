@@ -1,5 +1,15 @@
 using traits::AntiSquareRoot;
 using traits::FlatWeightNormSquared;
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> AntiScalar {
+        return this.unitize();
+    }
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.unitize();
+        return *this;
+    }
+}
 extension AntiScalar: Unitize {
     associatedtype Output = AntiScalar;
     func unitize() -> Output {
@@ -8,10 +18,13 @@ extension AntiScalar: Unitize {
             this.e1234 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> DualNum {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> AntiScalar& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> DualNum& {
         this = this.unitize();
         return *this;
     }
@@ -24,10 +37,13 @@ extension DualNum: Unitize {
             float2(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Flector {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> DualNum& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Flector& {
         this = this.unitize();
         return *this;
     }
@@ -46,10 +62,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> Flector {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Line {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> Flector& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Line& {
         this = this.unitize();
         return *this;
     }
@@ -68,10 +87,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float3(geometric_anti_product.e1234) * this.group1
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Motor {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> Line& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Motor& {
         this = this.unitize();
         return *this;
     }
@@ -90,10 +112,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group1
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> MultiVector {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> Motor& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.unitize();
         return *this;
     }
@@ -118,10 +143,13 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             float4(geometric_anti_product.e1234) * this.group4
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Origin {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> MultiVector& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Origin& {
         this = this.unitize();
         return *this;
     }
@@ -134,10 +162,13 @@ extension Origin: Unitize {
             this.e4 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Plane {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> Origin& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Plane& {
         this = this.unitize();
         return *this;
     }
@@ -150,10 +181,13 @@ extension Plane: Unitize {
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
-    func operator/(_rhs: UnitizeInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: UnitizePrefixOrPostfix) -> Point {
         return this.unitize();
     }
-    func operator/=(const UnitizeInfix& _rhs) -> Plane& {
+    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Point& {
         this = this.unitize();
         return *this;
     }
@@ -165,12 +199,5 @@ extension Point: Unitize {
             /* e1, e2, e3, e4 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
-    }
-    func operator/(_rhs: UnitizeInfix) -> Point {
-        return this.unitize();
-    }
-    func operator/=(const UnitizeInfix& _rhs) -> Point& {
-        this = this.unitize();
-        return *this;
     }
 }

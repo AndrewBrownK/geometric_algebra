@@ -18,9 +18,9 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
-impl std::ops::Div<bulk> for DualNum {
+impl std::ops::Div<BulkPrefixOrPostfix> for DualNum {
     type Output = Scalar;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
@@ -31,14 +31,14 @@ impl Bulk for DualNum {
         return Scalar::from_groups(/* scalar */ self[scalar]);
     }
 }
-impl std::ops::Div<bulk> for Flector {
+impl std::ops::Div<BulkPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Flector {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -54,14 +54,14 @@ impl Bulk for Flector {
         );
     }
 }
-impl std::ops::Div<bulk> for Horizon {
+impl std::ops::Div<BulkPrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Horizon {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -71,14 +71,14 @@ impl Bulk for Horizon {
         return self;
     }
 }
-impl std::ops::Div<bulk> for Line {
+impl std::ops::Div<BulkPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Line {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -88,14 +88,14 @@ impl Bulk for Line {
         return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ self.group1());
     }
 }
-impl std::ops::Div<bulk> for Motor {
+impl std::ops::Div<BulkPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Motor {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -105,14 +105,14 @@ impl Bulk for Motor {
         return Motor::from_groups(/* e41, e42, e43, e1234 */ Simd32x4::from(0.0), /* e23, e31, e12, scalar */ self.group1());
     }
 }
-impl std::ops::Div<bulk> for MultiVector {
+impl std::ops::Div<BulkPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for MultiVector {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -134,9 +134,9 @@ impl Bulk for MultiVector {
         );
     }
 }
-impl std::ops::Div<bulk> for Plane {
+impl std::ops::Div<BulkPrefixOrPostfix> for Plane {
     type Output = Horizon;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
@@ -147,14 +147,14 @@ impl Bulk for Plane {
         return Horizon::from_groups(/* e321 */ self[e321]);
     }
 }
-impl std::ops::Div<bulk> for Point {
+impl std::ops::Div<BulkPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Point {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }
@@ -165,14 +165,14 @@ impl Bulk for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
     }
 }
-impl std::ops::Div<bulk> for Scalar {
+impl std::ops::Div<BulkPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: bulk) -> Self::Output {
+    fn div(self, _rhs: BulkPrefixOrPostfix) -> Self::Output {
         self.bulk()
     }
 }
-impl std::ops::DivAssign<bulk> for Scalar {
-    fn div_assign(&mut self, _rhs: bulk) {
+impl std::ops::DivAssign<BulkPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: BulkPrefixOrPostfix) {
         *self = self.bulk()
     }
 }

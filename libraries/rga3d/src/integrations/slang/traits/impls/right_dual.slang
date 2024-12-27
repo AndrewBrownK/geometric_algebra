@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> AntiScalar {
+        return this.right_dual();
+    }
+}
 extension DualNum: RightDual {
     associatedtype Output = AntiScalar;
     func right_dual() -> Output {
@@ -6,8 +12,15 @@ extension DualNum: RightDual {
             this.scalar
         );
     }
-    func operator/(_rhs: RightDualInfix) -> AntiScalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Flector {
         return this.right_dual();
+    }
+    func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Flector& {
+        this = this.right_dual();
+        return *this;
     }
 }
 extension Flector: RightDual {
@@ -20,12 +33,11 @@ extension Flector: RightDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Origin {
         return this.right_dual();
-    }
-    func operator/=(const RightDualInfix& _rhs) -> Flector& {
-        this = this.right_dual();
-        return *this;
     }
 }
 extension Horizon: RightDual {
@@ -36,8 +48,15 @@ extension Horizon: RightDual {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Origin {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Line {
         return this.right_dual();
+    }
+    func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Line& {
+        this = this.right_dual();
+        return *this;
     }
 }
 extension Line: RightDual {
@@ -50,10 +69,13 @@ extension Line: RightDual {
             float3(0.0)
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Motor {
         return this.right_dual();
     }
-    func operator/=(const RightDualInfix& _rhs) -> Line& {
+    func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Motor& {
         this = this.right_dual();
         return *this;
     }
@@ -68,10 +90,13 @@ extension Motor: RightDual {
             float4(0.0)
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> MultiVector {
         return this.right_dual();
     }
-    func operator/=(const RightDualInfix& _rhs) -> Motor& {
+    func operator/=(const RightDualPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.right_dual();
         return *this;
     }
@@ -92,12 +117,11 @@ extension MultiVector: RightDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightDualInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Origin {
         return this.right_dual();
-    }
-    func operator/=(const RightDualInfix& _rhs) -> MultiVector& {
-        this = this.right_dual();
-        return *this;
     }
 }
 extension Plane: RightDual {
@@ -108,7 +132,10 @@ extension Plane: RightDual {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Origin {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> Plane {
         return this.right_dual();
     }
 }
@@ -120,7 +147,10 @@ extension Point: RightDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightDualInfix) -> Plane {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: RightDualPrefixOrPostfix) -> AntiScalar {
         return this.right_dual();
     }
 }
@@ -131,8 +161,5 @@ extension Scalar: RightDual {
             /* e1234 */
             this.scalar
         );
-    }
-    func operator/(_rhs: RightDualInfix) -> AntiScalar {
-        return this.right_dual();
     }
 }

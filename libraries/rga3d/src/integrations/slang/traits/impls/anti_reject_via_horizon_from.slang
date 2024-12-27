@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<AntiScalar> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension AntiScalar: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: AntiRejectViaHorizonFrom<DualNum> {
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<AntiScalar> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension AntiScalar: AntiRejectViaHorizonFrom<Motor> {
@@ -73,6 +76,12 @@ extension AntiScalar: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<DualNum> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension DualNum: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = DualNum;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -80,9 +89,6 @@ extension DualNum: AntiRejectViaHorizonFrom<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar) * float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<DualNum> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension DualNum: AntiRejectViaHorizonFrom<Flector> {
@@ -237,6 +243,12 @@ extension DualNum: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Flector> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Flector: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Flector;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -256,9 +268,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * wedge.group1
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Flector> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Flector: AntiRejectViaHorizonFrom<Flector> {
@@ -427,6 +436,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Horizon> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Horizon: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Horizon;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -434,9 +449,6 @@ extension Horizon: AntiRejectViaHorizonFrom<DualNum> {
             /* e321 */
             powi(other.scalar, 2) * this.e321
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Horizon> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Horizon: AntiRejectViaHorizonFrom<Flector> {
@@ -540,6 +552,12 @@ extension Horizon: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Line> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Line: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Line;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -559,9 +577,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e23, e31, e12 */
             float3(right_dual.e1234) * wedge.group1
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Line> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Line: AntiRejectViaHorizonFrom<Flector> {
@@ -700,6 +715,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Motor> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Motor: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Motor;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -719,9 +740,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e23, e31, e12, scalar */
             float4(right_dual.e1234) * wedge.group1
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Motor> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Motor: AntiRejectViaHorizonFrom<Flector> {
@@ -894,6 +912,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<MultiVector> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension MultiVector: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = MultiVector;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -925,9 +949,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * wedge.group4
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<MultiVector> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension MultiVector: AntiRejectViaHorizonFrom<Flector> {
@@ -1208,6 +1229,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Origin> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Origin: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Origin;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -1215,9 +1242,6 @@ extension Origin: AntiRejectViaHorizonFrom<DualNum> {
             /* e4 */
             powi(other.scalar, 2) * this.e4
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Origin> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Origin: AntiRejectViaHorizonFrom<Flector> {
@@ -1372,6 +1396,12 @@ extension Origin: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Plane> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Plane: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Plane;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -1379,9 +1409,6 @@ extension Plane: AntiRejectViaHorizonFrom<DualNum> {
             /* e423, e431, e412, e321 */
             float4(other.scalar) * float4(other.scalar * this.e423, other.scalar * this.e431, other.scalar * this.e412, other.scalar * this.e321)
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Plane> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Plane: AntiRejectViaHorizonFrom<Flector> {
@@ -1489,6 +1516,12 @@ extension Plane: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Point> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Point: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = Point;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -1496,9 +1529,6 @@ extension Point: AntiRejectViaHorizonFrom<DualNum> {
             /* e1, e2, e3, e4 */
             float4(other.scalar) * float4(other.scalar * this.e1, other.scalar * this.e2, other.scalar * this.e3, other.scalar * this.e4)
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Point> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Point: AntiRejectViaHorizonFrom<Flector> {
@@ -1653,6 +1683,12 @@ extension Point: AntiRejectViaHorizonFrom<Scalar> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Scalar> {
+        return AntiRejectViaHorizonFromInfixPartial { a: this };
+    }
+}
 extension Scalar: AntiRejectViaHorizonFrom<DualNum> {
     associatedtype Output = DualNum;
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
@@ -1660,9 +1696,6 @@ extension Scalar: AntiRejectViaHorizonFrom<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar) * float2(other.scalar * this.scalar, other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> anti_reject_via_horizon_from_partial<Scalar> {
-        anti_reject_via_horizon_from_partial(this)
     }
 }
 extension Scalar: AntiRejectViaHorizonFrom<Flector> {

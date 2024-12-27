@@ -6,7 +6,7 @@ public interface Wedge<T> {
     associatedtype Output;
     func wedge(other: T) -> Output;
 }
-public const static wedge: WedgeInfix = WedgeInfix {}
+public static const wedge: WedgeInfix = WedgeInfix {};
 public struct WedgeInfix {}
 public struct WedgeInfixPartial<A> { a: A }
 extension WedgeInfixPartial<A> for A: Wedge<B> {

@@ -4,14 +4,14 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
-impl std::ops::Div<anti_square_root> for AntiScalar {
+impl std::ops::Div<AntiSquareRootPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_square_root) -> Self::Output {
+    fn div(self, _rhs: AntiSquareRootPrefixOrPostfix) -> Self::Output {
         self.anti_square_root()
     }
 }
-impl std::ops::DivAssign<anti_square_root> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_square_root) {
+impl std::ops::DivAssign<AntiSquareRootPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiSquareRootPrefixOrPostfix) {
         *self = self.anti_square_root()
     }
 }

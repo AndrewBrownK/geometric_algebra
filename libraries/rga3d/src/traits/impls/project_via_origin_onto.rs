@@ -18,10 +18,10 @@
 //   Median:         6      19       0
 //  Average:        18      32       0
 //  Maximum:       130     166       0
-impl std::ops::Div<project_via_origin_onto> for AntiScalar {
-    type Output = project_via_origin_onto_partial<AntiScalar>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for AntiScalar {
+    type Output = ProjectViaOriginOntoInfixPartial<AntiScalar>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Motor> for AntiScalar {
@@ -72,10 +72,10 @@ impl ProjectViaOriginOnto<MultiVector> for AntiScalar {
         );
     }
 }
-impl std::ops::Div<project_via_origin_onto> for DualNum {
-    type Output = project_via_origin_onto_partial<DualNum>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for DualNum {
+    type Output = ProjectViaOriginOntoInfixPartial<DualNum>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<DualNum> for DualNum {
@@ -323,10 +323,10 @@ impl ProjectViaOriginOnto<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Flector {
-    type Output = project_via_origin_onto_partial<Flector>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Flector {
+    type Output = ProjectViaOriginOntoInfixPartial<Flector>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Flector {
@@ -605,10 +605,10 @@ impl ProjectViaOriginOnto<Point> for Flector {
         );
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Horizon {
-    type Output = project_via_origin_onto_partial<Horizon>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Horizon {
+    type Output = ProjectViaOriginOntoInfixPartial<Horizon>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Horizon {
@@ -754,10 +754,10 @@ impl ProjectViaOriginOnto<Plane> for Horizon {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * other[e321]) * other.group0());
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Line {
-    type Output = project_via_origin_onto_partial<Line>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Line {
+    type Output = ProjectViaOriginOntoInfixPartial<Line>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Line {
@@ -1014,10 +1014,10 @@ impl ProjectViaOriginOnto<Plane> for Line {
         );
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Motor {
-    type Output = project_via_origin_onto_partial<Motor>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Motor {
+    type Output = ProjectViaOriginOntoInfixPartial<Motor>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<DualNum> for Motor {
@@ -1351,10 +1351,10 @@ impl ProjectViaOriginOnto<Scalar> for Motor {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_via_origin_onto> for MultiVector {
-    type Output = project_via_origin_onto_partial<MultiVector>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for MultiVector {
+    type Output = ProjectViaOriginOntoInfixPartial<MultiVector>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<DualNum> for MultiVector {
@@ -1815,10 +1815,10 @@ impl ProjectViaOriginOnto<Scalar> for MultiVector {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Origin {
-    type Output = project_via_origin_onto_partial<Origin>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Origin {
+    type Output = ProjectViaOriginOntoInfixPartial<Origin>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Origin {
@@ -1987,10 +1987,10 @@ impl ProjectViaOriginOnto<Point> for Origin {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * 0.0) * other.group0());
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Plane {
-    type Output = project_via_origin_onto_partial<Plane>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Plane {
+    type Output = ProjectViaOriginOntoInfixPartial<Plane>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Plane {
@@ -2156,10 +2156,10 @@ impl ProjectViaOriginOnto<Plane> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Point {
-    type Output = project_via_origin_onto_partial<Point>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Point {
+    type Output = ProjectViaOriginOntoInfixPartial<Point>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<Flector> for Point {
@@ -2422,10 +2422,10 @@ impl ProjectViaOriginOnto<Point> for Point {
         );
     }
 }
-impl std::ops::Div<project_via_origin_onto> for Scalar {
-    type Output = project_via_origin_onto_partial<Scalar>;
-    fn div(self, _rhs: project_via_origin_onto) -> Self::Output {
-        project_via_origin_onto_partial(self)
+impl std::ops::Div<ProjectViaOriginOntoInfix> for Scalar {
+    type Output = ProjectViaOriginOntoInfixPartial<Scalar>;
+    fn div(self, _rhs: ProjectViaOriginOntoInfix) -> Self::Output {
+        ProjectViaOriginOntoInfixPartial(self)
     }
 }
 impl ProjectViaOriginOnto<DualNum> for Scalar {

@@ -20,9 +20,9 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         3       4       0
 //  Average:         3       4       0
 //  Maximum:         7       8       0
-impl std::ops::Div<flat_weight_norm> for Flector {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Flector {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -34,9 +34,9 @@ impl FlatWeightNorm for Flector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Line {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Line {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -48,9 +48,9 @@ impl FlatWeightNorm for Line {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Motor {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Motor {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -62,9 +62,9 @@ impl FlatWeightNorm for Motor {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for MultiVector {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for MultiVector {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }
@@ -76,9 +76,9 @@ impl FlatWeightNorm for MultiVector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<flat_weight_norm> for Point {
+impl std::ops::Div<FlatWeightNormPrefixOrPostfix> for Point {
     type Output = AntiScalar;
-    fn div(self, _rhs: flat_weight_norm) -> Self::Output {
+    fn div(self, _rhs: FlatWeightNormPrefixOrPostfix) -> Self::Output {
         self.flat_weight_norm()
     }
 }

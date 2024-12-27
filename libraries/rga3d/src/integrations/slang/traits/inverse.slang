@@ -5,9 +5,9 @@ using data::*;
 public interface Inverse {
     func inverse() -> Output;
 }
-public const static inverse: InverseInfix = InverseInfix {}
-public struct InverseInfix {}
-extension InverseInfix for A: Inverse {
+public static const inverse: InversePrefixOrPostfix = InversePrefixOrPostfix {};
+public struct InversePrefixOrPostfix {}
+extension InversePrefixOrPostfix for A: Inverse {
     func operator/(rhs: A) -> A.Output {
         return rhs.inverse();
     }

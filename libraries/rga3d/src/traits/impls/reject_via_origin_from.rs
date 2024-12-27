@@ -18,10 +18,10 @@
 //   Median:         5      20       0
 //  Average:        17      31       0
 //  Maximum:       130     165       0
-impl std::ops::Div<reject_via_origin_from> for AntiScalar {
-    type Output = reject_via_origin_from_partial<AntiScalar>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for AntiScalar {
+    type Output = RejectViaOriginFromInfixPartial<AntiScalar>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<DualNum> for AntiScalar {
@@ -262,10 +262,10 @@ impl RejectViaOriginFrom<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_via_origin_from> for DualNum {
-    type Output = reject_via_origin_from_partial<DualNum>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for DualNum {
+    type Output = RejectViaOriginFromInfixPartial<DualNum>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<DualNum> for DualNum {
@@ -508,10 +508,10 @@ impl RejectViaOriginFrom<Scalar> for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Flector {
-    type Output = reject_via_origin_from_partial<Flector>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Flector {
+    type Output = RejectViaOriginFromInfixPartial<Flector>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Flector {
@@ -800,10 +800,10 @@ impl RejectViaOriginFrom<Point> for Flector {
         );
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Horizon {
-    type Output = reject_via_origin_from_partial<Horizon>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Horizon {
+    type Output = RejectViaOriginFromInfixPartial<Horizon>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Horizon {
@@ -1022,10 +1022,10 @@ impl RejectViaOriginFrom<Point> for Horizon {
         );
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Line {
-    type Output = reject_via_origin_from_partial<Line>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Line {
+    type Output = RejectViaOriginFromInfixPartial<Line>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Line {
@@ -1273,10 +1273,10 @@ impl RejectViaOriginFrom<Plane> for Line {
         );
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Motor {
-    type Output = reject_via_origin_from_partial<Motor>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Motor {
+    type Output = RejectViaOriginFromInfixPartial<Motor>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<DualNum> for Motor {
@@ -1605,10 +1605,10 @@ impl RejectViaOriginFrom<Scalar> for Motor {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_via_origin_from> for MultiVector {
-    type Output = reject_via_origin_from_partial<MultiVector>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for MultiVector {
+    type Output = RejectViaOriginFromInfixPartial<MultiVector>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<DualNum> for MultiVector {
@@ -2064,10 +2064,10 @@ impl RejectViaOriginFrom<Scalar> for MultiVector {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Origin {
-    type Output = reject_via_origin_from_partial<Origin>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Origin {
+    type Output = RejectViaOriginFromInfixPartial<Origin>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Origin {
@@ -2224,10 +2224,10 @@ impl RejectViaOriginFrom<Plane> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * f32::powi(other[e321], 2) * -1.0);
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Plane {
-    type Output = reject_via_origin_from_partial<Plane>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Plane {
+    type Output = RejectViaOriginFromInfixPartial<Plane>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Plane {
@@ -2495,10 +2495,10 @@ impl RejectViaOriginFrom<Point> for Plane {
         );
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Point {
-    type Output = reject_via_origin_from_partial<Point>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Point {
+    type Output = RejectViaOriginFromInfixPartial<Point>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<Flector> for Point {
@@ -2661,10 +2661,10 @@ impl RejectViaOriginFrom<Plane> for Point {
         );
     }
 }
-impl std::ops::Div<reject_via_origin_from> for Scalar {
-    type Output = reject_via_origin_from_partial<Scalar>;
-    fn div(self, _rhs: reject_via_origin_from) -> Self::Output {
-        reject_via_origin_from_partial(self)
+impl std::ops::Div<RejectViaOriginFromInfix> for Scalar {
+    type Output = RejectViaOriginFromInfixPartial<Scalar>;
+    fn div(self, _rhs: RejectViaOriginFromInfix) -> Self::Output {
+        RejectViaOriginFromInfixPartial(self)
     }
 }
 impl RejectViaOriginFrom<DualNum> for Scalar {

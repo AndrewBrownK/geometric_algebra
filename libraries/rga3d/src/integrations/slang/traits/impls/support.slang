@@ -1,3 +1,9 @@
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: SupportPrefixOrPostfix) -> Line {
+        return this.support();
+    }
+}
 extension Flector: Support {
     associatedtype Output = Line;
     func support() -> Output {
@@ -8,7 +14,10 @@ extension Flector: Support {
             float3(0.0)
         );
     }
-    func operator/(_rhs: SupportInfix) -> Line {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: SupportPrefixOrPostfix) -> Line {
         return this.support();
     }
 }
@@ -21,8 +30,5 @@ extension MultiVector: Support {
             /* e23, e31, e12 */
             float3(0.0)
         );
-    }
-    func operator/(_rhs: SupportInfix) -> Line {
-        return this.support();
     }
 }

@@ -18,14 +18,14 @@
 //   Median:         0       1       0
 //  Average:         0       3       0
 //  Maximum:         0      10       0
-impl std::ops::Div<reverse> for AntiScalar {
+impl std::ops::Div<ReversePrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for AntiScalar {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -34,14 +34,14 @@ impl Reverse for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<reverse> for DualNum {
+impl std::ops::Div<ReversePrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for DualNum {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -50,14 +50,14 @@ impl Reverse for DualNum {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Flector {
+impl std::ops::Div<ReversePrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Flector {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -70,14 +70,14 @@ impl Reverse for Flector {
         return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<reverse> for Horizon {
+impl std::ops::Div<ReversePrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Horizon {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -90,14 +90,14 @@ impl Reverse for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<reverse> for Line {
+impl std::ops::Div<ReversePrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Line {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -115,14 +115,14 @@ impl Reverse for Line {
         );
     }
 }
-impl std::ops::Div<reverse> for Motor {
+impl std::ops::Div<ReversePrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Motor {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -140,14 +140,14 @@ impl Reverse for Motor {
         );
     }
 }
-impl std::ops::Div<reverse> for MultiVector {
+impl std::ops::Div<ReversePrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for MultiVector {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -174,14 +174,14 @@ impl Reverse for MultiVector {
         );
     }
 }
-impl std::ops::Div<reverse> for Origin {
+impl std::ops::Div<ReversePrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Origin {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -190,14 +190,14 @@ impl Reverse for Origin {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Plane {
+impl std::ops::Div<ReversePrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Plane {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -210,14 +210,14 @@ impl Reverse for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<reverse> for Point {
+impl std::ops::Div<ReversePrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Point {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }
@@ -226,14 +226,14 @@ impl Reverse for Point {
         return self;
     }
 }
-impl std::ops::Div<reverse> for Scalar {
+impl std::ops::Div<ReversePrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: reverse) -> Self::Output {
+    fn div(self, _rhs: ReversePrefixOrPostfix) -> Self::Output {
         self.reverse()
     }
 }
-impl std::ops::DivAssign<reverse> for Scalar {
-    fn div_assign(&mut self, _rhs: reverse) {
+impl std::ops::DivAssign<ReversePrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: ReversePrefixOrPostfix) {
         *self = self.reverse()
     }
 }

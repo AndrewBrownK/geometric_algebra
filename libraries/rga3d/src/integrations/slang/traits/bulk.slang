@@ -6,9 +6,9 @@ public interface Bulk {
     associatedtype Output;
     func bulk() -> Output;
 }
-public const static bulk: BulkInfix = BulkInfix {}
-public struct BulkInfix {}
-extension BulkInfix for A: Bulk {
+public static const bulk: BulkPrefixOrPostfix = BulkPrefixOrPostfix {};
+public struct BulkPrefixOrPostfix {}
+extension BulkPrefixOrPostfix for A: Bulk {
     func operator/(rhs: A) -> A.Output {
         return rhs.bulk();
     }

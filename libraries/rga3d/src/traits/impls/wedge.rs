@@ -18,10 +18,10 @@
 //   Median:         0       6       0
 //  Average:         3       9       0
 //  Maximum:        65      81       0
-impl std::ops::Div<wedge> for AntiScalar {
-    type Output = wedge_partial<AntiScalar>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for AntiScalar {
+    type Output = WedgeInfixPartial<AntiScalar>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for AntiScalar {
@@ -64,10 +64,10 @@ impl Wedge<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[scalar]);
     }
 }
-impl std::ops::Div<wedge> for DualNum {
-    type Output = wedge_partial<DualNum>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for DualNum {
+    type Output = WedgeInfixPartial<DualNum>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<AntiScalar> for DualNum {
@@ -223,10 +223,10 @@ impl Wedge<Scalar> for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<wedge> for Flector {
-    type Output = wedge_partial<Flector>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Flector {
+    type Output = WedgeInfixPartial<Flector>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Flector {
@@ -436,10 +436,10 @@ impl Wedge<Scalar> for Flector {
         );
     }
 }
-impl std::ops::Div<wedge> for Horizon {
-    type Output = wedge_partial<Horizon>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Horizon {
+    type Output = WedgeInfixPartial<Horizon>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Horizon {
@@ -527,10 +527,10 @@ impl Wedge<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * other[scalar]);
     }
 }
-impl std::ops::Div<wedge> for Line {
-    type Output = wedge_partial<Line>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Line {
+    type Output = WedgeInfixPartial<Line>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Line {
@@ -697,10 +697,10 @@ impl Wedge<Scalar> for Line {
         );
     }
 }
-impl std::ops::Div<wedge> for Motor {
-    type Output = wedge_partial<Motor>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Motor {
+    type Output = WedgeInfixPartial<Motor>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<AntiScalar> for Motor {
@@ -935,10 +935,10 @@ impl Wedge<Scalar> for Motor {
         );
     }
 }
-impl std::ops::Div<wedge> for MultiVector {
-    type Output = wedge_partial<MultiVector>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for MultiVector {
+    type Output = WedgeInfixPartial<MultiVector>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<AntiScalar> for MultiVector {
@@ -1279,10 +1279,10 @@ impl Wedge<Scalar> for MultiVector {
         );
     }
 }
-impl std::ops::Div<wedge> for Origin {
-    type Output = wedge_partial<Origin>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Origin {
+    type Output = WedgeInfixPartial<Origin>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Origin {
@@ -1412,10 +1412,10 @@ impl Wedge<Scalar> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * other[scalar]);
     }
 }
-impl std::ops::Div<wedge> for Plane {
-    type Output = wedge_partial<Plane>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Plane {
+    type Output = WedgeInfixPartial<Plane>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Plane {
@@ -1512,10 +1512,10 @@ impl Wedge<Scalar> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<wedge> for Point {
-    type Output = wedge_partial<Point>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Point {
+    type Output = WedgeInfixPartial<Point>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<DualNum> for Point {
@@ -1697,10 +1697,10 @@ impl Wedge<Scalar> for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<wedge> for Scalar {
-    type Output = wedge_partial<Scalar>;
-    fn div(self, _rhs: wedge) -> Self::Output {
-        wedge_partial(self)
+impl std::ops::Div<WedgeInfix> for Scalar {
+    type Output = WedgeInfixPartial<Scalar>;
+    fn div(self, _rhs: WedgeInfix) -> Self::Output {
+        WedgeInfixPartial(self)
     }
 }
 impl Wedge<AntiScalar> for Scalar {

@@ -5,9 +5,9 @@ using data::*;
 public interface AntiConstraintValid {
     func anti_constraint_valid() -> Output;
 }
-public const static anti_constraint_valid: AntiConstraintValidInfix = AntiConstraintValidInfix {}
-public struct AntiConstraintValidInfix {}
-extension AntiConstraintValidInfix for A: AntiConstraintValid {
+public static const anti_constraint_valid: AntiConstraintValidPrefixOrPostfix = AntiConstraintValidPrefixOrPostfix {};
+public struct AntiConstraintValidPrefixOrPostfix {}
+extension AntiConstraintValidPrefixOrPostfix for A: AntiConstraintValid {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_constraint_valid();
     }

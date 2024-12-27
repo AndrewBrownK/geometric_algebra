@@ -6,7 +6,7 @@ public interface GeometricAntiProduct<T> {
     associatedtype Output;
     func geometric_anti_product(other: T) -> Output;
 }
-public const static geometric_anti_product: GeometricAntiProductInfix = GeometricAntiProductInfix {}
+public static const geometric_anti_product: GeometricAntiProductInfix = GeometricAntiProductInfix {};
 public struct GeometricAntiProductInfix {}
 public struct GeometricAntiProductInfixPartial<A> { a: A }
 extension GeometricAntiProductInfixPartial<A> for A: GeometricAntiProduct<B> {

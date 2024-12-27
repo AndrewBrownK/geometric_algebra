@@ -6,7 +6,7 @@ public interface ProjectViaOriginOnto<T> {
     associatedtype Output;
     func project_via_origin_onto(other: T) -> Output;
 }
-public const static project_via_origin_onto: ProjectViaOriginOntoInfix = ProjectViaOriginOntoInfix {}
+public static const project_via_origin_onto: ProjectViaOriginOntoInfix = ProjectViaOriginOntoInfix {};
 public struct ProjectViaOriginOntoInfix {}
 public struct ProjectViaOriginOntoInfixPartial<A> { a: A }
 extension ProjectViaOriginOntoInfixPartial<A> for A: ProjectViaOriginOnto<B> {

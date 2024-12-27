@@ -1,5 +1,11 @@
 using traits::AntiReverse;
 using traits::GeometricAntiProduct;
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<AntiScalar> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension AntiScalar: AntiSandwich<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -7,9 +13,6 @@ extension AntiScalar: AntiSandwich<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<AntiScalar> {
-        anti_sandwich_partial(this)
     }
 }
 extension AntiScalar: AntiSandwich<DualNum> {
@@ -116,6 +119,12 @@ extension AntiScalar: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<DualNum> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension DualNum: AntiSandwich<AntiScalar> {
     associatedtype Output = DualNum;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -123,9 +132,6 @@ extension DualNum: AntiSandwich<AntiScalar> {
             /* scalar, e1234 */
             float2(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<DualNum> {
-        anti_sandwich_partial(this)
     }
 }
 extension DualNum: AntiSandwich<DualNum> {
@@ -238,6 +244,12 @@ extension DualNum: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Flector> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Flector: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -247,9 +259,6 @@ extension Flector: AntiSandwich<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group1
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Flector> {
-        anti_sandwich_partial(this)
     }
 }
 extension Flector: AntiSandwich<DualNum> {
@@ -368,6 +377,12 @@ extension Flector: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Horizon> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Horizon: AntiSandwich<Flector> {
     associatedtype Output = Flector;
     func anti_sandwich(other: Flector) -> Output {
@@ -377,9 +392,6 @@ extension Horizon: AntiSandwich<Flector> {
             /* e23, e31, e12, scalar */
             float4(this.e321) * float4(other.group1.xyz, other.e4) * float4(-1.0)
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Horizon> {
-        anti_sandwich_partial(this)
     }
 }
 extension Horizon: AntiSandwich<Line> {
@@ -430,6 +442,12 @@ extension Horizon: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Line> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Line: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -439,9 +457,6 @@ extension Line: AntiSandwich<AntiScalar> {
             /* e23, e31, e12 */
             float3(other.e1234) * this.group1
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Line> {
-        anti_sandwich_partial(this)
     }
 }
 extension Line: AntiSandwich<DualNum> {
@@ -558,6 +573,12 @@ extension Line: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Motor> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Motor: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -567,9 +588,6 @@ extension Motor: AntiSandwich<AntiScalar> {
             /* e23, e31, e12, scalar */
             float4(other.e1234) * this.group1
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Motor> {
-        anti_sandwich_partial(this)
     }
 }
 extension Motor: AntiSandwich<DualNum> {
@@ -688,6 +706,12 @@ extension Motor: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<MultiVector> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension MultiVector: AntiSandwich<AntiScalar> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -703,9 +727,6 @@ extension MultiVector: AntiSandwich<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group4
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<MultiVector> {
-        anti_sandwich_partial(this)
     }
 }
 extension MultiVector: AntiSandwich<DualNum> {
@@ -878,6 +899,12 @@ extension MultiVector: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Origin> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Origin: AntiSandwich<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -885,9 +912,6 @@ extension Origin: AntiSandwich<AntiScalar> {
             /* e4 */
             other.e1234 * this.e4
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Origin> {
-        anti_sandwich_partial(this)
     }
 }
 extension Origin: AntiSandwich<DualNum> {
@@ -1000,6 +1024,12 @@ extension Origin: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Plane> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Plane: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -1007,9 +1037,6 @@ extension Plane: AntiSandwich<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Plane> {
-        anti_sandwich_partial(this)
     }
 }
 extension Plane: AntiSandwich<DualNum> {
@@ -1126,6 +1153,12 @@ extension Plane: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Point> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Point: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
@@ -1133,9 +1166,6 @@ extension Point: AntiSandwich<AntiScalar> {
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Point> {
-        anti_sandwich_partial(this)
     }
 }
 extension Point: AntiSandwich<DualNum> {
@@ -1250,6 +1280,12 @@ extension Point: AntiSandwich<Scalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Scalar> {
+        return AntiSandwichInfixPartial { a: this };
+    }
+}
 extension Scalar: AntiSandwich<Flector> {
     associatedtype Output = Flector;
     func anti_sandwich(other: Flector) -> Output {
@@ -1259,9 +1295,6 @@ extension Scalar: AntiSandwich<Flector> {
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e4 * this.scalar)
         ).geometric_anti_product(this.anti_reverse());
-    }
-    func operator/(_rhs: AntiSandwichInfix) -> anti_sandwich_partial<Scalar> {
-        anti_sandwich_partial(this)
     }
 }
 extension Scalar: AntiSandwich<Line> {

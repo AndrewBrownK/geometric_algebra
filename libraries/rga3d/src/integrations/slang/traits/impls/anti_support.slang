@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Horizon {
+        return this.anti_support();
+    }
+}
 extension DualNum: AntiSupport {
     associatedtype Output = Horizon;
     func anti_support() -> Output {
@@ -6,7 +12,10 @@ extension DualNum: AntiSupport {
             this.scalar
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Horizon {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Motor {
         return this.anti_support();
     }
 }
@@ -26,7 +35,10 @@ Flector right_dual = Flector.from_groups(
             float4(right_dual.group1.xyz, right_dual.e4) * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Motor {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
         return this.anti_support();
     }
 }
@@ -38,7 +50,10 @@ extension Horizon: AntiSupport {
             this.e321
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Scalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Point {
         return this.anti_support();
     }
 }
@@ -54,7 +69,10 @@ Horizon right_complement = Horizon.from_groups(
             float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(float3(this.e23 * -1.0, this.e31 * -1.0, this.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Point {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Flector {
         return this.anti_support();
     }
 }
@@ -78,8 +96,15 @@ Motor right_dual = Motor.from_groups(
             float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Flector {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> MultiVector {
         return this.anti_support();
+    }
+    func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> MultiVector& {
+        this = this.anti_support();
+        return *this;
     }
 }
 extension MultiVector: AntiSupport {
@@ -114,12 +139,11 @@ MultiVector right_dual = MultiVector.from_groups(
             float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
         return this.anti_support();
-    }
-    func operator/=(const AntiSupportInfix& _rhs) -> MultiVector& {
-        this = this.anti_support();
-        return *this;
     }
 }
 extension Plane: AntiSupport {
@@ -130,7 +154,10 @@ extension Plane: AntiSupport {
             this.e321
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Scalar {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Line {
         return this.anti_support();
     }
 }
@@ -144,7 +171,10 @@ extension Point: AntiSupport {
             float4(this.e1, this.e2, this.e3, 0.0).xyz * float3(-1.0)
         );
     }
-    func operator/(_rhs: AntiSupportInfix) -> Line {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Horizon {
         return this.anti_support();
     }
 }
@@ -155,8 +185,5 @@ extension Scalar: AntiSupport {
             /* e321 */
             this.scalar
         );
-    }
-    func operator/(_rhs: AntiSupportInfix) -> Horizon {
-        return this.anti_support();
     }
 }

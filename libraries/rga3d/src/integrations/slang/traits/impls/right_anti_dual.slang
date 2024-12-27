@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiScalar {
+        return this.right_anti_dual();
+    }
+}
 extension DualNum: RightAntiDual {
     associatedtype Output = AntiScalar;
     func right_anti_dual() -> Output {
@@ -6,8 +12,15 @@ extension DualNum: RightAntiDual {
             this.scalar
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> AntiScalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Flector {
         return this.right_anti_dual();
+    }
+    func operator/=(const RightAntiDualPrefixOrPostfix& _rhs) -> Flector& {
+        this = this.right_anti_dual();
+        return *this;
     }
 }
 extension Flector: RightAntiDual {
@@ -20,12 +33,11 @@ extension Flector: RightAntiDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Origin {
         return this.right_anti_dual();
-    }
-    func operator/=(const RightAntiDualInfix& _rhs) -> Flector& {
-        this = this.right_anti_dual();
-        return *this;
     }
 }
 extension Horizon: RightAntiDual {
@@ -36,8 +48,15 @@ extension Horizon: RightAntiDual {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Origin {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Line {
         return this.right_anti_dual();
+    }
+    func operator/=(const RightAntiDualPrefixOrPostfix& _rhs) -> Line& {
+        this = this.right_anti_dual();
+        return *this;
     }
 }
 extension Line: RightAntiDual {
@@ -50,10 +69,13 @@ extension Line: RightAntiDual {
             float3(0.0)
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Motor {
         return this.right_anti_dual();
     }
-    func operator/=(const RightAntiDualInfix& _rhs) -> Line& {
+    func operator/=(const RightAntiDualPrefixOrPostfix& _rhs) -> Motor& {
         this = this.right_anti_dual();
         return *this;
     }
@@ -68,10 +90,13 @@ extension Motor: RightAntiDual {
             float4(0.0)
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> MultiVector {
         return this.right_anti_dual();
     }
-    func operator/=(const RightAntiDualInfix& _rhs) -> Motor& {
+    func operator/=(const RightAntiDualPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.right_anti_dual();
         return *this;
     }
@@ -92,12 +117,11 @@ extension MultiVector: RightAntiDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Origin {
         return this.right_anti_dual();
-    }
-    func operator/=(const RightAntiDualInfix& _rhs) -> MultiVector& {
-        this = this.right_anti_dual();
-        return *this;
     }
 }
 extension Plane: RightAntiDual {
@@ -108,7 +132,10 @@ extension Plane: RightAntiDual {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Origin {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Plane {
         return this.right_anti_dual();
     }
 }
@@ -120,7 +147,10 @@ extension Point: RightAntiDual {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: RightAntiDualInfix) -> Plane {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiScalar {
         return this.right_anti_dual();
     }
 }
@@ -131,8 +161,5 @@ extension Scalar: RightAntiDual {
             /* e1234 */
             this.scalar
         );
-    }
-    func operator/(_rhs: RightAntiDualInfix) -> AntiScalar {
-        return this.right_anti_dual();
     }
 }

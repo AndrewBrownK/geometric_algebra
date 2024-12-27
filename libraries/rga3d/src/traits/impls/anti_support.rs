@@ -18,9 +18,9 @@
 //   Median:         0       3       0
 //  Average:         0       6       0
 //  Maximum:         0      22       0
-impl std::ops::Div<anti_support> for DualNum {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for DualNum {
     type Output = Horizon;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -31,9 +31,9 @@ impl AntiSupport for DualNum {
         return Horizon::from_groups(/* e321 */ self[scalar]);
     }
 }
-impl std::ops::Div<anti_support> for Flector {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Flector {
     type Output = Motor;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -62,9 +62,9 @@ impl AntiSupport for Flector {
         );
     }
 }
-impl std::ops::Div<anti_support> for Horizon {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Horizon {
     type Output = Scalar;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -75,9 +75,9 @@ impl AntiSupport for Horizon {
         return Scalar::from_groups(/* scalar */ self[e321]);
     }
 }
-impl std::ops::Div<anti_support> for Line {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Line {
     type Output = Point;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -101,9 +101,9 @@ impl AntiSupport for Line {
         );
     }
 }
-impl std::ops::Div<anti_support> for Motor {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Motor {
     type Output = Flector;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -135,14 +135,14 @@ impl AntiSupport for Motor {
         );
     }
 }
-impl std::ops::Div<anti_support> for MultiVector {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
-impl std::ops::DivAssign<anti_support> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_support) {
+impl std::ops::DivAssign<AntiSupportPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiSupportPrefixOrPostfix) {
         *self = self.anti_support()
     }
 }
@@ -186,9 +186,9 @@ impl AntiSupport for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_support> for Plane {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Plane {
     type Output = Scalar;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -199,9 +199,9 @@ impl AntiSupport for Plane {
         return Scalar::from_groups(/* scalar */ self[e321]);
     }
 }
-impl std::ops::Div<anti_support> for Point {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Point {
     type Output = Line;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }
@@ -221,9 +221,9 @@ impl AntiSupport for Point {
         );
     }
 }
-impl std::ops::Div<anti_support> for Scalar {
+impl std::ops::Div<AntiSupportPrefixOrPostfix> for Scalar {
     type Output = Horizon;
-    fn div(self, _rhs: anti_support) -> Self::Output {
+    fn div(self, _rhs: AntiSupportPrefixOrPostfix) -> Self::Output {
         self.anti_support()
     }
 }

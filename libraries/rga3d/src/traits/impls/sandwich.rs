@@ -20,10 +20,10 @@ use crate::traits::Reverse;
 //   Median:        19      42       0
 //  Average:        45      66       0
 //  Maximum:       362     394       0
-impl std::ops::Div<sandwich> for AntiScalar {
-    type Output = sandwich_partial<AntiScalar>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for AntiScalar {
+    type Output = SandwichInfixPartial<AntiScalar>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<Flector> for AntiScalar {
@@ -120,10 +120,10 @@ impl Sandwich<Point> for AntiScalar {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for DualNum {
-    type Output = sandwich_partial<DualNum>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for DualNum {
+    type Output = SandwichInfixPartial<DualNum>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for DualNum {
@@ -319,10 +319,10 @@ impl Sandwich<Scalar> for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * self.group0()).geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Flector {
-    type Output = sandwich_partial<Flector>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Flector {
+    type Output = SandwichInfixPartial<Flector>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Flector {
@@ -644,10 +644,10 @@ impl Sandwich<Scalar> for Flector {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Horizon {
-    type Output = sandwich_partial<Horizon>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Horizon {
+    type Output = SandwichInfixPartial<Horizon>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Horizon {
@@ -838,10 +838,10 @@ impl Sandwich<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * other[scalar]).geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Line {
-    type Output = sandwich_partial<Line>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Line {
+    type Output = SandwichInfixPartial<Line>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Line {
@@ -1136,10 +1136,10 @@ impl Sandwich<Scalar> for Line {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Motor {
-    type Output = sandwich_partial<Motor>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Motor {
+    type Output = SandwichInfixPartial<Motor>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Motor {
@@ -1460,10 +1460,10 @@ impl Sandwich<Scalar> for Motor {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for MultiVector {
-    type Output = sandwich_partial<MultiVector>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for MultiVector {
+    type Output = SandwichInfixPartial<MultiVector>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for MultiVector {
@@ -1961,10 +1961,10 @@ impl Sandwich<Scalar> for MultiVector {
         .geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Origin {
-    type Output = sandwich_partial<Origin>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Origin {
+    type Output = SandwichInfixPartial<Origin>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<Flector> for Origin {
@@ -2067,10 +2067,10 @@ impl Sandwich<Point> for Origin {
         return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(self[e4]) * other.group0().xyz(), /* e23, e31, e12 */ Simd32x3::from(0.0)).geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Plane {
-    type Output = sandwich_partial<Plane>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Plane {
+    type Output = SandwichInfixPartial<Plane>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Plane {
@@ -2318,10 +2318,10 @@ impl Sandwich<Scalar> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * self.group0()).geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Point {
-    type Output = sandwich_partial<Point>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Point {
+    type Output = SandwichInfixPartial<Point>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Point {
@@ -2597,10 +2597,10 @@ impl Sandwich<Scalar> for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * self.group0()).geometric_product(self.reverse());
     }
 }
-impl std::ops::Div<sandwich> for Scalar {
-    type Output = sandwich_partial<Scalar>;
-    fn div(self, _rhs: sandwich) -> Self::Output {
-        sandwich_partial(self)
+impl std::ops::Div<SandwichInfix> for Scalar {
+    type Output = SandwichInfixPartial<Scalar>;
+    fn div(self, _rhs: SandwichInfix) -> Self::Output {
+        SandwichInfixPartial(self)
     }
 }
 impl Sandwich<AntiScalar> for Scalar {

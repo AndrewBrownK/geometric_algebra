@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<AntiScalar> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension AntiScalar: RejectViaOriginFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_via_origin_from(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: RejectViaOriginFrom<DualNum> {
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<AntiScalar> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension AntiScalar: RejectViaOriginFrom<Flector> {
@@ -162,6 +165,12 @@ extension AntiScalar: RejectViaOriginFrom<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<DualNum> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension DualNum: RejectViaOriginFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_via_origin_from(other: DualNum) -> Output {
@@ -169,9 +178,6 @@ extension DualNum: RejectViaOriginFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<DualNum> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension DualNum: RejectViaOriginFrom<Flector> {
@@ -326,6 +332,12 @@ extension DualNum: RejectViaOriginFrom<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Flector> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Flector: RejectViaOriginFrom<Flector> {
     associatedtype Output = Flector;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -347,9 +359,6 @@ Flector right_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_dual.e4 * anti_wedge.e23) + (right_dual.e423 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e31) + (right_dual.e431 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e12) + (right_dual.e412 * anti_wedge.scalar), -(right_dual.e2 * anti_wedge.e31) - (right_dual.e3 * anti_wedge.e12)) + float4((right_dual.group0.zxy * anti_wedge.group0.yzx), right_dual.e321 * anti_wedge.scalar) - (right_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Flector> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Flector: RejectViaOriginFrom<Horizon> {
@@ -488,6 +497,12 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Horizon> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Horizon: RejectViaOriginFrom<Flector> {
     associatedtype Output = Flector;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -509,9 +524,6 @@ Flector right_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_dual.e4 * anti_wedge.e23) + (right_dual.e423 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e31) + (right_dual.e431 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e12) + (right_dual.e412 * anti_wedge.scalar), -(right_dual.e2 * anti_wedge.e31) - (right_dual.e3 * anti_wedge.e12)) + float4((right_dual.group0.zxy * anti_wedge.group0.yzx), right_dual.e321 * anti_wedge.scalar) - (right_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Horizon> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Horizon: RejectViaOriginFrom<Line> {
@@ -619,6 +631,12 @@ extension Horizon: RejectViaOriginFrom<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Line> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Line: RejectViaOriginFrom<Flector> {
     associatedtype Output = Motor;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -638,9 +656,6 @@ Flector right_dual = Flector.from_groups(
             /* e23, e31, e12, scalar */
             float4(((right_dual.group0.zxy * anti_wedge.group0.yzx) - (right_dual.group0.yzx * anti_wedge.group0.zxy)), 0.0)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Line> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Line: RejectViaOriginFrom<Horizon> {
@@ -740,6 +755,12 @@ extension Line: RejectViaOriginFrom<Plane> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Motor> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Motor: RejectViaOriginFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_via_origin_from(other: DualNum) -> Output {
@@ -747,9 +768,6 @@ extension Motor: RejectViaOriginFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Motor> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Motor: RejectViaOriginFrom<Flector> {
@@ -922,6 +940,12 @@ extension Motor: RejectViaOriginFrom<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<MultiVector> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension MultiVector: RejectViaOriginFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_via_origin_from(other: DualNum) -> Output {
@@ -929,9 +953,6 @@ extension MultiVector: RejectViaOriginFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<MultiVector> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension MultiVector: RejectViaOriginFrom<Flector> {
@@ -1188,6 +1209,12 @@ extension MultiVector: RejectViaOriginFrom<Scalar> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Origin> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Origin: RejectViaOriginFrom<Flector> {
     associatedtype Output = Flector;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -1207,9 +1234,6 @@ Flector right_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar) * right_dual.group1
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Origin> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Origin: RejectViaOriginFrom<Horizon> {
@@ -1292,6 +1316,12 @@ extension Origin: RejectViaOriginFrom<Plane> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Plane> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Plane: RejectViaOriginFrom<Flector> {
     associatedtype Output = Flector;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -1313,9 +1343,6 @@ Flector right_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_dual.e4 * anti_wedge.e23) + (right_dual.e423 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e31) + (right_dual.e431 * anti_wedge.scalar), (right_dual.e4 * anti_wedge.e12) + (right_dual.e412 * anti_wedge.scalar), -(right_dual.e2 * anti_wedge.e31) - (right_dual.e3 * anti_wedge.e12)) + float4((right_dual.group0.zxy * anti_wedge.group0.yzx), right_dual.e321 * anti_wedge.scalar) - (right_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Plane> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Plane: RejectViaOriginFrom<Horizon> {
@@ -1438,6 +1465,12 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Point> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Point: RejectViaOriginFrom<Flector> {
     associatedtype Output = Flector;
     func reject_via_origin_from(other: Flector) -> Output {
@@ -1457,9 +1490,6 @@ Flector right_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Point> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Point: RejectViaOriginFrom<Horizon> {
@@ -1542,6 +1572,12 @@ extension Point: RejectViaOriginFrom<Plane> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: RejectViaOriginFromInfix) -> RejectViaOriginFromInfixPartial<Scalar> {
+        return RejectViaOriginFromInfixPartial { a: this };
+    }
+}
 extension Scalar: RejectViaOriginFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_via_origin_from(other: DualNum) -> Output {
@@ -1549,9 +1585,6 @@ extension Scalar: RejectViaOriginFrom<DualNum> {
             /* e1234 */
             other.scalar * other.e1234 * this.scalar
         );
-    }
-    func operator/(_rhs: RejectViaOriginFromInfix) -> reject_via_origin_from_partial<Scalar> {
-        reject_via_origin_from_partial(this)
     }
 }
 extension Scalar: RejectViaOriginFrom<Motor> {

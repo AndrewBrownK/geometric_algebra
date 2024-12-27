@@ -5,9 +5,9 @@ using data::*;
 public interface AntiInverse {
     func anti_inverse() -> Output;
 }
-public const static anti_inverse: AntiInverseInfix = AntiInverseInfix {}
-public struct AntiInverseInfix {}
-extension AntiInverseInfix for A: AntiInverse {
+public static const anti_inverse: AntiInversePrefixOrPostfix = AntiInversePrefixOrPostfix {};
+public struct AntiInversePrefixOrPostfix {}
+extension AntiInversePrefixOrPostfix for A: AntiInverse {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_inverse();
     }

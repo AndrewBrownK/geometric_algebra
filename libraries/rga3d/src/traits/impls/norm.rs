@@ -20,9 +20,9 @@ use crate::traits::FlatWeightNorm;
 //   Median:         6      16       0
 //  Average:         6      17       0
 //  Maximum:        14      34       0
-impl std::ops::Div<norm> for Flector {
+impl std::ops::Div<NormPrefixOrPostfix> for Flector {
     type Output = DualNum;
-    fn div(self, _rhs: norm) -> Self::Output {
+    fn div(self, _rhs: NormPrefixOrPostfix) -> Self::Output {
         self.norm()
     }
 }
@@ -39,9 +39,9 @@ impl Norm for Flector {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
-impl std::ops::Div<norm> for Line {
+impl std::ops::Div<NormPrefixOrPostfix> for Line {
     type Output = DualNum;
-    fn div(self, _rhs: norm) -> Self::Output {
+    fn div(self, _rhs: NormPrefixOrPostfix) -> Self::Output {
         self.norm()
     }
 }
@@ -58,9 +58,9 @@ impl Norm for Line {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
-impl std::ops::Div<norm> for Motor {
+impl std::ops::Div<NormPrefixOrPostfix> for Motor {
     type Output = DualNum;
-    fn div(self, _rhs: norm) -> Self::Output {
+    fn div(self, _rhs: NormPrefixOrPostfix) -> Self::Output {
         self.norm()
     }
 }
@@ -77,9 +77,9 @@ impl Norm for Motor {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
-impl std::ops::Div<norm> for MultiVector {
+impl std::ops::Div<NormPrefixOrPostfix> for MultiVector {
     type Output = DualNum;
-    fn div(self, _rhs: norm) -> Self::Output {
+    fn div(self, _rhs: NormPrefixOrPostfix) -> Self::Output {
         self.norm()
     }
 }
@@ -98,9 +98,9 @@ impl Norm for MultiVector {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234]]));
     }
 }
-impl std::ops::Div<norm> for Point {
+impl std::ops::Div<NormPrefixOrPostfix> for Point {
     type Output = DualNum;
-    fn div(self, _rhs: norm) -> Self::Output {
+    fn div(self, _rhs: NormPrefixOrPostfix) -> Self::Output {
         self.norm()
     }
 }

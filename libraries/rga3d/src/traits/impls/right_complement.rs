@@ -18,9 +18,9 @@
 //   Median:         0       1       0
 //  Average:         0       3       0
 //  Maximum:         0      10       0
-impl std::ops::Div<right_complement> for AntiScalar {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
@@ -31,14 +31,14 @@ impl RightComplement for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e1234]);
     }
 }
-impl std::ops::Div<right_complement> for DualNum {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for DualNum {
-    fn div_assign(&mut self, _rhs: right_complement) {
+impl std::ops::DivAssign<RightComplementPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: RightComplementPrefixOrPostfix) {
         *self = self.right_complement()
     }
 }
@@ -48,14 +48,14 @@ impl RightComplement for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ self.group0().yx());
     }
 }
-impl std::ops::Div<right_complement> for Flector {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Flector {
-    fn div_assign(&mut self, _rhs: right_complement) {
+impl std::ops::DivAssign<RightComplementPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: RightComplementPrefixOrPostfix) {
         *self = self.right_complement()
     }
 }
@@ -69,9 +69,9 @@ impl RightComplement for Flector {
         return Flector::from_groups(/* e1, e2, e3, e4 */ self.group1() * Simd32x4::from(-1.0), /* e423, e431, e412, e321 */ self.group0());
     }
 }
-impl std::ops::Div<right_complement> for Horizon {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Horizon {
     type Output = Origin;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
@@ -85,14 +85,14 @@ impl RightComplement for Horizon {
         return Origin::from_groups(/* e4 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<right_complement> for Line {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Line {
-    fn div_assign(&mut self, _rhs: right_complement) {
+impl std::ops::DivAssign<RightComplementPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: RightComplementPrefixOrPostfix) {
         *self = self.right_complement()
     }
 }
@@ -111,14 +111,14 @@ impl RightComplement for Line {
         );
     }
 }
-impl std::ops::Div<right_complement> for Motor {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for Motor {
-    fn div_assign(&mut self, _rhs: right_complement) {
+impl std::ops::DivAssign<RightComplementPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: RightComplementPrefixOrPostfix) {
         *self = self.right_complement()
     }
 }
@@ -137,14 +137,14 @@ impl RightComplement for Motor {
         );
     }
 }
-impl std::ops::Div<right_complement> for MultiVector {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
-impl std::ops::DivAssign<right_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_complement) {
+impl std::ops::DivAssign<RightComplementPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: RightComplementPrefixOrPostfix) {
         *self = self.right_complement()
     }
 }
@@ -172,9 +172,9 @@ impl RightComplement for MultiVector {
         );
     }
 }
-impl std::ops::Div<right_complement> for Origin {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Origin {
     type Output = Horizon;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
@@ -185,9 +185,9 @@ impl RightComplement for Origin {
         return Horizon::from_groups(/* e321 */ self[e4]);
     }
 }
-impl std::ops::Div<right_complement> for Plane {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Plane {
     type Output = Point;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
@@ -201,9 +201,9 @@ impl RightComplement for Plane {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<right_complement> for Point {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Point {
     type Output = Plane;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }
@@ -213,9 +213,9 @@ impl RightComplement for Point {
         return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0());
     }
 }
-impl std::ops::Div<right_complement> for Scalar {
+impl std::ops::Div<RightComplementPrefixOrPostfix> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: right_complement) -> Self::Output {
+    fn div(self, _rhs: RightComplementPrefixOrPostfix) -> Self::Output {
         self.right_complement()
     }
 }

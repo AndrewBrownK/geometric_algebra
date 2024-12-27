@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<AntiScalar> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension AntiScalar: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: AntiProjectViaHorizonOnto<DualNum> {
             /* e1234 */
             powi(other.scalar, 2) * this.e1234
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<AntiScalar> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension AntiScalar: AntiProjectViaHorizonOnto<Flector> {
@@ -158,6 +161,12 @@ extension AntiScalar: AntiProjectViaHorizonOnto<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<DualNum> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension DualNum: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = DualNum;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -169,9 +178,6 @@ DualNum anti_wedge = DualNum.from_groups(
             /* scalar, e1234 */
             float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar))
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<DualNum> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Flector> {
@@ -326,6 +332,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Flector> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Flector: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -345,9 +357,6 @@ Flector anti_wedge = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * anti_wedge.group1
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Flector> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Flector: AntiProjectViaHorizonOnto<Flector> {
@@ -516,6 +525,12 @@ Flector anti_wedge = Flector.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Horizon> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Horizon: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -523,9 +538,6 @@ extension Horizon: AntiProjectViaHorizonOnto<DualNum> {
             /* e321 */
             powi(other.scalar, 2) * this.e321
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Horizon> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Horizon: AntiProjectViaHorizonOnto<Flector> {
@@ -670,6 +682,12 @@ extension Horizon: AntiProjectViaHorizonOnto<Scalar> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Line> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Line: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Line;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -689,9 +707,6 @@ Line anti_wedge = Line.from_groups(
             /* e23, e31, e12 */
             float3(other.scalar) * anti_wedge.group1
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Line> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Line: AntiProjectViaHorizonOnto<Flector> {
@@ -840,6 +855,12 @@ Line anti_wedge = Line.from_groups(
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Motor> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Motor: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -859,9 +880,6 @@ Motor anti_wedge = Motor.from_groups(
             /* e23, e31, e12, scalar */
             float4(other.scalar) * anti_wedge.group1
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Motor> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Motor: AntiProjectViaHorizonOnto<Flector> {
@@ -1034,6 +1052,12 @@ Motor anti_wedge = Motor.from_groups(
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<MultiVector> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension MultiVector: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -1065,9 +1089,6 @@ MultiVector anti_wedge = MultiVector.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * anti_wedge.group4
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<MultiVector> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension MultiVector: AntiProjectViaHorizonOnto<Flector> {
@@ -1348,6 +1369,12 @@ MultiVector anti_wedge = MultiVector.from_groups(
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Origin> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Origin: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Origin;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -1355,9 +1382,6 @@ extension Origin: AntiProjectViaHorizonOnto<DualNum> {
             /* e4 */
             powi(other.scalar, 2) * this.e4
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Origin> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Origin: AntiProjectViaHorizonOnto<Flector> {
@@ -1449,6 +1473,12 @@ extension Origin: AntiProjectViaHorizonOnto<Scalar> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Plane> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Plane: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -1460,9 +1490,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * float4(right_dual.e1234 * this.e423, right_dual.e1234 * this.e431, right_dual.e1234 * this.e412, right_dual.e1234 * this.e321)
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Plane> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Plane: AntiProjectViaHorizonOnto<Flector> {
@@ -1621,6 +1648,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Point> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Point: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Point;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -1632,9 +1665,6 @@ AntiScalar right_dual = AntiScalar.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * float4(right_dual.e1234 * this.e1, right_dual.e1234 * this.e2, right_dual.e1234 * this.e3, right_dual.e1234 * this.e4)
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Point> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Point: AntiProjectViaHorizonOnto<Flector> {
@@ -1740,6 +1770,12 @@ AntiScalar right_dual = AntiScalar.from_groups(
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Scalar> {
+        return AntiProjectViaHorizonOntoInfixPartial { a: this };
+    }
+}
 extension Scalar: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = DualNum;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
@@ -1747,9 +1783,6 @@ extension Scalar: AntiProjectViaHorizonOnto<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
-    }
-    func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> anti_project_via_horizon_onto_partial<Scalar> {
-        anti_project_via_horizon_onto_partial(this)
     }
 }
 extension Scalar: AntiProjectViaHorizonOnto<Motor> {

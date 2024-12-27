@@ -6,9 +6,9 @@ public interface AntiConstraintViolation {
     associatedtype Output;
     func anti_constraint_violation() -> Output;
 }
-public const static anti_constraint_violation: AntiConstraintViolationInfix = AntiConstraintViolationInfix {}
-public struct AntiConstraintViolationInfix {}
-extension AntiConstraintViolationInfix for A: AntiConstraintViolation {
+public static const anti_constraint_violation: AntiConstraintViolationPrefixOrPostfix = AntiConstraintViolationPrefixOrPostfix {};
+public struct AntiConstraintViolationPrefixOrPostfix {}
+extension AntiConstraintViolationPrefixOrPostfix for A: AntiConstraintViolation {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_constraint_violation();
     }

@@ -8,9 +8,10 @@ pub trait LeftComplement {
     type Output;
     fn left_complement(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct left_complement;
-impl<A: LeftComplement> std::ops::Div<A> for left_complement {
+#[allow(non_upper_case_globals, dead_code)]
+pub static left_complement: LeftComplementPrefixOrPostfix = LeftComplementPrefixOrPostfix;
+pub struct LeftComplementPrefixOrPostfix;
+impl<A: LeftComplement> std::ops::Div<A> for LeftComplementPrefixOrPostfix {
     type Output = <A as LeftComplement>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.left_complement()

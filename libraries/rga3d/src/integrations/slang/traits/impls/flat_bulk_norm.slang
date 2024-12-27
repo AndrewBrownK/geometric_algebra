@@ -1,11 +1,20 @@
 using traits::FlatBulkNormSquared;
 using traits::SquareRoot;
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+        return this.flat_bulk_norm();
+    }
+}
 extension Flector: FlatBulkNorm {
     associatedtype Output = Scalar;
     func flat_bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: FlatBulkNormInfix) -> Scalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm();
     }
 }
@@ -14,7 +23,10 @@ extension Line: FlatBulkNorm {
     func flat_bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: FlatBulkNormInfix) -> Scalar {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm();
     }
 }
@@ -23,7 +35,10 @@ extension Motor: FlatBulkNorm {
     func flat_bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: FlatBulkNormInfix) -> Scalar {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm();
     }
 }
@@ -32,7 +47,10 @@ extension MultiVector: FlatBulkNorm {
     func flat_bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: FlatBulkNormInfix) -> Scalar {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm();
     }
 }
@@ -40,8 +58,5 @@ extension Point: FlatBulkNorm {
     associatedtype Output = Scalar;
     func flat_bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
-    }
-    func operator/(_rhs: FlatBulkNormInfix) -> Scalar {
-        return this.flat_bulk_norm();
     }
 }

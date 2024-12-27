@@ -8,9 +8,10 @@ pub trait Weight {
     type Output;
     fn weight(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct weight;
-impl<A: Weight> std::ops::Div<A> for weight {
+#[allow(non_upper_case_globals, dead_code)]
+pub static weight: WeightPrefixOrPostfix = WeightPrefixOrPostfix;
+pub struct WeightPrefixOrPostfix;
+impl<A: Weight> std::ops::Div<A> for WeightPrefixOrPostfix {
     type Output = <A as Weight>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.weight()

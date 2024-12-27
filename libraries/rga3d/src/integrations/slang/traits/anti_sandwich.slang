@@ -6,7 +6,7 @@ public interface AntiSandwich<T> {
     associatedtype Output;
     func anti_sandwich(other: T) -> Output;
 }
-public const static anti_sandwich: AntiSandwichInfix = AntiSandwichInfix {}
+public static const anti_sandwich: AntiSandwichInfix = AntiSandwichInfix {};
 public struct AntiSandwichInfix {}
 public struct AntiSandwichInfixPartial<A> { a: A }
 extension AntiSandwichInfixPartial<A> for A: AntiSandwich<B> {

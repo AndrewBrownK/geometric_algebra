@@ -8,9 +8,10 @@ pub trait RightComplement {
     type Output;
     fn right_complement(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct right_complement;
-impl<A: RightComplement> std::ops::Div<A> for right_complement {
+#[allow(non_upper_case_globals, dead_code)]
+pub static right_complement: RightComplementPrefixOrPostfix = RightComplementPrefixOrPostfix;
+pub struct RightComplementPrefixOrPostfix;
+impl<A: RightComplement> std::ops::Div<A> for RightComplementPrefixOrPostfix {
     type Output = <A as RightComplement>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.right_complement()

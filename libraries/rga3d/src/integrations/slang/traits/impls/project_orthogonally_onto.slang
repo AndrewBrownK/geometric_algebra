@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<AntiScalar> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension AntiScalar: ProjectOrthogonallyOnto<Motor> {
     associatedtype Output = Motor;
     func project_orthogonally_onto(other: Motor) -> Output {
@@ -11,9 +17,6 @@ AntiScalar wedge = AntiScalar.from_groups(
             /* e23, e31, e12, scalar */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<AntiScalar> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension AntiScalar: ProjectOrthogonallyOnto<MultiVector> {
@@ -37,6 +40,12 @@ AntiScalar wedge = AntiScalar.from_groups(
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<DualNum> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension DualNum: ProjectOrthogonallyOnto<DualNum> {
     associatedtype Output = DualNum;
     func project_orthogonally_onto(other: DualNum) -> Output {
@@ -44,9 +53,6 @@ extension DualNum: ProjectOrthogonallyOnto<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<DualNum> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension DualNum: ProjectOrthogonallyOnto<Flector> {
@@ -197,6 +203,12 @@ extension DualNum: ProjectOrthogonallyOnto<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Flector> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Flector: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Flector;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -218,9 +230,6 @@ Motor wedge = Motor.from_groups(
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Flector> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Flector: ProjectOrthogonallyOnto<Horizon> {
@@ -353,6 +362,12 @@ Plane right_anti_dual = Plane.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Horizon> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Horizon: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Flector;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -366,9 +381,6 @@ AntiScalar wedge = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Horizon> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Horizon: ProjectOrthogonallyOnto<Horizon> {
@@ -445,6 +457,12 @@ extension Horizon: ProjectOrthogonallyOnto<Plane> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Line> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Line: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Motor;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -464,9 +482,6 @@ Plane wedge = Plane.from_groups(
             /* e23, e31, e12, scalar */
             float4(other.e321 * wedge.e423 * -1.0, other.e321 * wedge.e431 * -1.0, other.e321 * wedge.e412 * -1.0, (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321)) + (wedge.group0.wwwx * float4(other.group1.xyz, other.e1))
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Line> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Line: ProjectOrthogonallyOnto<Horizon> {
@@ -588,6 +603,12 @@ Plane wedge = Plane.from_groups(
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Motor> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Motor: ProjectOrthogonallyOnto<DualNum> {
     associatedtype Output = DualNum;
     func project_orthogonally_onto(other: DualNum) -> Output {
@@ -595,9 +616,6 @@ extension Motor: ProjectOrthogonallyOnto<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Motor> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Motor: ProjectOrthogonallyOnto<Flector> {
@@ -774,6 +792,12 @@ extension Motor: ProjectOrthogonallyOnto<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<MultiVector> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension MultiVector: ProjectOrthogonallyOnto<DualNum> {
     associatedtype Output = DualNum;
     func project_orthogonally_onto(other: DualNum) -> Output {
@@ -781,9 +805,6 @@ extension MultiVector: ProjectOrthogonallyOnto<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<MultiVector> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension MultiVector: ProjectOrthogonallyOnto<Flector> {
@@ -1040,6 +1061,12 @@ extension MultiVector: ProjectOrthogonallyOnto<Scalar> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Origin> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Origin: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Flector;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -1061,9 +1088,6 @@ Motor wedge = Motor.from_groups(
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Origin> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Origin: ProjectOrthogonallyOnto<Motor> {
@@ -1139,6 +1163,12 @@ extension Origin: ProjectOrthogonallyOnto<Point> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Plane> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Plane: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Flector;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -1158,9 +1188,6 @@ AntiScalar wedge = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Plane> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Plane: ProjectOrthogonallyOnto<Horizon> {
@@ -1237,6 +1264,12 @@ extension Plane: ProjectOrthogonallyOnto<Plane> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Point> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Point: ProjectOrthogonallyOnto<Flector> {
     associatedtype Output = Flector;
     func project_orthogonally_onto(other: Flector) -> Output {
@@ -1258,9 +1291,6 @@ Motor wedge = Motor.from_groups(
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Point> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Point: ProjectOrthogonallyOnto<Horizon> {
@@ -1387,6 +1417,12 @@ Plane right_anti_dual = Plane.from_groups(
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Scalar> {
+        return ProjectOrthogonallyOntoInfixPartial { a: this };
+    }
+}
 extension Scalar: ProjectOrthogonallyOnto<DualNum> {
     associatedtype Output = DualNum;
     func project_orthogonally_onto(other: DualNum) -> Output {
@@ -1394,9 +1430,6 @@ extension Scalar: ProjectOrthogonallyOnto<DualNum> {
             /* scalar, e1234 */
             float2(other.scalar * this.scalar) * other.group0
         );
-    }
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> project_orthogonally_onto_partial<Scalar> {
-        project_orthogonally_onto_partial(this)
     }
 }
 extension Scalar: ProjectOrthogonallyOnto<Flector> {

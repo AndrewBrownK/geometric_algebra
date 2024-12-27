@@ -20,9 +20,9 @@ use crate::traits::SquareRoot;
 //   Median:         3      12       0
 //  Average:         3      13       0
 //  Maximum:         7      26       0
-impl std::ops::Div<flat_bulk_norm> for Flector {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -38,9 +38,9 @@ impl FlatBulkNorm for Flector {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Line {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -56,9 +56,9 @@ impl FlatBulkNorm for Line {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Motor {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -74,9 +74,9 @@ impl FlatBulkNorm for Motor {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for MultiVector {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }
@@ -94,9 +94,9 @@ impl FlatBulkNorm for MultiVector {
         return self.flat_bulk_norm_squared().square_root();
     }
 }
-impl std::ops::Div<flat_bulk_norm> for Point {
+impl std::ops::Div<FlatBulkNormPrefixOrPostfix> for Point {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm()
     }
 }

@@ -8,11 +8,11 @@ pub trait AntiProjectOrthogonallyOnto<T> {
     type Output;
     fn anti_project_orthogonally_onto(self, other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_project_orthogonally_onto;
-#[allow(non_camel_case_types)]
-pub struct anti_project_orthogonally_onto_partial<A>(A);
-impl<A: AntiProjectOrthogonallyOnto<B>, B> std::ops::Div<B> for anti_project_orthogonally_onto_partial<A> {
+#[allow(non_upper_case_globals, dead_code)]
+pub static anti_project_orthogonally_onto: AntiProjectOrthogonallyOntoInfix = AntiProjectOrthogonallyOntoInfix;
+pub struct AntiProjectOrthogonallyOntoInfix;
+pub struct AntiProjectOrthogonallyOntoInfixPartial<A>(A);
+impl<A: AntiProjectOrthogonallyOnto<B>, B> std::ops::Div<B> for AntiProjectOrthogonallyOntoInfixPartial<A> {
     type Output = <A as AntiProjectOrthogonallyOnto<B>>::Output;
     fn div(self, rhs: B) -> Self::Output {
         self.0.anti_project_orthogonally_onto(rhs)

@@ -6,9 +6,9 @@ public interface RightAntiDual {
     associatedtype Output;
     func right_anti_dual() -> Output;
 }
-public const static right_anti_dual: RightAntiDualInfix = RightAntiDualInfix {}
-public struct RightAntiDualInfix {}
-extension RightAntiDualInfix for A: RightAntiDual {
+public static const right_anti_dual: RightAntiDualPrefixOrPostfix = RightAntiDualPrefixOrPostfix {};
+public struct RightAntiDualPrefixOrPostfix {}
+extension RightAntiDualPrefixOrPostfix for A: RightAntiDual {
     func operator/(rhs: A) -> A.Output {
         return rhs.right_anti_dual();
     }

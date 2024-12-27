@@ -5,7 +5,7 @@
 // but might also want to check out rust-slang integrations like https://github.com/tangmi/slang-rs/
 
 use std::{fs, thread};
-use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::io::{BufRead, BufReader, BufWriter, ErrorKind, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
@@ -39,8 +39,10 @@ impl Slang {
             fancy_infix: None,
         }
     }
+
+    #[allow(non_upper_case_globals)]
     pub fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
-        mut self,
+        self,
         src_folder: P,
         algebra_name: &'static str,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
@@ -56,7 +58,7 @@ impl Slang {
         }
     }
 
-    //
+    #[allow(non_upper_case_globals)]
     async fn write_src_inner<P: AsRef<Path>, const AntiScalar: BasisElement>(
         mut self,
         src_folder: P,
@@ -1572,7 +1574,7 @@ impl TryFrom<{other}> for {owner} {{
         let ucc = name.as_upper_camel();
         // let lcc = name.as_lower_camel();
         // let lsc = name.as_lower_snake();
-        let ssc = name.as_screaming_snake();
+        // let ssc = name.as_screaming_snake();
         // TODO built in documentation, statistics, and traits that output this type
         let docs = docs.unwrap_or(ucc.clone());
         self.emit_comment(w, true, docs)?;
@@ -1581,7 +1583,7 @@ impl TryFrom<{other}> for {owner} {{
 
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
-        let lcc = name.as_lower_camel();
+        // let lcc = name.as_lower_camel();
         writeln!(w, "public struct {ucc} {{")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
@@ -1737,25 +1739,23 @@ impl TryFrom<{other}> for {owner} {{
         }
         writeln!(w, ";\n}}")?;
 
-        let can_fancy_infix = match def.arity {
-            TraitArity::Zero => false,
-            TraitArity::One => true,
-            TraitArity::Two => true,
+        let infix_term = match def.arity {
+            TraitArity::Zero => None,
+            TraitArity::One => Some("PrefixOrPostfix"),
+            TraitArity::Two => Some("Infix"),
         };
-        if !can_fancy_infix {
-            return Ok(())
-        }
+        let Some(infix_term) = infix_term else { return Ok(()) };
 
         if let Some(op) = &self.fancy_infix {
             // TODO work around the empty brace clutter.
-            writeln!(w, "public const static {lsc}: {ucc}Infix = {ucc}Infix {{}}")?;
-            writeln!(w, "public struct {ucc}Infix {{}}")?;
+            writeln!(w, "public static const {lsc}: {ucc}{infix_term} = {ucc}{infix_term} {{}};")?;
+            writeln!(w, "public struct {ucc}{infix_term} {{}}")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "public struct {ucc}InfixPartial<A> {{ a: A }}")?;
+                writeln!(w, "public struct {ucc}{infix_term}Partial<A> {{ a: A }}")?;
             }
             let operator_method = op.slang_trait_method();
             if let TraitArity::Two = def.arity {
-                writeln!(w, "extension {ucc}InfixPartial<A> for A: {ucc}<B> {{")?;
+                writeln!(w, "extension {ucc}{infix_term}Partial<A> for A: {ucc}<B> {{")?;
                 // writeln!(w, "impl<A: {ucc}<B>, B> {operator_name}<B> for {lsc}_partial<A> {{")?;
                 // write!(w, "    associatedtype Output = ")?;
                 // match *output_ty {
@@ -1769,7 +1769,7 @@ impl TryFrom<{other}> for {owner} {{
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                writeln!(w, "extension {ucc}Infix for A: {ucc} {{")?;
+                writeln!(w, "extension {ucc}{infix_term} for A: {ucc} {{")?;
                 // writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
                 // write!(w, "    associatedtype Output = ")?;
                 // match *output_ty {
@@ -1828,6 +1828,46 @@ impl TryFrom<{other}> for {owner} {{
             var_param = Some(v_param);
         }
 
+
+        if let Some(op) = self.fancy_infix {
+            let operator_method = op.slang_trait_method();
+            let infix_term = match def.arity {
+                TraitArity::Zero => None,
+                TraitArity::One => Some("PrefixOrPostfix"),
+                TraitArity::Two => Some("Infix"),
+            };
+            if let Some(infix_term) = infix_term {
+                if let TraitParam::Class(mv) = &owner_ty {
+                    let n = mv.name();
+                    if !is_op && !already_granted_infix.contains(n) {
+                        already_granted_infix.insert(n);
+                        write!(w, "extension ")?;
+                        self.write_type(w, *owner_ty)?;
+                        writeln!(w, " {{")?;
+                        writeln!(w, "    // Fancy infix trick")?;
+                        if let TraitArity::Two = def.arity {
+                            writeln!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> {ucc}{infix_term}Partial<{n}> {{")?;
+                            writeln!(w, "        return {ucc}{infix_term}Partial {{ a: this }};")?;
+                            writeln!(w, "    }}")?;
+                        }
+                        if let TraitArity::One = def.arity {
+                            write!(w, "    func {operator_method}(_rhs: {ucc}{infix_term}) -> ")?;
+                            self.write_type(w, output_ty)?;
+                            writeln!(w, " {{\n        return this.{lsc}();\n    }}")?;
+                            if &output_ty == owner_ty {
+                                // TODO it's really dubious that this is correct yet
+                                writeln!(w, "    func {operator_method}=(const {ucc}{infix_term}& _rhs) -> {n}& {{")?;
+                                writeln!(w, "        this = this.{lsc}();")?;
+                                writeln!(w, "        return *this;\n    }}")?;
+                            }
+                        }
+                        writeln!(w, "}}")?;
+                    }
+                }
+            }
+        }
+
+
         // todo alias documentation
         write!(w, "extension ")?;
         self.write_type(w, *owner_ty)?;
@@ -1885,34 +1925,7 @@ impl TryFrom<{other}> for {owner} {{
         write!(w, "        return ")?;
         self.write_expression(w, &impls.return_expr, true)?;
         writeln!(w, ";")?;
-        writeln!(w, "    }}")?;
-
-        if let Some(op) = self.fancy_infix {
-            let operator_method = op.slang_trait_method();
-            if let TraitParam::Class(mv) = &owner_ty {
-                let n = mv.name();
-                if !is_op && !already_granted_infix.contains(n) {
-                    already_granted_infix.insert(n);
-                    if let TraitArity::Two = def.arity {
-                        writeln!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> {lsc}_partial<{n}> {{")?;
-                        writeln!(w, "        {lsc}_partial(this)")?;
-                        writeln!(w, "    }}")?;
-                    }
-                    if let TraitArity::One = def.arity {
-                        write!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> ")?;
-                        self.write_type(w, output_ty)?;
-                        writeln!(w, " {{\n        return this.{lsc}();\n    }}")?;
-                        if &output_ty == owner_ty {
-                            // TODO it's really dubious that this is correct yet
-                            writeln!(w, "    func {operator_method}=(const {ucc}Infix& _rhs) -> {n}& {{")?;
-                            writeln!(w, "        this = this.{lsc}();")?;
-                            writeln!(w, "        return *this;\n    }}")?;
-                        }
-                    }
-                }
-            }
-        }
-        writeln!(w, "}}")?;
+        writeln!(w, "    }}\n}}")?;
 
 
 

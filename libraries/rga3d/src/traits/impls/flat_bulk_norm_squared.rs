@@ -21,9 +21,9 @@ use crate::traits::Wedge;
 //   Median:         3      12       0
 //  Average:         3      13       0
 //  Maximum:         7      26       0
-impl std::ops::Div<flat_bulk_norm_squared> for Flector {
+impl std::ops::Div<FlatBulkNormSquaredPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm_squared()
     }
 }
@@ -40,9 +40,9 @@ impl FlatBulkNormSquared for Flector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<flat_bulk_norm_squared> for Line {
+impl std::ops::Div<FlatBulkNormSquaredPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm_squared()
     }
 }
@@ -59,9 +59,9 @@ impl FlatBulkNormSquared for Line {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<flat_bulk_norm_squared> for Motor {
+impl std::ops::Div<FlatBulkNormSquaredPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm_squared()
     }
 }
@@ -78,9 +78,9 @@ impl FlatBulkNormSquared for Motor {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<flat_bulk_norm_squared> for MultiVector {
+impl std::ops::Div<FlatBulkNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm_squared()
     }
 }
@@ -99,9 +99,9 @@ impl FlatBulkNormSquared for MultiVector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<flat_bulk_norm_squared> for Point {
+impl std::ops::Div<FlatBulkNormSquaredPrefixOrPostfix> for Point {
     type Output = Scalar;
-    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.flat_bulk_norm_squared()
     }
 }

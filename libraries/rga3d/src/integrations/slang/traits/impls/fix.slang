@@ -1,3 +1,13 @@
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: FixPrefixOrPostfix) -> Horizon {
+        return this.fix();
+    }
+    func operator/=(const FixPrefixOrPostfix& _rhs) -> Horizon& {
+        this = this.fix();
+        return *this;
+    }
+}
 extension Horizon: Fix {
     associatedtype Output = Horizon;
     func fix() -> Output {
@@ -6,10 +16,13 @@ extension Horizon: Fix {
             1.0
         );
     }
-    func operator/(_rhs: FixInfix) -> Horizon {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: FixPrefixOrPostfix) -> Plane {
         return this.fix();
     }
-    func operator/=(const FixInfix& _rhs) -> Horizon& {
+    func operator/=(const FixPrefixOrPostfix& _rhs) -> Plane& {
         this = this.fix();
         return *this;
     }
@@ -22,10 +35,13 @@ extension Plane: Fix {
             float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e321, -0.5) * -1.0) * this.group0
         );
     }
-    func operator/(_rhs: FixInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: FixPrefixOrPostfix) -> Point {
         return this.fix();
     }
-    func operator/=(const FixInfix& _rhs) -> Plane& {
+    func operator/=(const FixPrefixOrPostfix& _rhs) -> Point& {
         this = this.fix();
         return *this;
     }
@@ -38,10 +54,13 @@ extension Point: Fix {
             float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
         );
     }
-    func operator/(_rhs: FixInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: FixPrefixOrPostfix) -> Scalar {
         return this.fix();
     }
-    func operator/=(const FixInfix& _rhs) -> Point& {
+    func operator/=(const FixPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.fix();
         return *this;
     }
@@ -53,12 +72,5 @@ extension Scalar: Fix {
             /* scalar */
             1.0
         );
-    }
-    func operator/(_rhs: FixInfix) -> Scalar {
-        return this.fix();
-    }
-    func operator/=(const FixInfix& _rhs) -> Scalar& {
-        this = this.fix();
-        return *this;
     }
 }

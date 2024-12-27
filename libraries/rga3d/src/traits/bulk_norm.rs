@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait BulkNorm {
     fn bulk_norm(self) -> Scalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct bulk_norm;
-impl<A: BulkNorm> std::ops::Div<A> for bulk_norm {
+#[allow(non_upper_case_globals, dead_code)]
+pub static bulk_norm: BulkNormPrefixOrPostfix = BulkNormPrefixOrPostfix;
+pub struct BulkNormPrefixOrPostfix;
+impl<A: BulkNorm> std::ops::Div<A> for BulkNormPrefixOrPostfix {
     type Output = Scalar;
     fn div(self, rhs: A) -> Self::Output {
         rhs.bulk_norm()

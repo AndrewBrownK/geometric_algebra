@@ -1,6 +1,12 @@
 using traits::DotProduct;
 using traits::FlatBulk;
 using traits::Wedge;
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+        return this.flat_bulk_norm_squared();
+    }
+}
 extension Flector: FlatBulkNormSquared {
     associatedtype Output = Scalar;
     func flat_bulk_norm_squared() -> Output {
@@ -10,7 +16,10 @@ Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
-    func operator/(_rhs: FlatBulkNormSquaredInfix) -> Scalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm_squared();
     }
 }
@@ -23,7 +32,10 @@ Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
-    func operator/(_rhs: FlatBulkNormSquaredInfix) -> Scalar {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm_squared();
     }
 }
@@ -36,7 +48,10 @@ Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
-    func operator/(_rhs: FlatBulkNormSquaredInfix) -> Scalar {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm_squared();
     }
 }
@@ -49,7 +64,10 @@ MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
-    func operator/(_rhs: FlatBulkNormSquaredInfix) -> Scalar {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
         return this.flat_bulk_norm_squared();
     }
 }
@@ -61,8 +79,5 @@ Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             1.0
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
-    }
-    func operator/(_rhs: FlatBulkNormSquaredInfix) -> Scalar {
-        return this.flat_bulk_norm_squared();
     }
 }

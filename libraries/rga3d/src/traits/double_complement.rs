@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait DoubleComplement {
     fn double_complement(self) -> Self;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct double_complement;
-impl<A: DoubleComplement> std::ops::Div<A> for double_complement {
+#[allow(non_upper_case_globals, dead_code)]
+pub static double_complement: DoubleComplementPrefixOrPostfix = DoubleComplementPrefixOrPostfix;
+pub struct DoubleComplementPrefixOrPostfix;
+impl<A: DoubleComplement> std::ops::Div<A> for DoubleComplementPrefixOrPostfix {
     type Output = A;
     fn div(self, rhs: A) -> Self::Output {
         rhs.double_complement()

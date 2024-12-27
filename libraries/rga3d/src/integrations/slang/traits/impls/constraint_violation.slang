@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: ConstraintViolationPrefixOrPostfix) -> AntiScalar {
+        return this.constraint_violation();
+    }
+}
 extension DualNum: ConstraintViolation {
     associatedtype Output = AntiScalar;
     func constraint_violation() -> Output {
@@ -6,7 +12,10 @@ extension DualNum: ConstraintViolation {
             this.scalar * this.e1234 * 2.0
         );
     }
-    func operator/(_rhs: ConstraintViolationInfix) -> AntiScalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: ConstraintViolationPrefixOrPostfix) -> AntiScalar {
         return this.constraint_violation();
     }
 }
@@ -24,7 +33,10 @@ Flector reverse = Flector.from_groups(
             (reverse.e423 * this.e1) + (reverse.e431 * this.e2) + (reverse.e412 * this.e3) + (reverse.e321 * this.e4) - (reverse.e1 * this.e423) - (reverse.e2 * this.e431) - (reverse.e3 * this.e412) - (reverse.e4 * this.e321)
         );
     }
-    func operator/(_rhs: ConstraintViolationInfix) -> AntiScalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: ConstraintViolationPrefixOrPostfix) -> AntiScalar {
         return this.constraint_violation();
     }
 }
@@ -42,7 +54,10 @@ Line reverse = Line.from_groups(
             -(reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
     }
-    func operator/(_rhs: ConstraintViolationInfix) -> AntiScalar {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: ConstraintViolationPrefixOrPostfix) -> AntiScalar {
         return this.constraint_violation();
     }
 }
@@ -60,8 +75,15 @@ Motor reverse = Motor.from_groups(
             (reverse.e1234 * this.scalar) + (reverse.scalar * this.e1234) - (reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
     }
-    func operator/(_rhs: ConstraintViolationInfix) -> AntiScalar {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: ConstraintViolationPrefixOrPostfix) -> MultiVector {
         return this.constraint_violation();
+    }
+    func operator/=(const ConstraintViolationPrefixOrPostfix& _rhs) -> MultiVector& {
+        this = this.constraint_violation();
+        return *this;
     }
 }
 extension MultiVector: ConstraintViolation {
@@ -103,12 +125,5 @@ MultiVector geometric_product = MultiVector.from_groups(
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
-    }
-    func operator/(_rhs: ConstraintViolationInfix) -> MultiVector {
-        return this.constraint_violation();
-    }
-    func operator/=(const ConstraintViolationInfix& _rhs) -> MultiVector& {
-        this = this.constraint_violation();
-        return *this;
     }
 }

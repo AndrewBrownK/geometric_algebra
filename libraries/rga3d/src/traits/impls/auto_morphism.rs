@@ -18,14 +18,14 @@
 //   Median:         0       1       0
 //  Average:         0       2       0
 //  Maximum:         0       8       0
-impl std::ops::Div<auto_morphism> for AntiScalar {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for AntiScalar {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -34,14 +34,14 @@ impl AutoMorphism for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<auto_morphism> for DualNum {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for DualNum {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -50,14 +50,14 @@ impl AutoMorphism for DualNum {
         return self;
     }
 }
-impl std::ops::Div<auto_morphism> for Flector {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Flector {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -75,14 +75,14 @@ impl AutoMorphism for Flector {
         );
     }
 }
-impl std::ops::Div<auto_morphism> for Horizon {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Horizon {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -95,14 +95,14 @@ impl AutoMorphism for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<auto_morphism> for Line {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Line {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -111,14 +111,14 @@ impl AutoMorphism for Line {
         return self;
     }
 }
-impl std::ops::Div<auto_morphism> for Motor {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Motor {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -127,14 +127,14 @@ impl AutoMorphism for Motor {
         return self;
     }
 }
-impl std::ops::Div<auto_morphism> for MultiVector {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for MultiVector {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -158,14 +158,14 @@ impl AutoMorphism for MultiVector {
         );
     }
 }
-impl std::ops::Div<auto_morphism> for Origin {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Origin {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -178,14 +178,14 @@ impl AutoMorphism for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * -1.0);
     }
 }
-impl std::ops::Div<auto_morphism> for Plane {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Plane {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -198,14 +198,14 @@ impl AutoMorphism for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<auto_morphism> for Point {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Point {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }
@@ -218,14 +218,14 @@ impl AutoMorphism for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<auto_morphism> for Scalar {
+impl std::ops::Div<AutoMorphismPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: auto_morphism) -> Self::Output {
+    fn div(self, _rhs: AutoMorphismPrefixOrPostfix) -> Self::Output {
         self.auto_morphism()
     }
 }
-impl std::ops::DivAssign<auto_morphism> for Scalar {
-    fn div_assign(&mut self, _rhs: auto_morphism) {
+impl std::ops::DivAssign<AutoMorphismPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AutoMorphismPrefixOrPostfix) {
         *self = self.auto_morphism()
     }
 }

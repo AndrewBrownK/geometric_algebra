@@ -5,9 +5,9 @@ using data::*;
 public interface Fix {
     func fix() -> Output;
 }
-public const static fix: FixInfix = FixInfix {}
-public struct FixInfix {}
-extension FixInfix for A: Fix {
+public static const fix: FixPrefixOrPostfix = FixPrefixOrPostfix {};
+public struct FixPrefixOrPostfix {}
+extension FixPrefixOrPostfix for A: Fix {
     func operator/(rhs: A) -> A.Output {
         return rhs.fix();
     }

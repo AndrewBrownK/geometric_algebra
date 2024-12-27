@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait UnitizedFlatNormSquared {
     fn unitized_flat_norm_squared(self) -> f32;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct unitized_flat_norm_squared;
-impl<A: UnitizedFlatNormSquared> std::ops::Div<A> for unitized_flat_norm_squared {
+#[allow(non_upper_case_globals, dead_code)]
+pub static unitized_flat_norm_squared: UnitizedFlatNormSquaredPrefixOrPostfix = UnitizedFlatNormSquaredPrefixOrPostfix;
+pub struct UnitizedFlatNormSquaredPrefixOrPostfix;
+impl<A: UnitizedFlatNormSquared> std::ops::Div<A> for UnitizedFlatNormSquaredPrefixOrPostfix {
     type Output = f32;
     fn div(self, rhs: A) -> Self::Output {
         rhs.unitized_flat_norm_squared()

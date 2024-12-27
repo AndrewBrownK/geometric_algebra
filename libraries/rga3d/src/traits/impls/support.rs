@@ -18,9 +18,9 @@
 //   Median:         0       1       0
 //  Average:         0       1       0
 //  Maximum:         0       1       0
-impl std::ops::Div<support> for Flector {
+impl std::ops::Div<SupportPrefixOrPostfix> for Flector {
     type Output = Line;
-    fn div(self, _rhs: support) -> Self::Output {
+    fn div(self, _rhs: SupportPrefixOrPostfix) -> Self::Output {
         self.support()
     }
 }
@@ -38,9 +38,9 @@ impl Support for Flector {
         );
     }
 }
-impl std::ops::Div<support> for MultiVector {
+impl std::ops::Div<SupportPrefixOrPostfix> for MultiVector {
     type Output = Line;
-    fn div(self, _rhs: support) -> Self::Output {
+    fn div(self, _rhs: SupportPrefixOrPostfix) -> Self::Output {
         self.support()
     }
 }

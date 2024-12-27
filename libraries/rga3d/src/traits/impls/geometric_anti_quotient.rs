@@ -18,10 +18,10 @@
 //   Median:         3      21       0
 //  Average:        14      30       0
 //  Maximum:       188     218       1
-impl std::ops::Div<geometric_anti_quotient> for AntiScalar {
-    type Output = geometric_anti_quotient_partial<AntiScalar>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for AntiScalar {
+    type Output = GeometricAntiQuotientInfixPartial<AntiScalar>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for AntiScalar {
@@ -264,10 +264,10 @@ impl GeometricAntiQuotient<Point> for AntiScalar {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for DualNum {
-    type Output = geometric_anti_quotient_partial<DualNum>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for DualNum {
+    type Output = GeometricAntiQuotientInfixPartial<DualNum>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for DualNum {
@@ -540,10 +540,10 @@ impl GeometricAntiQuotient<Point> for DualNum {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Flector {
-    type Output = geometric_anti_quotient_partial<Flector>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Flector {
+    type Output = GeometricAntiQuotientInfixPartial<Flector>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Flector {
@@ -919,10 +919,10 @@ impl GeometricAntiQuotient<Point> for Flector {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Horizon {
-    type Output = geometric_anti_quotient_partial<Horizon>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Horizon {
+    type Output = GeometricAntiQuotientInfixPartial<Horizon>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Horizon {
@@ -1141,10 +1141,10 @@ impl GeometricAntiQuotient<Point> for Horizon {
         return Scalar::from_groups(/* scalar */ self[e321] / (other[e4]));
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Line {
-    type Output = geometric_anti_quotient_partial<Line>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Line {
+    type Output = GeometricAntiQuotientInfixPartial<Line>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Line {
@@ -1530,10 +1530,10 @@ impl GeometricAntiQuotient<Point> for Line {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Motor {
-    type Output = geometric_anti_quotient_partial<Motor>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Motor {
+    type Output = GeometricAntiQuotientInfixPartial<Motor>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Motor {
@@ -1953,10 +1953,10 @@ impl GeometricAntiQuotient<Point> for Motor {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for MultiVector {
-    type Output = geometric_anti_quotient_partial<MultiVector>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for MultiVector {
+    type Output = GeometricAntiQuotientInfixPartial<MultiVector>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for MultiVector {
@@ -2529,10 +2529,10 @@ impl GeometricAntiQuotient<Point> for MultiVector {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Origin {
-    type Output = geometric_anti_quotient_partial<Origin>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Origin {
+    type Output = GeometricAntiQuotientInfixPartial<Origin>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Origin {
@@ -2781,10 +2781,10 @@ impl GeometricAntiQuotient<Point> for Origin {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Plane {
-    type Output = geometric_anti_quotient_partial<Plane>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Plane {
+    type Output = GeometricAntiQuotientInfixPartial<Plane>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Plane {
@@ -3118,10 +3118,10 @@ impl GeometricAntiQuotient<Point> for Plane {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Point {
-    type Output = geometric_anti_quotient_partial<Point>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Point {
+    type Output = GeometricAntiQuotientInfixPartial<Point>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Point {
@@ -3431,10 +3431,10 @@ impl GeometricAntiQuotient<Point> for Point {
         );
     }
 }
-impl std::ops::Div<geometric_anti_quotient> for Scalar {
-    type Output = geometric_anti_quotient_partial<Scalar>;
-    fn div(self, _rhs: geometric_anti_quotient) -> Self::Output {
-        geometric_anti_quotient_partial(self)
+impl std::ops::Div<GeometricAntiQuotientInfix> for Scalar {
+    type Output = GeometricAntiQuotientInfixPartial<Scalar>;
+    fn div(self, _rhs: GeometricAntiQuotientInfix) -> Self::Output {
+        GeometricAntiQuotientInfixPartial(self)
     }
 }
 impl GeometricAntiQuotient<AntiScalar> for Scalar {

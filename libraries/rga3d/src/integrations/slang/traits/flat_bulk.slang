@@ -6,9 +6,9 @@ public interface FlatBulk {
     associatedtype Output;
     func flat_bulk() -> Output;
 }
-public const static flat_bulk: FlatBulkInfix = FlatBulkInfix {}
-public struct FlatBulkInfix {}
-extension FlatBulkInfix for A: FlatBulk {
+public static const flat_bulk: FlatBulkPrefixOrPostfix = FlatBulkPrefixOrPostfix {};
+public struct FlatBulkPrefixOrPostfix {}
+extension FlatBulkPrefixOrPostfix for A: FlatBulk {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_bulk();
     }

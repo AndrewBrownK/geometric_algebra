@@ -1,17 +1,26 @@
 using traits::AntiDotProduct;
 using traits::FlatWeight;
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+        return this.weight_norm_squared();
+    }
+    func operator/=(const WeightNormSquaredPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.weight_norm_squared();
+        return *this;
+    }
+}
 extension AntiScalar: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
 AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
-    }
-    func operator/=(const WeightNormSquaredInfix& _rhs) -> AntiScalar& {
-        this = this.weight_norm_squared();
-        return *this;
     }
 }
 extension DualNum: WeightNormSquared {
@@ -20,7 +29,10 @@ extension DualNum: WeightNormSquared {
 AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -30,7 +42,10 @@ extension Flector: WeightNormSquared {
 Flector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -40,7 +55,10 @@ extension Line: WeightNormSquared {
 Line flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -50,7 +68,10 @@ extension Motor: WeightNormSquared {
 Motor flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -60,7 +81,10 @@ extension MultiVector: WeightNormSquared {
 MultiVector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -70,7 +94,10 @@ extension Origin: WeightNormSquared {
 Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -80,7 +107,10 @@ extension Plane: WeightNormSquared {
 Plane flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: WeightNormSquaredPrefixOrPostfix) -> AntiScalar {
         return this.weight_norm_squared();
     }
 }
@@ -89,8 +119,5 @@ extension Point: WeightNormSquared {
     func weight_norm_squared() -> Output {
 Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
-    }
-    func operator/(_rhs: WeightNormSquaredInfix) -> AntiScalar {
-        return this.weight_norm_squared();
     }
 }

@@ -20,9 +20,9 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         6      16       1
 //  Average:         6      17       1
 //  Maximum:        14      34       1
-impl std::ops::Div<unitized_flat_norm_squared> for Flector {
+impl std::ops::Div<UnitizedFlatNormSquaredPrefixOrPostfix> for Flector {
     type Output = f32;
-    fn div(self, _rhs: unitized_flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedFlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_flat_norm_squared()
     }
 }
@@ -39,9 +39,9 @@ impl UnitizedFlatNormSquared for Flector {
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
     }
 }
-impl std::ops::Div<unitized_flat_norm_squared> for Line {
+impl std::ops::Div<UnitizedFlatNormSquaredPrefixOrPostfix> for Line {
     type Output = f32;
-    fn div(self, _rhs: unitized_flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedFlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_flat_norm_squared()
     }
 }
@@ -58,9 +58,9 @@ impl UnitizedFlatNormSquared for Line {
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
     }
 }
-impl std::ops::Div<unitized_flat_norm_squared> for Motor {
+impl std::ops::Div<UnitizedFlatNormSquaredPrefixOrPostfix> for Motor {
     type Output = f32;
-    fn div(self, _rhs: unitized_flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedFlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_flat_norm_squared()
     }
 }
@@ -77,9 +77,9 @@ impl UnitizedFlatNormSquared for Motor {
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
     }
 }
-impl std::ops::Div<unitized_flat_norm_squared> for MultiVector {
+impl std::ops::Div<UnitizedFlatNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = f32;
-    fn div(self, _rhs: unitized_flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedFlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_flat_norm_squared()
     }
 }
@@ -98,9 +98,9 @@ impl UnitizedFlatNormSquared for MultiVector {
         return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
     }
 }
-impl std::ops::Div<unitized_flat_norm_squared> for Point {
+impl std::ops::Div<UnitizedFlatNormSquaredPrefixOrPostfix> for Point {
     type Output = f32;
-    fn div(self, _rhs: unitized_flat_norm_squared) -> Self::Output {
+    fn div(self, _rhs: UnitizedFlatNormSquaredPrefixOrPostfix) -> Self::Output {
         self.unitized_flat_norm_squared()
     }
 }

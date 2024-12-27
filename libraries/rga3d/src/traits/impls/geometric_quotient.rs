@@ -18,10 +18,10 @@
 //   Median:         3      22       0
 //  Average:        14      30       0
 //  Maximum:       188     218       1
-impl std::ops::Div<geometric_quotient> for AntiScalar {
-    type Output = geometric_quotient_partial<AntiScalar>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for AntiScalar {
+    type Output = GeometricQuotientInfixPartial<AntiScalar>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for AntiScalar {
@@ -239,10 +239,10 @@ impl GeometricQuotient<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] / (other[scalar]));
     }
 }
-impl std::ops::Div<geometric_quotient> for DualNum {
-    type Output = geometric_quotient_partial<DualNum>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for DualNum {
+    type Output = GeometricQuotientInfixPartial<DualNum>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for DualNum {
@@ -512,10 +512,10 @@ impl GeometricQuotient<Scalar> for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(1.0 / other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<geometric_quotient> for Flector {
-    type Output = geometric_quotient_partial<Flector>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Flector {
+    type Output = GeometricQuotientInfixPartial<Flector>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Flector {
@@ -913,10 +913,10 @@ impl GeometricQuotient<Scalar> for Flector {
         );
     }
 }
-impl std::ops::Div<geometric_quotient> for Horizon {
-    type Output = geometric_quotient_partial<Horizon>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Horizon {
+    type Output = GeometricQuotientInfixPartial<Horizon>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Horizon {
@@ -1165,10 +1165,10 @@ impl GeometricQuotient<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] / (other[scalar]));
     }
 }
-impl std::ops::Div<geometric_quotient> for Line {
-    type Output = geometric_quotient_partial<Line>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Line {
+    type Output = GeometricQuotientInfixPartial<Line>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Line {
@@ -1506,10 +1506,10 @@ impl GeometricQuotient<Scalar> for Line {
         );
     }
 }
-impl std::ops::Div<geometric_quotient> for Motor {
-    type Output = geometric_quotient_partial<Motor>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Motor {
+    type Output = GeometricQuotientInfixPartial<Motor>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Motor {
@@ -1874,10 +1874,10 @@ impl GeometricQuotient<Scalar> for Motor {
         );
     }
 }
-impl std::ops::Div<geometric_quotient> for MultiVector {
-    type Output = geometric_quotient_partial<MultiVector>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for MultiVector {
+    type Output = GeometricQuotientInfixPartial<MultiVector>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for MultiVector {
@@ -2437,10 +2437,10 @@ impl GeometricQuotient<Scalar> for MultiVector {
         );
     }
 }
-impl std::ops::Div<geometric_quotient> for Origin {
-    type Output = geometric_quotient_partial<Origin>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Origin {
+    type Output = GeometricQuotientInfixPartial<Origin>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Origin {
@@ -2657,10 +2657,10 @@ impl GeometricQuotient<Scalar> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] / (other[scalar]));
     }
 }
-impl std::ops::Div<geometric_quotient> for Plane {
-    type Output = geometric_quotient_partial<Plane>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Plane {
+    type Output = GeometricQuotientInfixPartial<Plane>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Plane {
@@ -2962,10 +2962,10 @@ impl GeometricQuotient<Scalar> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(1.0 / other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<geometric_quotient> for Point {
-    type Output = geometric_quotient_partial<Point>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Point {
+    type Output = GeometricQuotientInfixPartial<Point>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Point {
@@ -3294,10 +3294,10 @@ impl GeometricQuotient<Scalar> for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(1.0 / other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<geometric_quotient> for Scalar {
-    type Output = geometric_quotient_partial<Scalar>;
-    fn div(self, _rhs: geometric_quotient) -> Self::Output {
-        geometric_quotient_partial(self)
+impl std::ops::Div<GeometricQuotientInfix> for Scalar {
+    type Output = GeometricQuotientInfixPartial<Scalar>;
+    fn div(self, _rhs: GeometricQuotientInfix) -> Self::Output {
+        GeometricQuotientInfixPartial(self)
     }
 }
 impl GeometricQuotient<DualNum> for Scalar {

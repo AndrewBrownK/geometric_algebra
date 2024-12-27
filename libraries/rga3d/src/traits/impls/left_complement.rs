@@ -18,9 +18,9 @@
 //   Median:         0       1       0
 //  Average:         0       3       0
 //  Maximum:         0      10       0
-impl std::ops::Div<left_complement> for AntiScalar {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for AntiScalar {
     type Output = Scalar;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
@@ -31,14 +31,14 @@ impl LeftComplement for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e1234]);
     }
 }
-impl std::ops::Div<left_complement> for DualNum {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
-impl std::ops::DivAssign<left_complement> for DualNum {
-    fn div_assign(&mut self, _rhs: left_complement) {
+impl std::ops::DivAssign<LeftComplementPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: LeftComplementPrefixOrPostfix) {
         *self = self.left_complement()
     }
 }
@@ -48,14 +48,14 @@ impl LeftComplement for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ self.group0().yx());
     }
 }
-impl std::ops::Div<left_complement> for Flector {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
-impl std::ops::DivAssign<left_complement> for Flector {
-    fn div_assign(&mut self, _rhs: left_complement) {
+impl std::ops::DivAssign<LeftComplementPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: LeftComplementPrefixOrPostfix) {
         *self = self.left_complement()
     }
 }
@@ -69,9 +69,9 @@ impl LeftComplement for Flector {
         return Flector::from_groups(/* e1, e2, e3, e4 */ self.group1(), /* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<left_complement> for Horizon {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Horizon {
     type Output = Origin;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
@@ -82,14 +82,14 @@ impl LeftComplement for Horizon {
         return Origin::from_groups(/* e4 */ self[e321]);
     }
 }
-impl std::ops::Div<left_complement> for Line {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
-impl std::ops::DivAssign<left_complement> for Line {
-    fn div_assign(&mut self, _rhs: left_complement) {
+impl std::ops::DivAssign<LeftComplementPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: LeftComplementPrefixOrPostfix) {
         *self = self.left_complement()
     }
 }
@@ -108,14 +108,14 @@ impl LeftComplement for Line {
         );
     }
 }
-impl std::ops::Div<left_complement> for Motor {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
-impl std::ops::DivAssign<left_complement> for Motor {
-    fn div_assign(&mut self, _rhs: left_complement) {
+impl std::ops::DivAssign<LeftComplementPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: LeftComplementPrefixOrPostfix) {
         *self = self.left_complement()
     }
 }
@@ -134,14 +134,14 @@ impl LeftComplement for Motor {
         );
     }
 }
-impl std::ops::Div<left_complement> for MultiVector {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
-impl std::ops::DivAssign<left_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: left_complement) {
+impl std::ops::DivAssign<LeftComplementPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: LeftComplementPrefixOrPostfix) {
         *self = self.left_complement()
     }
 }
@@ -169,9 +169,9 @@ impl LeftComplement for MultiVector {
         );
     }
 }
-impl std::ops::Div<left_complement> for Origin {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Origin {
     type Output = Horizon;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
@@ -185,9 +185,9 @@ impl LeftComplement for Origin {
         return Horizon::from_groups(/* e321 */ self[e4] * -1.0);
     }
 }
-impl std::ops::Div<left_complement> for Plane {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Plane {
     type Output = Point;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
@@ -197,9 +197,9 @@ impl LeftComplement for Plane {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0());
     }
 }
-impl std::ops::Div<left_complement> for Point {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Point {
     type Output = Plane;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }
@@ -213,9 +213,9 @@ impl LeftComplement for Point {
         return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<left_complement> for Scalar {
+impl std::ops::Div<LeftComplementPrefixOrPostfix> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: left_complement) -> Self::Output {
+    fn div(self, _rhs: LeftComplementPrefixOrPostfix) -> Self::Output {
         self.left_complement()
     }
 }

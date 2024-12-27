@@ -18,10 +18,10 @@
 //   Median:         0      10       0
 //  Average:        11      19       0
 //  Maximum:       181     192       0
-impl std::ops::Div<geometric_anti_product> for AntiScalar {
-    type Output = geometric_anti_product_partial<AntiScalar>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for AntiScalar {
+    type Output = GeometricAntiProductInfixPartial<AntiScalar>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for AntiScalar {
@@ -171,10 +171,10 @@ impl GeometricAntiProduct<Scalar> for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]);
     }
 }
-impl std::ops::Div<geometric_anti_product> for DualNum {
-    type Output = geometric_anti_product_partial<DualNum>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for DualNum {
+    type Output = GeometricAntiProductInfixPartial<DualNum>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for DualNum {
@@ -349,10 +349,10 @@ impl GeometricAntiProduct<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]);
     }
 }
-impl std::ops::Div<geometric_anti_product> for Flector {
-    type Output = geometric_anti_product_partial<Flector>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Flector {
+    type Output = GeometricAntiProductInfixPartial<Flector>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Flector {
@@ -644,10 +644,10 @@ impl GeometricAntiProduct<Scalar> for Flector {
         );
     }
 }
-impl std::ops::Div<geometric_anti_product> for Horizon {
-    type Output = geometric_anti_product_partial<Horizon>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Horizon {
+    type Output = GeometricAntiProductInfixPartial<Horizon>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Horizon {
@@ -782,10 +782,10 @@ impl GeometricAntiProduct<Point> for Horizon {
         return Scalar::from_groups(/* scalar */ self[e321] * other[e4] * -1.0);
     }
 }
-impl std::ops::Div<geometric_anti_product> for Line {
-    type Output = geometric_anti_product_partial<Line>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Line {
+    type Output = GeometricAntiProductInfixPartial<Line>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Line {
@@ -1050,10 +1050,10 @@ impl GeometricAntiProduct<Scalar> for Line {
         return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[scalar]) * self.group0());
     }
 }
-impl std::ops::Div<geometric_anti_product> for Motor {
-    type Output = geometric_anti_product_partial<Motor>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Motor {
+    type Output = GeometricAntiProductInfixPartial<Motor>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Motor {
@@ -1346,10 +1346,10 @@ impl GeometricAntiProduct<Scalar> for Motor {
         );
     }
 }
-impl std::ops::Div<geometric_anti_product> for MultiVector {
-    type Output = geometric_anti_product_partial<MultiVector>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for MultiVector {
+    type Output = GeometricAntiProductInfixPartial<MultiVector>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for MultiVector {
@@ -1830,10 +1830,10 @@ impl GeometricAntiProduct<Scalar> for MultiVector {
         );
     }
 }
-impl std::ops::Div<geometric_anti_product> for Origin {
-    type Output = geometric_anti_product_partial<Origin>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Origin {
+    type Output = GeometricAntiProductInfixPartial<Origin>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Origin {
@@ -2003,10 +2003,10 @@ impl GeometricAntiProduct<Scalar> for Origin {
         return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0);
     }
 }
-impl std::ops::Div<geometric_anti_product> for Plane {
-    type Output = geometric_anti_product_partial<Plane>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Plane {
+    type Output = GeometricAntiProductInfixPartial<Plane>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Plane {
@@ -2262,10 +2262,10 @@ impl GeometricAntiProduct<Scalar> for Plane {
         );
     }
 }
-impl std::ops::Div<geometric_anti_product> for Point {
-    type Output = geometric_anti_product_partial<Point>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Point {
+    type Output = GeometricAntiProductInfixPartial<Point>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Point {
@@ -2492,10 +2492,10 @@ impl GeometricAntiProduct<Scalar> for Point {
         return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0);
     }
 }
-impl std::ops::Div<geometric_anti_product> for Scalar {
-    type Output = geometric_anti_product_partial<Scalar>;
-    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
-        geometric_anti_product_partial(self)
+impl std::ops::Div<GeometricAntiProductInfix> for Scalar {
+    type Output = GeometricAntiProductInfixPartial<Scalar>;
+    fn div(self, _rhs: GeometricAntiProductInfix) -> Self::Output {
+        GeometricAntiProductInfixPartial(self)
     }
 }
 impl GeometricAntiProduct<AntiScalar> for Scalar {

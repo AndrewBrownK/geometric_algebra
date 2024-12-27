@@ -6,9 +6,9 @@ public interface Weight {
     associatedtype Output;
     func weight() -> Output;
 }
-public const static weight: WeightInfix = WeightInfix {}
-public struct WeightInfix {}
-extension WeightInfix for A: Weight {
+public static const weight: WeightPrefixOrPostfix = WeightPrefixOrPostfix {};
+public struct WeightPrefixOrPostfix {}
+extension WeightPrefixOrPostfix for A: Weight {
     func operator/(rhs: A) -> A.Output {
         return rhs.weight();
     }

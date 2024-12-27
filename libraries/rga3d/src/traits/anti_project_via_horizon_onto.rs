@@ -8,11 +8,11 @@ pub trait AntiProjectViaHorizonOnto<T> {
     type Output;
     fn anti_project_via_horizon_onto(self, other: T) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_project_via_horizon_onto;
-#[allow(non_camel_case_types)]
-pub struct anti_project_via_horizon_onto_partial<A>(A);
-impl<A: AntiProjectViaHorizonOnto<B>, B> std::ops::Div<B> for anti_project_via_horizon_onto_partial<A> {
+#[allow(non_upper_case_globals, dead_code)]
+pub static anti_project_via_horizon_onto: AntiProjectViaHorizonOntoInfix = AntiProjectViaHorizonOntoInfix;
+pub struct AntiProjectViaHorizonOntoInfix;
+pub struct AntiProjectViaHorizonOntoInfixPartial<A>(A);
+impl<A: AntiProjectViaHorizonOnto<B>, B> std::ops::Div<B> for AntiProjectViaHorizonOntoInfixPartial<A> {
     type Output = <A as AntiProjectViaHorizonOnto<B>>::Output;
     fn div(self, rhs: B) -> Self::Output {
         self.0.anti_project_via_horizon_onto(rhs)

@@ -2589,26 +2589,24 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         }
         writeln!(w, ";\n}}")?;
 
-        let can_fancy_infix = match def.arity {
-            TraitArity::Zero => false,
-            TraitArity::One => true,
-            TraitArity::Two => true,
+        let infix_term = match def.arity {
+            TraitArity::Zero => None,
+            TraitArity::One => Some("PrefixOrPostfix"),
+            TraitArity::Two => Some("Infix"),
         };
-        if !can_fancy_infix {
-            return Ok(())
-        }
+        let Some(infix_term) = infix_term else { return Ok(()) };
 
         if let Some(op) = &self.fancy_infix {
-            writeln!(w, "#[allow(non_camel_case_types, dead_code)]")?;
-            writeln!(w, "pub struct {lsc};")?;
+            writeln!(w, "#[allow(non_upper_case_globals, dead_code)]")?;
+            writeln!(w, "pub static {lsc}: {ucc}{infix_term} = {ucc}{infix_term};")?;
+            writeln!(w, "pub struct {ucc}{infix_term};")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "#[allow(non_camel_case_types)]")?;
-                writeln!(w, "pub struct {lsc}_partial<A>(A);")?;
+                writeln!(w, "pub struct {ucc}{infix_term}Partial<A>(A);")?;
             }
             let operator_name = op.rust_trait_name();
             let operator_method = op.rust_trait_method();
             if let TraitArity::Two = def.arity {
-                writeln!(w, "impl<A: {ucc}<B>, B> std::ops::{operator_name}<B> for {lsc}_partial<A> {{")?;
+                writeln!(w, "impl<A: {ucc}<B>, B> std::ops::{operator_name}<B> for {ucc}{infix_term}Partial<A> {{")?;
                 write!(w, "    type Output = ")?;
                 match *output_ty {
                     TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
@@ -2621,7 +2619,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
+                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {ucc}{infix_term} {{")?;
                 write!(w, "    type Output = ")?;
                 match *output_ty {
                     TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
@@ -2686,30 +2684,37 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         if let Some(op) = self.fancy_infix {
             let operator_name = op.rust_trait_name();
             let operator_method = op.rust_trait_method();
-            if let TraitParam::Class(mv) = &owner_ty {
-                let n = mv.name();
-                if !is_op && !already_granted_infix.contains(n) {
-                    already_granted_infix.insert(n);
-                    if let TraitArity::Two = def.arity {
-                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
-                        writeln!(w, "    type Output = {lsc}_partial<{n}>;")?;
-                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                        writeln!(w, "        {lsc}_partial(self)")?;
-                        writeln!(w, "    }}\n}}")?;
-                    }
-                    if let TraitArity::One = def.arity {
-                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
-                        write!(w, "    type Output = ")?;
-                        self.write_type(w, output_ty)?;
-                        writeln!(w, ";")?;
-                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                        writeln!(w, "        self.{lsc}()")?;
-                        writeln!(w, "    }}\n}}")?;
-                        if &output_ty == owner_ty {
-                            writeln!(w, "impl std::ops::{operator_name}Assign<{lsc}> for {n} {{")?;
-                            writeln!(w, "    fn {operator_method}_assign(&mut self, _rhs: {lsc}) {{")?;
-                            writeln!(w, "        *self = self.{lsc}()")?;
+            let infix_term = match def.arity {
+                TraitArity::Zero => None,
+                TraitArity::One => Some("PrefixOrPostfix"),
+                TraitArity::Two => Some("Infix"),
+            };
+            if let Some(infix_term) = infix_term {
+                if let TraitParam::Class(mv) = &owner_ty {
+                    let n = mv.name();
+                    if !is_op && !already_granted_infix.contains(n) {
+                        already_granted_infix.insert(n);
+                        if let TraitArity::Two = def.arity {
+                            writeln!(w, "impl std::ops::{operator_name}<{ucc}{infix_term}> for {n} {{")?;
+                            writeln!(w, "    type Output = {ucc}{infix_term}Partial<{n}>;")?;
+                            writeln!(w, "    fn {operator_method}(self, _rhs: {ucc}{infix_term}) -> Self::Output {{")?;
+                            writeln!(w, "        {ucc}{infix_term}Partial(self)")?;
                             writeln!(w, "    }}\n}}")?;
+                        }
+                        if let TraitArity::One = def.arity {
+                            writeln!(w, "impl std::ops::{operator_name}<{ucc}{infix_term}> for {n} {{")?;
+                            write!(w, "    type Output = ")?;
+                            self.write_type(w, output_ty)?;
+                            writeln!(w, ";")?;
+                            writeln!(w, "    fn {operator_method}(self, _rhs: {ucc}{infix_term}) -> Self::Output {{")?;
+                            writeln!(w, "        self.{lsc}()")?;
+                            writeln!(w, "    }}\n}}")?;
+                            if &output_ty == owner_ty {
+                                writeln!(w, "impl std::ops::{operator_name}Assign<{ucc}{infix_term}> for {n} {{")?;
+                                writeln!(w, "    fn {operator_method}_assign(&mut self, _rhs: {ucc}{infix_term}) {{")?;
+                                writeln!(w, "        *self = self.{lsc}()")?;
+                                writeln!(w, "    }}\n}}")?;
+                            }
                         }
                     }
                 }

@@ -19,9 +19,9 @@ use crate::traits::UnitizedFlatNormSquared;
 //   Median:         6      16       1
 //  Average:         6      17       1
 //  Maximum:        14      34       1
-impl std::ops::Div<unitized_norm> for Flector {
+impl std::ops::Div<UnitizedNormPrefixOrPostfix> for Flector {
     type Output = f32;
-    fn div(self, _rhs: unitized_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedNormPrefixOrPostfix) -> Self::Output {
         self.unitized_norm()
     }
 }
@@ -37,9 +37,9 @@ impl UnitizedNorm for Flector {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_norm> for Line {
+impl std::ops::Div<UnitizedNormPrefixOrPostfix> for Line {
     type Output = f32;
-    fn div(self, _rhs: unitized_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedNormPrefixOrPostfix) -> Self::Output {
         self.unitized_norm()
     }
 }
@@ -55,9 +55,9 @@ impl UnitizedNorm for Line {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_norm> for Motor {
+impl std::ops::Div<UnitizedNormPrefixOrPostfix> for Motor {
     type Output = f32;
-    fn div(self, _rhs: unitized_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedNormPrefixOrPostfix) -> Self::Output {
         self.unitized_norm()
     }
 }
@@ -73,9 +73,9 @@ impl UnitizedNorm for Motor {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_norm> for MultiVector {
+impl std::ops::Div<UnitizedNormPrefixOrPostfix> for MultiVector {
     type Output = f32;
-    fn div(self, _rhs: unitized_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedNormPrefixOrPostfix) -> Self::Output {
         self.unitized_norm()
     }
 }
@@ -93,9 +93,9 @@ impl UnitizedNorm for MultiVector {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
 }
-impl std::ops::Div<unitized_norm> for Point {
+impl std::ops::Div<UnitizedNormPrefixOrPostfix> for Point {
     type Output = f32;
-    fn div(self, _rhs: unitized_norm) -> Self::Output {
+    fn div(self, _rhs: UnitizedNormPrefixOrPostfix) -> Self::Output {
         self.unitized_norm()
     }
 }

@@ -18,9 +18,9 @@
 //   Median:         0       1       0
 //  Average:         0       1       0
 //  Maximum:         0       4       0
-impl std::ops::Div<right_dual> for DualNum {
+impl std::ops::Div<RightDualPrefixOrPostfix> for DualNum {
     type Output = AntiScalar;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
@@ -31,14 +31,14 @@ impl RightDual for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[scalar]);
     }
 }
-impl std::ops::Div<right_dual> for Flector {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Flector {
-    fn div_assign(&mut self, _rhs: right_dual) {
+impl std::ops::DivAssign<RightDualPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: RightDualPrefixOrPostfix) {
         *self = self.right_dual()
     }
 }
@@ -57,9 +57,9 @@ impl RightDual for Flector {
         );
     }
 }
-impl std::ops::Div<right_dual> for Horizon {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Horizon {
     type Output = Origin;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
@@ -73,14 +73,14 @@ impl RightDual for Horizon {
         return Origin::from_groups(/* e4 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<right_dual> for Line {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Line {
-    fn div_assign(&mut self, _rhs: right_dual) {
+impl std::ops::DivAssign<RightDualPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: RightDualPrefixOrPostfix) {
         *self = self.right_dual()
     }
 }
@@ -94,14 +94,14 @@ impl RightDual for Line {
         return Line::from_groups(/* e41, e42, e43 */ self.group1() * Simd32x3::from(-1.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
     }
 }
-impl std::ops::Div<right_dual> for Motor {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for Motor {
-    fn div_assign(&mut self, _rhs: right_dual) {
+impl std::ops::DivAssign<RightDualPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: RightDualPrefixOrPostfix) {
         *self = self.right_dual()
     }
 }
@@ -120,14 +120,14 @@ impl RightDual for Motor {
         );
     }
 }
-impl std::ops::Div<right_dual> for MultiVector {
+impl std::ops::Div<RightDualPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
-impl std::ops::DivAssign<right_dual> for MultiVector {
-    fn div_assign(&mut self, _rhs: right_dual) {
+impl std::ops::DivAssign<RightDualPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: RightDualPrefixOrPostfix) {
         *self = self.right_dual()
     }
 }
@@ -156,9 +156,9 @@ impl RightDual for MultiVector {
         );
     }
 }
-impl std::ops::Div<right_dual> for Plane {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Plane {
     type Output = Origin;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
@@ -172,9 +172,9 @@ impl RightDual for Plane {
         return Origin::from_groups(/* e4 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<right_dual> for Point {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Point {
     type Output = Plane;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }
@@ -185,9 +185,9 @@ impl RightDual for Point {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
     }
 }
-impl std::ops::Div<right_dual> for Scalar {
+impl std::ops::Div<RightDualPrefixOrPostfix> for Scalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: right_dual) -> Self::Output {
+    fn div(self, _rhs: RightDualPrefixOrPostfix) -> Self::Output {
         self.right_dual()
     }
 }

@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<AntiScalar> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension AntiScalar: RejectOrthogonallyFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_orthogonally_from(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: RejectOrthogonallyFrom<DualNum> {
             /* e1234 */
             this.e1234 * powi(other.scalar, 2)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<AntiScalar> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension AntiScalar: RejectOrthogonallyFrom<Flector> {
@@ -162,6 +165,12 @@ extension AntiScalar: RejectOrthogonallyFrom<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<DualNum> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension DualNum: RejectOrthogonallyFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_orthogonally_from(other: DualNum) -> Output {
@@ -169,9 +178,6 @@ extension DualNum: RejectOrthogonallyFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<DualNum> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension DualNum: RejectOrthogonallyFrom<Flector> {
@@ -326,6 +332,12 @@ extension DualNum: RejectOrthogonallyFrom<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Flector> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Flector: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Flector;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -347,9 +359,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Flector> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Flector: RejectOrthogonallyFrom<Horizon> {
@@ -488,6 +497,12 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Horizon> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Horizon: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Flector;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -509,9 +524,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Horizon> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Horizon: RejectOrthogonallyFrom<Line> {
@@ -619,6 +631,12 @@ extension Horizon: RejectOrthogonallyFrom<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Line> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Line: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Motor;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -638,9 +656,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e23, e31, e12, scalar */
             float4(((right_anti_dual.group0.zxy * anti_wedge.group0.yzx) - (right_anti_dual.group0.yzx * anti_wedge.group0.zxy)), 0.0)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Line> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Line: RejectOrthogonallyFrom<Horizon> {
@@ -740,6 +755,12 @@ extension Line: RejectOrthogonallyFrom<Plane> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Motor> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Motor: RejectOrthogonallyFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_orthogonally_from(other: DualNum) -> Output {
@@ -747,9 +768,6 @@ extension Motor: RejectOrthogonallyFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Motor> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Motor: RejectOrthogonallyFrom<Flector> {
@@ -922,6 +940,12 @@ extension Motor: RejectOrthogonallyFrom<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<MultiVector> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension MultiVector: RejectOrthogonallyFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_orthogonally_from(other: DualNum) -> Output {
@@ -929,9 +953,6 @@ extension MultiVector: RejectOrthogonallyFrom<DualNum> {
             /* e1234 */
             (powi(other.scalar, 2) * this.e1234) + (other.scalar * other.e1234 * this.scalar)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<MultiVector> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension MultiVector: RejectOrthogonallyFrom<Flector> {
@@ -1188,6 +1209,12 @@ extension MultiVector: RejectOrthogonallyFrom<Scalar> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Origin> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Origin: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Flector;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -1207,9 +1234,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar) * right_anti_dual.group1
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Origin> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Origin: RejectOrthogonallyFrom<Horizon> {
@@ -1292,6 +1316,12 @@ extension Origin: RejectOrthogonallyFrom<Plane> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Plane> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Plane: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Flector;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -1313,9 +1343,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4((right_anti_dual.e4 * anti_wedge.e23) + (right_anti_dual.e423 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e31) + (right_anti_dual.e431 * anti_wedge.scalar), (right_anti_dual.e4 * anti_wedge.e12) + (right_anti_dual.e412 * anti_wedge.scalar), -(right_anti_dual.e2 * anti_wedge.e31) - (right_anti_dual.e3 * anti_wedge.e12)) + float4((right_anti_dual.group0.zxy * anti_wedge.group0.yzx), right_anti_dual.e321 * anti_wedge.scalar) - (right_anti_dual.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Plane> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Plane: RejectOrthogonallyFrom<Horizon> {
@@ -1438,6 +1465,12 @@ Scalar anti_wedge = Scalar.from_groups(
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Point> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Point: RejectOrthogonallyFrom<Flector> {
     associatedtype Output = Flector;
     func reject_orthogonally_from(other: Flector) -> Output {
@@ -1457,9 +1490,6 @@ Flector right_anti_dual = Flector.from_groups(
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Point> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Point: RejectOrthogonallyFrom<Horizon> {
@@ -1542,6 +1572,12 @@ extension Point: RejectOrthogonallyFrom<Plane> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Scalar> {
+        return RejectOrthogonallyFromInfixPartial { a: this };
+    }
+}
 extension Scalar: RejectOrthogonallyFrom<DualNum> {
     associatedtype Output = AntiScalar;
     func reject_orthogonally_from(other: DualNum) -> Output {
@@ -1549,9 +1585,6 @@ extension Scalar: RejectOrthogonallyFrom<DualNum> {
             /* e1234 */
             other.scalar * other.e1234 * this.scalar
         );
-    }
-    func operator/(_rhs: RejectOrthogonallyFromInfix) -> reject_orthogonally_from_partial<Scalar> {
-        reject_orthogonally_from_partial(this)
     }
 }
 extension Scalar: RejectOrthogonallyFrom<Motor> {

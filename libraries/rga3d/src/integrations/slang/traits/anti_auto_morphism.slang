@@ -5,9 +5,9 @@ using data::*;
 public interface AntiAutoMorphism {
     func anti_auto_morphism() -> Output;
 }
-public const static anti_auto_morphism: AntiAutoMorphismInfix = AntiAutoMorphismInfix {}
-public struct AntiAutoMorphismInfix {}
-extension AntiAutoMorphismInfix for A: AntiAutoMorphism {
+public static const anti_auto_morphism: AntiAutoMorphismPrefixOrPostfix = AntiAutoMorphismPrefixOrPostfix {};
+public struct AntiAutoMorphismPrefixOrPostfix {}
+extension AntiAutoMorphismPrefixOrPostfix for A: AntiAutoMorphism {
     func operator/(rhs: A) -> A.Output {
         return rhs.anti_auto_morphism();
     }

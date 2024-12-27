@@ -1,5 +1,11 @@
 using traits::FlatBulkNorm;
 using traits::FlatWeightNorm;
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
+        return this.norm();
+    }
+}
 extension Flector: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
@@ -8,7 +14,10 @@ extension Flector: Norm {
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
-    func operator/(_rhs: NormInfix) -> DualNum {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
@@ -20,7 +29,10 @@ extension Line: Norm {
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
-    func operator/(_rhs: NormInfix) -> DualNum {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
@@ -32,7 +44,10 @@ extension Motor: Norm {
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
-    func operator/(_rhs: NormInfix) -> DualNum {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
@@ -44,7 +59,10 @@ extension MultiVector: Norm {
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
-    func operator/(_rhs: NormInfix) -> DualNum {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
@@ -55,8 +73,5 @@ extension Point: Norm {
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
-    }
-    func operator/(_rhs: NormInfix) -> DualNum {
-        return this.norm();
     }
 }

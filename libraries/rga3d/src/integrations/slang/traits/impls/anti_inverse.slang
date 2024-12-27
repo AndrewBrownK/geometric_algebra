@@ -1,3 +1,13 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiScalar {
+        return this.anti_inverse();
+    }
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.anti_inverse();
+        return *this;
+    }
+}
 extension AntiScalar: AntiInverse {
     associatedtype Output = AntiScalar;
     func anti_inverse() -> Output {
@@ -6,10 +16,13 @@ extension AntiScalar: AntiInverse {
             1.0/this.e1234
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> DualNum {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> AntiScalar& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> DualNum& {
         this = this.anti_inverse();
         return *this;
     }
@@ -22,10 +35,13 @@ extension DualNum: AntiInverse {
             float2(powi(this.e1234, -2)) * this.group0
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Flector {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> DualNum& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Flector& {
         this = this.anti_inverse();
         return *this;
     }
@@ -50,10 +66,13 @@ AntiScalar other = AntiScalar.from_groups(
             float4(other.e1234) * anti_reverse.group1
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> Flector {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Line {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> Flector& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Line& {
         this = this.anti_inverse();
         return *this;
     }
@@ -78,10 +97,13 @@ AntiScalar other = AntiScalar.from_groups(
             float3(other.e1234) * anti_reverse.group1
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Motor {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> Line& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Motor& {
         this = this.anti_inverse();
         return *this;
     }
@@ -106,10 +128,13 @@ AntiScalar other = AntiScalar.from_groups(
             float4(other.e1234) * anti_reverse.group1
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> MultiVector {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> Motor& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.anti_inverse();
         return *this;
     }
@@ -146,10 +171,13 @@ AntiScalar other = AntiScalar.from_groups(
             float4(other.e1234) * anti_reverse.group4
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Origin {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> MultiVector& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Origin& {
         this = this.anti_inverse();
         return *this;
     }
@@ -162,10 +190,13 @@ extension Origin: AntiInverse {
             1.0/this.e4 * -1.0
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Plane {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> Origin& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Plane& {
         this = this.anti_inverse();
         return *this;
     }
@@ -178,10 +209,13 @@ extension Plane: AntiInverse {
             float4(powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)) * this.group0
         );
     }
-    func operator/(_rhs: AntiInverseInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Point {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInverseInfix& _rhs) -> Plane& {
+    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Point& {
         this = this.anti_inverse();
         return *this;
     }
@@ -193,12 +227,5 @@ extension Point: AntiInverse {
             /* e1, e2, e3, e4 */
             float4(powi(this.e4, -2)) * float4(this.e1 * -1.0, this.e2 * -1.0, this.e3 * -1.0, this.e4 * -1.0)
         );
-    }
-    func operator/(_rhs: AntiInverseInfix) -> Point {
-        return this.anti_inverse();
-    }
-    func operator/=(const AntiInverseInfix& _rhs) -> Point& {
-        this = this.anti_inverse();
-        return *this;
     }
 }

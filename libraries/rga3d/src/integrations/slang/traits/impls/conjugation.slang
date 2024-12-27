@@ -1,12 +1,25 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiScalar {
+        return this.conjugation();
+    }
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.conjugation();
+        return *this;
+    }
+}
 extension AntiScalar: Conjugation {
     associatedtype Output = AntiScalar;
     func conjugation() -> Output {
         return this;
     }
-    func operator/(_rhs: ConjugationInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> DualNum {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> AntiScalar& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> DualNum& {
         this = this.conjugation();
         return *this;
     }
@@ -16,10 +29,13 @@ extension DualNum: Conjugation {
     func conjugation() -> Output {
         return this;
     }
-    func operator/(_rhs: ConjugationInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Flector {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> DualNum& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Flector& {
         this = this.conjugation();
         return *this;
     }
@@ -34,10 +50,13 @@ extension Flector: Conjugation {
             this.group1
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Horizon {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Flector& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.conjugation();
         return *this;
     }
@@ -47,10 +66,13 @@ extension Horizon: Conjugation {
     func conjugation() -> Output {
         return this;
     }
-    func operator/(_rhs: ConjugationInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Line {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Horizon& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Line& {
         this = this.conjugation();
         return *this;
     }
@@ -65,10 +87,13 @@ extension Line: Conjugation {
             this.group1 * float3(-1.0)
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Motor {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Line& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Motor& {
         this = this.conjugation();
         return *this;
     }
@@ -83,10 +108,13 @@ extension Motor: Conjugation {
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> MultiVector {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Motor& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.conjugation();
         return *this;
     }
@@ -107,10 +135,13 @@ extension MultiVector: Conjugation {
             this.group4
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Origin {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> MultiVector& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Origin& {
         this = this.conjugation();
         return *this;
     }
@@ -123,10 +154,13 @@ extension Origin: Conjugation {
             this.e4 * -1.0
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Plane {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Origin& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Plane& {
         this = this.conjugation();
         return *this;
     }
@@ -136,10 +170,13 @@ extension Plane: Conjugation {
     func conjugation() -> Output {
         return this;
     }
-    func operator/(_rhs: ConjugationInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Point {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Plane& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Point& {
         this = this.conjugation();
         return *this;
     }
@@ -152,10 +189,13 @@ extension Point: Conjugation {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: ConjugationInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Scalar {
         return this.conjugation();
     }
-    func operator/=(const ConjugationInfix& _rhs) -> Point& {
+    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.conjugation();
         return *this;
     }
@@ -164,12 +204,5 @@ extension Scalar: Conjugation {
     associatedtype Output = Scalar;
     func conjugation() -> Output {
         return this;
-    }
-    func operator/(_rhs: ConjugationInfix) -> Scalar {
-        return this.conjugation();
-    }
-    func operator/=(const ConjugationInfix& _rhs) -> Scalar& {
-        this = this.conjugation();
-        return *this;
     }
 }

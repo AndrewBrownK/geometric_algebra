@@ -20,10 +20,10 @@ use crate::traits::GeometricAntiProduct;
 //   Median:        19      42       0
 //  Average:        45      65       0
 //  Maximum:       362     394       0
-impl std::ops::Div<anti_sandwich> for AntiScalar {
-    type Output = anti_sandwich_partial<AntiScalar>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for AntiScalar {
+    type Output = AntiSandwichInfixPartial<AntiScalar>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for AntiScalar {
@@ -177,10 +177,10 @@ impl AntiSandwich<Scalar> for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]).geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for DualNum {
-    type Output = anti_sandwich_partial<DualNum>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for DualNum {
+    type Output = AntiSandwichInfixPartial<DualNum>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for DualNum {
@@ -376,10 +376,10 @@ impl AntiSandwich<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]).geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Flector {
-    type Output = anti_sandwich_partial<Flector>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Flector {
+    type Output = AntiSandwichInfixPartial<Flector>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Flector {
@@ -691,10 +691,10 @@ impl AntiSandwich<Scalar> for Flector {
         .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Horizon {
-    type Output = anti_sandwich_partial<Horizon>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Horizon {
+    type Output = AntiSandwichInfixPartial<Horizon>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<Flector> for Horizon {
@@ -803,10 +803,10 @@ impl AntiSandwich<Plane> for Horizon {
         .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Line {
-    type Output = anti_sandwich_partial<Line>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Line {
+    type Output = AntiSandwichInfixPartial<Line>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Line {
@@ -1103,10 +1103,10 @@ impl AntiSandwich<Scalar> for Line {
             .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Motor {
-    type Output = anti_sandwich_partial<Motor>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Motor {
+    type Output = AntiSandwichInfixPartial<Motor>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Motor {
@@ -1429,10 +1429,10 @@ impl AntiSandwich<Scalar> for Motor {
         .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for MultiVector {
-    type Output = anti_sandwich_partial<MultiVector>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for MultiVector {
+    type Output = AntiSandwichInfixPartial<MultiVector>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for MultiVector {
@@ -1927,10 +1927,10 @@ impl AntiSandwich<Scalar> for MultiVector {
         .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Origin {
-    type Output = anti_sandwich_partial<Origin>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Origin {
+    type Output = AntiSandwichInfixPartial<Origin>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Origin {
@@ -2121,10 +2121,10 @@ impl AntiSandwich<Scalar> for Origin {
         return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0).geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Plane {
-    type Output = anti_sandwich_partial<Plane>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Plane {
+    type Output = AntiSandwichInfixPartial<Plane>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Plane {
@@ -2405,10 +2405,10 @@ impl AntiSandwich<Scalar> for Plane {
         .geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Point {
-    type Output = anti_sandwich_partial<Point>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Point {
+    type Output = AntiSandwichInfixPartial<Point>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<AntiScalar> for Point {
@@ -2659,10 +2659,10 @@ impl AntiSandwich<Scalar> for Point {
         return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0).geometric_anti_product(self.anti_reverse());
     }
 }
-impl std::ops::Div<anti_sandwich> for Scalar {
-    type Output = anti_sandwich_partial<Scalar>;
-    fn div(self, _rhs: anti_sandwich) -> Self::Output {
-        anti_sandwich_partial(self)
+impl std::ops::Div<AntiSandwichInfix> for Scalar {
+    type Output = AntiSandwichInfixPartial<Scalar>;
+    fn div(self, _rhs: AntiSandwichInfix) -> Self::Output {
+        AntiSandwichInfixPartial(self)
     }
 }
 impl AntiSandwich<Flector> for Scalar {

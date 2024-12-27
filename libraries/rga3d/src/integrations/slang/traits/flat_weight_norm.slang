@@ -5,9 +5,9 @@ using data::*;
 public interface FlatWeightNorm {
     func flat_weight_norm() -> AntiScalar;
 }
-public const static flat_weight_norm: FlatWeightNormInfix = FlatWeightNormInfix {}
-public struct FlatWeightNormInfix {}
-extension FlatWeightNormInfix for A: FlatWeightNorm {
+public static const flat_weight_norm: FlatWeightNormPrefixOrPostfix = FlatWeightNormPrefixOrPostfix {};
+public struct FlatWeightNormPrefixOrPostfix {}
+extension FlatWeightNormPrefixOrPostfix for A: FlatWeightNorm {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_weight_norm();
     }

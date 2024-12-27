@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<AntiScalar> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension AntiScalar: GeometricQuotient<DualNum> {
     associatedtype Output = AntiScalar;
     func geometric_quotient(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: GeometricQuotient<DualNum> {
             /* e1234 */
             this.e1234 / (other.scalar)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<AntiScalar> {
-        geometric_quotient_partial(this)
     }
 }
 extension AntiScalar: GeometricQuotient<Flector> {
@@ -164,6 +167,12 @@ extension AntiScalar: GeometricQuotient<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<DualNum> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension DualNum: GeometricQuotient<DualNum> {
     associatedtype Output = DualNum;
     func geometric_quotient(other: DualNum) -> Output {
@@ -175,9 +184,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(geometric_product.scalar * this.scalar, (geometric_product.scalar * this.e1234) + (geometric_product.e1234 * this.scalar))
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<DualNum> {
-        geometric_quotient_partial(this)
     }
 }
 extension DualNum: GeometricQuotient<Flector> {
@@ -360,6 +366,12 @@ extension DualNum: GeometricQuotient<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Flector> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Flector: GeometricQuotient<DualNum> {
     associatedtype Output = Flector;
     func geometric_quotient(other: DualNum) -> Output {
@@ -373,9 +385,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e423, e431, e412, e321 */
             float4(((float3(geometric_product.scalar) * this.group1.xyz) + (float3(geometric_product.e1234) * this.group0.xyz)), geometric_product.scalar * this.e321)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Flector> {
-        geometric_quotient_partial(this)
     }
 }
 extension Flector: GeometricQuotient<Flector> {
@@ -564,6 +573,12 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Horizon> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Horizon: GeometricQuotient<DualNum> {
     associatedtype Output = Flector;
     func geometric_quotient(other: DualNum) -> Output {
@@ -577,9 +592,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e423, e431, e412, e321 */
             float4(float3(0.0), geometric_product.scalar * this.e321)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Horizon> {
-        geometric_quotient_partial(this)
     }
 }
 extension Horizon: GeometricQuotient<Flector> {
@@ -756,6 +768,12 @@ extension Horizon: GeometricQuotient<Scalar> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Line> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Line: GeometricQuotient<DualNum> {
     associatedtype Output = Line;
     func geometric_quotient(other: DualNum) -> Output {
@@ -769,9 +787,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e23, e31, e12 */
             float3(geometric_product.scalar) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Line> {
-        geometric_quotient_partial(this)
     }
 }
 extension Line: GeometricQuotient<Flector> {
@@ -960,6 +975,12 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Motor> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Motor: GeometricQuotient<DualNum> {
     associatedtype Output = Motor;
     func geometric_quotient(other: DualNum) -> Output {
@@ -973,9 +994,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e23, e31, e12, scalar */
             float4(geometric_product.scalar) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Motor> {
-        geometric_quotient_partial(this)
     }
 }
 extension Motor: GeometricQuotient<Flector> {
@@ -1164,6 +1182,12 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<MultiVector> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension MultiVector: GeometricQuotient<DualNum> {
     associatedtype Output = MultiVector;
     func geometric_quotient(other: DualNum) -> Output {
@@ -1183,9 +1207,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e423, e431, e412, e321 */
             float4(((float3(geometric_product.scalar) * this.group4.xyz) + (float3(geometric_product.e1234) * this.group1.xyz)), geometric_product.scalar * this.e321)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<MultiVector> {
-        geometric_quotient_partial(this)
     }
 }
 extension MultiVector: GeometricQuotient<Flector> {
@@ -1416,6 +1437,12 @@ Scalar geometric_product = Scalar.from_groups(
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Origin> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Origin: GeometricQuotient<DualNum> {
     associatedtype Output = Origin;
     func geometric_quotient(other: DualNum) -> Output {
@@ -1423,9 +1450,6 @@ extension Origin: GeometricQuotient<DualNum> {
             /* e4 */
             this.e4 / (other.scalar)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Origin> {
-        geometric_quotient_partial(this)
     }
 }
 extension Origin: GeometricQuotient<Flector> {
@@ -1588,6 +1612,12 @@ extension Origin: GeometricQuotient<Scalar> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Plane> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Plane: GeometricQuotient<DualNum> {
     associatedtype Output = Flector;
     func geometric_quotient(other: DualNum) -> Output {
@@ -1601,9 +1631,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e423, e431, e412, e321 */
             float4(geometric_product.scalar) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Plane> {
-        geometric_quotient_partial(this)
     }
 }
 extension Plane: GeometricQuotient<Flector> {
@@ -1786,6 +1813,12 @@ extension Plane: GeometricQuotient<Scalar> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Point> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Point: GeometricQuotient<DualNum> {
     associatedtype Output = Flector;
     func geometric_quotient(other: DualNum) -> Output {
@@ -1799,9 +1832,6 @@ DualNum geometric_product = DualNum.from_groups(
             /* e423, e431, e412, e321 */
             float4(geometric_product.group0.yy, geometric_product.e1234, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Point> {
-        geometric_quotient_partial(this)
     }
 }
 extension Point: GeometricQuotient<Flector> {
@@ -1984,6 +2014,12 @@ extension Point: GeometricQuotient<Scalar> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Scalar> {
+        return GeometricQuotientInfixPartial { a: this };
+    }
+}
 extension Scalar: GeometricQuotient<DualNum> {
     associatedtype Output = DualNum;
     func geometric_quotient(other: DualNum) -> Output {
@@ -1995,9 +2031,6 @@ Scalar other_2 = Scalar.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * float2(other.scalar * other_2.scalar, other.e1234 * other_2.scalar)
         );
-    }
-    func operator/(_rhs: GeometricQuotientInfix) -> geometric_quotient_partial<Scalar> {
-        geometric_quotient_partial(this)
     }
 }
 extension Scalar: GeometricQuotient<Flector> {

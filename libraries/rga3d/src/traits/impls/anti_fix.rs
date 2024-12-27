@@ -18,14 +18,14 @@
 //   Median:         0       4       0
 //  Average:         0       3       0
 //  Maximum:         2       9       0
-impl std::ops::Div<anti_fix> for AntiScalar {
+impl std::ops::Div<AntiFixPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
+    fn div(self, _rhs: AntiFixPrefixOrPostfix) -> Self::Output {
         self.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_fix) {
+impl std::ops::DivAssign<AntiFixPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiFixPrefixOrPostfix) {
         *self = self.anti_fix()
     }
 }
@@ -34,14 +34,14 @@ impl AntiFix for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ 1.0);
     }
 }
-impl std::ops::Div<anti_fix> for Origin {
+impl std::ops::Div<AntiFixPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
+    fn div(self, _rhs: AntiFixPrefixOrPostfix) -> Self::Output {
         self.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Origin {
-    fn div_assign(&mut self, _rhs: anti_fix) {
+impl std::ops::DivAssign<AntiFixPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: AntiFixPrefixOrPostfix) {
         *self = self.anti_fix()
     }
 }
@@ -50,14 +50,14 @@ impl AntiFix for Origin {
         return Origin::from_groups(/* e4 */ 1.0);
     }
 }
-impl std::ops::Div<anti_fix> for Plane {
+impl std::ops::Div<AntiFixPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
+    fn div(self, _rhs: AntiFixPrefixOrPostfix) -> Self::Output {
         self.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Plane {
-    fn div_assign(&mut self, _rhs: anti_fix) {
+impl std::ops::DivAssign<AntiFixPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiFixPrefixOrPostfix) {
         *self = self.anti_fix()
     }
 }
@@ -77,14 +77,14 @@ impl AntiFix for Plane {
         );
     }
 }
-impl std::ops::Div<anti_fix> for Point {
+impl std::ops::Div<AntiFixPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: anti_fix) -> Self::Output {
+    fn div(self, _rhs: AntiFixPrefixOrPostfix) -> Self::Output {
         self.anti_fix()
     }
 }
-impl std::ops::DivAssign<anti_fix> for Point {
-    fn div_assign(&mut self, _rhs: anti_fix) {
+impl std::ops::DivAssign<AntiFixPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: AntiFixPrefixOrPostfix) {
         *self = self.anti_fix()
     }
 }

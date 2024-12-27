@@ -1,14 +1,23 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> AntiScalar {
+        return this.flat_weight();
+    }
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.flat_weight();
+        return *this;
+    }
+}
 extension AntiScalar: FlatWeight {
     associatedtype Output = AntiScalar;
     func flat_weight() -> Output {
         return this;
     }
-    func operator/(_rhs: FlatWeightInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> AntiScalar {
         return this.flat_weight();
-    }
-    func operator/=(const FlatWeightInfix& _rhs) -> AntiScalar& {
-        this = this.flat_weight();
-        return *this;
     }
 }
 extension DualNum: FlatWeight {
@@ -19,8 +28,15 @@ extension DualNum: FlatWeight {
             this.e1234
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> AntiScalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Flector {
         return this.flat_weight();
+    }
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Flector& {
+        this = this.flat_weight();
+        return *this;
     }
 }
 extension Flector: FlatWeight {
@@ -33,10 +49,13 @@ extension Flector: FlatWeight {
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> Flector {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Line {
         return this.flat_weight();
     }
-    func operator/=(const FlatWeightInfix& _rhs) -> Flector& {
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Line& {
         this = this.flat_weight();
         return *this;
     }
@@ -51,10 +70,13 @@ extension Line: FlatWeight {
             float3(0.0)
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Motor {
         return this.flat_weight();
     }
-    func operator/=(const FlatWeightInfix& _rhs) -> Line& {
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Motor& {
         this = this.flat_weight();
         return *this;
     }
@@ -69,10 +91,13 @@ extension Motor: FlatWeight {
             float4(0.0)
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> MultiVector {
         return this.flat_weight();
     }
-    func operator/=(const FlatWeightInfix& _rhs) -> Motor& {
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.flat_weight();
         return *this;
     }
@@ -93,10 +118,13 @@ extension MultiVector: FlatWeight {
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Origin {
         return this.flat_weight();
     }
-    func operator/=(const FlatWeightInfix& _rhs) -> MultiVector& {
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Origin& {
         this = this.flat_weight();
         return *this;
     }
@@ -106,10 +134,13 @@ extension Origin: FlatWeight {
     func flat_weight() -> Output {
         return this;
     }
-    func operator/(_rhs: FlatWeightInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Plane {
         return this.flat_weight();
     }
-    func operator/=(const FlatWeightInfix& _rhs) -> Origin& {
+    func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Plane& {
         this = this.flat_weight();
         return *this;
     }
@@ -122,12 +153,11 @@ extension Plane: FlatWeight {
             float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
-    func operator/(_rhs: FlatWeightInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Origin {
         return this.flat_weight();
-    }
-    func operator/=(const FlatWeightInfix& _rhs) -> Plane& {
-        this = this.flat_weight();
-        return *this;
     }
 }
 extension Point: FlatWeight {
@@ -137,8 +167,5 @@ extension Point: FlatWeight {
             /* e4 */
             this.e4
         );
-    }
-    func operator/(_rhs: FlatWeightInfix) -> Origin {
-        return this.flat_weight();
     }
 }

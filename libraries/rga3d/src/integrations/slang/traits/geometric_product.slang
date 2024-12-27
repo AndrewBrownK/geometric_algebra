@@ -6,7 +6,7 @@ public interface GeometricProduct<T> {
     associatedtype Output;
     func geometric_product(other: T) -> Output;
 }
-public const static geometric_product: GeometricProductInfix = GeometricProductInfix {}
+public static const geometric_product: GeometricProductInfix = GeometricProductInfix {};
 public struct GeometricProductInfix {}
 public struct GeometricProductInfixPartial<A> { a: A }
 extension GeometricProductInfixPartial<A> for A: GeometricProduct<B> {

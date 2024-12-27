@@ -1,12 +1,25 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiScalar {
+        return this.double_complement();
+    }
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.double_complement();
+        return *this;
+    }
+}
 extension AntiScalar: DoubleComplement {
     associatedtype Output = AntiScalar;
     func double_complement() -> Output {
         return this;
     }
-    func operator/(_rhs: DoubleComplementInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> DualNum {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> AntiScalar& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> DualNum& {
         this = this.double_complement();
         return *this;
     }
@@ -16,10 +29,13 @@ extension DualNum: DoubleComplement {
     func double_complement() -> Output {
         return this;
     }
-    func operator/(_rhs: DoubleComplementInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Flector {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> DualNum& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Flector& {
         this = this.double_complement();
         return *this;
     }
@@ -34,10 +50,13 @@ extension Flector: DoubleComplement {
             this.group1 * float4(-1.0)
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Horizon {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Flector& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.double_complement();
         return *this;
     }
@@ -50,10 +69,13 @@ extension Horizon: DoubleComplement {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Line {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Horizon& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Line& {
         this = this.double_complement();
         return *this;
     }
@@ -63,10 +85,13 @@ extension Line: DoubleComplement {
     func double_complement() -> Output {
         return this;
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Motor {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Line& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Motor& {
         this = this.double_complement();
         return *this;
     }
@@ -76,10 +101,13 @@ extension Motor: DoubleComplement {
     func double_complement() -> Output {
         return this;
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> MultiVector {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Motor& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.double_complement();
         return *this;
     }
@@ -100,10 +128,13 @@ extension MultiVector: DoubleComplement {
             this.group4 * float4(-1.0)
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Origin {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> MultiVector& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Origin& {
         this = this.double_complement();
         return *this;
     }
@@ -116,10 +147,13 @@ extension Origin: DoubleComplement {
             this.e4 * -1.0
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Plane {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Origin& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Plane& {
         this = this.double_complement();
         return *this;
     }
@@ -132,10 +166,13 @@ extension Plane: DoubleComplement {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Point {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Plane& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Point& {
         this = this.double_complement();
         return *this;
     }
@@ -148,10 +185,13 @@ extension Point: DoubleComplement {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: DoubleComplementInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Scalar {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Point& {
+    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.double_complement();
         return *this;
     }
@@ -160,12 +200,5 @@ extension Scalar: DoubleComplement {
     associatedtype Output = Scalar;
     func double_complement() -> Output {
         return this;
-    }
-    func operator/(_rhs: DoubleComplementInfix) -> Scalar {
-        return this.double_complement();
-    }
-    func operator/=(const DoubleComplementInfix& _rhs) -> Scalar& {
-        this = this.double_complement();
-        return *this;
     }
 }

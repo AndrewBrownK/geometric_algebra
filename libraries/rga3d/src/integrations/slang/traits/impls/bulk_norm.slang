@@ -1,11 +1,20 @@
 using traits::FlatBulkNormSquared;
 using traits::SquareRoot;
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+        return this.bulk_norm();
+    }
+}
 extension Flector: BulkNorm {
     associatedtype Output = Scalar;
     func bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: BulkNormInfix) -> Scalar {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
         return this.bulk_norm();
     }
 }
@@ -14,7 +23,10 @@ extension Line: BulkNorm {
     func bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: BulkNormInfix) -> Scalar {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
         return this.bulk_norm();
     }
 }
@@ -23,7 +35,10 @@ extension Motor: BulkNorm {
     func bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: BulkNormInfix) -> Scalar {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
         return this.bulk_norm();
     }
 }
@@ -32,7 +47,10 @@ extension MultiVector: BulkNorm {
     func bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
     }
-    func operator/(_rhs: BulkNormInfix) -> Scalar {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
         return this.bulk_norm();
     }
 }
@@ -40,8 +58,5 @@ extension Point: BulkNorm {
     associatedtype Output = Scalar;
     func bulk_norm() -> Output {
         return this.flat_bulk_norm_squared().square_root();
-    }
-    func operator/(_rhs: BulkNormInfix) -> Scalar {
-        return this.bulk_norm();
     }
 }

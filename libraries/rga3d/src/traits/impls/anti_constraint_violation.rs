@@ -18,9 +18,9 @@
 //   Median:         7      12       0
 //  Average:        16      23       0
 //  Maximum:        62      74       0
-impl std::ops::Div<anti_constraint_violation> for DualNum {
+impl std::ops::Div<AntiConstraintViolationPrefixOrPostfix> for DualNum {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
@@ -34,9 +34,9 @@ impl AntiConstraintViolation for DualNum {
         return Scalar::from_groups(/* scalar */ self[scalar] * self[e1234] * 2.0);
     }
 }
-impl std::ops::Div<anti_constraint_violation> for Flector {
+impl std::ops::Div<AntiConstraintViolationPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
@@ -62,9 +62,9 @@ impl AntiConstraintViolation for Flector {
         );
     }
 }
-impl std::ops::Div<anti_constraint_violation> for Line {
+impl std::ops::Div<AntiConstraintViolationPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
@@ -96,9 +96,9 @@ impl AntiConstraintViolation for Line {
         );
     }
 }
-impl std::ops::Div<anti_constraint_violation> for Motor {
+impl std::ops::Div<AntiConstraintViolationPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
@@ -131,14 +131,14 @@ impl AntiConstraintViolation for Motor {
         );
     }
 }
-impl std::ops::Div<anti_constraint_violation> for MultiVector {
+impl std::ops::Div<AntiConstraintViolationPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
-impl std::ops::DivAssign<anti_constraint_violation> for MultiVector {
-    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+impl std::ops::DivAssign<AntiConstraintViolationPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: AntiConstraintViolationPrefixOrPostfix) {
         *self = self.anti_constraint_violation()
     }
 }

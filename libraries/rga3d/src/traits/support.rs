@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait Support {
     fn support(self) -> Line;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct support;
-impl<A: Support> std::ops::Div<A> for support {
+#[allow(non_upper_case_globals, dead_code)]
+pub static support: SupportPrefixOrPostfix = SupportPrefixOrPostfix;
+pub struct SupportPrefixOrPostfix;
+impl<A: Support> std::ops::Div<A> for SupportPrefixOrPostfix {
     type Output = Line;
     fn div(self, rhs: A) -> Self::Output {
         rhs.support()

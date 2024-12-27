@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Scalar {
+        return this.bulk();
+    }
+}
 extension DualNum: Bulk {
     associatedtype Output = Scalar;
     func bulk() -> Output {
@@ -6,8 +12,15 @@ extension DualNum: Bulk {
             this.scalar
         );
     }
-    func operator/(_rhs: BulkInfix) -> Scalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Flector {
         return this.bulk();
+    }
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Flector& {
+        this = this.bulk();
+        return *this;
     }
 }
 extension Flector: Bulk {
@@ -20,10 +33,13 @@ extension Flector: Bulk {
             float4(float3(0.0), this.e321)
         );
     }
-    func operator/(_rhs: BulkInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Horizon {
         return this.bulk();
     }
-    func operator/=(const BulkInfix& _rhs) -> Flector& {
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.bulk();
         return *this;
     }
@@ -33,10 +49,13 @@ extension Horizon: Bulk {
     func bulk() -> Output {
         return this;
     }
-    func operator/(_rhs: BulkInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Line {
         return this.bulk();
     }
-    func operator/=(const BulkInfix& _rhs) -> Horizon& {
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Line& {
         this = this.bulk();
         return *this;
     }
@@ -51,10 +70,13 @@ extension Line: Bulk {
             this.group1
         );
     }
-    func operator/(_rhs: BulkInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Motor {
         return this.bulk();
     }
-    func operator/=(const BulkInfix& _rhs) -> Line& {
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Motor& {
         this = this.bulk();
         return *this;
     }
@@ -69,10 +91,13 @@ extension Motor: Bulk {
             this.group1
         );
     }
-    func operator/(_rhs: BulkInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> MultiVector {
         return this.bulk();
     }
-    func operator/=(const BulkInfix& _rhs) -> Motor& {
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.bulk();
         return *this;
     }
@@ -93,12 +118,11 @@ extension MultiVector: Bulk {
             float4(float3(0.0), this.e321)
         );
     }
-    func operator/(_rhs: BulkInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Horizon {
         return this.bulk();
-    }
-    func operator/=(const BulkInfix& _rhs) -> MultiVector& {
-        this = this.bulk();
-        return *this;
     }
 }
 extension Plane: Bulk {
@@ -109,8 +133,15 @@ extension Plane: Bulk {
             this.e321
         );
     }
-    func operator/(_rhs: BulkInfix) -> Horizon {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Point {
         return this.bulk();
+    }
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Point& {
+        this = this.bulk();
+        return *this;
     }
 }
 extension Point: Bulk {
@@ -121,10 +152,13 @@ extension Point: Bulk {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: BulkInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: BulkPrefixOrPostfix) -> Scalar {
         return this.bulk();
     }
-    func operator/=(const BulkInfix& _rhs) -> Point& {
+    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.bulk();
         return *this;
     }
@@ -133,12 +167,5 @@ extension Scalar: Bulk {
     associatedtype Output = Scalar;
     func bulk() -> Output {
         return this;
-    }
-    func operator/(_rhs: BulkInfix) -> Scalar {
-        return this.bulk();
-    }
-    func operator/=(const BulkInfix& _rhs) -> Scalar& {
-        this = this.bulk();
-        return *this;
     }
 }

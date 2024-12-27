@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<AntiScalar> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension AntiScalar: AntiWedge<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: AntiWedge<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<AntiScalar> {
-        anti_wedge_partial(this)
     }
 }
 extension AntiScalar: AntiWedge<DualNum> {
@@ -114,6 +117,12 @@ extension AntiScalar: AntiWedge<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<DualNum> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension DualNum: AntiWedge<AntiScalar> {
     associatedtype Output = DualNum;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -121,9 +130,6 @@ extension DualNum: AntiWedge<AntiScalar> {
             /* scalar, e1234 */
             float2(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<DualNum> {
-        anti_wedge_partial(this)
     }
 }
 extension DualNum: AntiWedge<DualNum> {
@@ -230,6 +236,12 @@ extension DualNum: AntiWedge<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Flector> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Flector: AntiWedge<AntiScalar> {
     associatedtype Output = Flector;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -239,9 +251,6 @@ extension Flector: AntiWedge<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Flector> {
-        anti_wedge_partial(this)
     }
 }
 extension Flector: AntiWedge<DualNum> {
@@ -343,6 +352,12 @@ extension Flector: AntiWedge<Point> {
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Horizon> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Horizon: AntiWedge<AntiScalar> {
     associatedtype Output = Horizon;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -350,9 +365,6 @@ extension Horizon: AntiWedge<AntiScalar> {
             /* e321 */
             other.e1234 * this.e321
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Horizon> {
-        anti_wedge_partial(this)
     }
 }
 extension Horizon: AntiWedge<DualNum> {
@@ -441,6 +453,12 @@ extension Horizon: AntiWedge<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Line> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Line: AntiWedge<AntiScalar> {
     associatedtype Output = Line;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -450,9 +468,6 @@ extension Line: AntiWedge<AntiScalar> {
             /* e23, e31, e12 */
             float3(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Line> {
-        anti_wedge_partial(this)
     }
 }
 extension Line: AntiWedge<DualNum> {
@@ -530,6 +545,12 @@ extension Line: AntiWedge<Plane> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Motor> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Motor: AntiWedge<AntiScalar> {
     associatedtype Output = Motor;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -539,9 +560,6 @@ extension Motor: AntiWedge<AntiScalar> {
             /* e23, e31, e12, scalar */
             float4(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Motor> {
-        anti_wedge_partial(this)
     }
 }
 extension Motor: AntiWedge<DualNum> {
@@ -654,6 +672,12 @@ extension Motor: AntiWedge<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<MultiVector> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension MultiVector: AntiWedge<AntiScalar> {
     associatedtype Output = MultiVector;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -669,9 +693,6 @@ extension MultiVector: AntiWedge<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group4
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<MultiVector> {
-        anti_wedge_partial(this)
     }
 }
 extension MultiVector: AntiWedge<DualNum> {
@@ -836,6 +857,12 @@ extension MultiVector: AntiWedge<Scalar> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Origin> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Origin: AntiWedge<AntiScalar> {
     associatedtype Output = Origin;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -843,9 +870,6 @@ extension Origin: AntiWedge<AntiScalar> {
             /* e4 */
             other.e1234 * this.e4
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Origin> {
-        anti_wedge_partial(this)
     }
 }
 extension Origin: AntiWedge<DualNum> {
@@ -910,6 +934,12 @@ extension Origin: AntiWedge<Plane> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Plane> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Plane: AntiWedge<AntiScalar> {
     associatedtype Output = Plane;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -917,9 +947,6 @@ extension Plane: AntiWedge<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Plane> {
-        anti_wedge_partial(this)
     }
 }
 extension Plane: AntiWedge<DualNum> {
@@ -1019,6 +1046,12 @@ extension Plane: AntiWedge<Point> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Point> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Point: AntiWedge<AntiScalar> {
     associatedtype Output = Point;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -1026,9 +1059,6 @@ extension Point: AntiWedge<AntiScalar> {
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Point> {
-        anti_wedge_partial(this)
     }
 }
 extension Point: AntiWedge<DualNum> {
@@ -1093,6 +1123,12 @@ extension Point: AntiWedge<Plane> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiWedgeInfix) -> AntiWedgeInfixPartial<Scalar> {
+        return AntiWedgeInfixPartial { a: this };
+    }
+}
 extension Scalar: AntiWedge<AntiScalar> {
     associatedtype Output = Scalar;
     func anti_wedge(other: AntiScalar) -> Output {
@@ -1100,9 +1136,6 @@ extension Scalar: AntiWedge<AntiScalar> {
             /* scalar */
             other.e1234 * this.scalar
         );
-    }
-    func operator/(_rhs: AntiWedgeInfix) -> anti_wedge_partial<Scalar> {
-        anti_wedge_partial(this)
     }
 }
 extension Scalar: AntiWedge<DualNum> {

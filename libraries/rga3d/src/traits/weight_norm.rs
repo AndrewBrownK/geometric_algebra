@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait WeightNorm {
     fn weight_norm(self) -> AntiScalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct weight_norm;
-impl<A: WeightNorm> std::ops::Div<A> for weight_norm {
+#[allow(non_upper_case_globals, dead_code)]
+pub static weight_norm: WeightNormPrefixOrPostfix = WeightNormPrefixOrPostfix;
+pub struct WeightNormPrefixOrPostfix;
+impl<A: WeightNorm> std::ops::Div<A> for WeightNormPrefixOrPostfix {
     type Output = AntiScalar;
     fn div(self, rhs: A) -> Self::Output {
         rhs.weight_norm()

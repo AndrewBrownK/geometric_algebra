@@ -18,14 +18,14 @@
 //   Median:         0       1       0
 //  Average:         0       2       0
 //  Maximum:         0       8       0
-impl std::ops::Div<double_complement> for AntiScalar {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for AntiScalar {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -34,14 +34,14 @@ impl DoubleComplement for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for DualNum {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for DualNum {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -50,14 +50,14 @@ impl DoubleComplement for DualNum {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for Flector {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Flector {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -75,14 +75,14 @@ impl DoubleComplement for Flector {
         );
     }
 }
-impl std::ops::Div<double_complement> for Horizon {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Horizon {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -95,14 +95,14 @@ impl DoubleComplement for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
-impl std::ops::Div<double_complement> for Line {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Line {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -111,14 +111,14 @@ impl DoubleComplement for Line {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for Motor {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Motor {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -127,14 +127,14 @@ impl DoubleComplement for Motor {
         return self;
     }
 }
-impl std::ops::Div<double_complement> for MultiVector {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for MultiVector {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -158,14 +158,14 @@ impl DoubleComplement for MultiVector {
         );
     }
 }
-impl std::ops::Div<double_complement> for Origin {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Origin {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -178,14 +178,14 @@ impl DoubleComplement for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * -1.0);
     }
 }
-impl std::ops::Div<double_complement> for Plane {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Plane {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -198,14 +198,14 @@ impl DoubleComplement for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<double_complement> for Point {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Point {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }
@@ -218,14 +218,14 @@ impl DoubleComplement for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<double_complement> for Scalar {
+impl std::ops::Div<DoubleComplementPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: double_complement) -> Self::Output {
+    fn div(self, _rhs: DoubleComplementPrefixOrPostfix) -> Self::Output {
         self.double_complement()
     }
 }
-impl std::ops::DivAssign<double_complement> for Scalar {
-    fn div_assign(&mut self, _rhs: double_complement) {
+impl std::ops::DivAssign<DoubleComplementPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: DoubleComplementPrefixOrPostfix) {
         *self = self.double_complement()
     }
 }

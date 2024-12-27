@@ -8,9 +8,10 @@ pub trait Bulk {
     type Output;
     fn bulk(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct bulk;
-impl<A: Bulk> std::ops::Div<A> for bulk {
+#[allow(non_upper_case_globals, dead_code)]
+pub static bulk: BulkPrefixOrPostfix = BulkPrefixOrPostfix;
+pub struct BulkPrefixOrPostfix;
+impl<A: Bulk> std::ops::Div<A> for BulkPrefixOrPostfix {
     type Output = <A as Bulk>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.bulk()

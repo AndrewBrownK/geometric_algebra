@@ -18,14 +18,14 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
-impl std::ops::Div<anti_constraint_valid> for AntiScalar {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for AntiScalar {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -34,14 +34,14 @@ impl AntiConstraintValid for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Horizon {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Horizon {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -50,14 +50,14 @@ impl AntiConstraintValid for Horizon {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Origin {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Origin {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -66,14 +66,14 @@ impl AntiConstraintValid for Origin {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Plane {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Plane {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -82,14 +82,14 @@ impl AntiConstraintValid for Plane {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Point {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Point {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }
@@ -98,14 +98,14 @@ impl AntiConstraintValid for Point {
         return self;
     }
 }
-impl std::ops::Div<anti_constraint_valid> for Scalar {
+impl std::ops::Div<AntiConstraintValidPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+    fn div(self, _rhs: AntiConstraintValidPrefixOrPostfix) -> Self::Output {
         self.anti_constraint_valid()
     }
 }
-impl std::ops::DivAssign<anti_constraint_valid> for Scalar {
-    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+impl std::ops::DivAssign<AntiConstraintValidPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: AntiConstraintValidPrefixOrPostfix) {
         *self = self.anti_constraint_valid()
     }
 }

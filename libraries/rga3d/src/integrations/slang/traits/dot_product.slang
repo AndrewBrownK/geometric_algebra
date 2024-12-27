@@ -5,7 +5,7 @@ using data::*;
 public interface DotProduct<T> {
     func dot_product(other: T) -> Scalar;
 }
-public const static dot_product: DotProductInfix = DotProductInfix {}
+public static const dot_product: DotProductInfix = DotProductInfix {};
 public struct DotProductInfix {}
 public struct DotProductInfixPartial<A> { a: A }
 extension DotProductInfixPartial<A> for A: DotProduct<B> {

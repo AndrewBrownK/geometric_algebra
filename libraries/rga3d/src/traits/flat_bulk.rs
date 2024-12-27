@@ -8,9 +8,10 @@ pub trait FlatBulk {
     type Output;
     fn flat_bulk(self) -> Self::Output;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct flat_bulk;
-impl<A: FlatBulk> std::ops::Div<A> for flat_bulk {
+#[allow(non_upper_case_globals, dead_code)]
+pub static flat_bulk: FlatBulkPrefixOrPostfix = FlatBulkPrefixOrPostfix;
+pub struct FlatBulkPrefixOrPostfix;
+impl<A: FlatBulk> std::ops::Div<A> for FlatBulkPrefixOrPostfix {
     type Output = <A as FlatBulk>::Output;
     fn div(self, rhs: A) -> Self::Output {
         rhs.flat_bulk()

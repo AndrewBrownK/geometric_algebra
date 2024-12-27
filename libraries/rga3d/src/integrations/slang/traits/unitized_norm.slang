@@ -5,9 +5,9 @@ using data::*;
 public interface UnitizedNorm {
     func unitized_norm() -> float;
 }
-public const static unitized_norm: UnitizedNormInfix = UnitizedNormInfix {}
-public struct UnitizedNormInfix {}
-extension UnitizedNormInfix for A: UnitizedNorm {
+public static const unitized_norm: UnitizedNormPrefixOrPostfix = UnitizedNormPrefixOrPostfix {};
+public struct UnitizedNormPrefixOrPostfix {}
+extension UnitizedNormPrefixOrPostfix for A: UnitizedNorm {
     func operator/(rhs: A) -> A.Output {
         return rhs.unitized_norm();
     }

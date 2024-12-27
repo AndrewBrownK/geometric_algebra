@@ -18,9 +18,9 @@
 //   Median:         7      12       0
 //  Average:        16      23       0
 //  Maximum:        62      74       0
-impl std::ops::Div<constraint_violation> for DualNum {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for DualNum {
     type Output = AntiScalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -34,9 +34,9 @@ impl ConstraintViolation for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[scalar] * self[e1234] * 2.0);
     }
 }
-impl std::ops::Div<constraint_violation> for Flector {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Flector {
     type Output = AntiScalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -62,9 +62,9 @@ impl ConstraintViolation for Flector {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for Line {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Line {
     type Output = AntiScalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -96,9 +96,9 @@ impl ConstraintViolation for Line {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for Motor {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for Motor {
     type Output = AntiScalar;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
@@ -131,14 +131,14 @@ impl ConstraintViolation for Motor {
         );
     }
 }
-impl std::ops::Div<constraint_violation> for MultiVector {
+impl std::ops::Div<ConstraintViolationPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: constraint_violation) -> Self::Output {
+    fn div(self, _rhs: ConstraintViolationPrefixOrPostfix) -> Self::Output {
         self.constraint_violation()
     }
 }
-impl std::ops::DivAssign<constraint_violation> for MultiVector {
-    fn div_assign(&mut self, _rhs: constraint_violation) {
+impl std::ops::DivAssign<ConstraintViolationPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: ConstraintViolationPrefixOrPostfix) {
         *self = self.constraint_violation()
     }
 }

@@ -6,7 +6,7 @@ public interface AntiProjectViaHorizonOnto<T> {
     associatedtype Output;
     func anti_project_via_horizon_onto(other: T) -> Output;
 }
-public const static anti_project_via_horizon_onto: AntiProjectViaHorizonOntoInfix = AntiProjectViaHorizonOntoInfix {}
+public static const anti_project_via_horizon_onto: AntiProjectViaHorizonOntoInfix = AntiProjectViaHorizonOntoInfix {};
 public struct AntiProjectViaHorizonOntoInfix {}
 public struct AntiProjectViaHorizonOntoInfixPartial<A> { a: A }
 extension AntiProjectViaHorizonOntoInfixPartial<A> for A: AntiProjectViaHorizonOnto<B> {

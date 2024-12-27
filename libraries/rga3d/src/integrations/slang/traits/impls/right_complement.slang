@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Scalar {
+        return this.right_complement();
+    }
+}
 extension AntiScalar: RightComplement {
     associatedtype Output = Scalar;
     func right_complement() -> Output {
@@ -6,8 +12,15 @@ extension AntiScalar: RightComplement {
             this.e1234
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Scalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> DualNum {
         return this.right_complement();
+    }
+    func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> DualNum& {
+        this = this.right_complement();
+        return *this;
     }
 }
 extension DualNum: RightComplement {
@@ -18,10 +31,13 @@ extension DualNum: RightComplement {
             this.group0.yx
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Flector {
         return this.right_complement();
     }
-    func operator/=(const RightComplementInfix& _rhs) -> DualNum& {
+    func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Flector& {
         this = this.right_complement();
         return *this;
     }
@@ -36,12 +52,11 @@ extension Flector: RightComplement {
             this.group0
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Origin {
         return this.right_complement();
-    }
-    func operator/=(const RightComplementInfix& _rhs) -> Flector& {
-        this = this.right_complement();
-        return *this;
     }
 }
 extension Horizon: RightComplement {
@@ -52,8 +67,15 @@ extension Horizon: RightComplement {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Origin {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Line {
         return this.right_complement();
+    }
+    func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Line& {
+        this = this.right_complement();
+        return *this;
     }
 }
 extension Line: RightComplement {
@@ -66,10 +88,13 @@ extension Line: RightComplement {
             this.group0 * float3(-1.0)
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Motor {
         return this.right_complement();
     }
-    func operator/=(const RightComplementInfix& _rhs) -> Line& {
+    func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Motor& {
         this = this.right_complement();
         return *this;
     }
@@ -84,10 +109,13 @@ extension Motor: RightComplement {
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> MultiVector {
         return this.right_complement();
     }
-    func operator/=(const RightComplementInfix& _rhs) -> Motor& {
+    func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.right_complement();
         return *this;
     }
@@ -108,12 +136,11 @@ extension MultiVector: RightComplement {
             this.group1
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Horizon {
         return this.right_complement();
-    }
-    func operator/=(const RightComplementInfix& _rhs) -> MultiVector& {
-        this = this.right_complement();
-        return *this;
     }
 }
 extension Origin: RightComplement {
@@ -124,7 +151,10 @@ extension Origin: RightComplement {
             this.e4
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Horizon {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Point {
         return this.right_complement();
     }
 }
@@ -136,7 +166,10 @@ extension Plane: RightComplement {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Point {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Plane {
         return this.right_complement();
     }
 }
@@ -148,7 +181,10 @@ extension Point: RightComplement {
             this.group0
         );
     }
-    func operator/(_rhs: RightComplementInfix) -> Plane {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: RightComplementPrefixOrPostfix) -> AntiScalar {
         return this.right_complement();
     }
 }
@@ -159,8 +195,5 @@ extension Scalar: RightComplement {
             /* e1234 */
             this.scalar
         );
-    }
-    func operator/(_rhs: RightComplementInfix) -> AntiScalar {
-        return this.right_complement();
     }
 }

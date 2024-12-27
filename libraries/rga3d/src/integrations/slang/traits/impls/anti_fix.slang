@@ -1,3 +1,13 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiFixPrefixOrPostfix) -> AntiScalar {
+        return this.anti_fix();
+    }
+    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.anti_fix();
+        return *this;
+    }
+}
 extension AntiScalar: AntiFix {
     associatedtype Output = AntiScalar;
     func anti_fix() -> Output {
@@ -6,10 +16,13 @@ extension AntiScalar: AntiFix {
             1.0
         );
     }
-    func operator/(_rhs: AntiFixInfix) -> AntiScalar {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Origin {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixInfix& _rhs) -> AntiScalar& {
+    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Origin& {
         this = this.anti_fix();
         return *this;
     }
@@ -22,10 +35,13 @@ extension Origin: AntiFix {
             1.0
         );
     }
-    func operator/(_rhs: AntiFixInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Plane {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixInfix& _rhs) -> Origin& {
+    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Plane& {
         this = this.anti_fix();
         return *this;
     }
@@ -38,10 +54,13 @@ extension Plane: AntiFix {
             float4(powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)) * this.group0
         );
     }
-    func operator/(_rhs: AntiFixInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Point {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixInfix& _rhs) -> Plane& {
+    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Point& {
         this = this.anti_fix();
         return *this;
     }
@@ -53,12 +72,5 @@ extension Point: AntiFix {
             /* e1, e2, e3, e4 */
             float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e4, -0.5) * -1.0) * this.group0
         );
-    }
-    func operator/(_rhs: AntiFixInfix) -> Point {
-        return this.anti_fix();
-    }
-    func operator/=(const AntiFixInfix& _rhs) -> Point& {
-        this = this.anti_fix();
-        return *this;
     }
 }

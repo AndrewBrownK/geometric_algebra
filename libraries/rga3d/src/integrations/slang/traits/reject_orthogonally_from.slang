@@ -6,7 +6,7 @@ public interface RejectOrthogonallyFrom<T> {
     associatedtype Output;
     func reject_orthogonally_from(other: T) -> Output;
 }
-public const static reject_orthogonally_from: RejectOrthogonallyFromInfix = RejectOrthogonallyFromInfix {}
+public static const reject_orthogonally_from: RejectOrthogonallyFromInfix = RejectOrthogonallyFromInfix {};
 public struct RejectOrthogonallyFromInfix {}
 public struct RejectOrthogonallyFromInfixPartial<A> { a: A }
 extension RejectOrthogonallyFromInfixPartial<A> for A: RejectOrthogonallyFrom<B> {

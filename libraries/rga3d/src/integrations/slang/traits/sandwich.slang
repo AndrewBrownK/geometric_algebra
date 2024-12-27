@@ -6,7 +6,7 @@ public interface Sandwich<T> {
     associatedtype Output;
     func sandwich(other: T) -> Output;
 }
-public const static sandwich: SandwichInfix = SandwichInfix {}
+public static const sandwich: SandwichInfix = SandwichInfix {};
 public struct SandwichInfix {}
 public struct SandwichInfixPartial<A> { a: A }
 extension SandwichInfixPartial<A> for A: Sandwich<B> {

@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Scalar {
+        return this.flat_bulk();
+    }
+}
 extension DualNum: FlatBulk {
     associatedtype Output = Scalar;
     func flat_bulk() -> Output {
@@ -6,8 +12,15 @@ extension DualNum: FlatBulk {
             this.scalar
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Scalar {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
         return this.flat_bulk();
+    }
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Flector& {
+        this = this.flat_bulk();
+        return *this;
     }
 }
 extension Flector: FlatBulk {
@@ -20,10 +33,13 @@ extension Flector: FlatBulk {
             float4(float3(0.0), this.e321)
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Horizon {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkInfix& _rhs) -> Flector& {
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.flat_bulk();
         return *this;
     }
@@ -33,10 +49,13 @@ extension Horizon: FlatBulk {
     func flat_bulk() -> Output {
         return this;
     }
-    func operator/(_rhs: FlatBulkInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Line {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkInfix& _rhs) -> Horizon& {
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Line& {
         this = this.flat_bulk();
         return *this;
     }
@@ -51,10 +70,13 @@ extension Line: FlatBulk {
             this.group1
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Motor {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkInfix& _rhs) -> Line& {
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Motor& {
         this = this.flat_bulk();
         return *this;
     }
@@ -69,10 +91,13 @@ extension Motor: FlatBulk {
             this.group1
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> MultiVector {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkInfix& _rhs) -> Motor& {
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.flat_bulk();
         return *this;
     }
@@ -93,12 +118,11 @@ extension MultiVector: FlatBulk {
             float4(float3(0.0), this.e321)
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Horizon {
         return this.flat_bulk();
-    }
-    func operator/=(const FlatBulkInfix& _rhs) -> MultiVector& {
-        this = this.flat_bulk();
-        return *this;
     }
 }
 extension Plane: FlatBulk {
@@ -109,8 +133,15 @@ extension Plane: FlatBulk {
             this.e321
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Horizon {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Point {
         return this.flat_bulk();
+    }
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Point& {
+        this = this.flat_bulk();
+        return *this;
     }
 }
 extension Point: FlatBulk {
@@ -121,10 +152,13 @@ extension Point: FlatBulk {
             float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
-    func operator/(_rhs: FlatBulkInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Scalar {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkInfix& _rhs) -> Point& {
+    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.flat_bulk();
         return *this;
     }
@@ -133,12 +167,5 @@ extension Scalar: FlatBulk {
     associatedtype Output = Scalar;
     func flat_bulk() -> Output {
         return this;
-    }
-    func operator/(_rhs: FlatBulkInfix) -> Scalar {
-        return this.flat_bulk();
-    }
-    func operator/=(const FlatBulkInfix& _rhs) -> Scalar& {
-        this = this.flat_bulk();
-        return *this;
     }
 }

@@ -18,14 +18,14 @@
 //   Median:         0       1       0
 //  Average:         0       3       0
 //  Maximum:         0      10       0
-impl std::ops::Div<conjugation> for AntiScalar {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for AntiScalar {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -34,14 +34,14 @@ impl Conjugation for AntiScalar {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for DualNum {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for DualNum {
     type Output = DualNum;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for DualNum {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for DualNum {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -50,14 +50,14 @@ impl Conjugation for DualNum {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Flector {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Flector {
     type Output = Flector;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Flector {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Flector {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -70,14 +70,14 @@ impl Conjugation for Flector {
         return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0), /* e423, e431, e412, e321 */ self.group1());
     }
 }
-impl std::ops::Div<conjugation> for Horizon {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Horizon {
     type Output = Horizon;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Horizon {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Horizon {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -86,14 +86,14 @@ impl Conjugation for Horizon {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Line {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Line {
     type Output = Line;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Line {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Line {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -111,14 +111,14 @@ impl Conjugation for Line {
         );
     }
 }
-impl std::ops::Div<conjugation> for Motor {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Motor {
     type Output = Motor;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Motor {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Motor {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -136,14 +136,14 @@ impl Conjugation for Motor {
         );
     }
 }
-impl std::ops::Div<conjugation> for MultiVector {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for MultiVector {
     type Output = MultiVector;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for MultiVector {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for MultiVector {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -170,14 +170,14 @@ impl Conjugation for MultiVector {
         );
     }
 }
-impl std::ops::Div<conjugation> for Origin {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Origin {
     type Output = Origin;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Origin {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Origin {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -190,14 +190,14 @@ impl Conjugation for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * -1.0);
     }
 }
-impl std::ops::Div<conjugation> for Plane {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Plane {
     type Output = Plane;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Plane {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Plane {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -206,14 +206,14 @@ impl Conjugation for Plane {
         return self;
     }
 }
-impl std::ops::Div<conjugation> for Point {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Point {
     type Output = Point;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Point {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Point {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }
@@ -226,14 +226,14 @@ impl Conjugation for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
-impl std::ops::Div<conjugation> for Scalar {
+impl std::ops::Div<ConjugationPrefixOrPostfix> for Scalar {
     type Output = Scalar;
-    fn div(self, _rhs: conjugation) -> Self::Output {
+    fn div(self, _rhs: ConjugationPrefixOrPostfix) -> Self::Output {
         self.conjugation()
     }
 }
-impl std::ops::DivAssign<conjugation> for Scalar {
-    fn div_assign(&mut self, _rhs: conjugation) {
+impl std::ops::DivAssign<ConjugationPrefixOrPostfix> for Scalar {
+    fn div_assign(&mut self, _rhs: ConjugationPrefixOrPostfix) {
         *self = self.conjugation()
     }
 }

@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<AntiScalar> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension AntiScalar: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: AntiDotProduct<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<AntiScalar> {
-        anti_dot_product_partial(this)
     }
 }
 extension AntiScalar: AntiDotProduct<DualNum> {
@@ -37,6 +40,12 @@ extension AntiScalar: AntiDotProduct<MultiVector> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<DualNum> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension DualNum: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
@@ -44,9 +53,6 @@ extension DualNum: AntiDotProduct<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<DualNum> {
-        anti_dot_product_partial(this)
     }
 }
 extension DualNum: AntiDotProduct<DualNum> {
@@ -76,6 +82,12 @@ extension DualNum: AntiDotProduct<MultiVector> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Flector> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Flector: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
@@ -83,9 +95,6 @@ extension Flector: AntiDotProduct<Flector> {
             /* e1234 */
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Flector> {
-        anti_dot_product_partial(this)
     }
 }
 extension Flector: AntiDotProduct<MultiVector> {
@@ -124,6 +133,12 @@ extension Flector: AntiDotProduct<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Line> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Line: AntiDotProduct<Line> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Line) -> Output {
@@ -131,9 +146,6 @@ extension Line: AntiDotProduct<Line> {
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Line> {
-        anti_dot_product_partial(this)
     }
 }
 extension Line: AntiDotProduct<Motor> {
@@ -154,6 +166,12 @@ extension Line: AntiDotProduct<MultiVector> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Motor> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Motor: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
@@ -161,9 +179,6 @@ extension Motor: AntiDotProduct<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Motor> {
-        anti_dot_product_partial(this)
     }
 }
 extension Motor: AntiDotProduct<DualNum> {
@@ -202,6 +217,12 @@ extension Motor: AntiDotProduct<MultiVector> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<MultiVector> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension MultiVector: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
@@ -209,9 +230,6 @@ extension MultiVector: AntiDotProduct<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<MultiVector> {
-        anti_dot_product_partial(this)
     }
 }
 extension MultiVector: AntiDotProduct<DualNum> {
@@ -286,6 +304,12 @@ extension MultiVector: AntiDotProduct<Point> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Origin> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Origin: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
@@ -293,9 +317,6 @@ extension Origin: AntiDotProduct<Flector> {
             /* e1234 */
             other.e4 * this.e4
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Origin> {
-        anti_dot_product_partial(this)
     }
 }
 extension Origin: AntiDotProduct<MultiVector> {
@@ -325,6 +346,12 @@ extension Origin: AntiDotProduct<Point> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Plane> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Plane: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
@@ -332,9 +359,6 @@ extension Plane: AntiDotProduct<Flector> {
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Plane> {
-        anti_dot_product_partial(this)
     }
 }
 extension Plane: AntiDotProduct<MultiVector> {
@@ -355,6 +379,12 @@ extension Plane: AntiDotProduct<Plane> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Point> {
+        return AntiDotProductInfixPartial { a: this };
+    }
+}
 extension Point: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
@@ -362,9 +392,6 @@ extension Point: AntiDotProduct<Flector> {
             /* e1234 */
             other.e4 * this.e4
         );
-    }
-    func operator/(_rhs: AntiDotProductInfix) -> anti_dot_product_partial<Point> {
-        anti_dot_product_partial(this)
     }
 }
 extension Point: AntiDotProduct<MultiVector> {

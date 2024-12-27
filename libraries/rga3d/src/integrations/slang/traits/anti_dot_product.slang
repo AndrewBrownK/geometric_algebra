@@ -5,7 +5,7 @@ using data::*;
 public interface AntiDotProduct<T> {
     func anti_dot_product(other: T) -> AntiScalar;
 }
-public const static anti_dot_product: AntiDotProductInfix = AntiDotProductInfix {}
+public static const anti_dot_product: AntiDotProductInfix = AntiDotProductInfix {};
 public struct AntiDotProductInfix {}
 public struct AntiDotProductInfixPartial<A> { a: A }
 extension AntiDotProductInfixPartial<A> for A: AntiDotProduct<B> {

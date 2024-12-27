@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait AntiAutoMorphism {
     fn anti_auto_morphism(self) -> Self;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct anti_auto_morphism;
-impl<A: AntiAutoMorphism> std::ops::Div<A> for anti_auto_morphism {
+#[allow(non_upper_case_globals, dead_code)]
+pub static anti_auto_morphism: AntiAutoMorphismPrefixOrPostfix = AntiAutoMorphismPrefixOrPostfix;
+pub struct AntiAutoMorphismPrefixOrPostfix;
+impl<A: AntiAutoMorphism> std::ops::Div<A> for AntiAutoMorphismPrefixOrPostfix {
     type Output = A;
     fn div(self, rhs: A) -> Self::Output {
         rhs.anti_auto_morphism()

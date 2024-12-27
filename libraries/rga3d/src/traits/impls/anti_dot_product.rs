@@ -18,10 +18,10 @@
 //   Median:         0       1       0
 //  Average:         1       2       0
 //  Maximum:         7       8       0
-impl std::ops::Div<anti_dot_product> for AntiScalar {
-    type Output = anti_dot_product_partial<AntiScalar>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for AntiScalar {
+    type Output = AntiDotProductInfixPartial<AntiScalar>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<AntiScalar> for AntiScalar {
@@ -60,10 +60,10 @@ impl AntiDotProduct<MultiVector> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e1234]);
     }
 }
-impl std::ops::Div<anti_dot_product> for DualNum {
-    type Output = anti_dot_product_partial<DualNum>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for DualNum {
+    type Output = AntiDotProductInfixPartial<DualNum>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<AntiScalar> for DualNum {
@@ -102,10 +102,10 @@ impl AntiDotProduct<MultiVector> for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[e1234]);
     }
 }
-impl std::ops::Div<anti_dot_product> for Flector {
-    type Output = anti_dot_product_partial<Flector>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Flector {
+    type Output = AntiDotProductInfixPartial<Flector>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<Flector> for Flector {
@@ -159,10 +159,10 @@ impl AntiDotProduct<Point> for Flector {
         return AntiScalar::from_groups(/* e1234 */ self[e4] * other[e4]);
     }
 }
-impl std::ops::Div<anti_dot_product> for Line {
-    type Output = anti_dot_product_partial<Line>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Line {
+    type Output = AntiDotProductInfixPartial<Line>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<Line> for Line {
@@ -192,10 +192,10 @@ impl AntiDotProduct<MultiVector> for Line {
         return AntiScalar::from_groups(/* e1234 */ (self[e41] * other[e41]) + (self[e42] * other[e42]) + (self[e43] * other[e43]));
     }
 }
-impl std::ops::Div<anti_dot_product> for Motor {
-    type Output = anti_dot_product_partial<Motor>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Motor {
+    type Output = AntiDotProductInfixPartial<Motor>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<AntiScalar> for Motor {
@@ -249,10 +249,10 @@ impl AntiDotProduct<MultiVector> for Motor {
         );
     }
 }
-impl std::ops::Div<anti_dot_product> for MultiVector {
-    type Output = anti_dot_product_partial<MultiVector>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for MultiVector {
+    type Output = AntiDotProductInfixPartial<MultiVector>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<AntiScalar> for MultiVector {
@@ -352,10 +352,10 @@ impl AntiDotProduct<Point> for MultiVector {
         return AntiScalar::from_groups(/* e1234 */ self[e4] * other[e4]);
     }
 }
-impl std::ops::Div<anti_dot_product> for Origin {
-    type Output = anti_dot_product_partial<Origin>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Origin {
+    type Output = AntiDotProductInfixPartial<Origin>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<Flector> for Origin {
@@ -394,10 +394,10 @@ impl AntiDotProduct<Point> for Origin {
         return AntiScalar::from_groups(/* e1234 */ self[e4] * other[e4]);
     }
 }
-impl std::ops::Div<anti_dot_product> for Plane {
-    type Output = anti_dot_product_partial<Plane>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Plane {
+    type Output = AntiDotProductInfixPartial<Plane>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<Flector> for Plane {
@@ -427,10 +427,10 @@ impl AntiDotProduct<Plane> for Plane {
         return AntiScalar::from_groups(/* e1234 */ (other[e423] * self[e423]) + (other[e431] * self[e431]) + (other[e412] * self[e412]));
     }
 }
-impl std::ops::Div<anti_dot_product> for Point {
-    type Output = anti_dot_product_partial<Point>;
-    fn div(self, _rhs: anti_dot_product) -> Self::Output {
-        anti_dot_product_partial(self)
+impl std::ops::Div<AntiDotProductInfix> for Point {
+    type Output = AntiDotProductInfixPartial<Point>;
+    fn div(self, _rhs: AntiDotProductInfix) -> Self::Output {
+        AntiDotProductInfixPartial(self)
     }
 }
 impl AntiDotProduct<Flector> for Point {

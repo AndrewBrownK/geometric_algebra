@@ -1,3 +1,13 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> DualNum {
+        return this.inverse();
+    }
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> DualNum& {
+        this = this.inverse();
+        return *this;
+    }
+}
 extension DualNum: Inverse {
     associatedtype Output = DualNum;
     func inverse() -> Output {
@@ -6,10 +16,13 @@ extension DualNum: Inverse {
             float2(powi(this.scalar, -2)) * this.group0
         );
     }
-    func operator/(_rhs: InverseInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Flector {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> DualNum& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Flector& {
         this = this.inverse();
         return *this;
     }
@@ -34,10 +47,13 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group1
         );
     }
-    func operator/(_rhs: InverseInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Horizon {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Flector& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Horizon& {
         this = this.inverse();
         return *this;
     }
@@ -50,10 +66,13 @@ extension Horizon: Inverse {
             1.0/this.e321 * -1.0
         );
     }
-    func operator/(_rhs: InverseInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Line {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Horizon& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Line& {
         this = this.inverse();
         return *this;
     }
@@ -78,10 +97,13 @@ Scalar other = Scalar.from_groups(
             float3(other.scalar) * reverse.group1
         );
     }
-    func operator/(_rhs: InverseInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Motor {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Line& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Motor& {
         this = this.inverse();
         return *this;
     }
@@ -106,10 +128,13 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group1
         );
     }
-    func operator/(_rhs: InverseInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> MultiVector {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Motor& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.inverse();
         return *this;
     }
@@ -146,10 +171,13 @@ Scalar other = Scalar.from_groups(
             float4(other.scalar) * reverse.group4
         );
     }
-    func operator/(_rhs: InverseInfix) -> MultiVector {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Plane {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> MultiVector& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Plane& {
         this = this.inverse();
         return *this;
     }
@@ -162,10 +190,13 @@ extension Plane: Inverse {
             float4(powi(this.e321, -2)) * float4(this.e423 * -1.0, this.e431 * -1.0, this.e412 * -1.0, this.e321 * -1.0)
         );
     }
-    func operator/(_rhs: InverseInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Point {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Plane& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Point& {
         this = this.inverse();
         return *this;
     }
@@ -178,10 +209,13 @@ extension Point: Inverse {
             float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
         );
     }
-    func operator/(_rhs: InverseInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: InversePrefixOrPostfix) -> Scalar {
         return this.inverse();
     }
-    func operator/=(const InverseInfix& _rhs) -> Point& {
+    func operator/=(const InversePrefixOrPostfix& _rhs) -> Scalar& {
         this = this.inverse();
         return *this;
     }
@@ -193,12 +227,5 @@ extension Scalar: Inverse {
             /* scalar */
             1.0/this.scalar
         );
-    }
-    func operator/(_rhs: InverseInfix) -> Scalar {
-        return this.inverse();
-    }
-    func operator/=(const InverseInfix& _rhs) -> Scalar& {
-        this = this.inverse();
-        return *this;
     }
 }

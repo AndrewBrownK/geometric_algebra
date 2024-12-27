@@ -18,10 +18,10 @@
 //   Median:         5      20       0
 //  Average:        17      31       0
 //  Maximum:       130     165       0
-impl std::ops::Div<reject_orthogonally_from> for AntiScalar {
-    type Output = reject_orthogonally_from_partial<AntiScalar>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for AntiScalar {
+    type Output = RejectOrthogonallyFromInfixPartial<AntiScalar>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<DualNum> for AntiScalar {
@@ -277,10 +277,10 @@ impl RejectOrthogonallyFrom<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for DualNum {
-    type Output = reject_orthogonally_from_partial<DualNum>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for DualNum {
+    type Output = RejectOrthogonallyFromInfixPartial<DualNum>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<DualNum> for DualNum {
@@ -538,10 +538,10 @@ impl RejectOrthogonallyFrom<Scalar> for DualNum {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Flector {
-    type Output = reject_orthogonally_from_partial<Flector>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Flector {
+    type Output = RejectOrthogonallyFromInfixPartial<Flector>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Flector {
@@ -842,10 +842,10 @@ impl RejectOrthogonallyFrom<Point> for Flector {
         );
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Horizon {
-    type Output = reject_orthogonally_from_partial<Horizon>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Horizon {
+    type Output = RejectOrthogonallyFromInfixPartial<Horizon>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Horizon {
@@ -1076,10 +1076,10 @@ impl RejectOrthogonallyFrom<Point> for Horizon {
         );
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Line {
-    type Output = reject_orthogonally_from_partial<Line>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Line {
+    type Output = RejectOrthogonallyFromInfixPartial<Line>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Line {
@@ -1339,10 +1339,10 @@ impl RejectOrthogonallyFrom<Plane> for Line {
         );
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Motor {
-    type Output = reject_orthogonally_from_partial<Motor>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Motor {
+    type Output = RejectOrthogonallyFromInfixPartial<Motor>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<DualNum> for Motor {
@@ -1686,10 +1686,10 @@ impl RejectOrthogonallyFrom<Scalar> for Motor {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for MultiVector {
-    type Output = reject_orthogonally_from_partial<MultiVector>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for MultiVector {
+    type Output = RejectOrthogonallyFromInfixPartial<MultiVector>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<DualNum> for MultiVector {
@@ -2163,10 +2163,10 @@ impl RejectOrthogonallyFrom<Scalar> for MultiVector {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Origin {
-    type Output = reject_orthogonally_from_partial<Origin>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Origin {
+    type Output = RejectOrthogonallyFromInfixPartial<Origin>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Origin {
@@ -2323,10 +2323,10 @@ impl RejectOrthogonallyFrom<Plane> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * f32::powi(other[e321], 2) * -1.0);
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Plane {
-    type Output = reject_orthogonally_from_partial<Plane>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Plane {
+    type Output = RejectOrthogonallyFromInfixPartial<Plane>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Plane {
@@ -2606,10 +2606,10 @@ impl RejectOrthogonallyFrom<Point> for Plane {
         );
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Point {
-    type Output = reject_orthogonally_from_partial<Point>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Point {
+    type Output = RejectOrthogonallyFromInfixPartial<Point>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<Flector> for Point {
@@ -2772,10 +2772,10 @@ impl RejectOrthogonallyFrom<Plane> for Point {
         );
     }
 }
-impl std::ops::Div<reject_orthogonally_from> for Scalar {
-    type Output = reject_orthogonally_from_partial<Scalar>;
-    fn div(self, _rhs: reject_orthogonally_from) -> Self::Output {
-        reject_orthogonally_from_partial(self)
+impl std::ops::Div<RejectOrthogonallyFromInfix> for Scalar {
+    type Output = RejectOrthogonallyFromInfixPartial<Scalar>;
+    fn div(self, _rhs: RejectOrthogonallyFromInfix) -> Self::Output {
+        RejectOrthogonallyFromInfixPartial(self)
     }
 }
 impl RejectOrthogonallyFrom<DualNum> for Scalar {

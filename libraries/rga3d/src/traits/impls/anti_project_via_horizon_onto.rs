@@ -18,10 +18,10 @@
 //   Median:         3      16       0
 //  Average:        16      30       0
 //  Maximum:       130     166       0
-impl std::ops::Div<anti_project_via_horizon_onto> for AntiScalar {
-    type Output = anti_project_via_horizon_onto_partial<AntiScalar>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for AntiScalar {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<AntiScalar>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for AntiScalar {
@@ -269,10 +269,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ f32::powi(other[scalar], 2) * self[e1234]);
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for DualNum {
-    type Output = anti_project_via_horizon_onto_partial<DualNum>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for DualNum {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<DualNum>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for DualNum {
@@ -537,10 +537,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for DualNum {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Flector {
-    type Output = anti_project_via_horizon_onto_partial<Flector>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Flector {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Flector>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Flector {
@@ -863,10 +863,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Flector {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Horizon {
-    type Output = anti_project_via_horizon_onto_partial<Horizon>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Horizon {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Horizon>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Horizon {
@@ -1125,10 +1125,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ f32::powi(other[scalar], 2) * self[e321]);
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Line {
-    type Output = anti_project_via_horizon_onto_partial<Line>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Line {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Line>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Line {
@@ -1416,10 +1416,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Line {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Motor {
-    type Output = anti_project_via_horizon_onto_partial<Motor>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Motor {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Motor>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Motor {
@@ -1760,10 +1760,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Motor {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for MultiVector {
-    type Output = anti_project_via_horizon_onto_partial<MultiVector>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for MultiVector {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<MultiVector>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for MultiVector {
@@ -2295,10 +2295,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Origin {
-    type Output = anti_project_via_horizon_onto_partial<Origin>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Origin {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Origin>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Origin {
@@ -2454,10 +2454,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Origin {
         return Origin::from_groups(/* e4 */ f32::powi(other[scalar], 2) * self[e4]);
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Plane {
-    type Output = anti_project_via_horizon_onto_partial<Plane>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Plane {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Plane>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Plane {
@@ -2767,10 +2767,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Plane {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Point {
-    type Output = anti_project_via_horizon_onto_partial<Point>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Point {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Point>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Point {
@@ -2964,10 +2964,10 @@ impl AntiProjectViaHorizonOnto<Scalar> for Point {
         );
     }
 }
-impl std::ops::Div<anti_project_via_horizon_onto> for Scalar {
-    type Output = anti_project_via_horizon_onto_partial<Scalar>;
-    fn div(self, _rhs: anti_project_via_horizon_onto) -> Self::Output {
-        anti_project_via_horizon_onto_partial(self)
+impl std::ops::Div<AntiProjectViaHorizonOntoInfix> for Scalar {
+    type Output = AntiProjectViaHorizonOntoInfixPartial<Scalar>;
+    fn div(self, _rhs: AntiProjectViaHorizonOntoInfix) -> Self::Output {
+        AntiProjectViaHorizonOntoInfixPartial(self)
     }
 }
 impl AntiProjectViaHorizonOnto<DualNum> for Scalar {

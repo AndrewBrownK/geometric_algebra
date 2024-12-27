@@ -1,12 +1,25 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> AntiScalar {
+        return this.anti_reverse();
+    }
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.anti_reverse();
+        return *this;
+    }
+}
 extension AntiScalar: AntiReverse {
     associatedtype Output = AntiScalar;
     func anti_reverse() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiReverseInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> DualNum {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> AntiScalar& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> DualNum& {
         this = this.anti_reverse();
         return *this;
     }
@@ -16,10 +29,13 @@ extension DualNum: AntiReverse {
     func anti_reverse() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiReverseInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Flector {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> DualNum& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Flector& {
         this = this.anti_reverse();
         return *this;
     }
@@ -34,10 +50,13 @@ extension Flector: AntiReverse {
             this.group1
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Horizon {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Flector& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Horizon& {
         this = this.anti_reverse();
         return *this;
     }
@@ -47,10 +66,13 @@ extension Horizon: AntiReverse {
     func anti_reverse() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiReverseInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Line {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Horizon& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Line& {
         this = this.anti_reverse();
         return *this;
     }
@@ -65,10 +87,13 @@ extension Line: AntiReverse {
             this.group1 * float3(-1.0)
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Motor {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Line& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Motor& {
         this = this.anti_reverse();
         return *this;
     }
@@ -83,10 +108,13 @@ extension Motor: AntiReverse {
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> MultiVector {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Motor& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.anti_reverse();
         return *this;
     }
@@ -107,10 +135,13 @@ extension MultiVector: AntiReverse {
             this.group4
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Origin {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> MultiVector& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Origin& {
         this = this.anti_reverse();
         return *this;
     }
@@ -123,10 +154,13 @@ extension Origin: AntiReverse {
             this.e4 * -1.0
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Plane {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Origin& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Plane& {
         this = this.anti_reverse();
         return *this;
     }
@@ -136,10 +170,13 @@ extension Plane: AntiReverse {
     func anti_reverse() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiReverseInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Point {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Plane& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Point& {
         this = this.anti_reverse();
         return *this;
     }
@@ -152,10 +189,13 @@ extension Point: AntiReverse {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiReverseInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiReversePrefixOrPostfix) -> Scalar {
         return this.anti_reverse();
     }
-    func operator/=(const AntiReverseInfix& _rhs) -> Point& {
+    func operator/=(const AntiReversePrefixOrPostfix& _rhs) -> Scalar& {
         this = this.anti_reverse();
         return *this;
     }
@@ -164,12 +204,5 @@ extension Scalar: AntiReverse {
     associatedtype Output = Scalar;
     func anti_reverse() -> Output {
         return this;
-    }
-    func operator/(_rhs: AntiReverseInfix) -> Scalar {
-        return this.anti_reverse();
-    }
-    func operator/=(const AntiReverseInfix& _rhs) -> Scalar& {
-        this = this.anti_reverse();
-        return *this;
     }
 }

@@ -6,7 +6,7 @@ public interface GeometricQuotient<T> {
     associatedtype Output;
     func geometric_quotient(other: T) -> Output;
 }
-public const static geometric_quotient: GeometricQuotientInfix = GeometricQuotientInfix {}
+public static const geometric_quotient: GeometricQuotientInfix = GeometricQuotientInfix {};
 public struct GeometricQuotientInfix {}
 public struct GeometricQuotientInfixPartial<A> { a: A }
 extension GeometricQuotientInfixPartial<A> for A: GeometricQuotient<B> {

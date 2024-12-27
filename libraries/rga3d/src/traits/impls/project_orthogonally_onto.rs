@@ -18,10 +18,10 @@
 //   Median:         6      19       0
 //  Average:        18      32       0
 //  Maximum:       130     166       0
-impl std::ops::Div<project_orthogonally_onto> for AntiScalar {
-    type Output = project_orthogonally_onto_partial<AntiScalar>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for AntiScalar {
+    type Output = ProjectOrthogonallyOntoInfixPartial<AntiScalar>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
@@ -72,10 +72,10 @@ impl ProjectOrthogonallyOnto<MultiVector> for AntiScalar {
         );
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for DualNum {
-    type Output = project_orthogonally_onto_partial<DualNum>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for DualNum {
+    type Output = ProjectOrthogonallyOntoInfixPartial<DualNum>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<DualNum> for DualNum {
@@ -329,10 +329,10 @@ impl ProjectOrthogonallyOnto<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Flector {
-    type Output = project_orthogonally_onto_partial<Flector>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Flector {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Flector>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Flector {
@@ -612,10 +612,10 @@ impl ProjectOrthogonallyOnto<Point> for Flector {
         );
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Horizon {
-    type Output = project_orthogonally_onto_partial<Horizon>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Horizon {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Horizon>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Horizon {
@@ -761,10 +761,10 @@ impl ProjectOrthogonallyOnto<Plane> for Horizon {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(self[e321] * other[e321]) * other.group0());
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Line {
-    type Output = project_orthogonally_onto_partial<Line>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Line {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Line>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Line {
@@ -1023,10 +1023,10 @@ impl ProjectOrthogonallyOnto<Plane> for Line {
         );
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Motor {
-    type Output = project_orthogonally_onto_partial<Motor>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Motor {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Motor>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<DualNum> for Motor {
@@ -1360,10 +1360,10 @@ impl ProjectOrthogonallyOnto<Scalar> for Motor {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for MultiVector {
-    type Output = project_orthogonally_onto_partial<MultiVector>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for MultiVector {
+    type Output = ProjectOrthogonallyOntoInfixPartial<MultiVector>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<DualNum> for MultiVector {
@@ -1828,10 +1828,10 @@ impl ProjectOrthogonallyOnto<Scalar> for MultiVector {
         return Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2) * self[scalar]);
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Origin {
-    type Output = project_orthogonally_onto_partial<Origin>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Origin {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Origin>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Origin {
@@ -2000,10 +2000,10 @@ impl ProjectOrthogonallyOnto<Point> for Origin {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[e4] * 0.0) * other.group0());
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Plane {
-    type Output = project_orthogonally_onto_partial<Plane>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Plane {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Plane>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Plane {
@@ -2169,10 +2169,10 @@ impl ProjectOrthogonallyOnto<Plane> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[e321] * self[e321]) * other.group0());
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Point {
-    type Output = project_orthogonally_onto_partial<Point>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Point {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Point>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<Flector> for Point {
@@ -2436,10 +2436,10 @@ impl ProjectOrthogonallyOnto<Point> for Point {
         );
     }
 }
-impl std::ops::Div<project_orthogonally_onto> for Scalar {
-    type Output = project_orthogonally_onto_partial<Scalar>;
-    fn div(self, _rhs: project_orthogonally_onto) -> Self::Output {
-        project_orthogonally_onto_partial(self)
+impl std::ops::Div<ProjectOrthogonallyOntoInfix> for Scalar {
+    type Output = ProjectOrthogonallyOntoInfixPartial<Scalar>;
+    fn div(self, _rhs: ProjectOrthogonallyOntoInfix) -> Self::Output {
+        ProjectOrthogonallyOntoInfixPartial(self)
     }
 }
 impl ProjectOrthogonallyOnto<DualNum> for Scalar {

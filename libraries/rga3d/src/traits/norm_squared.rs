@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait NormSquared {
     fn norm_squared(self) -> DualNum;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct norm_squared;
-impl<A: NormSquared> std::ops::Div<A> for norm_squared {
+#[allow(non_upper_case_globals, dead_code)]
+pub static norm_squared: NormSquaredPrefixOrPostfix = NormSquaredPrefixOrPostfix;
+pub struct NormSquaredPrefixOrPostfix;
+impl<A: NormSquared> std::ops::Div<A> for NormSquaredPrefixOrPostfix {
     type Output = DualNum;
     fn div(self, rhs: A) -> Self::Output {
         rhs.norm_squared()

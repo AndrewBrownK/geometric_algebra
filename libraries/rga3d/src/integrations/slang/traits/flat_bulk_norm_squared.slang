@@ -5,9 +5,9 @@ using data::*;
 public interface FlatBulkNormSquared {
     func flat_bulk_norm_squared() -> Scalar;
 }
-public const static flat_bulk_norm_squared: FlatBulkNormSquaredInfix = FlatBulkNormSquaredInfix {}
-public struct FlatBulkNormSquaredInfix {}
-extension FlatBulkNormSquaredInfix for A: FlatBulkNormSquared {
+public static const flat_bulk_norm_squared: FlatBulkNormSquaredPrefixOrPostfix = FlatBulkNormSquaredPrefixOrPostfix {};
+public struct FlatBulkNormSquaredPrefixOrPostfix {}
+extension FlatBulkNormSquaredPrefixOrPostfix for A: FlatBulkNormSquared {
     func operator/(rhs: A) -> A.Output {
         return rhs.flat_bulk_norm_squared();
     }

@@ -7,9 +7,10 @@ use crate::simd::*;
 pub trait SquareRoot {
     fn square_root(self) -> Scalar;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct square_root;
-impl<A: SquareRoot> std::ops::Div<A> for square_root {
+#[allow(non_upper_case_globals, dead_code)]
+pub static square_root: SquareRootPrefixOrPostfix = SquareRootPrefixOrPostfix;
+pub struct SquareRootPrefixOrPostfix;
+impl<A: SquareRoot> std::ops::Div<A> for SquareRootPrefixOrPostfix {
     type Output = Scalar;
     fn div(self, rhs: A) -> Self::Output {
         rhs.square_root()

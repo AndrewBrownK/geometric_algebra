@@ -6,7 +6,7 @@ public interface AntiProjectOrthogonallyOnto<T> {
     associatedtype Output;
     func anti_project_orthogonally_onto(other: T) -> Output;
 }
-public const static anti_project_orthogonally_onto: AntiProjectOrthogonallyOntoInfix = AntiProjectOrthogonallyOntoInfix {}
+public static const anti_project_orthogonally_onto: AntiProjectOrthogonallyOntoInfix = AntiProjectOrthogonallyOntoInfix {};
 public struct AntiProjectOrthogonallyOntoInfix {}
 public struct AntiProjectOrthogonallyOntoInfixPartial<A> { a: A }
 extension AntiProjectOrthogonallyOntoInfixPartial<A> for A: AntiProjectOrthogonallyOnto<B> {

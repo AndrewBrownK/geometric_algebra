@@ -20,9 +20,9 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         6      16       0
 //  Average:         6      17       0
 //  Maximum:        14      34       0
-impl std::ops::Div<norm_squared> for Flector {
+impl std::ops::Div<NormSquaredPrefixOrPostfix> for Flector {
     type Output = DualNum;
-    fn div(self, _rhs: norm_squared) -> Self::Output {
+    fn div(self, _rhs: NormSquaredPrefixOrPostfix) -> Self::Output {
         self.norm_squared()
     }
 }
@@ -39,9 +39,9 @@ impl NormSquared for Flector {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234]]));
     }
 }
-impl std::ops::Div<norm_squared> for Line {
+impl std::ops::Div<NormSquaredPrefixOrPostfix> for Line {
     type Output = DualNum;
-    fn div(self, _rhs: norm_squared) -> Self::Output {
+    fn div(self, _rhs: NormSquaredPrefixOrPostfix) -> Self::Output {
         self.norm_squared()
     }
 }
@@ -58,9 +58,9 @@ impl NormSquared for Line {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234]]));
     }
 }
-impl std::ops::Div<norm_squared> for Motor {
+impl std::ops::Div<NormSquaredPrefixOrPostfix> for Motor {
     type Output = DualNum;
-    fn div(self, _rhs: norm_squared) -> Self::Output {
+    fn div(self, _rhs: NormSquaredPrefixOrPostfix) -> Self::Output {
         self.norm_squared()
     }
 }
@@ -77,9 +77,9 @@ impl NormSquared for Motor {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234]]));
     }
 }
-impl std::ops::Div<norm_squared> for MultiVector {
+impl std::ops::Div<NormSquaredPrefixOrPostfix> for MultiVector {
     type Output = DualNum;
-    fn div(self, _rhs: norm_squared) -> Self::Output {
+    fn div(self, _rhs: NormSquaredPrefixOrPostfix) -> Self::Output {
         self.norm_squared()
     }
 }
@@ -98,9 +98,9 @@ impl NormSquared for MultiVector {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234]]));
     }
 }
-impl std::ops::Div<norm_squared> for Point {
+impl std::ops::Div<NormSquaredPrefixOrPostfix> for Point {
     type Output = DualNum;
-    fn div(self, _rhs: norm_squared) -> Self::Output {
+    fn div(self, _rhs: NormSquaredPrefixOrPostfix) -> Self::Output {
         self.norm_squared()
     }
 }

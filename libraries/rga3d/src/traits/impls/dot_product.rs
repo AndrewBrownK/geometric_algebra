@@ -18,10 +18,10 @@
 //   Median:         0       1       0
 //  Average:         1       2       0
 //  Maximum:         7       8       0
-impl std::ops::Div<dot_product> for DualNum {
-    type Output = dot_product_partial<DualNum>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for DualNum {
+    type Output = DotProductInfixPartial<DualNum>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<DualNum> for DualNum {
@@ -60,10 +60,10 @@ impl DotProduct<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ self[scalar] * other[scalar]);
     }
 }
-impl std::ops::Div<dot_product> for Flector {
-    type Output = dot_product_partial<Flector>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Flector {
+    type Output = DotProductInfixPartial<Flector>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<Flector> for Flector {
@@ -111,10 +111,10 @@ impl DotProduct<Point> for Flector {
         return Scalar::from_groups(/* scalar */ (self[e1] * other[e1]) + (self[e2] * other[e2]) + (self[e3] * other[e3]));
     }
 }
-impl std::ops::Div<dot_product> for Horizon {
-    type Output = dot_product_partial<Horizon>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Horizon {
+    type Output = DotProductInfixPartial<Horizon>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<Flector> for Horizon {
@@ -153,10 +153,10 @@ impl DotProduct<Plane> for Horizon {
         return Scalar::from_groups(/* scalar */ self[e321] * other[e321]);
     }
 }
-impl std::ops::Div<dot_product> for Line {
-    type Output = dot_product_partial<Line>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Line {
+    type Output = DotProductInfixPartial<Line>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<Line> for Line {
@@ -186,10 +186,10 @@ impl DotProduct<MultiVector> for Line {
         return Scalar::from_groups(/* scalar */ (self[e23] * other[e23]) + (self[e31] * other[e31]) + (self[e12] * other[e12]));
     }
 }
-impl std::ops::Div<dot_product> for Motor {
-    type Output = dot_product_partial<Motor>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Motor {
+    type Output = DotProductInfixPartial<Motor>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<DualNum> for Motor {
@@ -243,10 +243,10 @@ impl DotProduct<Scalar> for Motor {
         return Scalar::from_groups(/* scalar */ self[scalar] * other[scalar]);
     }
 }
-impl std::ops::Div<dot_product> for MultiVector {
-    type Output = dot_product_partial<MultiVector>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for MultiVector {
+    type Output = DotProductInfixPartial<MultiVector>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<DualNum> for MultiVector {
@@ -343,10 +343,10 @@ impl DotProduct<Scalar> for MultiVector {
         return Scalar::from_groups(/* scalar */ self[scalar] * other[scalar]);
     }
 }
-impl std::ops::Div<dot_product> for Plane {
-    type Output = dot_product_partial<Plane>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Plane {
+    type Output = DotProductInfixPartial<Plane>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<Flector> for Plane {
@@ -385,10 +385,10 @@ impl DotProduct<Plane> for Plane {
         return Scalar::from_groups(/* scalar */ other[e321] * self[e321]);
     }
 }
-impl std::ops::Div<dot_product> for Point {
-    type Output = dot_product_partial<Point>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Point {
+    type Output = DotProductInfixPartial<Point>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<Flector> for Point {
@@ -418,10 +418,10 @@ impl DotProduct<Point> for Point {
         return Scalar::from_groups(/* scalar */ (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]));
     }
 }
-impl std::ops::Div<dot_product> for Scalar {
-    type Output = dot_product_partial<Scalar>;
-    fn div(self, _rhs: dot_product) -> Self::Output {
-        dot_product_partial(self)
+impl std::ops::Div<DotProductInfix> for Scalar {
+    type Output = DotProductInfixPartial<Scalar>;
+    fn div(self, _rhs: DotProductInfix) -> Self::Output {
+        DotProductInfixPartial(self)
     }
 }
 impl DotProduct<DualNum> for Scalar {

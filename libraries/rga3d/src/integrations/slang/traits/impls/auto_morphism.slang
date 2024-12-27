@@ -1,12 +1,25 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> AntiScalar {
+        return this.auto_morphism();
+    }
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.auto_morphism();
+        return *this;
+    }
+}
 extension AntiScalar: AutoMorphism {
     associatedtype Output = AntiScalar;
     func auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AutoMorphismInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> DualNum {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> AntiScalar& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> DualNum& {
         this = this.auto_morphism();
         return *this;
     }
@@ -16,10 +29,13 @@ extension DualNum: AutoMorphism {
     func auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AutoMorphismInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Flector {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> DualNum& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Flector& {
         this = this.auto_morphism();
         return *this;
     }
@@ -34,10 +50,13 @@ extension Flector: AutoMorphism {
             this.group1 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Horizon {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Flector& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.auto_morphism();
         return *this;
     }
@@ -50,10 +69,13 @@ extension Horizon: AutoMorphism {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Line {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Horizon& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Line& {
         this = this.auto_morphism();
         return *this;
     }
@@ -63,10 +85,13 @@ extension Line: AutoMorphism {
     func auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Motor {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Line& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Motor& {
         this = this.auto_morphism();
         return *this;
     }
@@ -76,10 +101,13 @@ extension Motor: AutoMorphism {
     func auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> MultiVector {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Motor& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.auto_morphism();
         return *this;
     }
@@ -100,10 +128,13 @@ extension MultiVector: AutoMorphism {
             this.group4 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Origin {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> MultiVector& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Origin& {
         this = this.auto_morphism();
         return *this;
     }
@@ -116,10 +147,13 @@ extension Origin: AutoMorphism {
             this.e4 * -1.0
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Plane {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Origin& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Plane& {
         this = this.auto_morphism();
         return *this;
     }
@@ -132,10 +166,13 @@ extension Plane: AutoMorphism {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Point {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Plane& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Point& {
         this = this.auto_morphism();
         return *this;
     }
@@ -148,10 +185,13 @@ extension Point: AutoMorphism {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AutoMorphismInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Scalar {
         return this.auto_morphism();
     }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Point& {
+    func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.auto_morphism();
         return *this;
     }
@@ -160,12 +200,5 @@ extension Scalar: AutoMorphism {
     associatedtype Output = Scalar;
     func auto_morphism() -> Output {
         return this;
-    }
-    func operator/(_rhs: AutoMorphismInfix) -> Scalar {
-        return this.auto_morphism();
-    }
-    func operator/=(const AutoMorphismInfix& _rhs) -> Scalar& {
-        this = this.auto_morphism();
-        return *this;
     }
 }

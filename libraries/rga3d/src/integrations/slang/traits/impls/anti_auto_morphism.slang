@@ -1,12 +1,25 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiScalar {
+        return this.anti_auto_morphism();
+    }
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiScalar& {
+        this = this.anti_auto_morphism();
+        return *this;
+    }
+}
 extension AntiScalar: AntiAutoMorphism {
     associatedtype Output = AntiScalar;
     func anti_auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> AntiScalar {
+}
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> DualNum {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> AntiScalar& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> DualNum& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -16,10 +29,13 @@ extension DualNum: AntiAutoMorphism {
     func anti_auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> DualNum {
+}
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Flector {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> DualNum& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Flector& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -34,10 +50,13 @@ extension Flector: AntiAutoMorphism {
             this.group1 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Flector {
+}
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Horizon {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Flector& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -50,10 +69,13 @@ extension Horizon: AntiAutoMorphism {
             this.e321 * -1.0
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Horizon {
+}
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Line {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Horizon& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Line& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -63,10 +85,13 @@ extension Line: AntiAutoMorphism {
     func anti_auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Line {
+}
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Motor {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Line& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Motor& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -76,10 +101,13 @@ extension Motor: AntiAutoMorphism {
     func anti_auto_morphism() -> Output {
         return this;
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Motor {
+}
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> MultiVector {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Motor& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -100,10 +128,13 @@ extension MultiVector: AntiAutoMorphism {
             this.group4 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> MultiVector {
+}
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Origin {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> MultiVector& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Origin& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -116,10 +147,13 @@ extension Origin: AntiAutoMorphism {
             this.e4 * -1.0
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Origin {
+}
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Plane {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Origin& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Plane& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -132,10 +166,13 @@ extension Plane: AntiAutoMorphism {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Plane {
+}
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Point {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Plane& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Point& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -148,10 +185,13 @@ extension Point: AntiAutoMorphism {
             this.group0 * float4(-1.0)
         );
     }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Point {
+}
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Scalar {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Point& {
+    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.anti_auto_morphism();
         return *this;
     }
@@ -160,12 +200,5 @@ extension Scalar: AntiAutoMorphism {
     associatedtype Output = Scalar;
     func anti_auto_morphism() -> Output {
         return this;
-    }
-    func operator/(_rhs: AntiAutoMorphismInfix) -> Scalar {
-        return this.anti_auto_morphism();
-    }
-    func operator/=(const AntiAutoMorphismInfix& _rhs) -> Scalar& {
-        this = this.anti_auto_morphism();
-        return *this;
     }
 }

@@ -18,10 +18,10 @@
 //   Median:         3      16       0
 //  Average:        16      30       0
 //  Maximum:       130     166       0
-impl std::ops::Div<anti_reject_via_horizon_from> for AntiScalar {
-    type Output = anti_reject_via_horizon_from_partial<AntiScalar>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for AntiScalar {
+    type Output = AntiRejectViaHorizonFromInfixPartial<AntiScalar>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for AntiScalar {
@@ -104,10 +104,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for DualNum {
-    type Output = anti_reject_via_horizon_from_partial<DualNum>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for DualNum {
+    type Output = AntiRejectViaHorizonFromInfixPartial<DualNum>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for DualNum {
@@ -364,10 +364,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for DualNum {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Flector {
-    type Output = anti_reject_via_horizon_from_partial<Flector>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Flector {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Flector>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Flector {
@@ -686,10 +686,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Flector {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Horizon {
-    type Output = anti_reject_via_horizon_from_partial<Horizon>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Horizon {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Horizon>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Horizon {
@@ -857,10 +857,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Line {
-    type Output = anti_reject_via_horizon_from_partial<Line>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Line {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Line>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Line {
@@ -1135,10 +1135,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Line {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Motor {
-    type Output = anti_reject_via_horizon_from_partial<Motor>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Motor {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Motor>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Motor {
@@ -1474,10 +1474,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Motor {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for MultiVector {
-    type Output = anti_reject_via_horizon_from_partial<MultiVector>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for MultiVector {
+    type Output = AntiRejectViaHorizonFromInfixPartial<MultiVector>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for MultiVector {
@@ -1998,10 +1998,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for MultiVector {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Origin {
-    type Output = anti_reject_via_horizon_from_partial<Origin>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Origin {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Origin>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Origin {
@@ -2229,10 +2229,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * f32::powi(other[scalar], 2));
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Plane {
-    type Output = anti_reject_via_horizon_from_partial<Plane>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Plane {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Plane>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Plane {
@@ -2430,10 +2430,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Plane {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Point {
-    type Output = anti_reject_via_horizon_from_partial<Point>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Point {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Point>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Point {
@@ -2724,10 +2724,10 @@ impl AntiRejectViaHorizonFrom<Scalar> for Point {
         );
     }
 }
-impl std::ops::Div<anti_reject_via_horizon_from> for Scalar {
-    type Output = anti_reject_via_horizon_from_partial<Scalar>;
-    fn div(self, _rhs: anti_reject_via_horizon_from) -> Self::Output {
-        anti_reject_via_horizon_from_partial(self)
+impl std::ops::Div<AntiRejectViaHorizonFromInfix> for Scalar {
+    type Output = AntiRejectViaHorizonFromInfixPartial<Scalar>;
+    fn div(self, _rhs: AntiRejectViaHorizonFromInfix) -> Self::Output {
+        AntiRejectViaHorizonFromInfixPartial(self)
     }
 }
 impl AntiRejectViaHorizonFrom<DualNum> for Scalar {

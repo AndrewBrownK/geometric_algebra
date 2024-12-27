@@ -6,9 +6,9 @@ public interface ConstraintViolation {
     associatedtype Output;
     func constraint_violation() -> Output;
 }
-public const static constraint_violation: ConstraintViolationInfix = ConstraintViolationInfix {}
-public struct ConstraintViolationInfix {}
-extension ConstraintViolationInfix for A: ConstraintViolation {
+public static const constraint_violation: ConstraintViolationPrefixOrPostfix = ConstraintViolationPrefixOrPostfix {};
+public struct ConstraintViolationPrefixOrPostfix {}
+extension ConstraintViolationPrefixOrPostfix for A: ConstraintViolation {
     func operator/(rhs: A) -> A.Output {
         return rhs.constraint_violation();
     }

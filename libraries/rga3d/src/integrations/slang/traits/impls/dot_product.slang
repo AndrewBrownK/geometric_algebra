@@ -1,3 +1,9 @@
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<DualNum> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension DualNum: DotProduct<DualNum> {
     associatedtype Output = Scalar;
     func dot_product(other: DualNum) -> Output {
@@ -5,9 +11,6 @@ extension DualNum: DotProduct<DualNum> {
             /* scalar */
             other.scalar * this.scalar
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<DualNum> {
-        dot_product_partial(this)
     }
 }
 extension DualNum: DotProduct<Motor> {
@@ -37,6 +40,12 @@ extension DualNum: DotProduct<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Flector> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Flector: DotProduct<Flector> {
     associatedtype Output = Scalar;
     func dot_product(other: Flector) -> Output {
@@ -44,9 +53,6 @@ extension Flector: DotProduct<Flector> {
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321)
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Flector> {
-        dot_product_partial(this)
     }
 }
 extension Flector: DotProduct<Horizon> {
@@ -85,6 +91,12 @@ extension Flector: DotProduct<Point> {
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Horizon> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Horizon: DotProduct<Flector> {
     associatedtype Output = Scalar;
     func dot_product(other: Flector) -> Output {
@@ -92,9 +104,6 @@ extension Horizon: DotProduct<Flector> {
             /* scalar */
             other.e321 * this.e321
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Horizon> {
-        dot_product_partial(this)
     }
 }
 extension Horizon: DotProduct<Horizon> {
@@ -124,6 +133,12 @@ extension Horizon: DotProduct<Plane> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Line> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Line: DotProduct<Line> {
     associatedtype Output = Scalar;
     func dot_product(other: Line) -> Output {
@@ -131,9 +146,6 @@ extension Line: DotProduct<Line> {
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Line> {
-        dot_product_partial(this)
     }
 }
 extension Line: DotProduct<Motor> {
@@ -154,6 +166,12 @@ extension Line: DotProduct<MultiVector> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Motor> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Motor: DotProduct<DualNum> {
     associatedtype Output = Scalar;
     func dot_product(other: DualNum) -> Output {
@@ -161,9 +179,6 @@ extension Motor: DotProduct<DualNum> {
             /* scalar */
             other.scalar * this.scalar
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Motor> {
-        dot_product_partial(this)
     }
 }
 extension Motor: DotProduct<Line> {
@@ -202,6 +217,12 @@ extension Motor: DotProduct<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<MultiVector> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension MultiVector: DotProduct<DualNum> {
     associatedtype Output = Scalar;
     func dot_product(other: DualNum) -> Output {
@@ -209,9 +230,6 @@ extension MultiVector: DotProduct<DualNum> {
             /* scalar */
             other.scalar * this.scalar
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<MultiVector> {
-        dot_product_partial(this)
     }
 }
 extension MultiVector: DotProduct<Flector> {
@@ -286,6 +304,12 @@ extension MultiVector: DotProduct<Scalar> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Plane> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Plane: DotProduct<Flector> {
     associatedtype Output = Scalar;
     func dot_product(other: Flector) -> Output {
@@ -293,9 +317,6 @@ extension Plane: DotProduct<Flector> {
             /* scalar */
             other.e321 * this.e321
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Plane> {
-        dot_product_partial(this)
     }
 }
 extension Plane: DotProduct<Horizon> {
@@ -325,6 +346,12 @@ extension Plane: DotProduct<Plane> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Point> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Point: DotProduct<Flector> {
     associatedtype Output = Scalar;
     func dot_product(other: Flector) -> Output {
@@ -332,9 +359,6 @@ extension Point: DotProduct<Flector> {
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Point> {
-        dot_product_partial(this)
     }
 }
 extension Point: DotProduct<MultiVector> {
@@ -355,6 +379,12 @@ extension Point: DotProduct<Point> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Scalar> {
+        return DotProductInfixPartial { a: this };
+    }
+}
 extension Scalar: DotProduct<DualNum> {
     associatedtype Output = Scalar;
     func dot_product(other: DualNum) -> Output {
@@ -362,9 +392,6 @@ extension Scalar: DotProduct<DualNum> {
             /* scalar */
             other.scalar * this.scalar
         );
-    }
-    func operator/(_rhs: DotProductInfix) -> dot_product_partial<Scalar> {
-        dot_product_partial(this)
     }
 }
 extension Scalar: DotProduct<Motor> {

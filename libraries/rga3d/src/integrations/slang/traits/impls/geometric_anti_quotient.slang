@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<AntiScalar> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension AntiScalar: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = AntiScalar;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: GeometricAntiQuotient<AntiScalar> {
             /* e1234 */
             this.e1234 / (other.e1234)
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<AntiScalar> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension AntiScalar: GeometricAntiQuotient<DualNum> {
@@ -188,6 +191,12 @@ AntiScalar other_2 = AntiScalar.from_groups(
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<DualNum> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension DualNum: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = DualNum;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -195,9 +204,6 @@ extension DualNum: GeometricAntiQuotient<AntiScalar> {
             /* scalar, e1234 */
             float2(1.0/other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<DualNum> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension DualNum: GeometricAntiQuotient<DualNum> {
@@ -384,6 +390,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Flector> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Flector: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Flector;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -397,9 +409,6 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(geometric_anti_product.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Flector> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Flector: GeometricAntiQuotient<DualNum> {
@@ -588,6 +597,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Horizon> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Horizon: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Horizon;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -595,9 +610,6 @@ extension Horizon: GeometricAntiQuotient<AntiScalar> {
             /* e321 */
             this.e321 / (other.e1234)
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Horizon> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Horizon: GeometricAntiQuotient<DualNum> {
@@ -760,6 +772,12 @@ extension Horizon: GeometricAntiQuotient<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Line> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Line: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Line;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -773,9 +791,6 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e23, e31, e12 */
             float3(geometric_anti_product.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Line> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Line: GeometricAntiQuotient<DualNum> {
@@ -964,6 +979,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Motor> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Motor: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Motor;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -977,9 +998,6 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e23, e31, e12, scalar */
             float4(geometric_anti_product.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Motor> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Motor: GeometricAntiQuotient<DualNum> {
@@ -1168,6 +1186,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<MultiVector> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension MultiVector: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = MultiVector;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -1187,9 +1211,6 @@ AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e423, e431, e412, e321 */
             float4(geometric_anti_product.e1234) * this.group4
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<MultiVector> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension MultiVector: GeometricAntiQuotient<DualNum> {
@@ -1420,6 +1441,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Origin> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Origin: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Origin;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -1427,9 +1454,6 @@ extension Origin: GeometricAntiQuotient<AntiScalar> {
             /* e4 */
             this.e4 / (other.e1234)
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Origin> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Origin: GeometricAntiQuotient<DualNum> {
@@ -1612,6 +1636,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Plane> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Plane: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Plane;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -1619,9 +1649,6 @@ extension Plane: GeometricAntiQuotient<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(1.0/other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Plane> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Plane: GeometricAntiQuotient<DualNum> {
@@ -1810,6 +1837,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Point> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Point: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Point;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -1817,9 +1850,6 @@ extension Point: GeometricAntiQuotient<AntiScalar> {
             /* e1, e2, e3, e4 */
             float4(1.0/other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Point> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Point: GeometricAntiQuotient<DualNum> {
@@ -2008,6 +2038,12 @@ Point geometric_anti_product = Point.from_groups(
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Scalar> {
+        return GeometricAntiQuotientInfixPartial { a: this };
+    }
+}
 extension Scalar: GeometricAntiQuotient<AntiScalar> {
     associatedtype Output = Scalar;
     func geometric_anti_quotient(other: AntiScalar) -> Output {
@@ -2015,9 +2051,6 @@ extension Scalar: GeometricAntiQuotient<AntiScalar> {
             /* scalar */
             this.scalar / (other.e1234)
         );
-    }
-    func operator/(_rhs: GeometricAntiQuotientInfix) -> geometric_anti_quotient_partial<Scalar> {
-        geometric_anti_quotient_partial(this)
     }
 }
 extension Scalar: GeometricAntiQuotient<DualNum> {

@@ -21,9 +21,9 @@ use crate::traits::Wedge;
 //   Median:         3      12       0
 //  Average:         3      13       0
 //  Maximum:         7      26       0
-impl std::ops::Div<bulk_norm_squared> for Flector {
+impl std::ops::Div<BulkNormSquaredPrefixOrPostfix> for Flector {
     type Output = Scalar;
-    fn div(self, _rhs: bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: BulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.bulk_norm_squared()
     }
 }
@@ -40,9 +40,9 @@ impl BulkNormSquared for Flector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<bulk_norm_squared> for Line {
+impl std::ops::Div<BulkNormSquaredPrefixOrPostfix> for Line {
     type Output = Scalar;
-    fn div(self, _rhs: bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: BulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.bulk_norm_squared()
     }
 }
@@ -59,9 +59,9 @@ impl BulkNormSquared for Line {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<bulk_norm_squared> for Motor {
+impl std::ops::Div<BulkNormSquaredPrefixOrPostfix> for Motor {
     type Output = Scalar;
-    fn div(self, _rhs: bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: BulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.bulk_norm_squared()
     }
 }
@@ -78,9 +78,9 @@ impl BulkNormSquared for Motor {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<bulk_norm_squared> for MultiVector {
+impl std::ops::Div<BulkNormSquaredPrefixOrPostfix> for MultiVector {
     type Output = Scalar;
-    fn div(self, _rhs: bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: BulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.bulk_norm_squared()
     }
 }
@@ -99,9 +99,9 @@ impl BulkNormSquared for MultiVector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-impl std::ops::Div<bulk_norm_squared> for Point {
+impl std::ops::Div<BulkNormSquaredPrefixOrPostfix> for Point {
     type Output = Scalar;
-    fn div(self, _rhs: bulk_norm_squared) -> Self::Output {
+    fn div(self, _rhs: BulkNormSquaredPrefixOrPostfix) -> Self::Output {
         self.bulk_norm_squared()
     }
 }

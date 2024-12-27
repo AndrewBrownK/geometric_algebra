@@ -20,14 +20,14 @@ use crate::traits::FlatWeightNormSquared;
 //   Median:         2       3       0
 //  Average:         1       2       0
 //  Maximum:         7       8       0
-impl std::ops::Div<weight_norm> for AntiScalar {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for AntiScalar {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
-impl std::ops::DivAssign<weight_norm> for AntiScalar {
-    fn div_assign(&mut self, _rhs: weight_norm) {
+impl std::ops::DivAssign<WeightNormPrefixOrPostfix> for AntiScalar {
+    fn div_assign(&mut self, _rhs: WeightNormPrefixOrPostfix) {
         *self = self.weight_norm()
     }
 }
@@ -39,9 +39,9 @@ impl WeightNorm for AntiScalar {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for DualNum {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for DualNum {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -53,9 +53,9 @@ impl WeightNorm for DualNum {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Flector {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Flector {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -67,9 +67,9 @@ impl WeightNorm for Flector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Line {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Line {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -81,9 +81,9 @@ impl WeightNorm for Line {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Motor {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Motor {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -95,9 +95,9 @@ impl WeightNorm for Motor {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for MultiVector {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for MultiVector {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -109,9 +109,9 @@ impl WeightNorm for MultiVector {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Origin {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Origin {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -123,9 +123,9 @@ impl WeightNorm for Origin {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Plane {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Plane {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }
@@ -137,9 +137,9 @@ impl WeightNorm for Plane {
         return self.flat_weight_norm_squared().anti_square_root();
     }
 }
-impl std::ops::Div<weight_norm> for Point {
+impl std::ops::Div<WeightNormPrefixOrPostfix> for Point {
     type Output = AntiScalar;
-    fn div(self, _rhs: weight_norm) -> Self::Output {
+    fn div(self, _rhs: WeightNormPrefixOrPostfix) -> Self::Output {
         self.weight_norm()
     }
 }

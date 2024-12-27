@@ -1,3 +1,9 @@
+extension AntiScalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<AntiScalar> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension AntiScalar: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -5,9 +11,6 @@ extension AntiScalar: GeometricAntiProduct<AntiScalar> {
             /* e1234 */
             other.e1234 * this.e1234
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<AntiScalar> {
-        geometric_anti_product_partial(this)
     }
 }
 extension AntiScalar: GeometricAntiProduct<DualNum> {
@@ -114,6 +117,12 @@ extension AntiScalar: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension DualNum {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<DualNum> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension DualNum: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = DualNum;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -121,9 +130,6 @@ extension DualNum: GeometricAntiProduct<AntiScalar> {
             /* scalar, e1234 */
             float2(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<DualNum> {
-        geometric_anti_product_partial(this)
     }
 }
 extension DualNum: GeometricAntiProduct<DualNum> {
@@ -236,6 +242,12 @@ extension DualNum: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Flector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Flector> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Flector: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Flector;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -245,9 +257,6 @@ extension Flector: GeometricAntiProduct<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Flector> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Flector: GeometricAntiProduct<DualNum> {
@@ -366,6 +375,12 @@ extension Flector: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Horizon {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Horizon> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Horizon: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Horizon;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -373,9 +388,6 @@ extension Horizon: GeometricAntiProduct<AntiScalar> {
             /* e321 */
             other.e1234 * this.e321
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Horizon> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Horizon: GeometricAntiProduct<DualNum> {
@@ -464,6 +476,12 @@ extension Horizon: GeometricAntiProduct<Point> {
         );
     }
 }
+extension Line {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Line> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Line: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Line;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -473,9 +491,6 @@ extension Line: GeometricAntiProduct<AntiScalar> {
             /* e23, e31, e12 */
             float3(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Line> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Line: GeometricAntiProduct<DualNum> {
@@ -592,6 +607,12 @@ extension Line: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Motor {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Motor> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Motor: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Motor;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -601,9 +622,6 @@ extension Motor: GeometricAntiProduct<AntiScalar> {
             /* e23, e31, e12, scalar */
             float4(other.e1234) * this.group1
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Motor> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Motor: GeometricAntiProduct<DualNum> {
@@ -722,6 +740,12 @@ extension Motor: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension MultiVector {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<MultiVector> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension MultiVector: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = MultiVector;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -737,9 +761,6 @@ extension MultiVector: GeometricAntiProduct<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group4
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<MultiVector> {
-        geometric_anti_product_partial(this)
     }
 }
 extension MultiVector: GeometricAntiProduct<DualNum> {
@@ -912,6 +933,12 @@ extension MultiVector: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Origin {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Origin> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Origin: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Origin;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -919,9 +946,6 @@ extension Origin: GeometricAntiProduct<AntiScalar> {
             /* e4 */
             other.e1234 * this.e4
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Origin> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Origin: GeometricAntiProduct<DualNum> {
@@ -1034,6 +1058,12 @@ extension Origin: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Plane {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Plane> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Plane: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Plane;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -1041,9 +1071,6 @@ extension Plane: GeometricAntiProduct<AntiScalar> {
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Plane> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Plane: GeometricAntiProduct<DualNum> {
@@ -1160,6 +1187,12 @@ extension Plane: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Point {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Point> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Point: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Point;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -1167,9 +1200,6 @@ extension Point: GeometricAntiProduct<AntiScalar> {
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Point> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Point: GeometricAntiProduct<DualNum> {
@@ -1284,6 +1314,12 @@ extension Point: GeometricAntiProduct<Scalar> {
         );
     }
 }
+extension Scalar {
+    // Fancy infix trick
+    func operator/(_rhs: GeometricAntiProductInfix) -> GeometricAntiProductInfixPartial<Scalar> {
+        return GeometricAntiProductInfixPartial { a: this };
+    }
+}
 extension Scalar: GeometricAntiProduct<AntiScalar> {
     associatedtype Output = Scalar;
     func geometric_anti_product(other: AntiScalar) -> Output {
@@ -1291,9 +1327,6 @@ extension Scalar: GeometricAntiProduct<AntiScalar> {
             /* scalar */
             other.e1234 * this.scalar
         );
-    }
-    func operator/(_rhs: GeometricAntiProductInfix) -> geometric_anti_product_partial<Scalar> {
-        geometric_anti_product_partial(this)
     }
 }
 extension Scalar: GeometricAntiProduct<DualNum> {
