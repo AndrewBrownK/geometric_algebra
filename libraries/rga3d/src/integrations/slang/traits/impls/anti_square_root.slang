@@ -11,10 +11,10 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: AntiSquareRoot {
-    func anti_square_root(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func anti_square_root() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            powf(self[e1234], 0.5)
+            powf(this.e1234, 0.5)
         );
     }
 }

@@ -5,10 +5,10 @@ AntiScalar {
     }
 }
 extension DualNum: ConstraintViolation {
-    func constraint_violation(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func constraint_violation() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[scalar] * self[e1234] * 2.0
+            this.scalar * this.e1234 * 2.0
         );
     }
 }
@@ -19,16 +19,16 @@ AntiScalar {
     }
 }
 extension Flector: ConstraintViolation {
-    func constraint_violation(self) -> AntiScalar {
-Flector reverse = Flector::from_groups(
+    func constraint_violation() -> AntiScalar {
+Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0(), 
+            this.group0, 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
-        return AntiScalar::from_groups(
+        return AntiScalar.from_groups(
             /* e1234 */
-            (reverse[e423] * self[e1]) + (reverse[e431] * self[e2]) + (reverse[e412] * self[e3]) + (reverse[e321] * self[e4]) - (reverse[e1] * self[e423]) - (reverse[e2] * self[e431]) - (reverse[e3] * self[e412]) - (reverse[e4] * self[e321])
+            (reverse.e423 * this.e1) + (reverse.e431 * this.e2) + (reverse.e412 * this.e3) + (reverse.e321 * this.e4) - (reverse.e1 * this.e423) - (reverse.e2 * this.e431) - (reverse.e3 * this.e412) - (reverse.e4 * this.e321)
         );
     }
 }
@@ -39,16 +39,16 @@ AntiScalar {
     }
 }
 extension Line: ConstraintViolation {
-    func constraint_violation(self) -> AntiScalar {
-Line reverse = Line::from_groups(
+    func constraint_violation() -> AntiScalar {
+Line reverse = Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
-        return AntiScalar::from_groups(
+        return AntiScalar.from_groups(
             /* e1234 */
-            -(reverse[e41] * self[e23]) - (reverse[e42] * self[e31]) - (reverse[e43] * self[e12]) - (reverse[e23] * self[e41]) - (reverse[e31] * self[e42]) - (reverse[e12] * self[e43])
+            -(reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
     }
 }
@@ -59,16 +59,16 @@ AntiScalar {
     }
 }
 extension Motor: ConstraintViolation {
-    func constraint_violation(self) -> AntiScalar {
-Motor reverse = Motor::from_groups(
+    func constraint_violation() -> AntiScalar {
+Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiScalar::from_groups(
+        return AntiScalar.from_groups(
             /* e1234 */
-            (reverse[e1234] * self[scalar]) + (reverse[scalar] * self[e1234]) - (reverse[e41] * self[e23]) - (reverse[e42] * self[e31]) - (reverse[e43] * self[e12]) - (reverse[e23] * self[e41]) - (reverse[e31] * self[e42]) - (reverse[e12] * self[e43])
+            (reverse.e1234 * this.scalar) + (reverse.scalar * this.e1234) - (reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
     }
 }
@@ -85,24 +85,24 @@ extension MultiVector {
     }
 }
 extension MultiVector: ConstraintViolation {
-    func constraint_violation(self) -> MultiVector {
-MultiVector reverse = MultiVector::from_groups(
+    func constraint_violation() -> MultiVector {
+MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1(), 
+            this.group1, 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4() * float4(-1.0)
+            this.group4 * float4(-1.0)
         );
-MultiVector geometric_product = MultiVector::from_groups(
+MultiVector geometric_product = MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, (reverse[e1234] * self[scalar]) + (reverse[e321] * self[e4]) - (reverse[e2] * self[e431]) - (reverse[e3] * self[e412]) - (reverse[e4] * self[e321]) - (reverse[e23] * self[e41]) - (reverse[e31] * self[e42]) - (reverse[e12] * self[e43])) + (float2(reverse[scalar]) * self.group0()) + (float2(self[e1]) * float2(reverse[e1], reverse[e423])) + (float2(self[e2]) * float2(reverse[e2], reverse[e431])) + (float2(self[e3]) * float2(reverse[e3], reverse[e412])) - (float2(self[e23]) * float2(reverse[e23], reverse[e41])) - (float2(self[e31]) * float2(reverse[e31], reverse[e42])) - (float2(self[e12]) * float2(reverse[e12], reverse[e43])) - (float2(reverse[e321], reverse[e1]) * self.group4().wx), 
+            float2(0.0, (reverse.e1234 * this.scalar) + (reverse.e321 * this.e4) - (reverse.e2 * this.e431) - (reverse.e3 * this.e412) - (reverse.e4 * this.e321) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)) + (float2(reverse.scalar) * this.group0) + (float2(this.e1) * float2(reverse.e1, reverse.e423)) + (float2(this.e2) * float2(reverse.e2, reverse.e431)) + (float2(this.e3) * float2(reverse.e3, reverse.e412)) - (float2(this.e23) * float2(reverse.e23, reverse.e41)) - (float2(this.e31) * float2(reverse.e31, reverse.e42)) - (float2(this.e12) * float2(reverse.e12, reverse.e43)) - (float2(reverse.e321, reverse.e1) * this.group4.wx), 
             /* e1, e2, e3, e4 */
-            (float4(reverse[scalar]) * self.group1()) + (float4(reverse[e2], reverse[e321], reverse[e321], reverse[e3]) * float4(self.group3().zyz, self[e43])) + (float4(reverse[e321], reverse[e3], reverse[e1], reverse[e2]) * float4(self.group3().xxy, self[e42])) + (float4(self.group0().xx, self[scalar], reverse[e1234]) * float4(reverse.group1().xyz, self[e321])) + (float4(self.group1().zx, self[e321], reverse[e1]) * float4(reverse.group3().yzz, self[e41])) + (float4(self.group4().ww, self[e2], reverse[e4]) * float4(reverse.group3().xyx, self[scalar])) + float4(float3(0.0), -(reverse[e42] * self[e2]) - (reverse[e43] * self[e3]) - (reverse[e23] * self[e423]) - (reverse[e31] * self[e431]) - (reverse[e12] * self[e412]) - (reverse[e423] * self[e23]) - (reverse[e431] * self[e31]) - (reverse[e412] * self[e12])) - float4((reverse.group3().zxy * self.group1().yzx), reverse[e321] * self[e1234]) - float4((self.group3().yzx * reverse.group1().zxy), reverse[e41] * self[e1]), 
+            (float4(reverse.scalar) * this.group1) + (float4(reverse.e2, reverse.e321, reverse.e321, reverse.e3) * float4(this.group3.zyz, this.e43)) + (float4(reverse.e321, reverse.e3, reverse.e1, reverse.e2) * float4(this.group3.xxy, this.e42)) + (float4(this.group0.xx, this.scalar, reverse.e1234) * float4(reverse.group1.xyz, this.e321)) + (float4(this.group1.zx, this.e321, reverse.e1) * float4(reverse.group3.yzz, this.e41)) + (float4(this.group4.ww, this.e2, reverse.e4) * float4(reverse.group3.xyx, this.scalar)) + float4(float3(0.0), -(reverse.e42 * this.e2) - (reverse.e43 * this.e3) - (reverse.e23 * this.e423) - (reverse.e31 * this.e431) - (reverse.e12 * this.e412) - (reverse.e423 * this.e23) - (reverse.e431 * this.e31) - (reverse.e412 * this.e12)) - float4((reverse.group3.zxy * this.group1.yzx), reverse.e321 * this.e1234) - float4((this.group3.yzx * reverse.group1.zxy), reverse.e41 * this.e1), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -110,11 +110,11 @@ MultiVector geometric_product = MultiVector::from_groups(
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, geometric_product[e1234]), 
+            float2(0.0, geometric_product.e1234), 
             /* e1, e2, e3, e4 */
-            geometric_product.group1(), 
+            geometric_product.group1, 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */

@@ -6,8 +6,8 @@ float {
     }
 }
 extension Flector: UnitizedNorm {
-    func unitized_norm(self) -> float {
-        return powf(self.unitized_flat_norm_squared(), 0.5);
+    func unitized_norm() -> float {
+        return powf(this.unitized_flat_norm_squared(), 0.5);
     }
 }
 extension Line {
@@ -17,8 +17,8 @@ float {
     }
 }
 extension Line: UnitizedNorm {
-    func unitized_norm(self) -> float {
-        return powf(self.unitized_flat_norm_squared(), 0.5);
+    func unitized_norm() -> float {
+        return powf(this.unitized_flat_norm_squared(), 0.5);
     }
 }
 extension Motor {
@@ -28,8 +28,8 @@ float {
     }
 }
 extension Motor: UnitizedNorm {
-    func unitized_norm(self) -> float {
-        return powf(self.unitized_flat_norm_squared(), 0.5);
+    func unitized_norm() -> float {
+        return powf(this.unitized_flat_norm_squared(), 0.5);
     }
 }
 extension MultiVector {
@@ -39,8 +39,8 @@ float {
     }
 }
 extension MultiVector: UnitizedNorm {
-    func unitized_norm(self) -> float {
-        return powf(self.unitized_flat_norm_squared(), 0.5);
+    func unitized_norm() -> float {
+        return powf(this.unitized_flat_norm_squared(), 0.5);
     }
 }
 extension Point {
@@ -50,7 +50,7 @@ float {
     }
 }
 extension Point: UnitizedNorm {
-    func unitized_norm(self) -> float {
-        return powf(self.unitized_flat_norm_squared(), 0.5);
+    func unitized_norm() -> float {
+        return powf(this.unitized_flat_norm_squared(), 0.5);
     }
 }

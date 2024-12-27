@@ -13,10 +13,10 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Unitize {
-    func unitize(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func unitize() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[e1234] / (self.flat_weight_norm_squared().anti_square_root()[e1234])
+            this.e1234 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
 }
@@ -33,10 +33,10 @@ extension DualNum {
     }
 }
 extension DualNum: Unitize {
-    func unitize(self) -> DualNum {
-        return DualNum::from_groups(
+    func unitize() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+            float2(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
 }
@@ -53,16 +53,16 @@ extension Flector {
     }
 }
 extension Flector: Unitize {
-    func unitize(self) -> Flector {
-AntiScalar geometric_anti_product = AntiScalar::from_groups(
+    func unitize() -> Flector {
+AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
-            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+            1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Flector::from_groups(
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_anti_product[e1234]) * self.group0(), 
+            float4(geometric_anti_product.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product[e1234]) * self.group1()
+            float4(geometric_anti_product.e1234) * this.group1
         );
     }
 }
@@ -79,16 +79,16 @@ extension Line {
     }
 }
 extension Line: Unitize {
-    func unitize(self) -> Line {
-AntiScalar geometric_anti_product = AntiScalar::from_groups(
+    func unitize() -> Line {
+AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
-            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+            1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Line::from_groups(
+        return Line.from_groups(
             /* e41, e42, e43 */
-            float3(geometric_anti_product[e1234]) * self.group0(), 
+            float3(geometric_anti_product.e1234) * this.group0, 
             /* e23, e31, e12 */
-            float3(geometric_anti_product[e1234]) * self.group1()
+            float3(geometric_anti_product.e1234) * this.group1
         );
     }
 }
@@ -105,16 +105,16 @@ extension Motor {
     }
 }
 extension Motor: Unitize {
-    func unitize(self) -> Motor {
-AntiScalar geometric_anti_product = AntiScalar::from_groups(
+    func unitize() -> Motor {
+AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
-            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+            1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Motor::from_groups(
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(geometric_anti_product[e1234]) * self.group0(), 
+            float4(geometric_anti_product.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
-            float4(geometric_anti_product[e1234]) * self.group1()
+            float4(geometric_anti_product.e1234) * this.group1
         );
     }
 }
@@ -131,22 +131,22 @@ extension MultiVector {
     }
 }
 extension MultiVector: Unitize {
-    func unitize(self) -> MultiVector {
-AntiScalar geometric_anti_product = AntiScalar::from_groups(
+    func unitize() -> MultiVector {
+AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
-            1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]
+            1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(geometric_anti_product[e1234]) * self.group0(), 
+            float2(geometric_anti_product.e1234) * this.group0, 
             /* e1, e2, e3, e4 */
-            float4(geometric_anti_product[e1234]) * self.group1(), 
+            float4(geometric_anti_product.e1234) * this.group1, 
             /* e41, e42, e43 */
-            float3(geometric_anti_product[e1234]) * self.group2(), 
+            float3(geometric_anti_product.e1234) * this.group2, 
             /* e23, e31, e12 */
-            float3(geometric_anti_product[e1234]) * self.group3(), 
+            float3(geometric_anti_product.e1234) * this.group3, 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product[e1234]) * self.group4()
+            float4(geometric_anti_product.e1234) * this.group4
         );
     }
 }
@@ -163,10 +163,10 @@ extension Origin {
     }
 }
 extension Origin: Unitize {
-    func unitize(self) -> Origin {
-        return Origin::from_groups(
+    func unitize() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] / (self.flat_weight_norm_squared().anti_square_root()[e1234])
+            this.e4 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
     }
 }
@@ -183,10 +183,10 @@ extension Plane {
     }
 }
 extension Plane: Unitize {
-    func unitize(self) -> Plane {
-        return Plane::from_groups(
+    func unitize() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+            float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
 }
@@ -203,10 +203,10 @@ extension Point {
     }
 }
 extension Point: Unitize {
-    func unitize(self) -> Point {
-        return Point::from_groups(
+    func unitize() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(1.0/self.flat_weight_norm_squared().anti_square_root()[e1234]) * self.group0()
+            float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
     }
 }

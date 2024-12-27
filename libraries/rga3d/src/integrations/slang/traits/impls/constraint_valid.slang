@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: ConstraintValid {
-    func constraint_valid(self) -> AntiScalar {
-        return self;
+    func constraint_valid() -> AntiScalar {
+        return this;
     }
 }
 extension Horizon {
@@ -28,8 +28,8 @@ extension Horizon {
     }
 }
 extension Horizon: ConstraintValid {
-    func constraint_valid(self) -> Horizon {
-        return self;
+    func constraint_valid() -> Horizon {
+        return this;
     }
 }
 extension Origin {
@@ -45,8 +45,8 @@ extension Origin {
     }
 }
 extension Origin: ConstraintValid {
-    func constraint_valid(self) -> Origin {
-        return self;
+    func constraint_valid() -> Origin {
+        return this;
     }
 }
 extension Plane {
@@ -62,8 +62,8 @@ extension Plane {
     }
 }
 extension Plane: ConstraintValid {
-    func constraint_valid(self) -> Plane {
-        return self;
+    func constraint_valid() -> Plane {
+        return this;
     }
 }
 extension Point {
@@ -79,8 +79,8 @@ extension Point {
     }
 }
 extension Point: ConstraintValid {
-    func constraint_valid(self) -> Point {
-        return self;
+    func constraint_valid() -> Point {
+        return this;
     }
 }
 extension Scalar {
@@ -96,7 +96,7 @@ extension Scalar {
     }
 }
 extension Scalar: ConstraintValid {
-    func constraint_valid(self) -> Scalar {
-        return self;
+    func constraint_valid() -> Scalar {
+        return this;
     }
 }

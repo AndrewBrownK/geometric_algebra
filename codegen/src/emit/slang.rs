@@ -6,7 +6,7 @@
 
 use std::{fs, thread};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::io::{BufRead, BufReader, ErrorKind, Write};
+use std::io::{BufRead, BufReader, BufWriter, ErrorKind, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -106,7 +106,8 @@ impl Slang {
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
         let (started_file, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
         join_set.spawn(async move {
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             let mut paths = vec![];
             while let Some(p) = rx.recv().await {
                 use std::fmt::Write;
@@ -171,7 +172,8 @@ impl Slang {
             join_set.spawn(async move {
                 let file_path = folder_data.join(Path::new(&lsc)).with_extension("slang");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 writeln!(&mut file, "implementing {algebra_name};")?;
                 writeln!(&mut file, "using data::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
@@ -210,7 +212,8 @@ impl Slang {
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("slang");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 // TODO remove these imports when they are unused
                 writeln!(&mut file, "using data::*;")?;
                 self.declare_trait_def(&mut file, td)?;
@@ -281,7 +284,8 @@ impl Slang {
                 }
 
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 let mut deps_set = HashSet::new();
                 for dep in deps {
                     if let Some(pb) = &pb {
@@ -333,7 +337,8 @@ impl Slang {
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("data.slang"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             writeln!(&mut file, "implementing {algebra_name};")?;
             for mv in mvs {
                 let n = mv.name;
@@ -351,7 +356,8 @@ impl Slang {
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("traits.slang"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             writeln!(&mut file, "implementing {algebra_name};")?;
             for td in defs.iter() {
                 if let TraitTypeConsensus::NoVotes = *td.output.read() {
@@ -380,7 +386,8 @@ impl Slang {
             let n = format!("{algebra_name}.slang");
             let file_path = src_folder2.join(Path::new(n.as_str()));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             writeln!(&mut file, "namespace data {{")?;
             writeln!(&mut file, "    __include data;")?;
             writeln!(&mut file, "}}")?;
@@ -437,7 +444,9 @@ impl Slang {
             IntExpr::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -470,7 +479,9 @@ impl Slang {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -498,12 +509,12 @@ impl Slang {
             FloatExpr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
                 let el = mv.mv_class.elements()[*i as usize];
-                write!(w, "[{el}]")?;
+                write!(w, ".{el}")?;
             }
             FloatExpr::AccessMultiVecFlat(mv, i) => {
                 self.write_multi_vec(w, mv)?;
                 let el = mv.mv_class.elements()[*i as usize];
-                write!(w, "[{el}]")?;
+                write!(w, ".{el}")?;
             }
             FloatExpr::TraitInvoke11ToFloat(t, arg) => {
                 let method = t.as_lower_snake();
@@ -688,7 +699,9 @@ impl Slang {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -709,8 +722,7 @@ impl Slang {
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                // TODO
-                write!(w, ".group{i}()")?;
+                write!(w, ".group{i}")?;
             }
             Vec2Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 2];
@@ -886,7 +898,9 @@ impl Slang {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -915,9 +929,8 @@ impl Slang {
                 write!(w, ")")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
-                // TODO
                 self.write_multi_vec(w, mv)?;
-                write!(w, ".group{i}()")?;
+                write!(w, ".group{i}")?;
             }
             Vec3Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 3];
@@ -1095,7 +1108,9 @@ impl Slang {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -1136,8 +1151,7 @@ impl Slang {
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                // TODO
-                write!(w, ".group{i}()")?;
+                write!(w, ".group{i}")?;
             }
             Vec4Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 4];
@@ -1316,7 +1330,9 @@ impl Slang {
             MultiVectorVia::Variable(v) => {
                 let name = &v.decl.name.0;
                 let no = v.decl.name.1;
-                if no == 0 {
+                if name.as_str() == "self" && no == 0 {
+                    write!(w, "this")?;
+                } else if no == 0 {
                     write!(w, "{name}")?;
                 } else {
                     let no = no + 1;
@@ -1326,7 +1342,7 @@ impl Slang {
             MultiVectorVia::Construct(v) => {
                 let n = mv.name();
                 // TODO
-                write!(w, "{n}::from_groups(")?;
+                write!(w, "{n}.from_groups(")?;
                 let groups = mv.groups();
                 for (i, g) in v.iter().enumerate() {
                     if i > 0 {
@@ -1770,7 +1786,6 @@ impl TryFrom<{other}> for {owner} {{
     ) -> anyhow::Result<()> {
         let def = &impls.definition;
 
-        let output_kind = def.output.read();
         let output_ty = impls.return_expr.expression_type();
         let owner_ty = &impls.owner;
         if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
@@ -1808,7 +1823,6 @@ impl TryFrom<{other}> for {owner} {{
         }
 
         if let Some(op) = self.fancy_infix {
-            let operator_name = op.rust_trait_name();
             let operator_method = op.rust_trait_method();
             if let TraitParam::Class(mv) = &owner_ty {
                 let n = mv.name();
@@ -1848,101 +1862,12 @@ impl TryFrom<{other}> for {owner} {{
             write!(w, ">")?;
         }
         writeln!(w, " {{")?;
-        // if let TraitTypeConsensus::Disagreement = output_kind.deref() {
-        //     write!(w, "    type Output = ")?;
-        //     self.write_type(w, output_ty)?;
-        //     writeln!(w, ";")?;
-        // } else if is_op {
-        //     write!(w, "    type Output = ")?;
-        //     self.write_type(w, output_ty)?;
-        //     writeln!(w, ";")?;
-        // }
-
-        // {
-        //     let stats = &impls.statistics;
-        //     let ws = stats.with_simd();
-        //     let wos = stats.without_simd();
-        //     let mut qty_types = 0;
-        //     let mut has_simd = false;
-        //     if !stats.floats.is_zero() {
-        //         qty_types += 1;
-        //     }
-        //     if !stats.simd2.is_zero() {
-        //         qty_types += 1;
-        //         has_simd = true;
-        //     }
-        //     if !stats.simd3.is_zero() {
-        //         qty_types += 1;
-        //         has_simd = true;
-        //     }
-        //     if !stats.simd4.is_zero() {
-        //         qty_types += 1;
-        //         has_simd = true;
-        //     }
-        //     if !wos.is_zero() {
-        //         writeln!(w, "// Operative Statistics for this implementation:")?;
-        //         let space = if qty_types == 1 {
-        //             if has_simd {
-        //                 "    "
-        //             } else {
-        //                 ""
-        //             }
-        //         } else {
-        //             "     "
-        //         };
-        //         writeln!(w, "//{space}      add/sub      mul      div")?;
-        //     }
-        //     if !stats.floats.is_zero() {
-        //         let f_a = stats.floats.add_sub;
-        //         let f_m = stats.floats.mul;
-        //         let f_d = stats.floats.div;
-        //         let space = if qty_types > 1 { "     " } else { "" };
-        //         writeln!(w, "//{space} f32  {f_a:>7}  {f_m:>7}  {f_d:>7}")?;
-        //     }
-        //     if !stats.simd2.is_zero() {
-        //         let s2_a = stats.simd2.add_sub;
-        //         let s2_m = stats.simd2.mul;
-        //         let s2_d = stats.simd2.div;
-        //         let space = if qty_types > 1 { " " } else { "" };
-        //         writeln!(w, "//{space}   simd2  {s2_a:>7}  {s2_m:>7}  {s2_d:>7}")?;
-        //     }
-        //     if !stats.simd3.is_zero() {
-        //         let s3_a = stats.simd3.add_sub;
-        //         let s3_m = stats.simd3.mul;
-        //         let s3_d = stats.simd3.div;
-        //         let space = if qty_types > 1 { " " } else { "" };
-        //         writeln!(w, "//{space}   simd3  {s3_a:>7}  {s3_m:>7}  {s3_d:>7}")?;
-        //     }
-        //     if !stats.simd4.is_zero() {
-        //         let s4_a = stats.simd4.add_sub;
-        //         let s4_m = stats.simd4.mul;
-        //         let s4_d = stats.simd4.div;
-        //         let space = if qty_types > 1 { " " } else { "" };
-        //         writeln!(w, "//{space}   simd4  {s4_a:>7}  {s4_m:>7}  {s4_d:>7}")?;
-        //     }
-        //     if has_simd {
-        //         let y_a = ws.add_sub;
-        //         let y_m = ws.mul;
-        //         let y_d = ws.div;
-        //         let n_a = wos.add_sub;
-        //         let n_m = wos.mul;
-        //         let n_d = wos.div;
-        //         if qty_types > 1 {
-        //             writeln!(w, "// Totals...")?;
-        //             writeln!(w, "// yes simd  {y_a:>7}  {y_m:>7}  {y_d:>7}")?;
-        //             writeln!(w, "//  no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
-        //         } else {
-        //             writeln!(w, "// no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
-        //         }
-        //     }
-        // }
-
         write!(w, "    func {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
-            (TraitArity::One, _) => write!(w, "self")?,
+            (TraitArity::One, _) => {},
             (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "self, other: ")?;
+                write!(w, "other: ")?;
                 self.write_type(w, *other_ty)?;
             }
             _ => panic!("Arity 2 should always have other type"),

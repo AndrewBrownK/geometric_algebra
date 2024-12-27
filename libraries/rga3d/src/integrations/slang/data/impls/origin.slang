@@ -1,11 +1,11 @@
 using traits::GeometricProduct;
 extension Origin: Add<AntiScalar> {
-    func operator+(self, other: AntiScalar) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: AntiScalar) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, other[e1234]), 
+            float2(0.0, other.e1234), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -16,12 +16,12 @@ extension Origin: Add<AntiScalar> {
     }
 }
 extension Origin: Add<DualNum> {
-    func operator+(self, other: DualNum) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: DualNum) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            other.group0(), 
+            other.group0, 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -32,114 +32,114 @@ extension Origin: Add<DualNum> {
     }
 }
 extension Origin: Add<Flector> {
-    func operator+(self, other: Flector) -> Flector {
-        return Flector::from_groups(
+    func operator+(other: Flector) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            other.group0() + float4(float3(0.0), self[e4]), 
+            other.group0 + float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            other.group1()
+            other.group1
         );
     }
 }
 extension Origin: Add<Horizon> {
-    func operator+(self, other: Horizon) -> Flector {
-        return Flector::from_groups(
+    func operator+(other: Horizon) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), other[e321])
+            float4(float3(0.0), other.e321)
         );
     }
 }
 extension Origin: Add<Line> {
-    func operator+(self, other: Line) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Line) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            other.group0(), 
+            other.group0, 
             /* e23, e31, e12 */
-            other.group1(), 
+            other.group1, 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
 extension Origin: Add<Motor> {
-    func operator+(self, other: Motor) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Motor) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], other[e1234]), 
+            float2(other.scalar, other.e1234), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            other.group0().xyz, 
+            other.group0.xyz, 
             /* e23, e31, e12 */
-            other.group1().xyz, 
+            other.group1.xyz, 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
 extension Origin: Add<MultiVector> {
-    func operator+(self, other: MultiVector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: MultiVector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            other.group0(), 
+            other.group0, 
             /* e1, e2, e3, e4 */
-            other.group1() + float4(float3(0.0), self[e4]), 
+            other.group1 + float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            other.group2(), 
+            other.group2, 
             /* e23, e31, e12 */
-            other.group3(), 
+            other.group3, 
             /* e423, e431, e412, e321 */
-            other.group4()
+            other.group4
         );
     }
 }
 extension Origin: Add<Origin> {
-    func operator+(self, other: Origin) -> Origin {
-        return Origin::from_groups(
+    func operator+(other: Origin) -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            other[e4] + self[e4]
+            other.e4 + this.e4
         );
     }
 }
 extension Origin {
     func operator+=(const Origin& other) {
-        *this = Origin::from_groups(
+        *this = Origin.from_groups(
             /* e4 */
-            other[e4] + self[e4]
+            other.e4 + this.e4
         );
     }
 }
 extension Origin: Add<Plane> {
-    func operator+(self, other: Plane) -> Flector {
-        return Flector::from_groups(
+    func operator+(other: Plane) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            other.group0()
+            other.group0
         );
     }
 }
 extension Origin: Add<Point> {
-    func operator+(self, other: Point) -> Point {
-        return Point::from_groups(
+    func operator+(other: Point) -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            other.group0() + float4(float3(0.0), self[e4])
+            other.group0 + float4(float3(0.0), this.e4)
         );
     }
 }
 extension Origin: Add<Scalar> {
-    func operator+(self, other: Scalar) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Scalar) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], 0.0), 
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -150,75 +150,75 @@ extension Origin: Add<Scalar> {
     }
 }
 extension Origin: Mul<DualNum> {
-    func operator*(self, other: DualNum) -> Origin {
-        return self.geometric_product(other);
+    func operator*(other: DualNum) -> Origin {
+        return this.geometric_product(other);
     }
 }
 extension Origin {
     func operator*=(const DualNum& other) {
-        *this = self.geometric_product(other);
+        *this = this.geometric_product(other);
     }
 }
 extension Origin: Mul<Flector> {
-    func operator*(self, other: Flector) -> Motor {
-        return self.geometric_product(other);
+    func operator*(other: Flector) -> Motor {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Horizon> {
-    func operator*(self, other: Horizon) -> AntiScalar {
-        return self.geometric_product(other);
+    func operator*(other: Horizon) -> AntiScalar {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Line> {
-    func operator*(self, other: Line) -> Plane {
-        return self.geometric_product(other);
+    func operator*(other: Line) -> Plane {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Motor> {
-    func operator*(self, other: Motor) -> Flector {
-        return self.geometric_product(other);
+    func operator*(other: Motor) -> Flector {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<MultiVector> {
-    func operator*(self, other: MultiVector) -> MultiVector {
-        return self.geometric_product(other);
+    func operator*(other: MultiVector) -> MultiVector {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Plane> {
-    func operator*(self, other: Plane) -> AntiScalar {
-        return self.geometric_product(other);
+    func operator*(other: Plane) -> AntiScalar {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Point> {
-    func operator*(self, other: Point) -> Line {
-        return self.geometric_product(other);
+    func operator*(other: Point) -> Line {
+        return this.geometric_product(other);
     }
 }
 extension Origin: Mul<Scalar> {
-    func operator*(self, other: Scalar) -> Origin {
-        return self.geometric_product(other);
+    func operator*(other: Scalar) -> Origin {
+        return this.geometric_product(other);
     }
 }
 extension Origin {
     func operator*=(const Scalar& other) {
-        *this = self.geometric_product(other);
+        *this = this.geometric_product(other);
     }
 }
 extension Origin: Neg {
-    func neg(self) -> Origin {
-        return Origin::from_groups(
+    func neg() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
 extension Origin: Sub<AntiScalar> {
-    func operator-(self, other: AntiScalar) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: AntiScalar) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(1.0, other[e1234]) * float2(0.0, -1.0), 
+            float2(1.0, other.e1234) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -229,12 +229,12 @@ extension Origin: Sub<AntiScalar> {
     }
 }
 extension Origin: Sub<DualNum> {
-    func operator-(self, other: DualNum) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: DualNum) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            other.group0() * float2(-1.0), 
+            other.group0 * float2(-1.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -245,114 +245,114 @@ extension Origin: Sub<DualNum> {
     }
 }
 extension Origin: Sub<Flector> {
-    func operator-(self, other: Flector) -> Flector {
-        return Flector::from_groups(
+    func operator-(other: Flector) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.group0().xyz, self[e4] - other[e4]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            float4(other.group0.xyz, this.e4 - other.e4) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e423, e431, e412, e321 */
-            other.group1() * float4(-1.0)
+            other.group1 * float4(-1.0)
         );
     }
 }
 extension Origin: Sub<Horizon> {
-    func operator-(self, other: Horizon) -> Flector {
-        return Flector::from_groups(
+    func operator-(other: Horizon) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), other[e321] * -1.0)
+            float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
 extension Origin: Sub<Line> {
-    func operator-(self, other: Line) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Line) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            other.group0() * float3(-1.0), 
+            other.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            other.group1() * float3(-1.0), 
+            other.group1 * float3(-1.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
 extension Origin: Sub<Motor> {
-    func operator-(self, other: Motor) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Motor) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], other[e1234]) * float2(-1.0), 
+            float2(other.scalar, other.e1234) * float2(-1.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            other.group0().xyz * float3(-1.0), 
+            other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
-            other.group1().xyz * float3(-1.0), 
+            other.group1.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
 extension Origin: Sub<MultiVector> {
-    func operator-(self, other: MultiVector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: MultiVector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            other.group0() * float2(-1.0), 
+            other.group0 * float2(-1.0), 
             /* e1, e2, e3, e4 */
-            float4(other.group1().xyz, self[e4] - other[e4]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            float4(other.group1.xyz, this.e4 - other.e4) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e41, e42, e43 */
-            other.group2() * float3(-1.0), 
+            other.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            other.group3() * float3(-1.0), 
+            other.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            other.group4() * float4(-1.0)
+            other.group4 * float4(-1.0)
         );
     }
 }
 extension Origin: Sub<Origin> {
-    func operator-(self, other: Origin) -> Origin {
-        return Origin::from_groups(
+    func operator-(other: Origin) -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] - other[e4]
+            this.e4 - other.e4
         );
     }
 }
 extension Origin {
     func operator-=(const Origin& other) {
-        *this = Origin::from_groups(
+        *this = Origin.from_groups(
             /* e4 */
-            self[e4] - other[e4]
+            this.e4 - other.e4
         );
     }
 }
 extension Origin: Sub<Plane> {
-    func operator-(self, other: Plane) -> Flector {
-        return Flector::from_groups(
+    func operator-(other: Plane) -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            other.group0() * float4(-1.0)
+            other.group0 * float4(-1.0)
         );
     }
 }
 extension Origin: Sub<Point> {
-    func operator-(self, other: Point) -> Point {
-        return Point::from_groups(
+    func operator-(other: Point) -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.group0().xyz, self[e4] - other[e4]) * float4(-1.0, -1.0, -1.0, 1.0)
+            float4(other.group0.xyz, this.e4 - other.e4) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
 extension Origin: Sub<Scalar> {
-    func operator-(self, other: Scalar) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Scalar) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], 1.0) * float2(-1.0, 0.0), 
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -423,9 +423,9 @@ impl TryFrom<Flector> for Origin {
             error.push('}');
             return Err(error);
         }
-        return Ok(Origin::from_groups(
+        return Ok(Origin.from_groups(
             /* e4 */
-            flector[e4]
+            flector.e4
         ));
     }
 }
@@ -546,9 +546,9 @@ impl TryFrom<MultiVector> for Origin {
             error.push('}');
             return Err(error);
         }
-        return Ok(Origin::from_groups(
+        return Ok(Origin.from_groups(
             /* e4 */
-            multi_vector[e4]
+            multi_vector.e4
         ));
     }
 }
@@ -585,9 +585,9 @@ impl TryFrom<Point> for Origin {
             error.push('}');
             return Err(error);
         }
-        return Ok(Origin::from_groups(
+        return Ok(Origin.from_groups(
             /* e4 */
-            point[e4]
+            point.e4
         ));
     }
 }

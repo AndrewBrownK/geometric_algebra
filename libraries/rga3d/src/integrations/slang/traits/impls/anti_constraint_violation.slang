@@ -5,10 +5,10 @@ Scalar {
     }
 }
 extension DualNum: AntiConstraintViolation {
-    func anti_constraint_violation(self) -> Scalar {
-        return Scalar::from_groups(
+    func anti_constraint_violation() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            self[scalar] * self[e1234] * 2.0
+            this.scalar * this.e1234 * 2.0
         );
     }
 }
@@ -19,16 +19,16 @@ Scalar {
     }
 }
 extension Flector: AntiConstraintViolation {
-    func anti_constraint_violation(self) -> Scalar {
-Flector anti_reverse = Flector::from_groups(
+    func anti_constraint_violation() -> Scalar {
+Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1()
+            this.group1
         );
-        return Scalar::from_groups(
+        return Scalar.from_groups(
             /* scalar */
-            (anti_reverse[e423] * self[e1]) + (anti_reverse[e431] * self[e2]) + (anti_reverse[e412] * self[e3]) + (anti_reverse[e321] * self[e4]) - (anti_reverse[e1] * self[e423]) - (anti_reverse[e2] * self[e431]) - (anti_reverse[e3] * self[e412]) - (anti_reverse[e4] * self[e321])
+            (anti_reverse.e423 * this.e1) + (anti_reverse.e431 * this.e2) + (anti_reverse.e412 * this.e3) + (anti_reverse.e321 * this.e4) - (anti_reverse.e1 * this.e423) - (anti_reverse.e2 * this.e431) - (anti_reverse.e3 * this.e412) - (anti_reverse.e4 * this.e321)
         );
     }
 }
@@ -39,16 +39,16 @@ Scalar {
     }
 }
 extension Line: AntiConstraintViolation {
-    func anti_constraint_violation(self) -> Scalar {
-Line anti_reverse = Line::from_groups(
+    func anti_constraint_violation() -> Scalar {
+Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
-        return Scalar::from_groups(
+        return Scalar.from_groups(
             /* scalar */
-            -(anti_reverse[e41] * self[e23]) - (anti_reverse[e42] * self[e31]) - (anti_reverse[e43] * self[e12]) - (anti_reverse[e23] * self[e41]) - (anti_reverse[e31] * self[e42]) - (anti_reverse[e12] * self[e43])
+            -(anti_reverse.e41 * this.e23) - (anti_reverse.e42 * this.e31) - (anti_reverse.e43 * this.e12) - (anti_reverse.e23 * this.e41) - (anti_reverse.e31 * this.e42) - (anti_reverse.e12 * this.e43)
         );
     }
 }
@@ -59,16 +59,16 @@ Scalar {
     }
 }
 extension Motor: AntiConstraintViolation {
-    func anti_constraint_violation(self) -> Scalar {
-Motor anti_reverse = Motor::from_groups(
+    func anti_constraint_violation() -> Scalar {
+Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar::from_groups(
+        return Scalar.from_groups(
             /* scalar */
-            (anti_reverse[e1234] * self[scalar]) + (anti_reverse[scalar] * self[e1234]) - (anti_reverse[e41] * self[e23]) - (anti_reverse[e42] * self[e31]) - (anti_reverse[e43] * self[e12]) - (anti_reverse[e23] * self[e41]) - (anti_reverse[e31] * self[e42]) - (anti_reverse[e12] * self[e43])
+            (anti_reverse.e1234 * this.scalar) + (anti_reverse.scalar * this.e1234) - (anti_reverse.e41 * this.e23) - (anti_reverse.e42 * this.e31) - (anti_reverse.e43 * this.e12) - (anti_reverse.e23 * this.e41) - (anti_reverse.e31 * this.e42) - (anti_reverse.e12 * this.e43)
         );
     }
 }
@@ -85,22 +85,22 @@ extension MultiVector {
     }
 }
 extension MultiVector: AntiConstraintViolation {
-    func anti_constraint_violation(self) -> MultiVector {
-MultiVector anti_reverse = MultiVector::from_groups(
+    func anti_constraint_violation() -> MultiVector {
+MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4()
+            this.group4
         );
-MultiVector geometric_anti_product = MultiVector::from_groups(
+MultiVector geometric_anti_product = MultiVector.from_groups(
             /* scalar, e1234 */
-            float2((anti_reverse[e1234] * self[scalar]) + (anti_reverse[e321] * self[e4]) - (anti_reverse[e2] * self[e431]) - (anti_reverse[e3] * self[e412]) - (anti_reverse[e4] * self[e321]) - (anti_reverse[e23] * self[e41]) - (anti_reverse[e31] * self[e42]) - (anti_reverse[e12] * self[e43]), 0.0) + (float2(anti_reverse[e423]) * float2(self[e1], self[e423])) + (float2(anti_reverse[e431]) * float2(self[e2], self[e431])) + (float2(anti_reverse[e412]) * float2(self[e3], self[e412])) + (float2(self[e1234]) * anti_reverse.group0()) - (float2(anti_reverse[e41]) * float2(self[e23], self[e41])) - (float2(anti_reverse[e42]) * float2(self[e31], self[e42])) - (float2(anti_reverse[e43]) * float2(self[e12], self[e43])) - (float2(self[e423], self[e4]) * anti_reverse.group1().xw), 
+            float2((anti_reverse.e1234 * this.scalar) + (anti_reverse.e321 * this.e4) - (anti_reverse.e2 * this.e431) - (anti_reverse.e3 * this.e412) - (anti_reverse.e4 * this.e321) - (anti_reverse.e23 * this.e41) - (anti_reverse.e31 * this.e42) - (anti_reverse.e12 * this.e43), 0.0) + (float2(anti_reverse.e423) * float2(this.e1, this.e423)) + (float2(anti_reverse.e431) * float2(this.e2, this.e431)) + (float2(anti_reverse.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * anti_reverse.group0) - (float2(anti_reverse.e41) * float2(this.e23, this.e41)) - (float2(anti_reverse.e42) * float2(this.e31, this.e42)) - (float2(anti_reverse.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * anti_reverse.group1.xw), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -108,11 +108,11 @@ MultiVector geometric_anti_product = MultiVector::from_groups(
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            (float4(anti_reverse[e1234]) * self.group4()) + (float4(self[e4], self[e412], self[e423], anti_reverse[e321]) * float4(anti_reverse.group2().xxy, self[e1234])) + (float4(self[e431], self[e4], self[e4], self[e423]) * float4(anti_reverse.group2().zyz, anti_reverse[e23])) + (float4(self.group0().yy, self[e1234], self[scalar]) * float4(anti_reverse.group4().xyz, anti_reverse[e4])) + (float4(anti_reverse.group1().ww, anti_reverse[e431], self[e431]) * float4(self.group2().xyx, anti_reverse[e31])) + (float4(anti_reverse.group4().zx, anti_reverse[e4], self[e412]) * float4(self.group2().yzz, anti_reverse[e12])) + float4(float3(0.0), -(anti_reverse[e1] * self[e41]) - (anti_reverse[e2] * self[e42]) - (anti_reverse[e3] * self[e43]) - (anti_reverse[e42] * self[e2]) - (anti_reverse[e43] * self[e3]) - (anti_reverse[e423] * self[e23]) - (anti_reverse[e431] * self[e31]) - (anti_reverse[e412] * self[e12])) - float4((anti_reverse.group2().yzx * self.group4().zxy), anti_reverse[scalar] * self[e4]) - float4((self.group2().zxy * anti_reverse.group4().yzx), anti_reverse[e41] * self[e1])
+            (float4(anti_reverse.e1234) * this.group4) + (float4(this.e4, this.e412, this.e423, anti_reverse.e321) * float4(anti_reverse.group2.xxy, this.e1234)) + (float4(this.e431, this.e4, this.e4, this.e423) * float4(anti_reverse.group2.zyz, anti_reverse.e23)) + (float4(this.group0.yy, this.e1234, this.scalar) * float4(anti_reverse.group4.xyz, anti_reverse.e4)) + (float4(anti_reverse.group1.ww, anti_reverse.e431, this.e431) * float4(this.group2.xyx, anti_reverse.e31)) + (float4(anti_reverse.group4.zx, anti_reverse.e4, this.e412) * float4(this.group2.yzz, anti_reverse.e12)) + float4(float3(0.0), -(anti_reverse.e1 * this.e41) - (anti_reverse.e2 * this.e42) - (anti_reverse.e3 * this.e43) - (anti_reverse.e42 * this.e2) - (anti_reverse.e43 * this.e3) - (anti_reverse.e423 * this.e23) - (anti_reverse.e431 * this.e31) - (anti_reverse.e412 * this.e12)) - float4((anti_reverse.group2.yzx * this.group4.zxy), anti_reverse.scalar * this.e4) - float4((this.group2.zxy * anti_reverse.group4.yzx), anti_reverse.e41 * this.e1)
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(geometric_anti_product[scalar], 0.0), 
+            float2(geometric_anti_product.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -120,7 +120,7 @@ MultiVector geometric_anti_product = MultiVector::from_groups(
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            geometric_anti_product.group4()
+            geometric_anti_product.group4
         );
     }
 }

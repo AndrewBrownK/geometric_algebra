@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: DoubleComplement {
-    func double_complement(self) -> AntiScalar {
-        return self;
+    func double_complement() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -28,8 +28,8 @@ extension DualNum {
     }
 }
 extension DualNum: DoubleComplement {
-    func double_complement(self) -> DualNum {
-        return self;
+    func double_complement() -> DualNum {
+        return this;
     }
 }
 extension Flector {
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: DoubleComplement {
-    func double_complement(self) -> Flector {
-        return Flector::from_groups(
+    func double_complement() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
     }
 }
@@ -67,10 +67,10 @@ extension Horizon {
     }
 }
 extension Horizon: DoubleComplement {
-    func double_complement(self) -> Horizon {
-        return Horizon::from_groups(
+    func double_complement() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[e321] * -1.0
+            this.e321 * -1.0
         );
     }
 }
@@ -87,8 +87,8 @@ extension Line {
     }
 }
 extension Line: DoubleComplement {
-    func double_complement(self) -> Line {
-        return self;
+    func double_complement() -> Line {
+        return this;
     }
 }
 extension Motor {
@@ -104,8 +104,8 @@ extension Motor {
     }
 }
 extension Motor: DoubleComplement {
-    func double_complement(self) -> Motor {
-        return self;
+    func double_complement() -> Motor {
+        return this;
     }
 }
 extension MultiVector {
@@ -121,18 +121,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: DoubleComplement {
-    func double_complement(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func double_complement() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2(), 
+            this.group2, 
             /* e23, e31, e12 */
-            self.group3(), 
+            this.group3, 
             /* e423, e431, e412, e321 */
-            self.group4() * float4(-1.0)
+            this.group4 * float4(-1.0)
         );
     }
 }
@@ -149,10 +149,10 @@ extension Origin {
     }
 }
 extension Origin: DoubleComplement {
-    func double_complement(self) -> Origin {
-        return Origin::from_groups(
+    func double_complement() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
@@ -169,10 +169,10 @@ extension Plane {
     }
 }
 extension Plane: DoubleComplement {
-    func double_complement(self) -> Plane {
-        return Plane::from_groups(
+    func double_complement() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -189,10 +189,10 @@ extension Point {
     }
 }
 extension Point: DoubleComplement {
-    func double_complement(self) -> Point {
-        return Point::from_groups(
+    func double_complement() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -209,7 +209,7 @@ extension Scalar {
     }
 }
 extension Scalar: DoubleComplement {
-    func double_complement(self) -> Scalar {
-        return self;
+    func double_complement() -> Scalar {
+        return this;
     }
 }

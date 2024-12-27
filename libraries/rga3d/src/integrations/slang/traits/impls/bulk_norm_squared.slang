@@ -8,8 +8,8 @@ Scalar {
     }
 }
 extension Flector: BulkNormSquared {
-    func bulk_norm_squared(self) -> Scalar {
-Motor flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(
+    func bulk_norm_squared() -> Scalar {
+Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
         ));
@@ -23,8 +23,8 @@ Scalar {
     }
 }
 extension Line: BulkNormSquared {
-    func bulk_norm_squared(self) -> Scalar {
-Plane flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(
+    func bulk_norm_squared() -> Scalar {
+Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
         ));
@@ -38,8 +38,8 @@ Scalar {
     }
 }
 extension Motor: BulkNormSquared {
-    func bulk_norm_squared(self) -> Scalar {
-Flector flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(
+    func bulk_norm_squared() -> Scalar {
+Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
         ));
@@ -53,8 +53,8 @@ Scalar {
     }
 }
 extension MultiVector: BulkNormSquared {
-    func bulk_norm_squared(self) -> Scalar {
-MultiVector flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(
+    func bulk_norm_squared() -> Scalar {
+MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
         ));
@@ -68,8 +68,8 @@ Scalar {
     }
 }
 extension Point: BulkNormSquared {
-    func bulk_norm_squared(self) -> Scalar {
-Line flat_bulk_thing = self.flat_bulk().wedge(Origin::from_groups(
+    func bulk_norm_squared() -> Scalar {
+Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
         ));

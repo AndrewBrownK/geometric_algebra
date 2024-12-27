@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Conjugation {
-    func conjugation(self) -> AntiScalar {
-        return self;
+    func conjugation() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -28,8 +28,8 @@ extension DualNum {
     }
 }
 extension DualNum: Conjugation {
-    func conjugation(self) -> DualNum {
-        return self;
+    func conjugation() -> DualNum {
+        return this;
     }
 }
 extension Flector {
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: Conjugation {
-    func conjugation(self) -> Flector {
-        return Flector::from_groups(
+    func conjugation() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1()
+            this.group1
         );
     }
 }
@@ -67,8 +67,8 @@ extension Horizon {
     }
 }
 extension Horizon: Conjugation {
-    func conjugation(self) -> Horizon {
-        return self;
+    func conjugation() -> Horizon {
+        return this;
     }
 }
 extension Line {
@@ -84,12 +84,12 @@ extension Line {
     }
 }
 extension Line: Conjugation {
-    func conjugation(self) -> Line {
-        return Line::from_groups(
+    func conjugation() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
     }
 }
@@ -106,12 +106,12 @@ extension Motor {
     }
 }
 extension Motor: Conjugation {
-    func conjugation(self) -> Motor {
-        return Motor::from_groups(
+    func conjugation() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
@@ -128,18 +128,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: Conjugation {
-    func conjugation(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func conjugation() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4()
+            this.group4
         );
     }
 }
@@ -156,10 +156,10 @@ extension Origin {
     }
 }
 extension Origin: Conjugation {
-    func conjugation(self) -> Origin {
-        return Origin::from_groups(
+    func conjugation() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
@@ -176,8 +176,8 @@ extension Plane {
     }
 }
 extension Plane: Conjugation {
-    func conjugation(self) -> Plane {
-        return self;
+    func conjugation() -> Plane {
+        return this;
     }
 }
 extension Point {
@@ -193,10 +193,10 @@ extension Point {
     }
 }
 extension Point: Conjugation {
-    func conjugation(self) -> Point {
-        return Point::from_groups(
+    func conjugation() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -213,7 +213,7 @@ extension Scalar {
     }
 }
 extension Scalar: Conjugation {
-    func conjugation(self) -> Scalar {
-        return self;
+    func conjugation() -> Scalar {
+        return this;
     }
 }

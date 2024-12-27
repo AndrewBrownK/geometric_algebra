@@ -1,6 +1,6 @@
 use std::collections::{HashSet};
 use std::fs;
-use std::io::Write;
+use std::io::{BufWriter, Write};
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
@@ -199,7 +199,8 @@ impl Wgsl {
 
         let e: anyhow::Result<()> = try {
             fs::create_dir_all(&folder_integrations)?;
-            let mut file = fs::OpenOptions::new().create(true).truncate(true).write(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().create(true).truncate(true).write(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             let mut pre = version_pre.to_string();
             if !pre.is_empty() {
                 pre = format!("-{pre}");

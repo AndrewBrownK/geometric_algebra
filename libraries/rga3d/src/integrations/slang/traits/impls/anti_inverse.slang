@@ -11,10 +11,10 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: AntiInverse {
-    func anti_inverse(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func anti_inverse() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            1.0/self[e1234]
+            1.0/this.e1234
         );
     }
 }
@@ -31,10 +31,10 @@ extension DualNum {
     }
 }
 extension DualNum: AntiInverse {
-    func anti_inverse(self) -> DualNum {
-        return DualNum::from_groups(
+    func anti_inverse() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(powi(self[e1234], -2)) * self.group0()
+            float2(powi(this.e1234, -2)) * this.group0
         );
     }
 }
@@ -51,22 +51,22 @@ extension Flector {
     }
 }
 extension Flector: AntiInverse {
-    func anti_inverse(self) -> Flector {
-Flector anti_reverse = Flector::from_groups(
+    func anti_inverse() -> Flector {
+Flector anti_reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1()
+            this.group1
         );
-AntiScalar other = AntiScalar::from_groups(
+AntiScalar other = AntiScalar.from_groups(
             /* e1234 */
-            powi(self[e4], 2) + powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)
+            powi(this.e4, 2) + powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)
         );
-        return Flector::from_groups(
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other[e1234]) * anti_reverse.group0(), 
+            float4(other.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
-            float4(other[e1234]) * anti_reverse.group1()
+            float4(other.e1234) * anti_reverse.group1
         );
     }
 }
@@ -83,22 +83,22 @@ extension Line {
     }
 }
 extension Line: AntiInverse {
-    func anti_inverse(self) -> Line {
-Line anti_reverse = Line::from_groups(
+    func anti_inverse() -> Line {
+Line anti_reverse = Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
-AntiScalar other = AntiScalar::from_groups(
+AntiScalar other = AntiScalar.from_groups(
             /* e1234 */
-            powi(self[e41], 2) + powi(self[e42], 2) + powi(self[e43], 2)
+            powi(this.e41, 2) + powi(this.e42, 2) + powi(this.e43, 2)
         );
-        return Line::from_groups(
+        return Line.from_groups(
             /* e41, e42, e43 */
-            float3(other[e1234]) * anti_reverse.group0(), 
+            float3(other.e1234) * anti_reverse.group0, 
             /* e23, e31, e12 */
-            float3(other[e1234]) * anti_reverse.group1()
+            float3(other.e1234) * anti_reverse.group1
         );
     }
 }
@@ -115,22 +115,22 @@ extension Motor {
     }
 }
 extension Motor: AntiInverse {
-    func anti_inverse(self) -> Motor {
-Motor anti_reverse = Motor::from_groups(
+    func anti_inverse() -> Motor {
+Motor anti_reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-AntiScalar other = AntiScalar::from_groups(
+AntiScalar other = AntiScalar.from_groups(
             /* e1234 */
-            powi(self[e41], 2) + powi(self[e42], 2) + powi(self[e43], 2) + powi(self[e1234], 2)
+            powi(this.e41, 2) + powi(this.e42, 2) + powi(this.e43, 2) + powi(this.e1234, 2)
         );
-        return Motor::from_groups(
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other[e1234]) * anti_reverse.group0(), 
+            float4(other.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
-            float4(other[e1234]) * anti_reverse.group1()
+            float4(other.e1234) * anti_reverse.group1
         );
     }
 }
@@ -147,34 +147,34 @@ extension MultiVector {
     }
 }
 extension MultiVector: AntiInverse {
-    func anti_inverse(self) -> MultiVector {
-MultiVector anti_reverse = MultiVector::from_groups(
+    func anti_inverse() -> MultiVector {
+MultiVector anti_reverse = MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4()
+            this.group4
         );
-AntiScalar other = AntiScalar::from_groups(
+AntiScalar other = AntiScalar.from_groups(
             /* e1234 */
-            powi(self[e1234], 2) + powi(self[e4], 2) + powi(self[e41], 2) + powi(self[e42], 2) + powi(self[e43], 2) + powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)
+            powi(this.e1234, 2) + powi(this.e4, 2) + powi(this.e41, 2) + powi(this.e42, 2) + powi(this.e43, 2) + powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[e1234]) * anti_reverse.group0(), 
+            float2(other.e1234) * anti_reverse.group0, 
             /* e1, e2, e3, e4 */
-            float4(other[e1234]) * anti_reverse.group1(), 
+            float4(other.e1234) * anti_reverse.group1, 
             /* e41, e42, e43 */
-            float3(other[e1234]) * anti_reverse.group2(), 
+            float3(other.e1234) * anti_reverse.group2, 
             /* e23, e31, e12 */
-            float3(other[e1234]) * anti_reverse.group3(), 
+            float3(other.e1234) * anti_reverse.group3, 
             /* e423, e431, e412, e321 */
-            float4(other[e1234]) * anti_reverse.group4()
+            float4(other.e1234) * anti_reverse.group4
         );
     }
 }
@@ -191,10 +191,10 @@ extension Origin {
     }
 }
 extension Origin: AntiInverse {
-    func anti_inverse(self) -> Origin {
-        return Origin::from_groups(
+    func anti_inverse() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            1.0/self[e4] * -1.0
+            1.0/this.e4 * -1.0
         );
     }
 }
@@ -211,10 +211,10 @@ extension Plane {
     }
 }
 extension Plane: AntiInverse {
-    func anti_inverse(self) -> Plane {
-        return Plane::from_groups(
+    func anti_inverse() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)) * self.group0()
+            float4(powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)) * this.group0
         );
     }
 }
@@ -231,10 +231,10 @@ extension Point {
     }
 }
 extension Point: AntiInverse {
-    func anti_inverse(self) -> Point {
-        return Point::from_groups(
+    func anti_inverse() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(powi(self[e4], -2)) * float4(self[e1] * -1.0, self[e2] * -1.0, self[e3] * -1.0, self[e4] * -1.0)
+            float4(powi(this.e4, -2)) * float4(this.e1 * -1.0, this.e2 * -1.0, this.e3 * -1.0, this.e4 * -1.0)
         );
     }
 }

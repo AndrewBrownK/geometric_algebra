@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Weight {
-    func weight(self) -> AntiScalar {
-        return self;
+    func weight() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -22,10 +22,10 @@ AntiScalar {
     }
 }
 extension DualNum: Weight {
-    func weight(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func weight() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[e1234]
+            this.e1234
         );
     }
 }
@@ -42,12 +42,12 @@ extension Flector {
     }
 }
 extension Flector: Weight {
-    func weight(self) -> Flector {
-        return Flector::from_groups(
+    func weight() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            float4(self[e423], self[e431], self[e412], 0.0)
+            float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
 }
@@ -64,10 +64,10 @@ extension Line {
     }
 }
 extension Line: Weight {
-    func weight(self) -> Line {
-        return Line::from_groups(
+    func weight() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group0(), 
+            this.group0, 
             /* e23, e31, e12 */
             float3(0.0)
         );
@@ -86,10 +86,10 @@ extension Motor {
     }
 }
 extension Motor: Weight {
-    func weight(self) -> Motor {
-        return Motor::from_groups(
+    func weight() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
@@ -108,18 +108,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: Weight {
-    func weight(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func weight() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, self[e1234]), 
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e4]), 
+            float4(float3(0.0), this.e4), 
             /* e41, e42, e43 */
-            self.group2(), 
+            this.group2, 
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            float4(self[e423], self[e431], self[e412], 0.0)
+            float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
 }
@@ -136,8 +136,8 @@ extension Origin {
     }
 }
 extension Origin: Weight {
-    func weight(self) -> Origin {
-        return self;
+    func weight() -> Origin {
+        return this;
     }
 }
 extension Plane {
@@ -153,10 +153,10 @@ extension Plane {
     }
 }
 extension Plane: Weight {
-    func weight(self) -> Plane {
-        return Plane::from_groups(
+    func weight() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(self[e423], self[e431], self[e412], 0.0)
+            float4(this.e423, this.e431, this.e412, 0.0)
         );
     }
 }
@@ -167,10 +167,10 @@ Origin {
     }
 }
 extension Point: Weight {
-    func weight(self) -> Origin {
-        return Origin::from_groups(
+    func weight() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4]
+            this.e4
         );
     }
 }

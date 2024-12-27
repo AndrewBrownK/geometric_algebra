@@ -5,10 +5,10 @@ Scalar {
     }
 }
 extension AntiScalar: LeftComplement {
-    func left_complement(self) -> Scalar {
-        return Scalar::from_groups(
+    func left_complement() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            self[e1234]
+            this.e1234
         );
     }
 }
@@ -25,10 +25,10 @@ extension DualNum {
     }
 }
 extension DualNum: LeftComplement {
-    func left_complement(self) -> DualNum {
-        return DualNum::from_groups(
+    func left_complement() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            self.group0().yx
+            this.group0.yx
         );
     }
 }
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: LeftComplement {
-    func left_complement(self) -> Flector {
-        return Flector::from_groups(
+    func left_complement() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group1(), 
+            this.group1, 
             /* e423, e431, e412, e321 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -61,10 +61,10 @@ Origin {
     }
 }
 extension Horizon: LeftComplement {
-    func left_complement(self) -> Origin {
-        return Origin::from_groups(
+    func left_complement() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e321]
+            this.e321
         );
     }
 }
@@ -81,12 +81,12 @@ extension Line {
     }
 }
 extension Line: LeftComplement {
-    func left_complement(self) -> Line {
-        return Line::from_groups(
+    func left_complement() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group1() * float3(-1.0), 
+            this.group1 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group0() * float3(-1.0)
+            this.group0 * float3(-1.0)
         );
     }
 }
@@ -103,12 +103,12 @@ extension Motor {
     }
 }
 extension Motor: LeftComplement {
-    func left_complement(self) -> Motor {
-        return Motor::from_groups(
+    func left_complement() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
@@ -125,18 +125,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: LeftComplement {
-    func left_complement(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func left_complement() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0().yx, 
+            this.group0.yx, 
             /* e1, e2, e3, e4 */
-            self.group4(), 
+            this.group4, 
             /* e41, e42, e43 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
     }
 }
@@ -147,10 +147,10 @@ Horizon {
     }
 }
 extension Origin: LeftComplement {
-    func left_complement(self) -> Horizon {
-        return Horizon::from_groups(
+    func left_complement() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
@@ -161,10 +161,10 @@ Point {
     }
 }
 extension Plane: LeftComplement {
-    func left_complement(self) -> Point {
-        return Point::from_groups(
+    func left_complement() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0()
+            this.group0
         );
     }
 }
@@ -175,10 +175,10 @@ Plane {
     }
 }
 extension Point: LeftComplement {
-    func left_complement(self) -> Plane {
-        return Plane::from_groups(
+    func left_complement() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -189,10 +189,10 @@ AntiScalar {
     }
 }
 extension Scalar: LeftComplement {
-    func left_complement(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func left_complement() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[scalar]
+            this.scalar
         );
     }
 }

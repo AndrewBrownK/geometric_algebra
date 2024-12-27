@@ -5,10 +5,10 @@ AntiScalar {
     }
 }
 extension DualNum: RightAntiDual {
-    func right_anti_dual(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func right_anti_dual() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[scalar]
+            this.scalar
         );
     }
 }
@@ -25,12 +25,12 @@ extension Flector {
     }
 }
 extension Flector: RightAntiDual {
-    func right_anti_dual(self) -> Flector {
-        return Flector::from_groups(
+    func right_anti_dual() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e321] * -1.0), 
+            float4(float3(0.0), this.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
 }
@@ -41,10 +41,10 @@ Origin {
     }
 }
 extension Horizon: RightAntiDual {
-    func right_anti_dual(self) -> Origin {
-        return Origin::from_groups(
+    func right_anti_dual() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e321] * -1.0
+            this.e321 * -1.0
         );
     }
 }
@@ -61,10 +61,10 @@ extension Line {
     }
 }
 extension Line: RightAntiDual {
-    func right_anti_dual(self) -> Line {
-        return Line::from_groups(
+    func right_anti_dual() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group1() * float3(-1.0), 
+            this.group1 * float3(-1.0), 
             /* e23, e31, e12 */
             float3(0.0)
         );
@@ -83,10 +83,10 @@ extension Motor {
     }
 }
 extension Motor: RightAntiDual {
-    func right_anti_dual(self) -> Motor {
-        return Motor::from_groups(
+    func right_anti_dual() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
@@ -105,18 +105,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: RightAntiDual {
-    func right_anti_dual(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func right_anti_dual() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, self[scalar]), 
+            float2(0.0, this.scalar), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e321] * -1.0), 
+            float4(float3(0.0), this.e321 * -1.0), 
             /* e41, e42, e43 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
 }
@@ -127,10 +127,10 @@ Origin {
     }
 }
 extension Plane: RightAntiDual {
-    func right_anti_dual(self) -> Origin {
-        return Origin::from_groups(
+    func right_anti_dual() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e321] * -1.0
+            this.e321 * -1.0
         );
     }
 }
@@ -141,10 +141,10 @@ Plane {
     }
 }
 extension Point: RightAntiDual {
-    func right_anti_dual(self) -> Plane {
-        return Plane::from_groups(
+    func right_anti_dual() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
 }
@@ -155,10 +155,10 @@ AntiScalar {
     }
 }
 extension Scalar: RightAntiDual {
-    func right_anti_dual(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func right_anti_dual() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
-            self[scalar]
+            this.scalar
         );
     }
 }

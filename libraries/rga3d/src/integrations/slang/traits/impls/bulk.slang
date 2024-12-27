@@ -5,10 +5,10 @@ Scalar {
     }
 }
 extension DualNum: Bulk {
-    func bulk(self) -> Scalar {
-        return Scalar::from_groups(
+    func bulk() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            self[scalar]
+            this.scalar
         );
     }
 }
@@ -25,12 +25,12 @@ extension Flector {
     }
 }
 extension Flector: Bulk {
-    func bulk(self) -> Flector {
-        return Flector::from_groups(
+    func bulk() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(self[e1], self[e2], self[e3], 0.0), 
+            float4(this.e1, this.e2, this.e3, 0.0), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), self[e321])
+            float4(float3(0.0), this.e321)
         );
     }
 }
@@ -47,8 +47,8 @@ extension Horizon {
     }
 }
 extension Horizon: Bulk {
-    func bulk(self) -> Horizon {
-        return self;
+    func bulk() -> Horizon {
+        return this;
     }
 }
 extension Line {
@@ -64,12 +64,12 @@ extension Line {
     }
 }
 extension Line: Bulk {
-    func bulk(self) -> Line {
-        return Line::from_groups(
+    func bulk() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
-            self.group1()
+            this.group1
         );
     }
 }
@@ -86,12 +86,12 @@ extension Motor {
     }
 }
 extension Motor: Bulk {
-    func bulk(self) -> Motor {
-        return Motor::from_groups(
+    func bulk() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
-            self.group1()
+            this.group1
         );
     }
 }
@@ -108,18 +108,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: Bulk {
-    func bulk(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func bulk() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(self[scalar], 0.0), 
+            float2(this.scalar, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(self[e1], self[e2], self[e3], 0.0), 
+            float4(this.e1, this.e2, this.e3, 0.0), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
-            self.group3(), 
+            this.group3, 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), self[e321])
+            float4(float3(0.0), this.e321)
         );
     }
 }
@@ -130,10 +130,10 @@ Horizon {
     }
 }
 extension Plane: Bulk {
-    func bulk(self) -> Horizon {
-        return Horizon::from_groups(
+    func bulk() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[e321]
+            this.e321
         );
     }
 }
@@ -150,10 +150,10 @@ extension Point {
     }
 }
 extension Point: Bulk {
-    func bulk(self) -> Point {
-        return Point::from_groups(
+    func bulk() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
     }
 }
@@ -170,7 +170,7 @@ extension Scalar {
     }
 }
 extension Scalar: Bulk {
-    func bulk(self) -> Scalar {
-        return self;
+    func bulk() -> Scalar {
+        return this;
     }
 }

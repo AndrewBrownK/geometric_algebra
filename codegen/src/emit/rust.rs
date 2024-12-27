@@ -1,7 +1,7 @@
 use anyhow::{anyhow, bail, Context, Error};
 use indicatif::ProgressFinish;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::io::{BufRead, BufReader, ErrorKind, Write};
+use std::io::{BufRead, BufReader, BufWriter, ErrorKind, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -138,7 +138,8 @@ impl Rust {
         let crate_folder = crate_folder.as_ref().to_path_buf();
         fs::create_dir_all(&crate_folder)?;
         let file_path = crate_folder.join(Path::new("Cargo.toml"));
-        let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+        let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+        let mut file = BufWriter::new(file);
         let mut pre = version_pre.to_string();
         if !pre.is_empty() {
             pre = format!("-{pre}");
@@ -283,7 +284,8 @@ postgres-types = "0.2.7""#
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
         let (started_file, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
         join_set.spawn(async move {
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             let mut paths = vec![];
             while let Some(p) = rx.recv().await {
                 use std::fmt::Write;
@@ -349,7 +351,8 @@ postgres-types = "0.2.7""#
             join_set.spawn(async move {
                 let file_path = folder_data.join(Path::new(&lsc)).with_extension("rs");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "#[allow(unused_imports)]")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
@@ -432,7 +435,8 @@ postgres-types = "0.2.7""#
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 // TODO remove these imports when they are unused
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "#[allow(unused_imports)]")?;
@@ -506,7 +510,8 @@ postgres-types = "0.2.7""#
                 }
 
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 let mut deps_set = HashSet::new();
                 for dep in deps {
                     if let Some(pb) = &pb {
@@ -650,7 +655,8 @@ postgres-types = "0.2.7""#
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("data.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             for (the_mod, mvs) in data_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for mv in mvs {
@@ -677,7 +683,8 @@ postgres-types = "0.2.7""#
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("traits.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             for (the_mod, ts) in trait_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for t in ts {
@@ -749,7 +756,8 @@ postgres-types = "0.2.7""#
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("lib.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             writeln!(&mut file, "pub mod data;")?;
             writeln!(&mut file, "pub mod traits;")?;
             writeln!(&mut file, "pub mod simd;")?;
@@ -790,7 +798,8 @@ postgres-types = "0.2.7""#
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("simd.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+            let mut file = BufWriter::new(file);
             let src = SIMD_SRC;
             write!(&mut file, "{src}")?;
             tx3.send(file_path)?;
@@ -806,7 +815,8 @@ postgres-types = "0.2.7""#
             join_set.spawn(async move {
                 let file_path = src_folder2.join(Path::new("integrations/wgsl.rs"));
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 emit_shader_support(&mut file, algebra_name.as_str(), "wgsl")?;
                 tx3.send(file_path)?;
                 Ok(())
@@ -820,7 +830,8 @@ postgres-types = "0.2.7""#
             join_set.spawn(async move {
                 let file_path = src_folder2.join(Path::new("integrations/glsl.rs"));
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                let mut file = BufWriter::new(file);
                 emit_shader_support(&mut file, algebra_name.as_str(), "glsl")?;
                 tx3.send(file_path)?;
                 Ok(())

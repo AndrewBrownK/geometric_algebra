@@ -7,8 +7,8 @@ float {
     }
 }
 extension Flector: UnitizedFlatNormSquared {
-    func unitized_flat_norm_squared(self) -> float {
-        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
+    func unitized_flat_norm_squared() -> float {
+        return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
 extension Line {
@@ -18,8 +18,8 @@ float {
     }
 }
 extension Line: UnitizedFlatNormSquared {
-    func unitized_flat_norm_squared(self) -> float {
-        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
+    func unitized_flat_norm_squared() -> float {
+        return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
 extension Motor {
@@ -29,8 +29,8 @@ float {
     }
 }
 extension Motor: UnitizedFlatNormSquared {
-    func unitized_flat_norm_squared(self) -> float {
-        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
+    func unitized_flat_norm_squared() -> float {
+        return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
 extension MultiVector {
@@ -40,8 +40,8 @@ float {
     }
 }
 extension MultiVector: UnitizedFlatNormSquared {
-    func unitized_flat_norm_squared(self) -> float {
-        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
+    func unitized_flat_norm_squared() -> float {
+        return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
 extension Point {
@@ -51,7 +51,7 @@ float {
     }
 }
 extension Point: UnitizedFlatNormSquared {
-    func unitized_flat_norm_squared(self) -> float {
-        return self.flat_bulk_norm_squared()[scalar] / (self.flat_weight_norm_squared()[e1234]);
+    func unitized_flat_norm_squared() -> float {
+        return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }

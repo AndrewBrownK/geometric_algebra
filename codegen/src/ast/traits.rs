@@ -2227,6 +2227,15 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         variables: Arc<Mutex<HashMap<(String, usize), Weak<RawVariableDeclaration>>>>,
         cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     ) -> Self {
+        // `self` vs `this` compatibility across rust and slang.
+        let mut vars = variables.lock();
+        let self_key = ("self".to_string(), 0);
+        let this_key = ("this".to_string(), 0);
+        if vars.contains_key(&self_key) && !vars.contains_key(&this_key) {
+            vars.insert(this_key, Weak::new());
+        }
+        drop(vars);
+
         TraitImplBuilder {
             ga,
             mvs,

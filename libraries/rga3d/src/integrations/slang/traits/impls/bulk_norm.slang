@@ -7,8 +7,8 @@ Scalar {
     }
 }
 extension Flector: BulkNorm {
-    func bulk_norm(self) -> Scalar {
-        return self.flat_bulk_norm_squared().square_root();
+    func bulk_norm() -> Scalar {
+        return this.flat_bulk_norm_squared().square_root();
     }
 }
 extension Line {
@@ -18,8 +18,8 @@ Scalar {
     }
 }
 extension Line: BulkNorm {
-    func bulk_norm(self) -> Scalar {
-        return self.flat_bulk_norm_squared().square_root();
+    func bulk_norm() -> Scalar {
+        return this.flat_bulk_norm_squared().square_root();
     }
 }
 extension Motor {
@@ -29,8 +29,8 @@ Scalar {
     }
 }
 extension Motor: BulkNorm {
-    func bulk_norm(self) -> Scalar {
-        return self.flat_bulk_norm_squared().square_root();
+    func bulk_norm() -> Scalar {
+        return this.flat_bulk_norm_squared().square_root();
     }
 }
 extension MultiVector {
@@ -40,8 +40,8 @@ Scalar {
     }
 }
 extension MultiVector: BulkNorm {
-    func bulk_norm(self) -> Scalar {
-        return self.flat_bulk_norm_squared().square_root();
+    func bulk_norm() -> Scalar {
+        return this.flat_bulk_norm_squared().square_root();
     }
 }
 extension Point {
@@ -51,7 +51,7 @@ Scalar {
     }
 }
 extension Point: BulkNorm {
-    func bulk_norm(self) -> Scalar {
-        return self.flat_bulk_norm_squared().square_root();
+    func bulk_norm() -> Scalar {
+        return this.flat_bulk_norm_squared().square_root();
     }
 }

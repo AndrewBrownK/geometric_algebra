@@ -13,8 +13,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension DualNum {
@@ -24,8 +24,8 @@ AntiScalar {
     }
 }
 extension DualNum: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Flector {
@@ -35,8 +35,8 @@ AntiScalar {
     }
 }
 extension Flector: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Line {
@@ -46,8 +46,8 @@ AntiScalar {
     }
 }
 extension Line: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Motor {
@@ -57,8 +57,8 @@ AntiScalar {
     }
 }
 extension Motor: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension MultiVector {
@@ -68,8 +68,8 @@ AntiScalar {
     }
 }
 extension MultiVector: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Origin {
@@ -79,8 +79,8 @@ AntiScalar {
     }
 }
 extension Origin: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Plane {
@@ -90,8 +90,8 @@ AntiScalar {
     }
 }
 extension Plane: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }
 extension Point {
@@ -101,7 +101,7 @@ AntiScalar {
     }
 }
 extension Point: WeightNorm {
-    func weight_norm(self) -> AntiScalar {
-        return self.flat_weight_norm_squared().anti_square_root();
+    func weight_norm() -> AntiScalar {
+        return this.flat_weight_norm_squared().anti_square_root();
     }
 }

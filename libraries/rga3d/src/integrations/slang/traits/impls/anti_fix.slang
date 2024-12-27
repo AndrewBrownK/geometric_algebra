@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: AntiFix {
-    func anti_fix(self) -> AntiScalar {
-        return AntiScalar::from_groups(
+    func anti_fix() -> AntiScalar {
+        return AntiScalar.from_groups(
             /* e1234 */
             1.0
         );
@@ -31,8 +31,8 @@ extension Origin {
     }
 }
 extension Origin: AntiFix {
-    func anti_fix(self) -> Origin {
-        return Origin::from_groups(
+    func anti_fix() -> Origin {
+        return Origin.from_groups(
             /* e4 */
             1.0
         );
@@ -51,10 +51,10 @@ extension Plane {
     }
 }
 extension Plane: AntiFix {
-    func anti_fix(self) -> Plane {
-        return Plane::from_groups(
+    func anti_fix() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(powi(self[e423], 2) + powi(self[e431], 2) + powi(self[e412], 2)) * self.group0()
+            float4(powi(this.e423, 2) + powi(this.e431, 2) + powi(this.e412, 2)) * this.group0
         );
     }
 }
@@ -71,10 +71,10 @@ extension Point {
     }
 }
 extension Point: AntiFix {
-    func anti_fix(self) -> Point {
-        return Point::from_groups(
+    func anti_fix() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(powf((self.group0() * float4(-1.0))[3], -0.5) * powf(self[e4], -0.5) * -1.0) * self.group0()
+            float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e4, -0.5) * -1.0) * this.group0
         );
     }
 }

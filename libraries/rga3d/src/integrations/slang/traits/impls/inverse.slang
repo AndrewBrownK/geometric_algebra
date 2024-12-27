@@ -11,10 +11,10 @@ extension DualNum {
     }
 }
 extension DualNum: Inverse {
-    func inverse(self) -> DualNum {
-        return DualNum::from_groups(
+    func inverse() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(powi(self[scalar], -2)) * self.group0()
+            float2(powi(this.scalar, -2)) * this.group0
         );
     }
 }
@@ -31,22 +31,22 @@ extension Flector {
     }
 }
 extension Flector: Inverse {
-    func inverse(self) -> Flector {
-Flector reverse = Flector::from_groups(
+    func inverse() -> Flector {
+Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0(), 
+            this.group0, 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
-Scalar other = Scalar::from_groups(
+Scalar other = Scalar.from_groups(
             /* scalar */
-            powi(self[e1], 2) + powi(self[e2], 2) + powi(self[e3], 2) + powi(self[e321], 2)
+            powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e321, 2)
         );
-        return Flector::from_groups(
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other[scalar]) * reverse.group0(), 
+            float4(other.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
-            float4(other[scalar]) * reverse.group1()
+            float4(other.scalar) * reverse.group1
         );
     }
 }
@@ -63,10 +63,10 @@ extension Horizon {
     }
 }
 extension Horizon: Inverse {
-    func inverse(self) -> Horizon {
-        return Horizon::from_groups(
+    func inverse() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            1.0/self[e321] * -1.0
+            1.0/this.e321 * -1.0
         );
     }
 }
@@ -83,22 +83,22 @@ extension Line {
     }
 }
 extension Line: Inverse {
-    func inverse(self) -> Line {
-Line reverse = Line::from_groups(
+    func inverse() -> Line {
+Line reverse = Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
-Scalar other = Scalar::from_groups(
+Scalar other = Scalar.from_groups(
             /* scalar */
-            powi(self[e23], 2) + powi(self[e31], 2) + powi(self[e12], 2)
+            powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2)
         );
-        return Line::from_groups(
+        return Line.from_groups(
             /* e41, e42, e43 */
-            float3(other[scalar]) * reverse.group0(), 
+            float3(other.scalar) * reverse.group0, 
             /* e23, e31, e12 */
-            float3(other[scalar]) * reverse.group1()
+            float3(other.scalar) * reverse.group1
         );
     }
 }
@@ -115,22 +115,22 @@ extension Motor {
     }
 }
 extension Motor: Inverse {
-    func inverse(self) -> Motor {
-Motor reverse = Motor::from_groups(
+    func inverse() -> Motor {
+Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-Scalar other = Scalar::from_groups(
+Scalar other = Scalar.from_groups(
             /* scalar */
-            powi(self[e23], 2) + powi(self[e31], 2) + powi(self[e12], 2) + powi(self[scalar], 2)
+            powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.scalar, 2)
         );
-        return Motor::from_groups(
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other[scalar]) * reverse.group0(), 
+            float4(other.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
-            float4(other[scalar]) * reverse.group1()
+            float4(other.scalar) * reverse.group1
         );
     }
 }
@@ -147,34 +147,34 @@ extension MultiVector {
     }
 }
 extension MultiVector: Inverse {
-    func inverse(self) -> MultiVector {
-MultiVector reverse = MultiVector::from_groups(
+    func inverse() -> MultiVector {
+MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1(), 
+            this.group1, 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4() * float4(-1.0)
+            this.group4 * float4(-1.0)
         );
-Scalar other = Scalar::from_groups(
+Scalar other = Scalar.from_groups(
             /* scalar */
-            powi(self[scalar], 2) + powi(self[e1], 2) + powi(self[e2], 2) + powi(self[e3], 2) + powi(self[e23], 2) + powi(self[e31], 2) + powi(self[e12], 2) + powi(self[e321], 2)
+            powi(this.scalar, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.e321, 2)
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar]) * reverse.group0(), 
+            float2(other.scalar) * reverse.group0, 
             /* e1, e2, e3, e4 */
-            float4(other[scalar]) * reverse.group1(), 
+            float4(other.scalar) * reverse.group1, 
             /* e41, e42, e43 */
-            float3(other[scalar]) * reverse.group2(), 
+            float3(other.scalar) * reverse.group2, 
             /* e23, e31, e12 */
-            float3(other[scalar]) * reverse.group3(), 
+            float3(other.scalar) * reverse.group3, 
             /* e423, e431, e412, e321 */
-            float4(other[scalar]) * reverse.group4()
+            float4(other.scalar) * reverse.group4
         );
     }
 }
@@ -191,10 +191,10 @@ extension Plane {
     }
 }
 extension Plane: Inverse {
-    func inverse(self) -> Plane {
-        return Plane::from_groups(
+    func inverse() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(powi(self[e321], -2)) * float4(self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e321] * -1.0)
+            float4(powi(this.e321, -2)) * float4(this.e423 * -1.0, this.e431 * -1.0, this.e412 * -1.0, this.e321 * -1.0)
         );
     }
 }
@@ -211,10 +211,10 @@ extension Point {
     }
 }
 extension Point: Inverse {
-    func inverse(self) -> Point {
-        return Point::from_groups(
+    func inverse() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(powi(self[e1], 2) + powi(self[e2], 2) + powi(self[e3], 2)) * self.group0()
+            float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
         );
     }
 }
@@ -231,10 +231,10 @@ extension Scalar {
     }
 }
 extension Scalar: Inverse {
-    func inverse(self) -> Scalar {
-        return Scalar::from_groups(
+    func inverse() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            1.0/self[scalar]
+            1.0/this.scalar
         );
     }
 }

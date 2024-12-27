@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: AntiReverse {
-    func anti_reverse(self) -> AntiScalar {
-        return self;
+    func anti_reverse() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -28,8 +28,8 @@ extension DualNum {
     }
 }
 extension DualNum: AntiReverse {
-    func anti_reverse(self) -> DualNum {
-        return self;
+    func anti_reverse() -> DualNum {
+        return this;
     }
 }
 extension Flector {
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: AntiReverse {
-    func anti_reverse(self) -> Flector {
-        return Flector::from_groups(
+    func anti_reverse() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1()
+            this.group1
         );
     }
 }
@@ -67,8 +67,8 @@ extension Horizon {
     }
 }
 extension Horizon: AntiReverse {
-    func anti_reverse(self) -> Horizon {
-        return self;
+    func anti_reverse() -> Horizon {
+        return this;
     }
 }
 extension Line {
@@ -84,12 +84,12 @@ extension Line {
     }
 }
 extension Line: AntiReverse {
-    func anti_reverse(self) -> Line {
-        return Line::from_groups(
+    func anti_reverse() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
     }
 }
@@ -106,12 +106,12 @@ extension Motor {
     }
 }
 extension Motor: AntiReverse {
-    func anti_reverse(self) -> Motor {
-        return Motor::from_groups(
+    func anti_reverse() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
@@ -128,18 +128,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: AntiReverse {
-    func anti_reverse(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func anti_reverse() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4()
+            this.group4
         );
     }
 }
@@ -156,10 +156,10 @@ extension Origin {
     }
 }
 extension Origin: AntiReverse {
-    func anti_reverse(self) -> Origin {
-        return Origin::from_groups(
+    func anti_reverse() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
@@ -176,8 +176,8 @@ extension Plane {
     }
 }
 extension Plane: AntiReverse {
-    func anti_reverse(self) -> Plane {
-        return self;
+    func anti_reverse() -> Plane {
+        return this;
     }
 }
 extension Point {
@@ -193,10 +193,10 @@ extension Point {
     }
 }
 extension Point: AntiReverse {
-    func anti_reverse(self) -> Point {
-        return Point::from_groups(
+    func anti_reverse() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -213,7 +213,7 @@ extension Scalar {
     }
 }
 extension Scalar: AntiReverse {
-    func anti_reverse(self) -> Scalar {
-        return self;
+    func anti_reverse() -> Scalar {
+        return this;
     }
 }

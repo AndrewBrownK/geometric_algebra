@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: Reverse {
-    func reverse(self) -> AntiScalar {
-        return self;
+    func reverse() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -28,8 +28,8 @@ extension DualNum {
     }
 }
 extension DualNum: Reverse {
-    func reverse(self) -> DualNum {
-        return self;
+    func reverse() -> DualNum {
+        return this;
     }
 }
 extension Flector {
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: Reverse {
-    func reverse(self) -> Flector {
-        return Flector::from_groups(
+    func reverse() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0(), 
+            this.group0, 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
     }
 }
@@ -67,10 +67,10 @@ extension Horizon {
     }
 }
 extension Horizon: Reverse {
-    func reverse(self) -> Horizon {
-        return Horizon::from_groups(
+    func reverse() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[e321] * -1.0
+            this.e321 * -1.0
         );
     }
 }
@@ -87,12 +87,12 @@ extension Line {
     }
 }
 extension Line: Reverse {
-    func reverse(self) -> Line {
-        return Line::from_groups(
+    func reverse() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
-            self.group0() * float3(-1.0), 
+            this.group0 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group1() * float3(-1.0)
+            this.group1 * float3(-1.0)
         );
     }
 }
@@ -109,12 +109,12 @@ extension Motor {
     }
 }
 extension Motor: Reverse {
-    func reverse(self) -> Motor {
-        return Motor::from_groups(
+    func reverse() -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group0() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0)
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
@@ -131,18 +131,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: Reverse {
-    func reverse(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func reverse() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1(), 
+            this.group1, 
             /* e41, e42, e43 */
-            self.group2() * float3(-1.0), 
+            this.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group4() * float4(-1.0)
+            this.group4 * float4(-1.0)
         );
     }
 }
@@ -159,8 +159,8 @@ extension Origin {
     }
 }
 extension Origin: Reverse {
-    func reverse(self) -> Origin {
-        return self;
+    func reverse() -> Origin {
+        return this;
     }
 }
 extension Plane {
@@ -176,10 +176,10 @@ extension Plane {
     }
 }
 extension Plane: Reverse {
-    func reverse(self) -> Plane {
-        return Plane::from_groups(
+    func reverse() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -196,8 +196,8 @@ extension Point {
     }
 }
 extension Point: Reverse {
-    func reverse(self) -> Point {
-        return self;
+    func reverse() -> Point {
+        return this;
     }
 }
 extension Scalar {
@@ -213,7 +213,7 @@ extension Scalar {
     }
 }
 extension Scalar: Reverse {
-    func reverse(self) -> Scalar {
-        return self;
+    func reverse() -> Scalar {
+        return this;
     }
 }

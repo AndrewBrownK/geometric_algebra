@@ -11,10 +11,10 @@ extension Scalar {
     }
 }
 extension Scalar: SquareRoot {
-    func square_root(self) -> Scalar {
-        return Scalar::from_groups(
+    func square_root() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            powf(self[scalar], 0.5)
+            powf(this.scalar, 0.5)
         );
     }
 }

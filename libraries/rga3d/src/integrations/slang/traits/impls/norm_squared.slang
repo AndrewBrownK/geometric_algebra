@@ -7,10 +7,10 @@ DualNum {
     }
 }
 extension Flector: NormSquared {
-    func norm_squared(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm_squared() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234])
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
@@ -21,10 +21,10 @@ DualNum {
     }
 }
 extension Line: NormSquared {
-    func norm_squared(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm_squared() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234])
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
@@ -35,10 +35,10 @@ DualNum {
     }
 }
 extension Motor: NormSquared {
-    func norm_squared(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm_squared() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234])
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
@@ -49,10 +49,10 @@ DualNum {
     }
 }
 extension MultiVector: NormSquared {
-    func norm_squared(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm_squared() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234])
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
@@ -63,10 +63,10 @@ DualNum {
     }
 }
 extension Point: NormSquared {
-    func norm_squared(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm_squared() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm_squared()[scalar], self.flat_weight_norm_squared()[e1234])
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }

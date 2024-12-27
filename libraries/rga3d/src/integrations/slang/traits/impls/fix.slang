@@ -11,8 +11,8 @@ extension Horizon {
     }
 }
 extension Horizon: Fix {
-    func fix(self) -> Horizon {
-        return Horizon::from_groups(
+    func fix() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
             1.0
         );
@@ -31,10 +31,10 @@ extension Plane {
     }
 }
 extension Plane: Fix {
-    func fix(self) -> Plane {
-        return Plane::from_groups(
+    func fix() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(powf((self.group0() * float4(-1.0))[3], -0.5) * powf(self[e321], -0.5) * -1.0) * self.group0()
+            float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e321, -0.5) * -1.0) * this.group0
         );
     }
 }
@@ -51,10 +51,10 @@ extension Point {
     }
 }
 extension Point: Fix {
-    func fix(self) -> Point {
-        return Point::from_groups(
+    func fix() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(powi(self[e1], 2) + powi(self[e2], 2) + powi(self[e3], 2)) * self.group0()
+            float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
         );
     }
 }
@@ -71,8 +71,8 @@ extension Scalar {
     }
 }
 extension Scalar: Fix {
-    func fix(self) -> Scalar {
-        return Scalar::from_groups(
+    func fix() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
             1.0
         );

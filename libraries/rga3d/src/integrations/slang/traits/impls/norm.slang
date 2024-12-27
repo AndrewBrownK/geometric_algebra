@@ -7,10 +7,10 @@ DualNum {
     }
 }
 extension Flector: Norm {
-    func norm(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234])
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
@@ -21,10 +21,10 @@ DualNum {
     }
 }
 extension Line: Norm {
-    func norm(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234])
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
@@ -35,10 +35,10 @@ DualNum {
     }
 }
 extension Motor: Norm {
-    func norm(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234])
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
@@ -49,10 +49,10 @@ DualNum {
     }
 }
 extension MultiVector: Norm {
-    func norm(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234])
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
@@ -63,10 +63,10 @@ DualNum {
     }
 }
 extension Point: Norm {
-    func norm(self) -> DualNum {
-        return DualNum::from_groups(
+    func norm() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(self.flat_bulk_norm()[scalar], self.flat_weight_norm()[e1234])
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }

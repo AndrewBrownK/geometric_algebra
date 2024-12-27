@@ -1,58 +1,58 @@
 using traits::GeometricProduct;
 using traits::RightDual;
 extension DualNum: Add<AntiScalar> {
-    func operator+(self, other: AntiScalar) -> DualNum {
-        return DualNum::from_groups(
+    func operator+(other: AntiScalar) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(0.0, other[e1234]) + self.group0()
+            float2(0.0, other.e1234) + this.group0
         );
     }
 }
 extension DualNum {
     func operator+=(const AntiScalar& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            float2(0.0, other[e1234]) + self.group0()
+            float2(0.0, other.e1234) + this.group0
         );
     }
 }
 extension DualNum: Add<DualNum> {
-    func operator+(self, other: DualNum) -> DualNum {
-        return DualNum::from_groups(
+    func operator+(other: DualNum) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            other.group0() + self.group0()
+            other.group0 + this.group0
         );
     }
 }
 extension DualNum {
     func operator+=(const DualNum& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            other.group0() + self.group0()
+            other.group0 + this.group0
         );
     }
 }
 extension DualNum: Add<Flector> {
-    func operator+(self, other: Flector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Flector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            other.group0(), 
+            other.group0, 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            other.group1()
+            other.group1
         );
     }
 }
 extension DualNum: Add<Horizon> {
-    func operator+(self, other: Horizon) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Horizon) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -60,53 +60,53 @@ extension DualNum: Add<Horizon> {
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), other[e321])
+            float4(float3(0.0), other.e321)
         );
     }
 }
 extension DualNum: Add<Line> {
-    func operator+(self, other: Line) -> Motor {
-        return Motor::from_groups(
+    func operator+(other: Line) -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.group0(), self[e1234]), 
+            float4(other.group0, this.e1234), 
             /* e23, e31, e12, scalar */
-            float4(other.group1(), self[scalar])
+            float4(other.group1, this.scalar)
         );
     }
 }
 extension DualNum: Add<Motor> {
-    func operator+(self, other: Motor) -> Motor {
-        return Motor::from_groups(
+    func operator+(other: Motor) -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.group0().xyz, self[e1234] + other[e1234]), 
+            float4(other.group0.xyz, this.e1234 + other.e1234), 
             /* e23, e31, e12, scalar */
-            float4(other.group1().xyz, self[scalar] + other[scalar])
+            float4(other.group1.xyz, this.scalar + other.scalar)
         );
     }
 }
 extension DualNum: Add<MultiVector> {
-    func operator+(self, other: MultiVector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: MultiVector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0() + other.group0(), 
+            this.group0 + other.group0, 
             /* e1, e2, e3, e4 */
-            other.group1(), 
+            other.group1, 
             /* e41, e42, e43 */
-            other.group2(), 
+            other.group2, 
             /* e23, e31, e12 */
-            other.group3(), 
+            other.group3, 
             /* e423, e431, e412, e321 */
-            other.group4()
+            other.group4
         );
     }
 }
 extension DualNum: Add<Origin> {
-    func operator+(self, other: Origin) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Origin) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), other[e4]), 
+            float4(float3(0.0), other.e4), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -117,10 +117,10 @@ extension DualNum: Add<Origin> {
     }
 }
 extension DualNum: Add<Plane> {
-    func operator+(self, other: Plane) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Plane) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -128,17 +128,17 @@ extension DualNum: Add<Plane> {
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            other.group0()
+            other.group0
         );
     }
 }
 extension DualNum: Add<Point> {
-    func operator+(self, other: Point) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator+(other: Point) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            other.group0(), 
+            other.group0, 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -149,18 +149,18 @@ extension DualNum: Add<Point> {
     }
 }
 extension DualNum: Add<Scalar> {
-    func operator+(self, other: Scalar) -> DualNum {
-        return DualNum::from_groups(
+    func operator+(other: Scalar) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], 0.0) + self.group0()
+            float2(other.scalar, 0.0) + this.group0
         );
     }
 }
 extension DualNum {
     func operator+=(const Scalar& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar], 0.0) + self.group0()
+            float2(other.scalar, 0.0) + this.group0
         );
     }
 }
@@ -168,9 +168,9 @@ extension DualNum {
 impl From<AntiScalar> for DualNum {
     fn from(from_anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(0.0, from_anti_scalar[e1234])
+            float2(0.0, from_anti_scalar.e1234)
         );
     }
 }
@@ -178,143 +178,143 @@ impl From<AntiScalar> for DualNum {
 impl From<Scalar> for DualNum {
     fn from(from_scalar: Scalar) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(from_scalar[scalar], 0.0)
+            float2(from_scalar.scalar, 0.0)
         );
     }
 }
 extension DualNum: Mul<AntiScalar> {
-    func operator*(self, other: AntiScalar) -> AntiScalar {
-        return self.geometric_product(other);
+    func operator*(other: AntiScalar) -> AntiScalar {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<DualNum> {
-    func operator*(self, other: DualNum) -> DualNum {
-        return self.geometric_product(other);
+    func operator*(other: DualNum) -> DualNum {
+        return this.geometric_product(other);
     }
 }
 extension DualNum {
     func operator*=(const DualNum& other) {
-        *this = self.geometric_product(other);
+        *this = this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Flector> {
-    func operator*(self, other: Flector) -> Flector {
-        return self.geometric_product(other);
+    func operator*(other: Flector) -> Flector {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Horizon> {
-    func operator*(self, other: Horizon) -> Flector {
-        return self.geometric_product(other);
+    func operator*(other: Horizon) -> Flector {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Line> {
-    func operator*(self, other: Line) -> Line {
-        return self.geometric_product(other);
+    func operator*(other: Line) -> Line {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Motor> {
-    func operator*(self, other: Motor) -> Motor {
-        return self.geometric_product(other);
+    func operator*(other: Motor) -> Motor {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<MultiVector> {
-    func operator*(self, other: MultiVector) -> MultiVector {
-        return self.geometric_product(other);
+    func operator*(other: MultiVector) -> MultiVector {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Origin> {
-    func operator*(self, other: Origin) -> Origin {
-        return self.geometric_product(other);
+    func operator*(other: Origin) -> Origin {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Plane> {
-    func operator*(self, other: Plane) -> Flector {
-        return self.geometric_product(other);
+    func operator*(other: Plane) -> Flector {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Point> {
-    func operator*(self, other: Point) -> Flector {
-        return self.geometric_product(other);
+    func operator*(other: Point) -> Flector {
+        return this.geometric_product(other);
     }
 }
 extension DualNum: Mul<Scalar> {
-    func operator*(self, other: Scalar) -> DualNum {
-        return self.geometric_product(other);
+    func operator*(other: Scalar) -> DualNum {
+        return this.geometric_product(other);
     }
 }
 extension DualNum {
     func operator*=(const Scalar& other) {
-        *this = self.geometric_product(other);
+        *this = this.geometric_product(other);
     }
 }
 extension DualNum: Neg {
-    func neg(self) -> DualNum {
-        return DualNum::from_groups(
+    func neg() -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            self.group0() * float2(-1.0)
+            this.group0 * float2(-1.0)
         );
     }
 }
 extension DualNum: Not {
-    func not(self) -> AntiScalar {
-        return self.right_dual();
+    func not() -> AntiScalar {
+        return this.right_dual();
     }
 }
 extension DualNum: Sub<AntiScalar> {
-    func operator-(self, other: AntiScalar) -> DualNum {
-        return DualNum::from_groups(
+    func operator-(other: AntiScalar) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(0.0, other[e1234] * -1.0) + self.group0()
+            float2(0.0, other.e1234 * -1.0) + this.group0
         );
     }
 }
 extension DualNum {
     func operator-=(const AntiScalar& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            float2(0.0, other[e1234] * -1.0) + self.group0()
+            float2(0.0, other.e1234 * -1.0) + this.group0
         );
     }
 }
 extension DualNum: Sub<DualNum> {
-    func operator-(self, other: DualNum) -> DualNum {
-        return DualNum::from_groups(
+    func operator-(other: DualNum) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            self.group0() - other.group0()
+            this.group0 - other.group0
         );
     }
 }
 extension DualNum {
     func operator-=(const DualNum& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            self.group0() - other.group0()
+            this.group0 - other.group0
         );
     }
 }
 extension DualNum: Sub<Flector> {
-    func operator-(self, other: Flector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Flector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            other.group0() * float4(-1.0), 
+            other.group0 * float4(-1.0), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            other.group1() * float4(-1.0)
+            other.group1 * float4(-1.0)
         );
     }
 }
 extension DualNum: Sub<Horizon> {
-    func operator-(self, other: Horizon) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Horizon) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -322,53 +322,53 @@ extension DualNum: Sub<Horizon> {
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), other[e321] * -1.0)
+            float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
 extension DualNum: Sub<Line> {
-    func operator-(self, other: Line) -> Motor {
-        return Motor::from_groups(
+    func operator-(other: Line) -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.group0(), self[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            float4(other.group0, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            float4(other.group1(), self[scalar]) * float4(-1.0, -1.0, -1.0, 1.0)
+            float4(other.group1, this.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
 extension DualNum: Sub<Motor> {
-    func operator-(self, other: Motor) -> Motor {
-        return Motor::from_groups(
+    func operator-(other: Motor) -> Motor {
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.group0().xyz, self[e1234] - other[e1234]) * float4(-1.0, -1.0, -1.0, 1.0), 
+            float4(other.group0.xyz, this.e1234 - other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
-            float4(other.group1().xyz, self[scalar] - other[scalar]) * float4(-1.0, -1.0, -1.0, 1.0)
+            float4(other.group1.xyz, this.scalar - other.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
 extension DualNum: Sub<MultiVector> {
-    func operator-(self, other: MultiVector) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: MultiVector) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0() - other.group0(), 
+            this.group0 - other.group0, 
             /* e1, e2, e3, e4 */
-            other.group1() * float4(-1.0), 
+            other.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            other.group2() * float3(-1.0), 
+            other.group2 * float3(-1.0), 
             /* e23, e31, e12 */
-            other.group3() * float3(-1.0), 
+            other.group3 * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            other.group4() * float4(-1.0)
+            other.group4 * float4(-1.0)
         );
     }
 }
 extension DualNum: Sub<Origin> {
-    func operator-(self, other: Origin) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Origin) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), other[e4] * -1.0), 
+            float4(float3(0.0), other.e4 * -1.0), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -379,10 +379,10 @@ extension DualNum: Sub<Origin> {
     }
 }
 extension DualNum: Sub<Plane> {
-    func operator-(self, other: Plane) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Plane) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e41, e42, e43 */
@@ -390,17 +390,17 @@ extension DualNum: Sub<Plane> {
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            other.group0() * float4(-1.0)
+            other.group0 * float4(-1.0)
         );
     }
 }
 extension DualNum: Sub<Point> {
-    func operator-(self, other: Point) -> MultiVector {
-        return MultiVector::from_groups(
+    func operator-(other: Point) -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            other.group0() * float4(-1.0), 
+            other.group0 * float4(-1.0), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -411,18 +411,18 @@ extension DualNum: Sub<Point> {
     }
 }
 extension DualNum: Sub<Scalar> {
-    func operator-(self, other: Scalar) -> DualNum {
-        return DualNum::from_groups(
+    func operator-(other: Scalar) -> DualNum {
+        return DualNum.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar] * -1.0, 0.0) + self.group0()
+            float2(other.scalar * -1.0, 0.0) + this.group0
         );
     }
 }
 extension DualNum {
     func operator-=(const Scalar& other) {
-        *this = DualNum::from_groups(
+        *this = DualNum.from_groups(
             /* scalar, e1234 */
-            float2(other[scalar] * -1.0, 0.0) + self.group0()
+            float2(other.scalar * -1.0, 0.0) + this.group0
         );
     }
 }
@@ -480,9 +480,9 @@ impl TryFrom<Motor> for DualNum {
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(
+        return Ok(DualNum.from_groups(
             /* scalar, e1234 */
-            float2(motor[scalar], motor[e1234])
+            float2(motor.scalar, motor.e1234)
         ));
     }
 }
@@ -595,9 +595,9 @@ impl TryFrom<MultiVector> for DualNum {
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(
+        return Ok(DualNum.from_groups(
             /* scalar, e1234 */
-            multi_vector.group0()
+            multi_vector.group0
         ));
     }
 }

@@ -5,10 +5,10 @@ Horizon {
     }
 }
 extension DualNum: AntiSupport {
-    func anti_support(self) -> Horizon {
-        return Horizon::from_groups(
+    func anti_support() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[scalar]
+            this.scalar
         );
     }
 }
@@ -19,18 +19,18 @@ Motor {
     }
 }
 extension Flector: AntiSupport {
-    func anti_support(self) -> Motor {
-Flector right_dual = Flector::from_groups(
+    func anti_support() -> Motor {
+Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e321] * -1.0), 
+            float4(float3(0.0), this.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
-        return Motor::from_groups(
+        return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
-            float4(right_dual.group1().xyz, right_dual[e4]) * float4(-1.0)
+            float4(right_dual.group1.xyz, right_dual.e4) * float4(-1.0)
         );
     }
 }
@@ -41,10 +41,10 @@ Scalar {
     }
 }
 extension Horizon: AntiSupport {
-    func anti_support(self) -> Scalar {
-        return Scalar::from_groups(
+    func anti_support() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            self[e321]
+            this.e321
         );
     }
 }
@@ -55,14 +55,14 @@ Point {
     }
 }
 extension Line: AntiSupport {
-    func anti_support(self) -> Point {
-Horizon right_complement = Horizon::from_groups(
+    func anti_support() -> Point {
+Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
         );
-        return Point::from_groups(
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(right_complement[e321], right_complement[e321], right_complement[e321], 0.0) * float4(float3(self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(float3(this.e23 * -1.0, this.e31 * -1.0, this.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
@@ -73,22 +73,22 @@ Flector {
     }
 }
 extension Motor: AntiSupport {
-    func anti_support(self) -> Flector {
-Horizon right_complement = Horizon::from_groups(
+    func anti_support() -> Flector {
+Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
         );
-Motor right_dual = Motor::from_groups(
+Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            self.group1() * float4(-1.0, -1.0, -1.0, 1.0), 
+            this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-        return Flector::from_groups(
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(right_complement[e321], right_complement[e321], right_complement[e321], 0.0) * float4(right_dual.group0().xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), right_complement[e321] * right_dual[e1234])
+            float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
 }
@@ -105,34 +105,34 @@ extension MultiVector {
     }
 }
 extension MultiVector: AntiSupport {
-    func anti_support(self) -> MultiVector {
-Horizon right_complement = Horizon::from_groups(
+    func anti_support() -> MultiVector {
+Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
         );
-MultiVector right_dual = MultiVector::from_groups(
+MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(0.0, self[scalar]), 
+            float2(0.0, this.scalar), 
             /* e1, e2, e3, e4 */
-            float4(float3(0.0), self[e321] * -1.0), 
+            float4(float3(0.0), this.e321 * -1.0), 
             /* e41, e42, e43 */
-            self.group3() * float3(-1.0), 
+            this.group3 * float3(-1.0), 
             /* e23, e31, e12 */
             float3(0.0), 
             /* e423, e431, e412, e321 */
-            float4(self[e1], self[e2], self[e3], 0.0)
+            float4(this.e1, this.e2, this.e3, 0.0)
         );
-        return MultiVector::from_groups(
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            float2(right_complement[e321] * right_dual[e4], 1.0) * float2(-1.0, 0.0), 
+            float2(right_complement.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(right_complement[e321], right_complement[e321], right_complement[e321], 0.0) * float4(right_dual.group2(), 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(right_dual.group2, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
-            float3(right_complement[e321]) * right_dual.group4().xyz * float3(-1.0), 
+            float3(right_complement.e321) * right_dual.group4.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
-            float4(float3(0.0), right_complement[e321] * right_dual[e1234])
+            float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
     }
 }
@@ -143,10 +143,10 @@ Scalar {
     }
 }
 extension Plane: AntiSupport {
-    func anti_support(self) -> Scalar {
-        return Scalar::from_groups(
+    func anti_support() -> Scalar {
+        return Scalar.from_groups(
             /* scalar */
-            self[e321]
+            this.e321
         );
     }
 }
@@ -157,12 +157,12 @@ Line {
     }
 }
 extension Point: AntiSupport {
-    func anti_support(self) -> Line {
-        return Line::from_groups(
+    func anti_support() -> Line {
+        return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
-            float4(self[e1], self[e2], self[e3], 0.0).xyz * float3(-1.0)
+            float4(this.e1, this.e2, this.e3, 0.0).xyz * float3(-1.0)
         );
     }
 }
@@ -173,10 +173,10 @@ Horizon {
     }
 }
 extension Scalar: AntiSupport {
-    func anti_support(self) -> Horizon {
-        return Horizon::from_groups(
+    func anti_support() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[scalar]
+            this.scalar
         );
     }
 }

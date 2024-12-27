@@ -11,8 +11,8 @@ extension AntiScalar {
     }
 }
 extension AntiScalar: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> AntiScalar {
-        return self;
+    func anti_auto_morphism() -> AntiScalar {
+        return this;
     }
 }
 extension DualNum {
@@ -28,8 +28,8 @@ extension DualNum {
     }
 }
 extension DualNum: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> DualNum {
-        return self;
+    func anti_auto_morphism() -> DualNum {
+        return this;
     }
 }
 extension Flector {
@@ -45,12 +45,12 @@ extension Flector {
     }
 }
 extension Flector: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Flector {
-        return Flector::from_groups(
+    func anti_auto_morphism() -> Flector {
+        return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0), 
+            this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
-            self.group1() * float4(-1.0)
+            this.group1 * float4(-1.0)
         );
     }
 }
@@ -67,10 +67,10 @@ extension Horizon {
     }
 }
 extension Horizon: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Horizon {
-        return Horizon::from_groups(
+    func anti_auto_morphism() -> Horizon {
+        return Horizon.from_groups(
             /* e321 */
-            self[e321] * -1.0
+            this.e321 * -1.0
         );
     }
 }
@@ -87,8 +87,8 @@ extension Line {
     }
 }
 extension Line: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Line {
-        return self;
+    func anti_auto_morphism() -> Line {
+        return this;
     }
 }
 extension Motor {
@@ -104,8 +104,8 @@ extension Motor {
     }
 }
 extension Motor: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Motor {
-        return self;
+    func anti_auto_morphism() -> Motor {
+        return this;
     }
 }
 extension MultiVector {
@@ -121,18 +121,18 @@ extension MultiVector {
     }
 }
 extension MultiVector: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> MultiVector {
-        return MultiVector::from_groups(
+    func anti_auto_morphism() -> MultiVector {
+        return MultiVector.from_groups(
             /* scalar, e1234 */
-            self.group0(), 
+            this.group0, 
             /* e1, e2, e3, e4 */
-            self.group1() * float4(-1.0), 
+            this.group1 * float4(-1.0), 
             /* e41, e42, e43 */
-            self.group2(), 
+            this.group2, 
             /* e23, e31, e12 */
-            self.group3(), 
+            this.group3, 
             /* e423, e431, e412, e321 */
-            self.group4() * float4(-1.0)
+            this.group4 * float4(-1.0)
         );
     }
 }
@@ -149,10 +149,10 @@ extension Origin {
     }
 }
 extension Origin: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Origin {
-        return Origin::from_groups(
+    func anti_auto_morphism() -> Origin {
+        return Origin.from_groups(
             /* e4 */
-            self[e4] * -1.0
+            this.e4 * -1.0
         );
     }
 }
@@ -169,10 +169,10 @@ extension Plane {
     }
 }
 extension Plane: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Plane {
-        return Plane::from_groups(
+    func anti_auto_morphism() -> Plane {
+        return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -189,10 +189,10 @@ extension Point {
     }
 }
 extension Point: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Point {
-        return Point::from_groups(
+    func anti_auto_morphism() -> Point {
+        return Point.from_groups(
             /* e1, e2, e3, e4 */
-            self.group0() * float4(-1.0)
+            this.group0 * float4(-1.0)
         );
     }
 }
@@ -209,7 +209,7 @@ extension Scalar {
     }
 }
 extension Scalar: AntiAutoMorphism {
-    func anti_auto_morphism(self) -> Scalar {
-        return self;
+    func anti_auto_morphism() -> Scalar {
+        return this;
     }
 }
