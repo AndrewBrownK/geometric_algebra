@@ -9,14 +9,14 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       9       0
+//   Median:         3       8       0
 //  Average:         9      16       0
 //  Maximum:        76      98       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3      16       0
-//  Average:        16      30       0
+//  Average:        16      29       0
 //  Maximum:       130     166       0
 impl std::ops::Div<AntiRejectOrthogonallyFromInfix> for AntiScalar {
     type Output = AntiRejectOrthogonallyFromInfixPartial<AntiScalar>;
@@ -56,11 +56,11 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for AntiScalar {
     //           add/sub      mul      div
     //      f32        0        3        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //    simd3        0        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       23        0
+    // yes simd        0        8        0
+    //  no simd        0       18        0
     fn anti_reject_orthogonally_from(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let wedge = AntiScalar::from_groups(/* e1234 */ self[e1234] * other[scalar]);
@@ -74,7 +74,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for AntiScalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -86,7 +86,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for AntiScalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 0.0]) * right_anti_dual.group4().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(wedge[e1234]) * right_anti_dual.group4().xyz()).with_w(0.0),
         );
     }
 }
@@ -142,7 +142,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for DualNum {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -209,7 +209,7 @@ impl AntiRejectOrthogonallyFrom<Motor> for DualNum {
         use crate::elements::*;
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])),
+            self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])) * other.group0().xyz().with_w(1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(self[scalar]) * other.group1(),
         );
@@ -271,7 +271,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -338,7 +338,7 @@ impl AntiRejectOrthogonallyFrom<Point> for DualNum {
     fn anti_reject_orthogonally_from(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[scalar]) * other.group0());
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Scalar::from_groups(
             // scalar
             (right_anti_dual[e423] * wedge[e1]) + (right_anti_dual[e431] * wedge[e2]) + (right_anti_dual[e412] * wedge[e3]) + (right_anti_dual[e321] * wedge[e4]),
@@ -417,7 +417,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Flector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
@@ -567,7 +567,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Flector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -651,7 +651,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Flector {
             // e23, e31, e12, scalar
             ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).with_w(0.0),
         );
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
@@ -709,10 +709,11 @@ impl AntiRejectOrthogonallyFrom<Flector> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        3        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       15        0
+    // yes simd        0        5        0
+    //  no simd        0       10        0
     fn anti_reject_orthogonally_from(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let wedge = AntiScalar::from_groups(/* e1234 */ other[e4] * self[e321] * -1.0);
@@ -720,13 +721,13 @@ impl AntiRejectOrthogonallyFrom<Flector> for Horizon {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(wedge[e1234]) * right_anti_dual.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 0.0]) * right_anti_dual.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(wedge[e1234]) * right_anti_dual.group1().xyz()).with_w(0.0),
         );
     }
 }
@@ -735,10 +736,11 @@ impl AntiRejectOrthogonallyFrom<Motor> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       14        0
+    // yes simd        0        4        0
+    //  no simd        0        9        0
     fn anti_reject_orthogonally_from(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let wedge = Horizon::from_groups(/* e321 */ self[e321] * other[scalar]);
@@ -750,7 +752,7 @@ impl AntiRejectOrthogonallyFrom<Motor> for Horizon {
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([wedge[e321], wedge[e321], wedge[e321], 0.0]) * right_anti_dual.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(wedge[e321]) * right_anti_dual.group0().xyz()).with_w(0.0),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(wedge[e321] * right_anti_dual[e1234]),
         );
@@ -791,7 +793,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -844,19 +846,13 @@ impl AntiRejectOrthogonallyFrom<Point> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        5        0
     fn anti_reject_orthogonally_from(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let wedge = AntiScalar::from_groups(/* e1234 */ self[e321] * other[e4] * -1.0);
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 0.0])
-                * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(self[e321] * other[e4] * -1.0) * other.group0().xyz()).with_w(0.0));
     }
 }
 impl AntiRejectOrthogonallyFrom<Scalar> for Horizon {
@@ -920,7 +916,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Line {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -961,24 +957,18 @@ impl AntiRejectOrthogonallyFrom<Motor> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       13        0
-    //    simd3        1        2        0
-    //    simd4        2        7        0
+    //    simd3        1        3        0
+    //    simd4        2        6        0
     // Totals...
     // yes simd       13       22        0
-    //  no simd       21       47        0
+    //  no simd       21       46        0
     fn anti_reject_orthogonally_from(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[scalar], other[scalar], other[scalar], 1.0])
-                * self.group0().with_w(
-                    -(self[e41] * other[e23])
-                        - (self[e42] * other[e31])
-                        - (self[e43] * other[e12])
-                        - (self[e23] * other[e41])
-                        - (self[e31] * other[e42])
-                        - (self[e12] * other[e43]),
-                ),
+            (Simd32x3::from(other[scalar]) * self.group0()).with_w(
+                -(self[e41] * other[e23]) - (self[e42] * other[e31]) - (self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]),
+            ),
             // e23, e31, e12, scalar
             Simd32x3::from(1.0).with_w(0.0) * self.group1().with_w(0.0) * other.group1().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -1048,7 +1038,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Line {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -1117,7 +1107,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Line {
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
             ]) - (other.group0().yzxx() * self.group0().zxy().with_w(self[e23])),
         );
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Line::from_groups(
             // e41, e42, e43
             (right_anti_dual.group0().yzx() * wedge.group0().zxy()) - (right_anti_dual.group0().zxy() * wedge.group0().yzx()),
@@ -1168,7 +1158,7 @@ impl AntiRejectOrthogonallyFrom<DualNum> for Motor {
         use crate::elements::*;
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0]) * other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])),
+            other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])) * self.group0().xyz().with_w(1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(other[scalar]) * self.group1(),
         );
@@ -1209,7 +1199,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Motor {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -1241,24 +1231,18 @@ impl AntiRejectOrthogonallyFrom<Line> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       12        0
-    //    simd3        0        1        0
-    //    simd4        0        7        0
+    //    simd3        0        2        0
+    //    simd4        0        6        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       10       43        0
+    //  no simd       10       42        0
     fn anti_reject_orthogonally_from(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * other.group0().with_w(
-                    -(other[e41] * self[e23])
-                        - (other[e42] * self[e31])
-                        - (other[e43] * self[e12])
-                        - (other[e23] * self[e41])
-                        - (other[e31] * self[e42])
-                        - (other[e12] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * other.group0()).with_w(
+                -(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
+            ),
             // e23, e31, e12, scalar
             Simd32x3::from(1.0).with_w(0.0) * other.group1().with_w(0.0) * self.group1().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -1378,7 +1362,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Motor {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -1456,7 +1440,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Motor {
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
             ]) - (other.group0().yzxx() * self.group0().zxy().with_w(self[e23])),
         );
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Motor::from_groups(
             // e41, e42, e43, e1234
             ((wedge.group1().zxy() * right_anti_dual.group0().yzx()) - (wedge.group1().yzx() * right_anti_dual.group0().zxy())).with_w(0.0),
@@ -1580,7 +1564,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for MultiVector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -1843,7 +1827,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -1959,7 +1943,7 @@ impl AntiRejectOrthogonallyFrom<Point> for MultiVector {
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
             ]) - (other.group0().yzxx() * self.group2().zxy().with_w(self[e23])),
         );
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -2058,7 +2042,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Origin {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
@@ -2089,17 +2073,13 @@ impl AntiRejectOrthogonallyFrom<Line> for Origin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        2        6        0
-    //  no simd        2       14        0
+    // yes simd        2        5        0
+    //  no simd        2        9        0
     fn anti_reject_orthogonally_from(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let wedge = Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        let wedge = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(self[e4]) * other.group1()).with_w(0.0));
         let right_anti_dual = Line::from_groups(/* e41, e42, e43 */ other.group1() * Simd32x3::from(-1.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
         return Origin::from_groups(
             // e4
@@ -2112,17 +2092,18 @@ impl AntiRejectOrthogonallyFrom<Motor> for Origin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        4        9        0
-    //    simd4        2        8        0
+    //    simd3        0        1        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd        6       17        0
-    //  no simd       12       41        0
+    // yes simd        6       16        0
+    //  no simd       12       36        0
     fn anti_reject_orthogonally_from(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let wedge = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[scalar] * self[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e4]) * other.group1().xyz()).with_w(0.0),
         );
         let right_anti_dual = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2150,11 +2131,11 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Origin {
     //           add/sub      mul      div
     //      f32       27       37        0
     //    simd2        0        1        0
-    //    simd3        4        9        0
-    //    simd4        4        5        0
+    //    simd3        4       10        0
+    //    simd4        4        3        0
     // Totals...
-    // yes simd       35       52        0
-    //  no simd       55       86        0
+    // yes simd       35       51        0
+    //  no simd       55       81        0
     fn anti_reject_orthogonally_from(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let wedge = MultiVector::from_groups(
@@ -2167,7 +2148,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Origin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group3().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e4]) * other.group3()).with_w(0.0),
         );
         let right_anti_dual = MultiVector::from_groups(
             // scalar, e1234
@@ -2179,7 +2160,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Origin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -2246,7 +2227,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Origin {
     fn anti_reject_orthogonally_from(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let wedge = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(self[e4]) * other.group0().xyz(), /* e23, e31, e12 */ Simd32x3::from(0.0));
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Origin::from_groups(
             // e4
             -(wedge[e41] * right_anti_dual[e423]) - (wedge[e42] * right_anti_dual[e431]) - (wedge[e43] * right_anti_dual[e412]),
@@ -2288,10 +2269,11 @@ impl AntiRejectOrthogonallyFrom<Flector> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       17        0
+    // yes simd        3        7        0
+    //  no simd        3       12        0
     fn anti_reject_orthogonally_from(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let wedge = AntiScalar::from_groups(
@@ -2302,13 +2284,13 @@ impl AntiRejectOrthogonallyFrom<Flector> for Plane {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(wedge[e1234]) * right_anti_dual.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 0.0]) * right_anti_dual.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(wedge[e1234]) * right_anti_dual.group1().xyz()).with_w(0.0),
         );
     }
 }
@@ -2377,7 +2359,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Plane {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -2430,21 +2412,15 @@ impl AntiRejectOrthogonallyFrom<Point> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        4        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
+    // yes simd        3        5        0
+    //  no simd        3        7        0
     fn anti_reject_orthogonally_from(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let wedge = AntiScalar::from_groups(
-            // e1234
-            -(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]),
-        );
         return Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 0.0])
-                * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(-(self[e423] * other[e1]) - (self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4])) * other.group0().xyz()).with_w(0.0),
         );
     }
 }
@@ -2515,7 +2491,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Point {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
@@ -2655,7 +2631,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Point {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -2734,7 +2710,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Point {
             // e23, e31, e12
             (other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy()),
         );
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
@@ -2808,7 +2784,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for Scalar {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2941,7 +2917,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Scalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -3011,7 +2987,7 @@ impl AntiRejectOrthogonallyFrom<Point> for Scalar {
     fn anti_reject_orthogonally_from(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let wedge = Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(self[scalar]) * other.group0());
-        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_anti_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Scalar::from_groups(
             // scalar
             (right_anti_dual[e423] * wedge[e1]) + (right_anti_dual[e431] * wedge[e2]) + (right_anti_dual[e412] * wedge[e3]) + (right_anti_dual[e321] * wedge[e4]),

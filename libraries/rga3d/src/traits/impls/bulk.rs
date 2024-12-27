@@ -48,7 +48,7 @@ impl Bulk for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
+            self.group0().xyz().with_w(0.0),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(self[e321]),
         );
@@ -124,7 +124,7 @@ impl Bulk for MultiVector {
             // scalar, e1234
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
+            self.group1().xyz().with_w(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -161,8 +161,7 @@ impl std::ops::DivAssign<BulkPrefixOrPostfix> for Point {
 impl Bulk for Point {
     type Output = Point;
     fn bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0().xyz().with_w(0.0));
     }
 }
 impl std::ops::Div<BulkPrefixOrPostfix> for Scalar {

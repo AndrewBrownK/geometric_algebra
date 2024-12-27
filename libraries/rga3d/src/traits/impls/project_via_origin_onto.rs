@@ -9,14 +9,14 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
-//   Median:         5      11       0
+//   Median:         5      10       0
 //  Average:         9      16       0
 //  Maximum:        76      97       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         5      19       0
-//  Average:        16      30       0
+//  Average:        16      29       0
 //  Maximum:       130     165       0
 impl std::ops::Div<ProjectViaOriginOntoInfix> for DualNum {
     type Output = ProjectViaOriginOntoInfixPartial<DualNum>;
@@ -54,7 +54,7 @@ impl ProjectViaOriginOnto<Flector> for DualNum {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Flector::from_groups(
             // e1, e2, e3, e4
@@ -130,8 +130,7 @@ impl ProjectViaOriginOnto<Motor> for DualNum {
         );
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([right_dual[e41], right_dual[e42], right_dual[e43], 1.0])
-                * self.group0().xx().with_zw(self[scalar], (self[scalar] * right_dual[e1234]) + (self[e1234] * right_dual[scalar])),
+            self.group0().xx().with_zw(self[scalar], (self[scalar] * right_dual[e1234]) + (self[e1234] * right_dual[scalar])) * right_dual.group0().xyz().with_w(1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );
@@ -174,7 +173,7 @@ impl ProjectViaOriginOnto<MultiVector> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -253,10 +252,7 @@ impl ProjectViaOriginOnto<Point> for DualNum {
         use crate::elements::*;
         let wedge = Plane::from_groups(
             // e423, e431, e412, e321
-            self.group0().xx().with_zw(self[scalar], 0.0)
-                * Simd32x3::from(1.0).with_w(0.0)
-                * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            self.group0().xx().with_zw(self[scalar], 0.0) * Simd32x3::from(1.0).with_w(0.0) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
         return Scalar::from_groups(
             // scalar
@@ -296,7 +292,7 @@ impl ProjectViaOriginOnto<Flector> for Flector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -330,10 +326,11 @@ impl ProjectViaOriginOnto<Horizon> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       18        0
+    // yes simd        0        5        0
+    //  no simd        0       13        0
     fn project_via_origin_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let wedge = Motor::from_groups(
@@ -344,7 +341,7 @@ impl ProjectViaOriginOnto<Horizon> for Flector {
         );
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * wedge.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * wedge.group0().xyz()).with_w(0.0),
             // e423, e431, e412, e321
             Simd32x3::from(0.0).with_w(other[e321] * wedge[e1234]),
         );
@@ -439,7 +436,7 @@ impl ProjectViaOriginOnto<MultiVector> for Flector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -546,7 +543,7 @@ impl ProjectViaOriginOnto<Point> for Flector {
     //  no simd        3        8        0
     fn project_via_origin_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from((self[e1] * right_dual[e423]) + (self[e2] * right_dual[e431]) + (self[e3] * right_dual[e412]) + (self[e4] * right_dual[e321])) * other.group0(),
@@ -653,7 +650,7 @@ impl ProjectViaOriginOnto<Flector> for Line {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Plane::from_groups(
             // e423, e431, e412, e321
@@ -782,7 +779,7 @@ impl ProjectViaOriginOnto<MultiVector> for Line {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -856,18 +853,13 @@ impl ProjectViaOriginOnto<Plane> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd3        2        4        0
-    //    simd4        0        2        0
+    //    simd3        2        5        0
     // Totals...
-    // yes simd        2        7        0
-    //  no simd        6       21        0
+    // yes simd        2        6        0
+    //  no simd        6       16        0
     fn project_via_origin_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
-        let wedge = Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 0.0]) * self.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        let wedge = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(other[e321] * -1.0) * self.group1()).with_w(0.0));
         return Line::from_groups(
             // e41, e42, e43
             (other.group0().zxy() * wedge.group0().yzx()) - (other.group0().yzx() * wedge.group0().zxy()),
@@ -912,7 +904,7 @@ impl ProjectViaOriginOnto<Flector> for Motor {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Flector::from_groups(
             // e1, e2, e3, e4
@@ -946,10 +938,11 @@ impl ProjectViaOriginOnto<Horizon> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       18        0
+    // yes simd        0        5        0
+    //  no simd        0       13        0
     fn project_via_origin_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
@@ -957,7 +950,7 @@ impl ProjectViaOriginOnto<Horizon> for Motor {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[scalar] * right_dual[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 0.0]) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group1().xyz()).with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -972,25 +965,24 @@ impl ProjectViaOriginOnto<Line> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       10       12        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd       10       18        0
-    //  no simd       10       35        0
+    //  no simd       10       33        0
     fn project_via_origin_onto(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let right_dual = Line::from_groups(/* e41, e42, e43 */ other.group1() * Simd32x3::from(-1.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 1.0])
-                * right_dual.group0().with_w(
-                    -(right_dual[e41] * self[e23])
-                        - (right_dual[e42] * self[e31])
-                        - (right_dual[e43] * self[e12])
-                        - (right_dual[e23] * self[e41])
-                        - (right_dual[e31] * self[e42])
-                        - (right_dual[e12] * self[e43]),
-                ),
+            (Simd32x3::from(self[scalar]) * right_dual.group0()).with_w(
+                -(right_dual[e41] * self[e23])
+                    - (right_dual[e42] * self[e31])
+                    - (right_dual[e43] * self[e12])
+                    - (right_dual[e23] * self[e41])
+                    - (right_dual[e31] * self[e42])
+                    - (right_dual[e12] * self[e43]),
+            ),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );
@@ -998,15 +990,14 @@ impl ProjectViaOriginOnto<Line> for Motor {
             // e41, e42, e43, e1234
             Simd32x3::from(1.0).with_w(0.0) * other.group0().with_w(0.0) * wedge.group0().www().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             // e23, e31, e12, scalar
-            Simd32x4::from([wedge[e1234], wedge[e1234], wedge[e1234], 1.0])
-                * other.group1().with_w(
-                    -(other[e41] * wedge[e23])
-                        - (other[e42] * wedge[e31])
-                        - (other[e43] * wedge[e12])
-                        - (other[e23] * wedge[e41])
-                        - (other[e31] * wedge[e42])
-                        - (other[e12] * wedge[e43]),
-                ),
+            (Simd32x3::from(wedge[e1234]) * other.group1()).with_w(
+                -(other[e41] * wedge[e23])
+                    - (other[e42] * wedge[e31])
+                    - (other[e43] * wedge[e12])
+                    - (other[e23] * wedge[e41])
+                    - (other[e31] * wedge[e42])
+                    - (other[e12] * wedge[e43]),
+            ),
         );
     }
 }
@@ -1082,7 +1073,7 @@ impl ProjectViaOriginOnto<MultiVector> for Motor {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -1158,11 +1149,11 @@ impl ProjectViaOriginOnto<Plane> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        8        0
-    //    simd3        1        2        0
-    //    simd4        1        3        0
+    //    simd3        1        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        4       13        0
-    //  no simd        9       26        0
+    // yes simd        4       12        0
+    //  no simd        9       21        0
     fn project_via_origin_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
@@ -1170,7 +1161,7 @@ impl ProjectViaOriginOnto<Plane> for Motor {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[scalar] * right_dual[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 0.0]) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group1().xyz()).with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -1198,10 +1189,7 @@ impl ProjectViaOriginOnto<Point> for Motor {
         use crate::elements::*;
         let wedge = Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x3::from(1.0).with_w(0.0)
-                * self.group1().www().with_w(0.0)
-                * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            Simd32x3::from(1.0).with_w(0.0) * self.group1().www().with_w(0.0) * other.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
         return Scalar::from_groups(
             // scalar
@@ -1255,7 +1243,7 @@ impl ProjectViaOriginOnto<Flector> for MultiVector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -1315,11 +1303,10 @@ impl ProjectViaOriginOnto<Horizon> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        5        0
     //    simd2        0        2        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
+    //    simd3        0        6        0
     // Totals...
-    // yes simd        0       15        0
-    //  no simd        0       37        0
+    // yes simd        0       13        0
+    //  no simd        0       27        0
     fn project_via_origin_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
@@ -1333,13 +1320,13 @@ impl ProjectViaOriginOnto<Horizon> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 0.0]) * self.group3().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group3()).with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([other[e321] * wedge[e4], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * wedge.group2().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * wedge.group2()).with_w(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1503,7 +1490,7 @@ impl ProjectViaOriginOnto<MultiVector> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -1593,11 +1580,11 @@ impl ProjectViaOriginOnto<Plane> for MultiVector {
     //           add/sub      mul      div
     //      f32        7       15        0
     //    simd2        0        1        0
-    //    simd3        2        6        0
-    //    simd4        1        4        0
+    //    simd3        2        7        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       10       26        0
-    //  no simd       17       51        0
+    // yes simd       10       25        0
+    //  no simd       17       46        0
     fn project_via_origin_onto(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
@@ -1611,7 +1598,7 @@ impl ProjectViaOriginOnto<Plane> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([right_dual[e4], right_dual[e4], right_dual[e4], 0.0]) * self.group3().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(right_dual[e4]) * self.group3()).with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -1643,7 +1630,7 @@ impl ProjectViaOriginOnto<Point> for MultiVector {
     //  no simd        6       24        0
     fn project_via_origin_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         let wedge = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -1693,20 +1680,14 @@ impl ProjectViaOriginOnto<Flector> for Origin {
     type Output = Point;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        9        0
-    //    simd3        0        1        0
+    //      f32        4        8        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        5       11        0
-    //  no simd        8       16        0
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn project_via_origin_onto(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let wedge = Line::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(self[e4]) * Simd32x3::from(0.0).with_w(other[e321] * -1.0).xyz(),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-        );
+        let wedge = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
         return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
@@ -1722,20 +1703,15 @@ impl ProjectViaOriginOnto<MultiVector> for Origin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       15        0
-    //    simd3        0        2        0
+    //      f32        9       14        0
+    //    simd3        0        1        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd       10       18        0
-    //  no simd       13       25        0
+    // yes simd       10       16        0
+    //  no simd       13       21        0
     fn project_via_origin_onto(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let wedge = Line::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(self[e4]) * Simd32x3::from(0.0).with_w(other[e321] * -1.0).xyz(),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-        );
+        let wedge = Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
@@ -1784,7 +1760,7 @@ impl ProjectViaOriginOnto<Flector> for Plane {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = AntiScalar::from_groups(
             // e1234
@@ -1831,7 +1807,7 @@ impl ProjectViaOriginOnto<MultiVector> for Plane {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = AntiScalar::from_groups(
             // e1234
@@ -1887,7 +1863,7 @@ impl ProjectViaOriginOnto<Flector> for Point {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -1919,18 +1895,16 @@ impl ProjectViaOriginOnto<Horizon> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        7        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       15        0
+    // yes simd        0        8        0
+    //  no simd        0       10        0
     fn project_via_origin_onto(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let right_dual = Origin::from_groups(/* e4 */ other[e321] * -1.0);
         return Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0])
-                * Simd32x3::from([right_dual[e4] * self[e1] * -1.0, right_dual[e4] * self[e2] * -1.0, right_dual[e4] * self[e3] * -1.0]).with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * Simd32x3::from([right_dual[e4] * self[e1] * -1.0, right_dual[e4] * self[e2] * -1.0, right_dual[e4] * self[e3] * -1.0])).with_w(0.0),
         );
     }
 }
@@ -2021,7 +1995,7 @@ impl ProjectViaOriginOnto<MultiVector> for Point {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -2121,7 +2095,7 @@ impl ProjectViaOriginOnto<Point> for Point {
     //  no simd        3        8        0
     fn project_via_origin_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([other[e1], other[e2], other[e3], 0.0]));
+        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ other.group0().xyz().with_w(0.0));
         return Point::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from((right_dual[e423] * self[e1]) + (right_dual[e431] * self[e2]) + (right_dual[e412] * self[e3]) + (right_dual[e321] * self[e4])) * other.group0(),
@@ -2153,24 +2127,24 @@ impl ProjectViaOriginOnto<Flector> for Scalar {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5        7        0
-    //    simd3        1        2        0
-    //    simd4        2        5        0
+    //    simd3        1        3        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd        8       14        0
-    //  no simd       16       33        0
+    // yes simd        8       13        0
+    //  no simd       16       28        0
     fn project_via_origin_onto(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let right_dual = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group0().xyz().with_w(0.0),
         );
         let wedge = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(self[scalar]) * right_dual.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 0.0]) * right_dual.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[scalar]) * right_dual.group1().xyz()).with_w(0.0),
         );
         return Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2261,11 +2235,11 @@ impl ProjectViaOriginOnto<MultiVector> for Scalar {
     //           add/sub      mul      div
     //      f32       27       36        0
     //    simd2        0        1        0
-    //    simd3        6       11        0
-    //    simd4        5        8        0
+    //    simd3        6       12        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       38       56        0
-    //  no simd       65      103        0
+    // yes simd       38       55        0
+    //  no simd       65       98        0
     fn project_via_origin_onto(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let right_dual = MultiVector::from_groups(
@@ -2278,7 +2252,7 @@ impl ProjectViaOriginOnto<MultiVector> for Scalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
+            other.group1().xyz().with_w(0.0),
         );
         let wedge = MultiVector::from_groups(
             // scalar, e1234
@@ -2290,7 +2264,7 @@ impl ProjectViaOriginOnto<MultiVector> for Scalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 0.0]) * right_dual.group4().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[scalar]) * right_dual.group4().xyz()).with_w(0.0),
         );
         return MultiVector::from_groups(
             // scalar, e1234
@@ -2349,18 +2323,13 @@ impl ProjectViaOriginOnto<Point> for Scalar {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        4        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        3        6        0
-    //  no simd        3       12        0
+    // yes simd        3        5        0
+    //  no simd        3        7        0
     fn project_via_origin_onto(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        let wedge = Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[scalar], self[scalar], self[scalar], 0.0])
-                * Simd32x4::from([other[e1], other[e2], other[e3], 0.0]).xyz().with_w(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        let wedge = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(self[scalar]) * other.group0().xyz()).with_w(0.0));
         return Scalar::from_groups(
             // scalar
             (wedge[e423] * other[e1]) + (wedge[e431] * other[e2]) + (wedge[e412] * other[e3]) + (wedge[e321] * other[e4]),

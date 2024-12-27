@@ -83,9 +83,9 @@ extension Line: Add<Motor> {
     func operator+(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.e41, other.e42, other.e43, 0.0) + float4(this.group0.xyz, other.e1234), 
+            float4((this.group0.xyz + other.group0.xyz), other.e1234), 
             /* e23, e31, e12, scalar */
-            float4(other.e23, other.e31, other.e12, 0.0) + float4(this.group1.xyz, other.scalar)
+            float4((this.group1.xyz + other.group1.xyz), other.scalar)
         );
     }
 }

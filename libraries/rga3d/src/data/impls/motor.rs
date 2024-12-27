@@ -113,15 +113,15 @@ impl std::ops::Add<Line> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e1234]),
+            (other.group0() + self.group0().xyz()).with_w(self[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[scalar]),
+            (other.group1() + self.group1().xyz()).with_w(self[scalar]),
         );
     }
 }
@@ -130,9 +130,9 @@ impl std::ops::AddAssign<Line> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().with_w(self[e1234]),
+            (other.group0() + self.group0().xyz()).with_w(self[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23], self[e31], self[e12], 0.0]) + other.group1().with_w(self[scalar]),
+            (other.group1() + self.group1().xyz()).with_w(self[scalar]),
         );
     }
 }
@@ -426,10 +426,10 @@ impl std::ops::Mul<Origin> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -439,11 +439,10 @@ impl std::ops::Mul<Plane> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        3        4        0
-    //    simd4        0        1        0
+    //    simd3        3        5        0
     // Totals...
     // yes simd        6       10        0
-    //  no simd       12       21        0
+    //  no simd       12       20        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }

@@ -28,7 +28,7 @@ extension Flector: FlatBulk {
     func flat_bulk() -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e1, this.e2, this.e3, 0.0), 
+            float4(this.group0.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -109,7 +109,7 @@ extension MultiVector: FlatBulk {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.scalar, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e1, this.e2, this.e3, 0.0), 
+            float4(this.group1.xyz, 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -149,7 +149,7 @@ extension Point: FlatBulk {
     func flat_bulk() -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group0.xyz, 0.0)
         );
     }
 }

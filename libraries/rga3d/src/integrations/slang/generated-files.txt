@@ -114,7 +114,6 @@
 ./libraries/rga3d/src/integrations/slang/traits/impls/right_dual.slang
 ./libraries/rga3d/src/integrations/slang/traits/impls/sandwich.slang
 ./libraries/rga3d/src/integrations/slang/traits/impls/square_root.slang
-./libraries/rga3d/src/integrations/slang/traits/impls/support.slang
 ./libraries/rga3d/src/integrations/slang/traits/impls/unit.slang
 ./libraries/rga3d/src/integrations/slang/traits/impls/unitize.slang
 ./libraries/rga3d/src/integrations/slang/traits/impls/unitized_flat_norm_squared.slang
@@ -139,7 +138,6 @@
 ./libraries/rga3d/src/integrations/slang/traits/right_dual.slang
 ./libraries/rga3d/src/integrations/slang/traits/sandwich.slang
 ./libraries/rga3d/src/integrations/slang/traits/square_root.slang
-./libraries/rga3d/src/integrations/slang/traits/support.slang
 ./libraries/rga3d/src/integrations/slang/traits/unit.slang
 ./libraries/rga3d/src/integrations/slang/traits/unitize.slang
 ./libraries/rga3d/src/integrations/slang/traits/unitized_flat_norm_squared.slang

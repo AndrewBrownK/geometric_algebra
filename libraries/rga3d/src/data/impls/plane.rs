@@ -19,7 +19,7 @@ use crate::traits::RightDual;
 //  Minimum:         0       0       0
 //   Median:         0       2       0
 //  Average:         2       5       0
-//  Maximum:        24      46       0
+//  Maximum:        24      45       0
 impl std::ops::Add<AntiScalar> for Plane {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {
@@ -231,10 +231,10 @@ impl std::ops::Mul<Horizon> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        5        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -244,11 +244,11 @@ impl std::ops::Mul<Line> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        3        0
-    //    simd4        2        1        0
+    //    simd3        0        4        0
+    //    simd4        2        0        0
     // Totals...
     // yes simd        4        7        0
-    //  no simd       10       16        0
+    //  no simd       10       15        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -258,11 +258,10 @@ impl std::ops::Mul<Motor> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        3        4        0
-    //    simd4        0        1        0
+    //    simd3        3        5        0
     // Totals...
     // yes simd        6       10        0
-    //  no simd       12       21        0
+    //  no simd       12       20        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -273,11 +272,10 @@ impl std::ops::Mul<MultiVector> for Plane {
     //           add/sub      mul      div
     //      f32        6       10        0
     //    simd2        0        1        0
-    //    simd3        6       10        0
-    //    simd4        0        1        0
+    //    simd3        6       11        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       46        0
+    //  no simd       24       45        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }

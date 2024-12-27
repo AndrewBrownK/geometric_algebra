@@ -117,7 +117,6 @@
 ./libraries/rga3d/src/traits/impls/right_dual.rs
 ./libraries/rga3d/src/traits/impls/sandwich.rs
 ./libraries/rga3d/src/traits/impls/square_root.rs
-./libraries/rga3d/src/traits/impls/support.rs
 ./libraries/rga3d/src/traits/impls/unit.rs
 ./libraries/rga3d/src/traits/impls/unitize.rs
 ./libraries/rga3d/src/traits/impls/unitized_flat_norm_squared.rs
@@ -142,7 +141,6 @@
 ./libraries/rga3d/src/traits/right_dual.rs
 ./libraries/rga3d/src/traits/sandwich.rs
 ./libraries/rga3d/src/traits/square_root.rs
-./libraries/rga3d/src/traits/support.rs
 ./libraries/rga3d/src/traits/unit.rs
 ./libraries/rga3d/src/traits/unitize.rs
 ./libraries/rga3d/src/traits/unitized_flat_norm_squared.rs

@@ -41,7 +41,7 @@ extension AntiScalar: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -53,7 +53,7 @@ extension AntiScalar: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 0.0) * float4(right_dual.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(wedge.e1234) * right_dual.group4.xyz), 0.0)
         );
     }
 }
@@ -94,7 +94,7 @@ extension DualNum: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -139,7 +139,7 @@ extension DualNum: AntiRejectViaHorizonFrom<Motor> {
     func anti_reject_via_horizon_from(other: Motor) -> Output {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.e41, other.e42, other.e43, 1.0) * float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
+            float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(this.scalar) * other.group1
         );
@@ -182,7 +182,7 @@ extension DualNum: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -216,7 +216,7 @@ extension DualNum: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Scalar.from_groups(
             /* scalar, 0, 0, 0 */
@@ -273,7 +273,7 @@ extension Flector: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -359,7 +359,7 @@ extension Flector: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -395,7 +395,7 @@ extension Flector: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -452,13 +452,13 @@ extension Horizon: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(wedge.e1234) * right_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(wedge.e1234) * right_dual.group1.xyz), 0.0)
         );
     }
 }
@@ -477,7 +477,7 @@ extension Horizon: AntiRejectViaHorizonFrom<Motor> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(wedge.e321, wedge.e321, wedge.e321, 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(wedge.e321) * right_dual.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), wedge.e321 * right_dual.e1234)
         );
@@ -508,7 +508,7 @@ extension Horizon: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -527,13 +527,9 @@ extension Horizon: AntiRejectViaHorizonFrom<MultiVector> {
 extension Horizon: AntiRejectViaHorizonFrom<Point> {
     associatedtype Output = Plane;
     func anti_reject_via_horizon_from(other: Point) -> Output {
-        AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e321 * other.e4 * -1.0, 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321 * other.e4 * -1.0) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -584,7 +580,7 @@ extension Line: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -610,7 +606,7 @@ extension Line: AntiRejectViaHorizonFrom<Motor> {
     func anti_reject_via_horizon_from(other: Motor) -> Output {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.scalar, other.scalar, other.scalar, 1.0) * float4(this.group0.xyz, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
+            float4((float3(other.scalar) * this.group0.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(this.group1.xyz, 0.0) * float4(other.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
@@ -653,7 +649,7 @@ extension Line: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -678,7 +674,7 @@ extension Line: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -720,7 +716,7 @@ extension Motor: AntiRejectViaHorizonFrom<DualNum> {
     func anti_reject_via_horizon_from(other: DualNum) -> Output {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 1.0) * float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
+            float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(other.scalar) * this.group1
         );
@@ -749,7 +745,7 @@ extension Motor: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -773,7 +769,7 @@ extension Motor: AntiRejectViaHorizonFrom<Line> {
     func anti_reject_via_horizon_from(other: Line) -> Output {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.scalar, this.scalar, this.scalar, 1.0) * float4(other.group0.xyz, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
+            float4((float3(this.scalar) * other.group0.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(other.group1.xyz, 0.0) * float4(this.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
@@ -839,7 +835,7 @@ extension Motor: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -875,7 +871,7 @@ extension Motor: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -964,7 +960,7 @@ extension MultiVector: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1108,7 +1104,7 @@ extension MultiVector: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1174,7 +1170,7 @@ extension MultiVector: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1251,7 +1247,7 @@ extension Origin: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1275,7 +1271,7 @@ extension Origin: AntiRejectViaHorizonFrom<Line> {
     func anti_reject_via_horizon_from(other: Line) -> Output {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
         Line right_dual = Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -1296,7 +1292,7 @@ extension Origin: AntiRejectViaHorizonFrom<Motor> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
         Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1325,7 +1321,7 @@ extension Origin: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group3.xyz), 0.0)
         );
         MultiVector right_dual = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1337,7 +1333,7 @@ extension Origin: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1373,7 +1369,7 @@ extension Origin: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Origin.from_groups(
             /* e4, 0, 0, 0 */
@@ -1416,13 +1412,13 @@ extension Plane: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(wedge.e1234) * right_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(wedge.e1234) * right_dual.group1.xyz), 0.0)
         );
     }
 }
@@ -1472,7 +1468,7 @@ extension Plane: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1491,13 +1487,9 @@ extension Plane: AntiRejectViaHorizonFrom<MultiVector> {
 extension Plane: AntiRejectViaHorizonFrom<Point> {
     associatedtype Output = Plane;
     func anti_reject_via_horizon_from(other: Point) -> Output {
-        AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -1538,7 +1530,7 @@ extension Point: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1624,7 +1616,7 @@ extension Point: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1660,7 +1652,7 @@ extension Point: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1705,7 +1697,7 @@ extension Scalar: AntiRejectViaHorizonFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1793,7 +1785,7 @@ extension Scalar: AntiRejectViaHorizonFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1827,7 +1819,7 @@ extension Scalar: AntiRejectViaHorizonFrom<Point> {
         );
         Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Scalar.from_groups(
             /* scalar, 0, 0, 0 */

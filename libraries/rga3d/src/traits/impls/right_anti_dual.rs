@@ -53,7 +53,7 @@ impl RightAntiDual for Flector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
+            self.group0().xyz().with_w(0.0),
         );
     }
 }
@@ -152,7 +152,7 @@ impl RightAntiDual for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
+            self.group1().xyz().with_w(0.0),
         );
     }
 }
@@ -181,8 +181,7 @@ impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Point {
 impl RightAntiDual for Point {
     type Output = Plane;
     fn right_anti_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0().xyz().with_w(0.0));
     }
 }
 impl std::ops::Div<RightAntiDualPrefixOrPostfix> for Scalar {

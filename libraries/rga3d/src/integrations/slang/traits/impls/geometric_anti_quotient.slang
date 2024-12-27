@@ -242,7 +242,7 @@ extension DualNum: GeometricAntiQuotient<Flector> {
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * geometric_anti_product.group1.xyz) + (float3(this.e1234) * geometric_anti_product.group0.xyz)), this.e1234 * geometric_anti_product.e4), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e423, geometric_anti_product.e431, geometric_anti_product.e412, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * geometric_anti_product.e4) + (this.e1234 * geometric_anti_product.e321))
+            float4(this.group0.xy.yy, this.e1234, (this.scalar * geometric_anti_product.e4) + (this.e1234 * geometric_anti_product.e321)) * float4(geometric_anti_product.group1.xyz, 1.0)
         );
     }
 }
@@ -341,7 +341,7 @@ extension DualNum: GeometricAntiQuotient<MultiVector> {
             /* e23, e31, e12, 0 */
             float4((float3(this.scalar) * geometric_anti_product.group2.xyz) + (float3(this.e1234) * geometric_anti_product.group3.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e423, geometric_anti_product.e431, geometric_anti_product.e412, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * geometric_anti_product.e4) + (this.e1234 * geometric_anti_product.e321))
+            float4(this.group0.xy.yy, this.e1234, (this.scalar * geometric_anti_product.e4) + (this.e1234 * geometric_anti_product.e321)) * float4(geometric_anti_product.group4.xyz, 1.0)
         );
     }
 }
@@ -422,7 +422,7 @@ extension Flector: GeometricAntiQuotient<DualNum> {
             /* e1, e2, e3, e4 */
             float4(((float3(geometric_anti_product.e1234) * this.group0.xyz) - (float3(geometric_anti_product.scalar) * this.group1.xyz)), geometric_anti_product.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 1.0) * float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4))
+            float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4)) * float4(this.group1.xyz, 1.0)
         );
     }
 }
@@ -663,7 +663,7 @@ extension Horizon: GeometricAntiQuotient<Line> {
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(float3(other_2.e1234 * anti_reverse.e41, other_2.e1234 * anti_reverse.e42, other_2.e1234 * anti_reverse.e43), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321) * float3(other_2.e1234 * anti_reverse.e41, other_2.e1234 * anti_reverse.e42, other_2.e1234 * anti_reverse.e43)), 0.0)
         );
     }
 }
@@ -688,7 +688,7 @@ extension Horizon: GeometricAntiQuotient<Motor> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * geometric_anti_product.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * geometric_anti_product.e1234)
         );
@@ -729,7 +729,7 @@ extension Horizon: GeometricAntiQuotient<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.e321 * geometric_anti_product.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_anti_product.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * geometric_anti_product.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -943,9 +943,9 @@ extension Line: GeometricAntiQuotient<Origin> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(geometric_anti_product.e4) * this.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(geometric_anti_product.e4) * this.group0.xyz), 0.0)
         );
     }
 }
@@ -975,7 +975,7 @@ extension Line: GeometricAntiQuotient<Point> {
             /* e1, e2, e3, e4 */
             float4((float3(geometric_anti_product.e4) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * geometric_anti_product.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * geometric_anti_product.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 1.0) * float4(this.group0.xyz, -(this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
+            float4((float3(geometric_anti_product.e4) * this.group0.xyz), -(this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
         );
     }
 }
@@ -1182,7 +1182,7 @@ extension Motor: GeometricAntiQuotient<Point> {
             /* e1, e2, e3, e4 */
             float4(((float3(this.e1234) * geometric_anti_product.group0.xyz) + (float3(geometric_anti_product.e4) * this.group1.xyz) + (this.group0.yzx * geometric_anti_product.group0.zxy) - (this.group0.zxy * geometric_anti_product.group0.yzx)), this.e1234 * geometric_anti_product.e4), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 1.0) * float4(this.group0.xyz, (this.scalar * geometric_anti_product.e4) - (this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
+            float4((float3(geometric_anti_product.e4) * this.group0.xyz), (this.scalar * geometric_anti_product.e4) - (this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
         );
     }
 }
@@ -1230,7 +1230,7 @@ extension MultiVector: GeometricAntiQuotient<DualNum> {
             /* e23, e31, e12, 0 */
             float4((float3(geometric_anti_product.scalar) * this.group2.xyz) + (float3(geometric_anti_product.e1234) * this.group3.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 1.0) * float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4))
+            float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4)) * float4(this.group4.xyz, 1.0)
         );
     }
 }
@@ -1437,7 +1437,7 @@ extension MultiVector: GeometricAntiQuotient<Point> {
             /* e23, e31, e12, 0 */
             float4((float3(this.e4) * geometric_anti_product.group0.xyz) + (this.group4.yzx * geometric_anti_product.group0.zxy) - (float3(geometric_anti_product.e4) * this.group1.xyz) - (this.group4.zxy * geometric_anti_product.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 1.0) * float4(this.group2.xyz, (this.scalar * geometric_anti_product.e4) - (this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
+            float4((float3(geometric_anti_product.e4) * this.group2.xyz), (this.scalar * geometric_anti_product.e4) - (this.e41 * geometric_anti_product.e1) - (this.e42 * geometric_anti_product.e2) - (this.e43 * geometric_anti_product.e3))
         );
     }
 }
@@ -1519,9 +1519,9 @@ extension Origin: GeometricAntiQuotient<Line> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_anti_product.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4((float3(this.e4) * geometric_anti_product.group1.xyz * float3(-1.0)), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * geometric_anti_product.group0.xyz), 0.0)
         );
     }
 }
@@ -1615,7 +1615,7 @@ extension Origin: GeometricAntiQuotient<Plane> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4((float3(this.e4) * geometric_anti_product.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
             float4(float3(0.0), this.e4 * geometric_anti_product.e321)
         );
@@ -1632,7 +1632,7 @@ extension Origin: GeometricAntiQuotient<Point> {
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e4 * geometric_anti_product.e4 * -1.0), 
             /* e23, e31, e12, scalar */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * geometric_anti_product.group0.xyz), 0.0)
         );
     }
 }
@@ -1801,7 +1801,7 @@ extension Plane: GeometricAntiQuotient<Origin> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4((float3(geometric_anti_product.e4) * this.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
             float4(float3(0.0), geometric_anti_product.e4 * this.e321 * -1.0)
         );
@@ -1917,7 +1917,7 @@ extension Point: GeometricAntiQuotient<Line> {
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * geometric_anti_product.group1.xyz), 0.0) - float4((geometric_anti_product.group0.xyz.yzx * this.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 1.0) * float4(geometric_anti_product.group0.xyz, -(geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3))
+            float4((float3(this.e4) * geometric_anti_product.group0.xyz), -(geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3))
         );
     }
 }
@@ -1944,7 +1944,7 @@ extension Point: GeometricAntiQuotient<Motor> {
             /* e1, e2, e3, e4 */
             float4(((float3(geometric_anti_product.e1234) * this.group0.xyz) + (geometric_anti_product.group0.zxy * this.group0.yzx) - (float3(this.e4) * geometric_anti_product.group1.xyz) - (geometric_anti_product.group0.yzx * this.group0.zxy)), geometric_anti_product.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 1.0) * float4(geometric_anti_product.group0.xyz, -(geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3) - (geometric_anti_product.scalar * this.e4))
+            float4((float3(this.e4) * geometric_anti_product.group0.xyz), -(geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3) - (geometric_anti_product.scalar * this.e4))
         );
     }
 }
@@ -1989,7 +1989,7 @@ extension Point: GeometricAntiQuotient<MultiVector> {
             /* e23, e31, e12, 0 */
             float4((float3(this.e4) * geometric_anti_product.group1.xyz) + (geometric_anti_product.group4.yzx * this.group0.zxy) - (float3(geometric_anti_product.e4) * this.group0.xyz) - (geometric_anti_product.group4.zxy * this.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 1.0) * float4(geometric_anti_product.group2.xyz, -(geometric_anti_product.scalar * this.e4) - (geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3))
+            float4((float3(this.e4) * geometric_anti_product.group2.xyz), -(geometric_anti_product.scalar * this.e4) - (geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3))
         );
     }
 }
@@ -2004,7 +2004,7 @@ extension Point: GeometricAntiQuotient<Origin> {
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), geometric_anti_product.e4 * this.e4 * -1.0), 
             /* e23, e31, e12, scalar */
-            float4(geometric_anti_product.e4, geometric_anti_product.e4, geometric_anti_product.e4, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(geometric_anti_product.e4) * this.group0.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -2083,7 +2083,7 @@ extension Scalar: GeometricAntiQuotient<Flector> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(geometric_anti_product.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.scalar) * geometric_anti_product.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), geometric_anti_product.e4 * this.scalar)
         );
@@ -2166,7 +2166,7 @@ extension Scalar: GeometricAntiQuotient<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(geometric_anti_product.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(geometric_anti_product.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.scalar) * geometric_anti_product.group4.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -2194,7 +2194,7 @@ extension Scalar: GeometricAntiQuotient<Plane> {
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.scalar) * float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321).xyz), 0.0)
         );
     }
 }

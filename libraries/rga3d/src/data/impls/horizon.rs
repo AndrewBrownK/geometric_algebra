@@ -235,8 +235,8 @@ impl std::ops::Mul<Line> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -279,10 +279,10 @@ impl std::ops::Mul<Plane> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        8        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -292,10 +292,10 @@ impl std::ops::Mul<Point> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        8        0
     fn mul(self, other: Point) -> Self::Output {
         return self.geometric_product(other);
     }

@@ -18,7 +18,7 @@ use crate::traits::RightDual;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       2       0
-//  Average:         5       8       0
+//  Average:         5       7       0
 //  Maximum:        61      72       0
 impl std::ops::Add<AntiScalar> for Line {
     type Output = Motor;
@@ -98,15 +98,15 @@ impl std::ops::Add<Motor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        2        0        0
-    // no simd        8        0        0
+    //   simd3        2        0        0
+    // no simd        6        0        0
     fn add(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().with_w(other[e1234]),
+            (self.group0() + other.group0().xyz()).with_w(other[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([other[e23], other[e31], other[e12], 0.0]) + self.group1().with_w(other[scalar]),
+            (self.group1() + other.group1().xyz()).with_w(other[scalar]),
         );
     }
 }
@@ -243,8 +243,8 @@ impl std::ops::Mul<Horizon> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd3        0        3        0
+    // no simd        0        9        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -296,8 +296,8 @@ impl std::ops::Mul<Origin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -307,11 +307,11 @@ impl std::ops::Mul<Plane> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        3        0
-    //    simd4        2        1        0
+    //    simd3        0        4        0
+    //    simd4        2        0        0
     // Totals...
     // yes simd        4        7        0
-    //  no simd       10       16        0
+    //  no simd       10       15        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }

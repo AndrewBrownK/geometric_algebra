@@ -20,13 +20,13 @@ extension AntiScalar: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_anti_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e1234) * right_anti_dual.group1.xyz), 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -90,7 +90,7 @@ extension AntiScalar: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -102,7 +102,7 @@ extension AntiScalar: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(right_anti_dual.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e1234) * right_anti_dual.group4.xyz), 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -132,7 +132,7 @@ extension AntiScalar: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane anti_wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e1234) * other.group0.xyz), 0.0)
         );
         return AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -175,7 +175,7 @@ extension DualNum: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -251,7 +251,7 @@ extension DualNum: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -293,7 +293,7 @@ extension DualNum: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane anti_wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.group0.xy.yy, this.e1234, 0.0) * float4(float3(1.0), 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(this.group0.xy.yy, this.e1234, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -348,7 +348,7 @@ extension Flector: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -428,7 +428,7 @@ extension Flector: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -470,7 +470,7 @@ extension Flector: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -529,7 +529,7 @@ extension Horizon: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -559,7 +559,7 @@ extension Horizon: AntiProjectOrthogonallyOnto<Line> {
     func anti_project_orthogonally_onto(other: Line) -> Output {
         Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0)), 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -578,7 +578,7 @@ extension Horizon: AntiProjectOrthogonallyOnto<Motor> {
         );
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * right_anti_dual.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * right_anti_dual.e1234)
         );
@@ -603,13 +603,13 @@ extension Horizon: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
             float4(float2(this.e321 * right_anti_dual.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(right_anti_dual.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * right_anti_dual.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -647,7 +647,7 @@ extension Horizon: AntiProjectOrthogonallyOnto<Point> {
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
-            float4(float3(this.e321) * float4(other.e1, other.e2, other.e3, 0.0).xyz * float3(-1.0), 0.0)
+            float4(float3(this.e321) * other.group0.xyz * float3(-1.0), 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -698,7 +698,7 @@ extension Line: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -746,7 +746,7 @@ extension Line: AntiProjectOrthogonallyOnto<Motor> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_anti_dual.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(right_anti_dual.e1234, right_anti_dual.e1234, right_anti_dual.e1234, 1.0) * float4(this.group1.xyz, -(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43))
+            float4((float3(right_anti_dual.e1234) * this.group1.xyz), -(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43))
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -769,7 +769,7 @@ extension Line: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -802,7 +802,7 @@ extension Line: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -858,7 +858,7 @@ extension Motor: AntiProjectOrthogonallyOnto<DualNum> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(anti_wedge.e41, anti_wedge.e42, anti_wedge.e43, 1.0) * float4(other.group0.xy.xx, other.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)), 
+            float4(other.group0.xy.xx, other.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)) * float4(anti_wedge.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(other.scalar) * anti_wedge.group1
         );
@@ -871,7 +871,7 @@ extension Motor: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -913,7 +913,7 @@ extension Motor: AntiProjectOrthogonallyOnto<Line> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 1.0) * float4(other.group0.xyz, -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
+            float4((float3(anti_wedge.scalar) * other.group0.xyz), -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(other.group1.xyz, 0.0) * float4(anti_wedge.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
@@ -955,7 +955,7 @@ extension Motor: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -997,7 +997,7 @@ extension Motor: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1080,7 +1080,7 @@ extension MultiVector: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1224,7 +1224,7 @@ extension MultiVector: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1290,7 +1290,7 @@ extension MultiVector: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1377,7 +1377,7 @@ extension Origin: AntiProjectOrthogonallyOnto<Motor> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * anti_wedge.e4), 
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.e4, anti_wedge.e4, anti_wedge.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(anti_wedge.e4) * other.group1.xyz), 0.0)
         );
     }
 }
@@ -1398,7 +1398,7 @@ extension Origin: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.e4, anti_wedge.e4, anti_wedge.e4, 0.0) * float4(other.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(anti_wedge.e4) * other.group3.xyz), 0.0)
         );
     }
 }
@@ -1437,7 +1437,7 @@ extension Plane: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1517,7 +1517,7 @@ extension Plane: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1559,7 +1559,7 @@ extension Plane: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Line anti_wedge = Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -1612,7 +1612,7 @@ extension Point: AntiProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Scalar anti_wedge = Scalar.from_groups(
             /* scalar, 0, 0, 0 */
@@ -1654,7 +1654,7 @@ extension Point: AntiProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector anti_wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1687,7 +1687,7 @@ extension Point: AntiProjectOrthogonallyOnto<Point> {
     func anti_project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */

@@ -179,7 +179,7 @@ extension DualNum: AntiWedge<Motor> {
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
             /* e23, e31, e12, scalar */
-            float4(other.e23, other.e31, other.e12, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e1234) + (this.e1234 * other.scalar))
+            float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group1.xyz, 1.0)
         );
     }
 }
@@ -392,7 +392,7 @@ extension Horizon: AntiWedge<Line> {
     func anti_wedge(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -401,7 +401,7 @@ extension Horizon: AntiWedge<Motor> {
     func anti_wedge(other: Motor) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * other.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * other.e1234)
         );
@@ -414,7 +414,7 @@ extension Horizon: AntiWedge<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * other.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -495,7 +495,7 @@ extension Line: AntiWedge<Horizon> {
     func anti_wedge(other: Horizon) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321) * this.group0.xyz), 0.0)
         );
     }
 }
@@ -515,7 +515,7 @@ extension Line: AntiWedge<Motor> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(other.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(other.e1234, other.e1234, other.e1234, 1.0) * float4(this.group1.xyz, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43))
+            float4((float3(other.e1234) * this.group1.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43))
         );
     }
 }
@@ -569,7 +569,7 @@ extension Motor: AntiWedge<DualNum> {
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
-            float4(this.e23, this.e31, this.e12, 1.0) * float4(other.group0.xy.yy, other.e1234, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
+            float4(other.group0.xy.yy, other.e1234, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group1.xyz, 1.0)
         );
     }
 }
@@ -589,7 +589,7 @@ extension Motor: AntiWedge<Horizon> {
     func anti_wedge(other: Horizon) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * this.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * this.e1234)
         );
@@ -602,7 +602,7 @@ extension Motor: AntiWedge<Line> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(this.e1234, this.e1234, this.e1234, 1.0) * float4(other.group1.xyz, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43))
+            float4((float3(this.e1234) * other.group1.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43))
         );
     }
 }
@@ -736,7 +736,7 @@ extension MultiVector: AntiWedge<Horizon> {
             /* scalar, e1234, 0, 0 */
             float4(float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * this.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */

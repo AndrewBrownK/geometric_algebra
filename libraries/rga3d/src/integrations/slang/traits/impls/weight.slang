@@ -46,7 +46,7 @@ extension Flector: Weight {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 0.0)
+            float4(this.group1.xyz, 0.0)
         );
     }
 }
@@ -115,7 +115,7 @@ extension MultiVector: Weight {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 0.0)
+            float4(this.group4.xyz, 0.0)
         );
     }
 }
@@ -150,7 +150,7 @@ extension Plane: Weight {
     func weight() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 0.0)
+            float4(this.group0.xyz, 0.0)
         );
     }
 }

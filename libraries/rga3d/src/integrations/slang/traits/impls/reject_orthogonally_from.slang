@@ -26,7 +26,7 @@ extension AntiScalar: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -114,7 +114,7 @@ extension AntiScalar: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -148,7 +148,7 @@ extension AntiScalar: RejectOrthogonallyFrom<Point> {
         );
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -193,7 +193,7 @@ extension DualNum: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -240,7 +240,7 @@ extension DualNum: RejectOrthogonallyFrom<Motor> {
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
             /* e23, e31, e12, scalar */
-            float4(other.e23, other.e31, other.e12, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e1234) + (this.e1234 * other.scalar))
+            float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group1.xyz, 1.0)
         );
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -281,7 +281,7 @@ extension DualNum: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -315,7 +315,7 @@ extension DualNum: RejectOrthogonallyFrom<Point> {
         );
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -351,7 +351,7 @@ extension Flector: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -378,7 +378,7 @@ extension Flector: RejectOrthogonallyFrom<Horizon> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), anti_wedge.scalar * right_anti_dual.e4), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(anti_wedge.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * anti_wedge.group1.xyz), 0.0)
         );
     }
 }
@@ -447,7 +447,7 @@ extension Flector: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -480,20 +480,16 @@ extension Flector: RejectOrthogonallyFrom<Plane> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), anti_wedge.scalar * right_anti_dual.e4), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(anti_wedge.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * anti_wedge.group1.xyz), 0.0)
         );
     }
 }
 extension Flector: RejectOrthogonallyFrom<Point> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Point) -> Output {
-        Scalar anti_wedge = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -516,7 +512,7 @@ extension Horizon: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -531,7 +527,7 @@ extension Horizon: RejectOrthogonallyFrom<Line> {
     func reject_orthogonally_from(other: Line) -> Output {
         Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321) * other.group0.xyz), 0.0)
         );
         Line right_anti_dual = Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -550,7 +546,7 @@ extension Horizon: RejectOrthogonallyFrom<Motor> {
     func reject_orthogonally_from(other: Motor) -> Output {
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * other.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * other.e1234)
         );
@@ -573,7 +569,7 @@ extension Horizon: RejectOrthogonallyFrom<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * other.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -591,7 +587,7 @@ extension Horizon: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -610,26 +606,18 @@ extension Horizon: RejectOrthogonallyFrom<MultiVector> {
 extension Horizon: RejectOrthogonallyFrom<Plane> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Plane) -> Output {
-        Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(float3(this.e321 * other.e423 * -1.0, this.e321 * other.e431 * -1.0, this.e321 * other.e412 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321 * -1.0) * float3(this.e321 * other.e423 * -1.0, this.e321 * other.e431 * -1.0, this.e321 * other.e412 * -1.0)), 0.0)
         );
     }
 }
 extension Horizon: RejectOrthogonallyFrom<Point> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Point) -> Output {
-        Scalar anti_wedge = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e4 * -1.0, 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321 * other.e4 * -1.0) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -650,7 +638,7 @@ extension Line: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -689,7 +677,7 @@ extension Line: RejectOrthogonallyFrom<Motor> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(other.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(other.e1234, other.e1234, other.e1234, 1.0) * float4(this.group1.xyz, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43))
+            float4((float3(other.e1234) * this.group1.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43))
         );
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -730,7 +718,7 @@ extension Line: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -785,7 +773,7 @@ extension Motor: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -800,7 +788,7 @@ extension Motor: RejectOrthogonallyFrom<Horizon> {
     func reject_orthogonally_from(other: Horizon) -> Output {
         Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * this.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * this.e1234)
         );
@@ -819,7 +807,7 @@ extension Motor: RejectOrthogonallyFrom<Line> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(this.e1234, this.e1234, this.e1234, 1.0) * float4(other.group1.xyz, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43))
+            float4((float3(this.e1234) * other.group1.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43))
         );
         Line right_anti_dual = Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -829,7 +817,7 @@ extension Motor: RejectOrthogonallyFrom<Line> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 1.0) * float4(right_anti_dual.group0.xyz, -(right_anti_dual.e41 * anti_wedge.e23) - (right_anti_dual.e42 * anti_wedge.e31) - (right_anti_dual.e43 * anti_wedge.e12) - (right_anti_dual.e23 * anti_wedge.e41) - (right_anti_dual.e31 * anti_wedge.e42) - (right_anti_dual.e12 * anti_wedge.e43)), 
+            float4((float3(anti_wedge.scalar) * right_anti_dual.group0.xyz), -(right_anti_dual.e41 * anti_wedge.e23) - (right_anti_dual.e42 * anti_wedge.e31) - (right_anti_dual.e43 * anti_wedge.e12) - (right_anti_dual.e23 * anti_wedge.e41) - (right_anti_dual.e31 * anti_wedge.e42) - (right_anti_dual.e12 * anti_wedge.e43)), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
@@ -883,7 +871,7 @@ extension Motor: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -925,7 +913,7 @@ extension Motor: RejectOrthogonallyFrom<Point> {
         );
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -976,7 +964,7 @@ extension MultiVector: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -999,7 +987,7 @@ extension MultiVector: RejectOrthogonallyFrom<Horizon> {
             /* scalar, e1234, 0, 0 */
             float4(float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * this.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -1021,7 +1009,7 @@ extension MultiVector: RejectOrthogonallyFrom<Horizon> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(anti_wedge.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * anti_wedge.group3.xyz), 0.0)
         );
     }
 }
@@ -1120,7 +1108,7 @@ extension MultiVector: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1165,7 +1153,7 @@ extension MultiVector: RejectOrthogonallyFrom<Plane> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(anti_wedge.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * anti_wedge.group3.xyz), 0.0)
         );
     }
 }
@@ -1186,7 +1174,7 @@ extension MultiVector: RejectOrthogonallyFrom<Point> {
         );
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1228,13 +1216,13 @@ extension Origin: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(anti_wedge.scalar) * right_anti_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(anti_wedge.scalar) * right_anti_dual.group1.xyz), 0.0)
         );
     }
 }
@@ -1272,7 +1260,7 @@ extension Origin: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1316,7 +1304,7 @@ extension Plane: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1329,13 +1317,9 @@ extension Plane: RejectOrthogonallyFrom<Flector> {
 extension Plane: RejectOrthogonallyFrom<Horizon> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Horizon) -> Output {
-        Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(float3(other.e321 * this.e423, other.e321 * this.e431, other.e321 * this.e412), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321 * -1.0) * float3(other.e321 * this.e423, other.e321 * this.e431, other.e321 * this.e412)), 0.0)
         );
     }
 }
@@ -1404,7 +1388,7 @@ extension Plane: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1423,26 +1407,18 @@ extension Plane: RejectOrthogonallyFrom<MultiVector> {
 extension Plane: RejectOrthogonallyFrom<Plane> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Plane) -> Output {
-        Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(float3((other.e321 * this.e423) - (other.e423 * this.e321), (other.e321 * this.e431) - (other.e431 * this.e321), (other.e321 * this.e412) - (other.e412 * this.e321)), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321 * -1.0) * float3((other.e321 * this.e423) - (other.e423 * this.e321), (other.e321 * this.e431) - (other.e431 * this.e321), (other.e321 * this.e412) - (other.e412 * this.e321))), 0.0)
         );
     }
 }
 extension Plane: RejectOrthogonallyFrom<Point> {
     associatedtype Output = Plane;
     func reject_orthogonally_from(other: Point) -> Output {
-        Scalar anti_wedge = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
-        );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) * other.group0.xyz), 0.0)
         );
     }
 }
@@ -1463,13 +1439,13 @@ extension Point: RejectOrthogonallyFrom<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(anti_wedge.scalar) * right_anti_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(anti_wedge.scalar) * right_anti_dual.group1.xyz), 0.0)
         );
     }
 }
@@ -1526,7 +1502,7 @@ extension Point: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1594,7 +1570,7 @@ extension Scalar: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1606,7 +1582,7 @@ extension Scalar: RejectOrthogonallyFrom<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 0.0) * float4(right_anti_dual.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(anti_wedge.scalar) * right_anti_dual.group4.xyz), 0.0)
         );
     }
 }

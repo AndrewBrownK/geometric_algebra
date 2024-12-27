@@ -15,8 +15,8 @@
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
-//   Median:         0      10       0
-//  Average:        11      19       0
+//   Median:         0       8       0
+//  Average:        11      18       0
 //  Maximum:       181     192       0
 impl std::ops::Div<GeometricProductInfix> for AntiScalar {
     type Output = GeometricProductInfixPartial<AntiScalar>;
@@ -39,17 +39,17 @@ impl GeometricProduct<Flector> for AntiScalar {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        8        0
     fn geometric_product(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e1234] * other[e321] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(self[e1234]) * other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -96,11 +96,10 @@ impl GeometricProduct<MultiVector> for AntiScalar {
     //           add/sub      mul      div
     //      f32        0        3        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        3        0
     // Totals...
     // yes simd        0        7        0
-    //  no simd        0       16        0
+    //  no simd        0       14        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -113,7 +112,7 @@ impl GeometricProduct<MultiVector> for AntiScalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 0.0]) * other.group1().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(self[e1234]) * other.group1().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -131,13 +130,13 @@ impl GeometricProduct<Point> for AntiScalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn geometric_product(self, other: Point) -> Self::Output {
         use crate::elements::*;
         return Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e1234], self[e1234], self[e1234], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(self[e1234]) * other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -194,7 +193,7 @@ impl GeometricProduct<Flector> for DualNum {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e4]) - (self[e1234] * other[e321])),
+            self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e4]) - (self[e1234] * other[e321])) * other.group0().xyz().with_w(1.0),
             // e423, e431, e412, e321
             ((Simd32x3::from(self[scalar]) * other.group1().xyz()) - (Simd32x3::from(self[e1234]) * other.group0().xyz())).with_w(self[scalar] * other[e321]),
         );
@@ -263,7 +262,7 @@ impl GeometricProduct<MultiVector> for DualNum {
             // scalar, e1234
             Simd32x2::from([self[scalar] * other[scalar], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e4]) - (self[e1234] * other[e321])),
+            self.group0().xx().with_zw(self[scalar], (self[scalar] * other[e4]) - (self[e1234] * other[e321])) * other.group1().xyz().with_w(1.0),
             // e41, e42, e43
             (Simd32x3::from(self[scalar]) * other.group2()) + (Simd32x3::from(self[e1234]) * other.group3()),
             // e23, e31, e12
@@ -340,17 +339,17 @@ impl GeometricProduct<AntiScalar> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn geometric_product(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[e1234] * self[e321]),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e1234]) * self.group0().xyz()).with_w(0.0),
         );
     }
 }
@@ -368,7 +367,7 @@ impl GeometricProduct<DualNum> for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 1.0]) * other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e4]) + (other[e1234] * self[e321])),
+            other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e4]) + (other[e1234] * self[e321])) * self.group0().xyz().with_w(1.0),
             // e423, e431, e412, e321
             ((Simd32x3::from(other[scalar]) * self.group1().xyz()) + (Simd32x3::from(other[e1234]) * self.group0().xyz())).with_w(other[scalar] * self[e321]),
         );
@@ -690,15 +689,15 @@ impl GeometricProduct<Line> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e321]) * other.group1()).with_w(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group0().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e321]) * other.group0()).with_w(0.0),
         );
     }
 }
@@ -759,15 +758,15 @@ impl GeometricProduct<Plane> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        8        0
     fn geometric_product(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(self[e321]) * other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
             // e23, e31, e12, scalar
             Simd32x3::from(0.0).with_w(self[e321] * other[e321] * -1.0),
         );
@@ -778,17 +777,17 @@ impl GeometricProduct<Point> for Horizon {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        8        0
     fn geometric_product(self, other: Point) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(self[e321] * other[e4] * -1.0),
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e321], self[e321], self[e321], 0.0]) * other.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(self[e321]) * other.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -869,15 +868,15 @@ impl GeometricProduct<Horizon> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd3        0        3        0
+    // no simd        0        9        0
     fn geometric_product(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * self.group1()).with_w(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group0().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * self.group0() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }
@@ -992,14 +991,11 @@ impl GeometricProduct<Origin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn geometric_product(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(other[e4]) * self.group1()).with_w(0.0));
     }
 }
 impl GeometricProduct<Plane> for Line {
@@ -1007,16 +1003,16 @@ impl GeometricProduct<Plane> for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        3        0
-    //    simd4        2        1        0
+    //    simd3        0        4        0
+    //    simd4        2        0        0
     // Totals...
     // yes simd        4        7        0
-    //  no simd       10       16        0
+    //  no simd       10       15        0
     fn geometric_product(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0]) * self.group1().with_w(-(self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
+            (Simd32x3::from(other[e321]) * self.group1()).with_w(-(self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
             // e423, e431, e412, e321
             (self.group1().zxy() * other.group0().yzx()).with_w(0.0)
                 - (Simd32x3::from(other[e321]) * self.group0()).with_w(0.0)
@@ -1276,17 +1272,17 @@ impl GeometricProduct<Origin> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn geometric_product(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[scalar] * other[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e4]) * self.group1().xyz()).with_w(0.0),
         );
     }
 }
@@ -1295,20 +1291,16 @@ impl GeometricProduct<Plane> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        3        4        0
-    //    simd4        0        1        0
+    //    simd3        3        5        0
     // Totals...
     // yes simd        6       10        0
-    //  no simd       12       21        0
+    //  no simd       12       20        0
     fn geometric_product(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group1()
-                    .xyz()
-                    .with_w(-(self[e1234] * other[e321]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
+            (Simd32x3::from(other[e321]) * self.group1().xyz())
+                .with_w(-(self[e1234] * other[e321]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
             // e423, e431, e412, e321
             ((Simd32x3::from(self[scalar]) * other.group0().xyz()) + (self.group1().zxy() * other.group0().yzx())
                 - (Simd32x3::from(other[e321]) * self.group0().xyz())
@@ -1376,11 +1368,10 @@ impl GeometricProduct<AntiScalar> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       15        0
+    // yes simd        0        5        0
+    //  no simd        0       10        0
     fn geometric_product(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1393,7 +1384,7 @@ impl GeometricProduct<AntiScalar> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 0.0]) * self.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e1234]) * self.group1().xyz()).with_w(0.0),
         );
     }
 }
@@ -1413,7 +1404,7 @@ impl GeometricProduct<DualNum> for MultiVector {
             // scalar, e1234
             Simd32x2::from([other[scalar] * self[scalar], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 1.0]) * other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e4]) + (other[e1234] * self[e321])),
+            other.group0().xx().with_zw(other[scalar], (other[scalar] * self[e4]) + (other[e1234] * self[e321])) * self.group1().xyz().with_w(1.0),
             // e41, e42, e43
             (Simd32x3::from(other[scalar]) * self.group2()) + (Simd32x3::from(other[e1234]) * self.group3()),
             // e23, e31, e12
@@ -1722,11 +1713,10 @@ impl GeometricProduct<Origin> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       13        0
     fn geometric_product(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1739,7 +1729,7 @@ impl GeometricProduct<Origin> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e4], other[e4], other[e4], 0.0]) * self.group3().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e4]) * self.group3()).with_w(0.0),
         );
     }
 }
@@ -1749,11 +1739,10 @@ impl GeometricProduct<Plane> for MultiVector {
     //           add/sub      mul      div
     //      f32        6       10        0
     //    simd2        0        1        0
-    //    simd3        6       10        0
-    //    simd4        0        1        0
+    //    simd3        6       11        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       46        0
+    //  no simd       24       45        0
     fn geometric_product(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1763,10 +1752,7 @@ impl GeometricProduct<Plane> for MultiVector {
                 (self[e1] * other[e423]) + (self[e2] * other[e431]) + (self[e3] * other[e412]) + (self[e4] * other[e321]),
             ]) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e321], other[e321], other[e321], 1.0])
-                * self
-                    .group3()
-                    .with_w(-(self[e1234] * other[e321]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
+            (Simd32x3::from(other[e321]) * self.group3()).with_w(-(self[e1234] * other[e321]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412])),
             // e41, e42, e43
             (Simd32x3::from(other[e321]) * self.group4().xyz()) + (self.group1().yzx() * other.group0().zxy())
                 - (Simd32x3::from(self[e321]) * other.group0().xyz())
@@ -1896,14 +1882,11 @@ impl GeometricProduct<Line> for Origin {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group1().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(self[e4]) * other.group1()).with_w(0.0));
     }
 }
 impl GeometricProduct<Motor> for Origin {
@@ -1911,17 +1894,17 @@ impl GeometricProduct<Motor> for Origin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(other[scalar] * self[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group1().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e4]) * other.group1().xyz()).with_w(0.0),
         );
     }
 }
@@ -1931,11 +1914,10 @@ impl GeometricProduct<MultiVector> for Origin {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       15        0
+    // yes simd        0        5        0
+    //  no simd        0       10        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1948,7 +1930,7 @@ impl GeometricProduct<MultiVector> for Origin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e4], self[e4], self[e4], 0.0]) * other.group3().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(self[e4]) * other.group3()).with_w(0.0),
         );
     }
 }
@@ -2048,15 +2030,15 @@ impl GeometricProduct<Horizon> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    // yes simd        0        3        0
+    //  no simd        0        5        0
     fn geometric_product(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * self.group0().xyz()).with_w(0.0),
             // e23, e31, e12, scalar
             Simd32x3::from(0.0).with_w(other[e321] * self[e321] * -1.0),
         );
@@ -2067,16 +2049,16 @@ impl GeometricProduct<Line> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        3        0
-    //    simd3        0        3        0
-    //    simd4        2        1        0
+    //    simd3        0        4        0
+    //    simd4        2        0        0
     // Totals...
     // yes simd        4        7        0
-    //  no simd       10       16        0
+    //  no simd       10       15        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0]) * other.group1().with_w(-(other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
+            (Simd32x3::from(self[e321]) * other.group1()).with_w(-(other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
             // e423, e431, e412, e321
             (Simd32x3::from(self[e321]) * other.group0()).with_w(0.0) + (other.group1().yzx() * self.group0().zxy()).with_w(0.0)
                 - (other.group1().zxy() * self.group0().yzx()).with_w(0.0),
@@ -2088,20 +2070,16 @@ impl GeometricProduct<Motor> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        5        0
-    //    simd3        3        4        0
-    //    simd4        0        1        0
+    //    simd3        3        5        0
     // Totals...
     // yes simd        6       10        0
-    //  no simd       12       21        0
+    //  no simd       12       20        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group1()
-                    .xyz()
-                    .with_w((other[e1234] * self[e321]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
+            (Simd32x3::from(self[e321]) * other.group1().xyz())
+                .with_w((other[e1234] * self[e321]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
             // e423, e431, e412, e321
             ((Simd32x3::from(other[scalar]) * self.group0().xyz()) + (Simd32x3::from(self[e321]) * other.group0().xyz()) + (other.group1().yzx() * self.group0().zxy())
                 - (other.group1().zxy() * self.group0().yzx()))
@@ -2115,11 +2093,10 @@ impl GeometricProduct<MultiVector> for Plane {
     //           add/sub      mul      div
     //      f32        6       10        0
     //    simd2        0        1        0
-    //    simd3        6       10        0
-    //    simd4        0        1        0
+    //    simd3        6       11        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       46        0
+    //  no simd       24       45        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -2129,10 +2106,7 @@ impl GeometricProduct<MultiVector> for Plane {
                 -(other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]),
             ]) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e321], self[e321], self[e321], 1.0])
-                * other
-                    .group3()
-                    .with_w((other[e1234] * self[e321]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
+            (Simd32x3::from(self[e321]) * other.group3()).with_w((other[e1234] * self[e321]) - (other[e23] * self[e423]) - (other[e31] * self[e431]) - (other[e12] * self[e412])),
             // e41, e42, e43
             (Simd32x3::from(other[e321]) * self.group0().xyz()) + (other.group1().yzx() * self.group0().zxy())
                 - (Simd32x3::from(self[e321]) * other.group4().xyz())
@@ -2220,14 +2194,11 @@ impl GeometricProduct<AntiScalar> for Point {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn geometric_product(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([other[e1234], other[e1234], other[e1234], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x3::from(other[e1234]) * self.group0().xyz()).with_w(0.0));
     }
 }
 impl GeometricProduct<DualNum> for Point {
@@ -2281,17 +2252,17 @@ impl GeometricProduct<Horizon> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        9        0
+    //  no simd        0        7        0
     fn geometric_product(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x3::from(0.0).with_w(other[e321] * self[e4]),
             // e23, e31, e12, scalar
-            Simd32x4::from([other[e321], other[e321], other[e321], 0.0]) * self.group0().xyz().with_w(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (Simd32x3::from(other[e321]) * self.group0().xyz() * Simd32x3::from(-1.0)).with_w(0.0),
         );
     }
 }

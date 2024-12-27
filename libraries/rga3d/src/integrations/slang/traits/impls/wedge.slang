@@ -100,7 +100,7 @@ extension DualNum: Wedge<Motor> {
     func wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.e41, other.e42, other.e43, 1.0) * float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
+            float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(this.scalar) * other.group1
         );
@@ -392,7 +392,7 @@ extension Line: Wedge<Motor> {
     func wedge(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.scalar, other.scalar, other.scalar, 1.0) * float4(this.group0.xyz, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
+            float4((float3(other.scalar) * this.group0.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(this.group1.xyz, 0.0) * float4(other.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
@@ -420,7 +420,7 @@ extension Line: Wedge<Origin> {
     func wedge(other: Origin) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e4) * this.group1.xyz), 0.0)
         );
     }
 }
@@ -464,7 +464,7 @@ extension Motor: Wedge<DualNum> {
     func wedge(other: DualNum) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 1.0) * float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
+            float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(other.scalar) * this.group1
         );
@@ -495,7 +495,7 @@ extension Motor: Wedge<Line> {
     func wedge(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.scalar, this.scalar, this.scalar, 1.0) * float4(other.group0.xyz, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
+            float4((float3(this.scalar) * other.group0.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(other.group1.xyz, 0.0) * float4(this.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
@@ -536,7 +536,7 @@ extension Motor: Wedge<Origin> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * other.e4), 
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e4) * this.group1.xyz), 0.0)
         );
     }
 }
@@ -701,7 +701,7 @@ extension MultiVector: Wedge<Origin> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e4) * this.group3.xyz), 0.0)
         );
     }
 }
@@ -796,7 +796,7 @@ extension Origin: Wedge<Line> {
     func wedge(other: Line) -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
     }
 }
@@ -807,7 +807,7 @@ extension Origin: Wedge<Motor> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
     }
 }
@@ -824,7 +824,7 @@ extension Origin: Wedge<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * other.group3.xyz), 0.0)
         );
     }
 }

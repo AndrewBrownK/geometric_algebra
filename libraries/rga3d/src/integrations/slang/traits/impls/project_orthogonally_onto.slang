@@ -20,7 +20,7 @@ extension DualNum: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -71,7 +71,7 @@ extension DualNum: ProjectOrthogonallyOnto<Motor> {
         );
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(right_anti_dual.e41, right_anti_dual.e42, right_anti_dual.e43, 1.0) * float4(this.group0.xy.xx, this.scalar, (this.scalar * right_anti_dual.e1234) + (this.e1234 * right_anti_dual.scalar)), 
+            float4(this.group0.xy.xx, this.scalar, (this.scalar * right_anti_dual.e1234) + (this.e1234 * right_anti_dual.scalar)) * float4(right_anti_dual.group0.xyz, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
@@ -96,7 +96,7 @@ extension DualNum: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -138,7 +138,7 @@ extension DualNum: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return Scalar.from_groups(
             /* scalar, 0, 0, 0 */
@@ -168,7 +168,7 @@ extension Flector: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -195,7 +195,7 @@ extension Flector: ProjectOrthogonallyOnto<Horizon> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(wedge.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * wedge.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * wedge.e1234)
         );
@@ -254,7 +254,7 @@ extension Flector: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -304,7 +304,7 @@ extension Flector: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -385,7 +385,7 @@ extension Line: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -469,7 +469,7 @@ extension Line: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -500,13 +500,9 @@ extension Line: ProjectOrthogonallyOnto<MultiVector> {
 extension Line: ProjectOrthogonallyOnto<Plane> {
     associatedtype Output = Line;
     func project_orthogonally_onto(other: Plane) -> Output {
-        Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
-        );
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321 * -1.0) * this.group1.xyz), 0.0)
         );
         return Line.from_groups(
             /* e41, e42, e43, 0 */
@@ -538,7 +534,7 @@ extension Motor: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -565,7 +561,7 @@ extension Motor: ProjectOrthogonallyOnto<Horizon> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * right_anti_dual.e4), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * this.group1.xyz), 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -586,7 +582,7 @@ extension Motor: ProjectOrthogonallyOnto<Line> {
         );
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.scalar, this.scalar, this.scalar, 1.0) * float4(right_anti_dual.group0.xyz, -(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 
+            float4((float3(this.scalar) * right_anti_dual.group0.xyz), -(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
@@ -594,7 +590,7 @@ extension Motor: ProjectOrthogonallyOnto<Line> {
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(wedge.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(wedge.e1234, wedge.e1234, wedge.e1234, 1.0) * float4(other.group1.xyz, -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43))
+            float4((float3(wedge.e1234) * other.group1.xyz), -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43))
         );
     }
 }
@@ -634,7 +630,7 @@ extension Motor: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -673,7 +669,7 @@ extension Motor: ProjectOrthogonallyOnto<Plane> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * right_anti_dual.e4), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * this.group1.xyz), 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -688,7 +684,7 @@ extension Motor: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return Scalar.from_groups(
             /* scalar, 0, 0, 0 */
@@ -727,7 +723,7 @@ extension MultiVector: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -772,13 +768,13 @@ extension MultiVector: ProjectOrthogonallyOnto<Horizon> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(this.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * this.group3.xyz), 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
             float4(float2(other.e321 * wedge.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(wedge.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(other.e321) * wedge.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -871,7 +867,7 @@ extension MultiVector: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -916,7 +912,7 @@ extension MultiVector: ProjectOrthogonallyOnto<Plane> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(right_anti_dual.e4, right_anti_dual.e4, right_anti_dual.e4, 0.0) * float4(this.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(right_anti_dual.e4) * this.group3.xyz), 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -937,7 +933,7 @@ extension MultiVector: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -985,7 +981,7 @@ extension Origin: ProjectOrthogonallyOnto<Flector> {
     func project_orthogonally_onto(other: Flector) -> Output {
         Line wedge = Line.from_groups(
             /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * float4(float3(0.0), other.e321 * -1.0).xyz, 0.0), 
+            float4(0.0), 
             /* e23, e31, e12, 0 */
             float4(0.0)
         );
@@ -1000,7 +996,7 @@ extension Origin: ProjectOrthogonallyOnto<MultiVector> {
     func project_orthogonally_onto(other: MultiVector) -> Output {
         Line wedge = Line.from_groups(
             /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * float4(float3(0.0), other.e321 * -1.0).xyz, 0.0), 
+            float4(0.0), 
             /* e23, e31, e12, 0 */
             float4(0.0)
         );
@@ -1031,7 +1027,7 @@ extension Plane: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -1067,7 +1063,7 @@ extension Plane: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
             /* e1234, 0, 0, 0 */
@@ -1109,7 +1105,7 @@ extension Point: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1134,7 +1130,7 @@ extension Point: ProjectOrthogonallyOnto<Horizon> {
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(float3(right_anti_dual.e4 * this.e1 * -1.0, right_anti_dual.e4 * this.e2 * -1.0, right_anti_dual.e4 * this.e3 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(other.e321) * float3(right_anti_dual.e4 * this.e1 * -1.0, right_anti_dual.e4 * this.e2 * -1.0, right_anti_dual.e4 * this.e3 * -1.0)), 0.0)
         );
     }
 }
@@ -1191,7 +1187,7 @@ extension Point: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1239,7 +1235,7 @@ extension Point: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1269,13 +1265,13 @@ extension Scalar: ProjectOrthogonallyOnto<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group0.xyz, 0.0)
         );
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * right_anti_dual.group0, 
             /* e423, e431, e412, e321 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.scalar) * right_anti_dual.group1.xyz), 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1339,7 +1335,7 @@ extension Scalar: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e1, other.e2, other.e3, 0.0)
+            float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1351,7 +1347,7 @@ extension Scalar: ProjectOrthogonallyOnto<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(right_anti_dual.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.scalar) * right_anti_dual.group4.xyz), 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
@@ -1381,7 +1377,7 @@ extension Scalar: ProjectOrthogonallyOnto<Point> {
     func project_orthogonally_onto(other: Point) -> Output {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(float4(other.e1, other.e2, other.e3, 0.0).xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.scalar) * other.group0.xyz), 0.0)
         );
         return Scalar.from_groups(
             /* scalar, 0, 0, 0 */

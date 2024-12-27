@@ -625,11 +625,10 @@ impl std::ops::Mul<AntiScalar> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       15        0
+    // yes simd        0        5        0
+    //  no simd        0       10        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -763,11 +762,10 @@ impl std::ops::Mul<Origin> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       13        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -783,11 +781,10 @@ impl std::ops::Mul<Plane> for MultiVector {
     //           add/sub      mul      div
     //      f32        6       10        0
     //    simd2        0        1        0
-    //    simd3        6       10        0
-    //    simd4        0        1        0
+    //    simd3        6       11        0
     // Totals...
     // yes simd       12       22        0
-    //  no simd       24       46        0
+    //  no simd       24       45        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }

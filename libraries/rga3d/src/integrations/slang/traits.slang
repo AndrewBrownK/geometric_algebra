@@ -52,7 +52,6 @@ __include "traits/right_complement";
 __include "traits/right_dual";
 __include "traits/sandwich";
 __include "traits/square_root";
-__include "traits/support";
 __include "traits/unit";
 __include "traits/unitize";
 __include "traits/unitized_flat_norm_squared";

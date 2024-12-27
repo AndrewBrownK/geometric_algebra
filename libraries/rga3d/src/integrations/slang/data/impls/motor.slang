@@ -83,9 +83,9 @@ extension Motor: Add<Line> {
     func operator+(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0.xyz, this.e1234), 
+            float4((other.group0.xyz + this.group0.xyz), this.e1234), 
             /* e23, e31, e12, scalar */
-            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1.xyz, this.scalar)
+            float4((other.group1.xyz + this.group1.xyz), this.scalar)
         );
     }
 }
@@ -94,9 +94,9 @@ extension Motor {
     func operator+=(const Line& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0.xyz, this.e1234), 
+            float4((other.group0.xyz + this.group0.xyz), this.e1234), 
             /* e23, e31, e12, scalar */
-            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1.xyz, this.scalar)
+            float4((other.group1.xyz + this.group1.xyz), this.scalar)
         );
     }
 }

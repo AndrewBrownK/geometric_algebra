@@ -36,7 +36,7 @@ extension AntiScalar: GeometricQuotient<Flector> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * geometric_product.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(geometric_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(this.e1234) * geometric_product.group0.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -132,7 +132,7 @@ extension AntiScalar: GeometricQuotient<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(geometric_product.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(this.e1234) * geometric_product.group1.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -154,7 +154,7 @@ extension AntiScalar: GeometricQuotient<Point> {
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e1234, this.e1234, this.e1234, 0.0) * float4(float4(other.e1 * other_2.scalar, other.e2 * other_2.scalar, other.e3 * other_2.scalar, other.e4 * other_2.scalar).xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(this.e1234) * float4(other.e1 * other_2.scalar, other.e2 * other_2.scalar, other.e3 * other_2.scalar, other.e4 * other_2.scalar).xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -207,7 +207,7 @@ extension DualNum: GeometricQuotient<Flector> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e1, geometric_product.e2, geometric_product.e3, 1.0) * float4(this.group0.xy.xx, this.scalar, (this.scalar * geometric_product.e4) - (this.e1234 * geometric_product.e321)), 
+            float4(this.group0.xy.xx, this.scalar, (this.scalar * geometric_product.e4) - (this.e1234 * geometric_product.e321)) * float4(geometric_product.group0.xyz, 1.0), 
             /* e423, e431, e412, e321 */
             float4(((float3(this.scalar) * geometric_product.group1.xyz) - (float3(this.e1234) * geometric_product.group0.xyz)), this.scalar * geometric_product.e321)
         );
@@ -317,7 +317,7 @@ extension DualNum: GeometricQuotient<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.scalar * geometric_product.scalar, (this.scalar * geometric_product.e1234) + (this.e1234 * geometric_product.scalar)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e1, geometric_product.e2, geometric_product.e3, 1.0) * float4(this.group0.xy.xx, this.scalar, (this.scalar * geometric_product.e4) - (this.e1234 * geometric_product.e321)), 
+            float4(this.group0.xy.xx, this.scalar, (this.scalar * geometric_product.e4) - (this.e1234 * geometric_product.e321)) * float4(geometric_product.group1.xyz, 1.0), 
             /* e41, e42, e43, 0 */
             float4((float3(this.scalar) * geometric_product.group2.xyz) + (float3(this.e1234) * geometric_product.group3.xyz), 0.0), 
             /* e23, e31, e12, 0 */
@@ -381,7 +381,7 @@ extension Flector: GeometricQuotient<DualNum> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e1, this.e2, this.e3, 1.0) * float4(geometric_product.group0.xy.xx, geometric_product.scalar, (geometric_product.scalar * this.e4) + (geometric_product.e1234 * this.e321)), 
+            float4(geometric_product.group0.xy.xx, geometric_product.scalar, (geometric_product.scalar * this.e4) + (geometric_product.e1234 * this.e321)) * float4(this.group0.xyz, 1.0), 
             /* e423, e431, e412, e321 */
             float4(((float3(geometric_product.scalar) * this.group1.xyz) + (float3(geometric_product.e1234) * this.group0.xyz)), geometric_product.scalar * this.e321)
         );
@@ -651,9 +651,9 @@ extension Horizon: GeometricQuotient<Line> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_product.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(this.e321) * geometric_product.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_product.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e321) * geometric_product.group0.xyz), 0.0)
         );
     }
 }
@@ -738,7 +738,7 @@ extension Horizon: GeometricQuotient<Plane> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4((float3(this.e321) * geometric_product.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
             float4(float3(0.0), this.e321 * geometric_product.e321 * -1.0)
         );
@@ -755,7 +755,7 @@ extension Horizon: GeometricQuotient<Point> {
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e321 * geometric_product.e4 * -1.0), 
             /* e23, e31, e12, scalar */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(geometric_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(this.e321) * geometric_product.group0.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -825,9 +825,9 @@ extension Line: GeometricQuotient<Horizon> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(geometric_product.e321) * this.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(geometric_product.e321) * this.group0.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -939,7 +939,7 @@ extension Line: GeometricQuotient<Plane> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 1.0) * float4(this.group1.xyz, -(this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
+            float4((float3(geometric_product.e321) * this.group1.xyz), -(this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
             /* e423, e431, e412, e321 */
             float4((this.group1.xyz.zxy * geometric_product.group0.yzx), 0.0) - float4((float3(geometric_product.e321) * this.group0.xyz), 0.0) - float4((this.group1.xyz.yzx * geometric_product.group0.zxy), 0.0)
         );
@@ -1146,7 +1146,7 @@ extension Motor: GeometricQuotient<Plane> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 1.0) * float4(this.group1.xyz, -(this.e1234 * geometric_product.e321) - (this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
+            float4((float3(geometric_product.e321) * this.group1.xyz), -(this.e1234 * geometric_product.e321) - (this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
             /* e423, e431, e412, e321 */
             float4(((float3(this.scalar) * geometric_product.group0.xyz) + (this.group1.zxy * geometric_product.group0.yzx) - (float3(geometric_product.e321) * this.group0.xyz) - (this.group1.yzx * geometric_product.group0.zxy)), this.scalar * geometric_product.e321)
         );
@@ -1199,7 +1199,7 @@ extension MultiVector: GeometricQuotient<DualNum> {
             /* scalar, e1234, 0, 0 */
             float4(float2(geometric_product.scalar * this.scalar, (geometric_product.scalar * this.e1234) + (geometric_product.e1234 * this.scalar)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e1, this.e2, this.e3, 1.0) * float4(geometric_product.group0.xy.xx, geometric_product.scalar, (geometric_product.scalar * this.e4) + (geometric_product.e1234 * this.e321)), 
+            float4(geometric_product.group0.xy.xx, geometric_product.scalar, (geometric_product.scalar * this.e4) + (geometric_product.e1234 * this.e321)) * float4(this.group1.xyz, 1.0), 
             /* e41, e42, e43, 0 */
             float4((float3(geometric_product.scalar) * this.group2.xyz) + (float3(geometric_product.e1234) * this.group3.xyz), 0.0), 
             /* e23, e31, e12, 0 */
@@ -1385,7 +1385,7 @@ extension MultiVector: GeometricQuotient<Plane> {
             /* scalar, e1234, 0, 0 */
             float4(float2(this.e321 * geometric_product.e321, (this.e1 * geometric_product.e423) + (this.e2 * geometric_product.e431) + (this.e3 * geometric_product.e412) + (this.e4 * geometric_product.e321)) * float2(-1.0, 1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 1.0) * float4(this.group3.xyz, -(this.e1234 * geometric_product.e321) - (this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
+            float4((float3(geometric_product.e321) * this.group3.xyz), -(this.e1234 * geometric_product.e321) - (this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
             /* e41, e42, e43, 0 */
             float4((float3(geometric_product.e321) * this.group4.xyz) + (this.group1.yzx * geometric_product.group0.zxy) - (float3(this.e321) * geometric_product.group0.xyz) - (this.group1.zxy * geometric_product.group0.yzx), 0.0), 
             /* e23, e31, e12, 0 */
@@ -1503,7 +1503,7 @@ extension Origin: GeometricQuotient<Line> {
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(float3(reverse.e23 * other_2.scalar, reverse.e31 * other_2.scalar, reverse.e12 * other_2.scalar), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * float3(reverse.e23 * other_2.scalar, reverse.e31 * other_2.scalar, reverse.e12 * other_2.scalar)), 0.0)
         );
     }
 }
@@ -1530,7 +1530,7 @@ extension Origin: GeometricQuotient<Motor> {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), geometric_product.scalar * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_product.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * geometric_product.group1.xyz), 0.0)
         );
     }
 }
@@ -1575,7 +1575,7 @@ extension Origin: GeometricQuotient<MultiVector> {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(geometric_product.group3.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((float3(this.e4) * geometric_product.group3.xyz), 0.0)
         );
     }
 }
@@ -1669,7 +1669,7 @@ extension Plane: GeometricQuotient<Horizon> {
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(geometric_product.e321) * this.group0.xyz), 0.0), 
             /* e23, e31, e12, scalar */
             float4(float3(0.0), geometric_product.e321 * this.e321 * -1.0)
         );
@@ -1696,7 +1696,7 @@ extension Plane: GeometricQuotient<Line> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 1.0) * float4(geometric_product.group1.xyz, -(geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
+            float4((float3(this.e321) * geometric_product.group1.xyz), -(geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
             /* e423, e431, e412, e321 */
             float4((float3(this.e321) * geometric_product.group0.xyz), 0.0) + float4((geometric_product.group1.xyz.yzx * this.group0.zxy), 0.0) - float4((geometric_product.group1.xyz.zxy * this.group0.yzx), 0.0)
         );
@@ -1723,7 +1723,7 @@ extension Plane: GeometricQuotient<Motor> {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 1.0) * float4(geometric_product.group1.xyz, (geometric_product.e1234 * this.e321) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
+            float4((float3(this.e321) * geometric_product.group1.xyz), (geometric_product.e1234 * this.e321) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
             /* e423, e431, e412, e321 */
             float4(((float3(geometric_product.scalar) * this.group0.xyz) + (float3(this.e321) * geometric_product.group0.xyz) + (geometric_product.group1.yzx * this.group0.zxy) - (geometric_product.group1.zxy * this.group0.yzx)), geometric_product.scalar * this.e321)
         );
@@ -1764,7 +1764,7 @@ extension Plane: GeometricQuotient<MultiVector> {
             /* scalar, e1234, 0, 0 */
             float4(float2(geometric_product.e321 * this.e321, -(geometric_product.e1 * this.e423) - (geometric_product.e2 * this.e431) - (geometric_product.e3 * this.e412) - (geometric_product.e4 * this.e321)) * float2(-1.0, 1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 1.0) * float4(geometric_product.group3.xyz, (geometric_product.e1234 * this.e321) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
+            float4((float3(this.e321) * geometric_product.group3.xyz), (geometric_product.e1234 * this.e321) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
             /* e41, e42, e43, 0 */
             float4((float3(geometric_product.e321) * this.group0.xyz) + (geometric_product.group1.yzx * this.group0.zxy) - (float3(this.e321) * geometric_product.group4.xyz) - (geometric_product.group1.zxy * this.group0.yzx), 0.0), 
             /* e23, e31, e12, 0 */
@@ -1872,7 +1872,7 @@ extension Point: GeometricQuotient<Horizon> {
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), geometric_product.e321 * this.e4), 
             /* e23, e31, e12, scalar */
-            float4(geometric_product.e321, geometric_product.e321, geometric_product.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
+            float4((float3(geometric_product.e321) * this.group0.xyz * float3(-1.0)), 0.0)
         );
     }
 }

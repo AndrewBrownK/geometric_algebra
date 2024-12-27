@@ -30,7 +30,7 @@ extension Flector: RightAntiDual {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group0.xyz, 0.0)
         );
     }
 }
@@ -114,7 +114,7 @@ extension MultiVector: RightAntiDual {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group1.xyz, 0.0)
         );
     }
 }
@@ -144,7 +144,7 @@ extension Point: RightAntiDual {
     func right_anti_dual() -> Output {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group0.xyz, 0.0)
         );
     }
 }

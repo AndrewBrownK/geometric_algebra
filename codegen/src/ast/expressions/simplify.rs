@@ -90,9 +90,6 @@ impl IntExpr {
     }
 }
 
-// TODO something really fishy here:
-//  - extension AntiScalar: ProjectOrthogonallyOnto<Motor> {
-//  - impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
 
 // TODO looks like lots of glaring simplification opportunities in AntiProjectOrthogonallyOnto
 
@@ -966,6 +963,10 @@ impl Vec2Expr {
                     Vec3Expr::SwizzleVec3(box inner_v3, i0, i1, _) if *i0 < 2 && *i1 < 2 => {
                         *self = Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(inner_v3.take_as_owned()))), *i0, *i1);
                     }
+                    Vec3Expr::Extend2to3(v2, _) => {
+                        *self = v2.take_as_owned();
+                        return
+                    }
                     _ => {}
                 }
             }
@@ -976,6 +977,10 @@ impl Vec2Expr {
                 match v4 {
                     Vec4Expr::SwizzleVec4(box inner_v4, i0, i1, _, _) if *i0 < 2 && *i1 < 2 => {
                         *self = Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(inner_v4.take_as_owned()))), *i0, *i1);
+                    }
+                    Vec4Expr::Extend2to4(v2, _, _) => {
+                        *self = v2.take_as_owned();
+                        return
                     }
                     _ => {}
                 }
@@ -1237,6 +1242,54 @@ impl Vec3Expr {
                     }
                     (Literal(x), Literal(y), z) if *x == *y => {
                         *self = Vec3Expr::Extend2to3(Vec2Expr::Gather1(Literal(*x)), z.take_as_owned())
+                    }
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                        z,
+                    ) if x_mve == y_mve => {
+                        let max_idx = u16::max(*x_idx, *y_idx);
+                        let min_idx = u16::min(*x_idx, *y_idx);
+                        if (min_idx + 1) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = *x_idx + 1 == *y_idx;
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > min_idx {
+                                return
+                            }
+                            if min_idx == flat_idx && group.simd_width() >= 2 {
+                                let mv_group = match group.simd_width() {
+                                    2 => Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx),
+                                    3 => Vec2Expr::Truncate3to2(Box::new(Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx))),
+                                    4 => Vec2Expr::Truncate4to2(Box::new(Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx))),
+                                    _ => unreachable!("max simd width is 4")
+                                };
+                                *self = if no_swizzle {
+                                    Vec3Expr::Extend2to3(mv_group, z.take_as_owned())
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    Vec3Expr::Extend2to3(
+                                        Vec2Expr::SwizzleVec2(Box::new(mv_group), x, y),
+                                        z.take_as_owned(),
+                                    )
+                                };
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
+                    (x, y, z) if x == y => {
+                        *self = Vec3Expr::Extend2to3(
+                            Vec2Expr::Gather1(x.take_as_owned()),
+                            z.take_as_owned(),
+                        );
+                        return
                     }
                     _ => {}
                 }
@@ -1560,6 +1613,10 @@ impl Vec3Expr {
                 match v4 {
                     Vec4Expr::SwizzleVec4(box inner_v4, i0, i1, i2, _) if *i0 < 3 && *i1 < 3 && *i2 < 3 => {
                         *self = Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(inner_v4.take_as_owned()))), *i0, *i1, *i2);
+                    }
+                    Vec4Expr::Extend3to4(v3, _) => {
+                        *self = v3.take_as_owned();
+                        return
                     }
                     _ => {}
                 }
@@ -2046,6 +2103,107 @@ impl Vec4Expr {
                     }
                     (Literal(x), Literal(y), z, w) if *x == *y => {
                         *self = Vec4Expr::Extend2to4(Vec2Expr::Gather1(Literal(*x)), z.take_as_owned(), w.take_as_owned())
+                    }
+                    // TODO impl AntiProjectOrthogonallyOnto<Point> for AntiScalar {
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                        AccessMultiVecFlat(z_mve, z_idx),
+                        w,
+                    ) if x_mve == y_mve && y_mve == z_mve => {
+                        let max_idx = u16::max(*x_idx, u16::max(*y_idx, *z_idx));
+                        let min_idx = u16::min(*x_idx, u16::min(*y_idx, *z_idx));
+                        if (min_idx + 2) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx);
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > min_idx {
+                                return
+                            }
+                            if min_idx == flat_idx && group.simd_width() >= 3 {
+                                let mv_group = match group.simd_width() {
+                                    3 => Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx),
+                                    4 => Vec3Expr::Truncate4to3(Box::new(Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx))),
+                                    _ => unreachable!("max simd width is 4")
+                                };
+                                *self = if no_swizzle {
+                                    Vec4Expr::Extend3to4(mv_group, w.take_as_owned())
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    let z = (*z_idx - min_idx) as u8;
+                                    Vec4Expr::Extend3to4(
+                                        Vec3Expr::SwizzleVec3(Box::new(mv_group), x, y, z),
+                                        w.take_as_owned()
+                                    )
+                                };
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                        z,
+                        w,
+                    ) if x_mve == y_mve => {
+                        let max_idx = u16::max(*x_idx, *y_idx);
+                        let min_idx = u16::min(*x_idx, *y_idx);
+                        if (min_idx + 1) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = *x_idx + 1 == *y_idx;
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > min_idx {
+                                return
+                            }
+                            if min_idx == flat_idx && group.simd_width() >= 2 {
+                                let mv_group = match group.simd_width() {
+                                    2 => Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx),
+                                    3 => Vec2Expr::Truncate3to2(Box::new(Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx))),
+                                    4 => Vec2Expr::Truncate4to2(Box::new(Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx))),
+                                    _ => unreachable!("max simd width is 4")
+                                };
+                                *self = if no_swizzle {
+                                    Vec4Expr::Extend2to4(mv_group, z.take_as_owned(), w.take_as_owned())
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    Vec4Expr::Extend2to4(
+                                        Vec2Expr::SwizzleVec2(Box::new(mv_group), x, y),
+                                        z.take_as_owned(),
+                                        w.take_as_owned(),
+                                    )
+                                };
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
+                    (x, y, z, w) if x == y && y == z => {
+                        *self = Vec4Expr::Extend3to4(
+                            Vec3Expr::Gather1(x.take_as_owned()),
+                            w.take_as_owned(),
+                        );
+                        return
+                    }
+                    (x, y, z, w) if x == y => {
+                        *self = Vec4Expr::Extend2to4(
+                            Vec2Expr::Gather1(x.take_as_owned()),
+                            z.take_as_owned(),
+                            w.take_as_owned(),
+                        );
+                        return
                     }
                     _ => {}
                 }

@@ -67,7 +67,7 @@ impl Weight for Flector {
             // e1, e2, e3, e4
             Simd32x3::from(0.0).with_w(self[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]),
+            self.group1().xyz().with_w(0.0),
         );
     }
 }
@@ -130,7 +130,7 @@ impl Weight for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]),
+            self.group4().xyz().with_w(0.0),
         );
     }
 }
@@ -165,8 +165,7 @@ impl std::ops::DivAssign<WeightPrefixOrPostfix> for Plane {
 impl Weight for Plane {
     type Output = Plane;
     fn weight(self) -> Self::Output {
-        use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self[e423], self[e431], self[e412], 0.0]));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0().xyz().with_w(0.0));
     }
 }
 impl std::ops::Div<WeightPrefixOrPostfix> for Point {

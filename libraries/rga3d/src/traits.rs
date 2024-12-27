@@ -39,7 +39,6 @@ pub mod arity_1 {
     pub use crate::traits::right_complement::RightComplement;
     pub use crate::traits::right_dual::RightDual;
     pub use crate::traits::square_root::SquareRoot;
-    pub use crate::traits::support::Support;
     pub use crate::traits::unitize::Unitize;
     pub use crate::traits::unitized_flat_norm_squared::UnitizedFlatNormSquared;
     pub use crate::traits::unitized_norm::UnitizedNorm;
@@ -134,7 +133,6 @@ pub mod infix {
     pub use crate::traits::sandwich::sandwich;
     pub use crate::traits::sandwich::sandwich_partial;
     pub use crate::traits::square_root::square_root;
-    pub use crate::traits::support::support;
     pub use crate::traits::unitize::unitize;
     pub use crate::traits::unitized_flat_norm_squared::unitized_flat_norm_squared;
     pub use crate::traits::unitized_norm::unitized_norm;
@@ -250,8 +248,6 @@ mod sandwich;
 pub use sandwich::Sandwich;
 mod square_root;
 pub use square_root::SquareRoot;
-mod support;
-pub use support::Support;
 mod unit;
 pub use unit::Unit;
 mod unitize;

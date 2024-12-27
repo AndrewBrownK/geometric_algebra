@@ -195,8 +195,8 @@ impl std::ops::Mul<AntiScalar> for Point {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -229,10 +229,10 @@ impl std::ops::Mul<Horizon> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        9        0
+    //  no simd        0        7        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }

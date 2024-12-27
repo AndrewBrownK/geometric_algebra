@@ -26,7 +26,7 @@ extension Flector: AntiSupport {
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group0.xyz, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -60,13 +60,9 @@ extension Line {
 extension Line: AntiSupport {
     associatedtype Output = Point;
     func anti_support() -> Output {
-        Horizon right_complement = Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
-        );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(float3(this.e23 * -1.0, this.e31 * -1.0, this.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4((this.group1.xyz * float3(-1.0)), 0.0)
         );
     }
 }
@@ -91,7 +87,7 @@ extension Motor: AntiSupport {
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(right_complement.e321) * right_dual.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), right_complement.e321 * right_dual.e1234)
         );
@@ -124,13 +120,13 @@ extension MultiVector: AntiSupport {
             /* e23, e31, e12, 0 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e1, this.e2, this.e3, 0.0)
+            float4(this.group1.xyz, 0.0)
         );
         return MultiVector.from_groups(
             /* scalar, e1234, 0, 0 */
             float4(float2(right_complement.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(right_complement.e321, right_complement.e321, right_complement.e321, 0.0) * float4(right_dual.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4((float3(right_complement.e321) * right_dual.group2.xyz), 0.0), 
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
@@ -168,7 +164,7 @@ extension Point: AntiSupport {
             /* e41, e42, e43, 0 */
             float4(0.0), 
             /* e23, e31, e12, 0 */
-            float4(float4(this.e1, this.e2, this.e3, 0.0).xyz * float3(-1.0), 0.0)
+            float4(this.group0.xyz * float3(-1.0), 0.0)
         );
     }
 }
