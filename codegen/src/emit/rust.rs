@@ -2589,9 +2589,13 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         }
         writeln!(w, ";\n}}")?;
 
-        let op = *def.op.lock();
-        if let Some(_op) = op {
-            // TODO
+        let can_fancy_infix = match def.arity {
+            TraitArity::Zero => false,
+            TraitArity::One => true,
+            TraitArity::Two => true,
+        };
+        if !can_fancy_infix {
+            return Ok(())
         }
 
         if let Some(op) = &self.fancy_infix {

@@ -7,6 +7,4 @@ use crate::simd::*;
 pub trait One {
     fn one() -> Self;
 }
-#[allow(non_camel_case_types, dead_code)]
-pub struct one;
 include!("./impls/one.rs");

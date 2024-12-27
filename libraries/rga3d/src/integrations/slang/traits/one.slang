@@ -5,6 +5,4 @@ using data::*;
 public interface One {
     func one() -> Output;
 }
-public const static one: OneInfix = OneInfix {}
-public struct OneInfix {}
 __include ./impls/one;
