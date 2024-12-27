@@ -94,6 +94,8 @@ impl IntExpr {
 //  - extension AntiScalar: ProjectOrthogonallyOnto<Motor> {
 //  - impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
 
+// TODO looks like lots of glaring simplification opportunities in AntiProjectOrthogonallyOnto
+
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false, false, true, false, false);
@@ -339,6 +341,10 @@ impl FloatExpr {
                     }
                     _ => true,
                 });
+                if *last_factor == 0.0 {
+                    *self = FloatExpr::Literal(0.0);
+                    return
+                }
                 product.append(&mut flatten);
                 product.sort_with_f32();
 
@@ -796,6 +802,10 @@ impl Vec2Expr {
                     }
                     _ => true,
                 });
+                if *last_factor == [0.0; 2] {
+                    *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
+                    return
+                }
                 product.append(&mut flatten);
                 product.sort_with_f32();
 
@@ -1338,6 +1348,10 @@ impl Vec3Expr {
                     }
                     _ => true,
                 });
+                if *last_factor == [0.0; 3] {
+                    *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
+                    return
+                }
                 product.append(&mut flatten);
                 product.sort_with_f32();
 
@@ -2173,6 +2187,10 @@ impl Vec4Expr {
                     }
                     _ => true,
                 });
+                if *last_factor == [0.0; 4] {
+                    *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
+                    return
+                }
                 product.append(&mut flatten);
                 product.sort_with_f32();
 
