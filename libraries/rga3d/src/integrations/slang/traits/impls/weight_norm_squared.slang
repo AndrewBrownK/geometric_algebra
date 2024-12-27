@@ -13,7 +13,7 @@ extension AntiScalar {
 extension AntiScalar: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-AntiScalar flat_weight = this.flat_weight();
+        AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -26,7 +26,7 @@ extension DualNum {
 extension DualNum: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-AntiScalar flat_weight = this.flat_weight();
+        AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -39,7 +39,7 @@ extension Flector {
 extension Flector: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Flector flat_weight = this.flat_weight();
+        Flector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -52,7 +52,7 @@ extension Line {
 extension Line: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Line flat_weight = this.flat_weight();
+        Line flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -65,7 +65,7 @@ extension Motor {
 extension Motor: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Motor flat_weight = this.flat_weight();
+        Motor flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -78,7 +78,7 @@ extension MultiVector {
 extension MultiVector: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-MultiVector flat_weight = this.flat_weight();
+        MultiVector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -91,7 +91,7 @@ extension Origin {
 extension Origin: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Origin flat_weight = this.flat_weight();
+        Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -104,7 +104,7 @@ extension Plane {
 extension Plane: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Plane flat_weight = this.flat_weight();
+        Plane flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
@@ -117,7 +117,7 @@ extension Point {
 extension Point: WeightNormSquared {
     associatedtype Output = AntiScalar;
     func weight_norm_squared() -> Output {
-Origin flat_weight = this.flat_weight();
+        Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
 }

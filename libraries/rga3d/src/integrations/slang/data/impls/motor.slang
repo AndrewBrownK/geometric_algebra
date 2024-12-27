@@ -48,14 +48,14 @@ extension Motor: Add<Flector> {
     associatedtype Output = MultiVector;
     func operator+(other: Flector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
@@ -65,14 +65,14 @@ extension Motor: Add<Horizon> {
     associatedtype Output = MultiVector;
     func operator+(other: Horizon) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321)
         );
@@ -83,9 +83,9 @@ extension Motor: Add<Line> {
     func operator+(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0, this.e1234), 
+            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0.xyz, this.e1234), 
             /* e23, e31, e12, scalar */
-            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1, this.scalar)
+            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1.xyz, this.scalar)
         );
     }
 }
@@ -94,9 +94,9 @@ extension Motor {
     func operator+=(const Line& other) {
         *this = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0, this.e1234), 
+            float4(this.e41, this.e42, this.e43, 0.0) + float4(other.group0.xyz, this.e1234), 
             /* e23, e31, e12, scalar */
-            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1, this.scalar)
+            float4(this.e23, this.e31, this.e12, 0.0) + float4(other.group1.xyz, this.scalar)
         );
     }
 }
@@ -126,14 +126,14 @@ extension Motor: Add<MultiVector> {
     associatedtype Output = MultiVector;
     func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234) + other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234) + other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e41, e42, e43 */
-            other.group2 + this.group0.xyz, 
-            /* e23, e31, e12 */
-            other.group3 + this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(other.group2.xyz + this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group3.xyz + this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group4
         );
@@ -143,14 +143,14 @@ extension Motor: Add<Origin> {
     associatedtype Output = MultiVector;
     func operator+(other: Origin) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
@@ -160,14 +160,14 @@ extension Motor: Add<Plane> {
     associatedtype Output = MultiVector;
     func operator+(other: Plane) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group0
         );
@@ -177,14 +177,14 @@ extension Motor: Add<Point> {
     associatedtype Output = MultiVector;
     func operator+(other: Point) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
@@ -241,9 +241,9 @@ impl From<Line> for Motor {
     fn from(from_line: Line) -> Self {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(from_line.group0, 0.0), 
+            float4(from_line.group0.xyz, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(from_line.group1, 0.0)
+            float4(from_line.group1.xyz, 0.0)
         );
     }
 }
@@ -420,14 +420,14 @@ extension Motor: Sub<Flector> {
     associatedtype Output = MultiVector;
     func operator-(other: Flector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
@@ -437,14 +437,14 @@ extension Motor: Sub<Horizon> {
     associatedtype Output = MultiVector;
     func operator-(other: Horizon) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * -1.0)
         );
@@ -498,14 +498,14 @@ extension Motor: Sub<MultiVector> {
     associatedtype Output = MultiVector;
     func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234) - other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234) - other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz - other.group2, 
-            /* e23, e31, e12 */
-            this.group1.xyz - other.group3, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz - other.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz - other.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
@@ -515,14 +515,14 @@ extension Motor: Sub<Origin> {
     associatedtype Output = MultiVector;
     func operator-(other: Origin) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4 * -1.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
@@ -532,14 +532,14 @@ extension Motor: Sub<Plane> {
     associatedtype Output = MultiVector;
     func operator-(other: Plane) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
         );
@@ -549,14 +549,14 @@ extension Motor: Sub<Point> {
     associatedtype Output = MultiVector;
     func operator-(other: Point) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group0.xyz, 
-            /* e23, e31, e12 */
-            this.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
@@ -654,9 +654,9 @@ impl TryFrom<MultiVector> for Motor {
         }
         return Ok(Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(multi_vector.group2, multi_vector.e1234), 
+            float4(multi_vector.group2.xyz, multi_vector.e1234), 
             /* e23, e31, e12, scalar */
-            float4(multi_vector.group3, multi_vector.scalar)
+            float4(multi_vector.group3.xyz, multi_vector.scalar)
         ));
     }
 }

@@ -8,8 +8,8 @@ extension DualNum: RightDual {
     associatedtype Output = AntiScalar;
     func right_dual() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.scalar
+            /* e1234, 0, 0, 0 */
+            float4(this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -44,8 +44,8 @@ extension Horizon: RightDual {
     associatedtype Output = Origin;
     func right_dual() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e321 * -1.0
+            /* e4, 0, 0, 0 */
+            float4(this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -63,10 +63,10 @@ extension Line: RightDual {
     associatedtype Output = Line;
     func right_dual() -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            this.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+            /* e41, e42, e43, 0 */
+            float4(this.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
     }
 }
@@ -105,14 +105,14 @@ extension MultiVector: RightDual {
     associatedtype Output = MultiVector;
     func right_dual() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, this.scalar), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, this.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
-            /* e41, e42, e43 */
-            this.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(this.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1, this.e2, this.e3, 0.0)
         );
@@ -128,8 +128,8 @@ extension Plane: RightDual {
     associatedtype Output = Origin;
     func right_dual() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e321 * -1.0
+            /* e4, 0, 0, 0 */
+            float4(this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -158,8 +158,8 @@ extension Scalar: RightDual {
     associatedtype Output = AntiScalar;
     func right_dual() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.scalar
+            /* e1234, 0, 0, 0 */
+            float4(this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }

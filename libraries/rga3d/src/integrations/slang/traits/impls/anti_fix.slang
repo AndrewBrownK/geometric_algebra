@@ -12,8 +12,8 @@ extension AntiScalar: AntiFix {
     associatedtype Output = AntiScalar;
     func anti_fix() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            1.0
+            /* e1234, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -31,8 +31,8 @@ extension Origin: AntiFix {
     associatedtype Output = Origin;
     func anti_fix() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            1.0
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         );
     }
 }

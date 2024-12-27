@@ -10,8 +10,8 @@ extension AntiScalar: AntiSandwich<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_sandwich(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -19,8 +19,8 @@ extension AntiScalar: AntiSandwich<DualNum> {
     associatedtype Output = DualNum;
     func anti_sandwich(other: DualNum) -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.e1234) * other.group0
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e1234) * other.group0.xy, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -39,8 +39,8 @@ extension AntiScalar: AntiSandwich<Horizon> {
     associatedtype Output = Horizon;
     func anti_sandwich(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e1234 * other.e321
+            /* e321, 0, 0, 0 */
+            float4(this.e1234 * other.e321, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -48,10 +48,10 @@ extension AntiScalar: AntiSandwich<Line> {
     associatedtype Output = Line;
     func anti_sandwich(other: Line) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(this.e1234) * other.group0, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * other.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * other.group1.xyz, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -70,14 +70,14 @@ extension AntiScalar: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e1234) * other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e1234) * other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group1, 
-            /* e41, e42, e43 */
-            float3(this.e1234) * other.group2, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * other.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * other.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * other.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group4
         ).geometric_anti_product(this.anti_reverse());
@@ -87,8 +87,8 @@ extension AntiScalar: AntiSandwich<Origin> {
     associatedtype Output = Origin;
     func anti_sandwich(other: Origin) -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e1234 * other.e4
+            /* e4, 0, 0, 0 */
+            float4(this.e1234 * other.e4, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -114,8 +114,8 @@ extension AntiScalar: AntiSandwich<Scalar> {
     associatedtype Output = Scalar;
     func anti_sandwich(other: Scalar) -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            this.e1234 * other.scalar
+            /* scalar, 0, 0, 0 */
+            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -129,8 +129,8 @@ extension DualNum: AntiSandwich<AntiScalar> {
     associatedtype Output = DualNum;
     func anti_sandwich(other: AntiScalar) -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(other.e1234) * this.group0
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.e1234) * this.group0.xy, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -138,8 +138,8 @@ extension DualNum: AntiSandwich<DualNum> {
     associatedtype Output = DualNum;
     func anti_sandwich(other: DualNum) -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -150,7 +150,7 @@ extension DualNum: AntiSandwich<Flector> {
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group0.xyz)), this.e1234 * other.e4), 
             /* e423, e431, e412, e321 */
-            float4(other.e423, other.e431, other.e412, 1.0) * float4(this.group0.yy, this.e1234, (this.scalar * other.e4) + (this.e1234 * other.e321))
+            float4(other.e423, other.e431, other.e412, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e4) + (this.e1234 * other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -158,8 +158,8 @@ extension DualNum: AntiSandwich<Horizon> {
     associatedtype Output = Horizon;
     func anti_sandwich(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e1234 * other.e321
+            /* e321, 0, 0, 0 */
+            float4(this.e1234 * other.e321, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -167,10 +167,10 @@ extension DualNum: AntiSandwich<Line> {
     associatedtype Output = Line;
     func anti_sandwich(other: Line) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(this.e1234) * other.group0, 
-            /* e23, e31, e12 */
-            (float3(this.scalar) * other.group0) + (float3(this.e1234) * other.group1)
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -189,16 +189,16 @@ extension DualNum: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * other.group4.xyz) + (float3(this.e1234) * other.group1.xyz)), this.e1234 * other.e4), 
-            /* e41, e42, e43 */
-            float3(this.e1234) * other.group2, 
-            /* e23, e31, e12 */
-            (float3(this.scalar) * other.group2) + (float3(this.e1234) * other.group3), 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * other.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.scalar) * other.group2.xyz) + (float3(this.e1234) * other.group3.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e423, other.e431, other.e412, 1.0) * float4(this.group0.yy, this.e1234, (this.scalar * other.e4) + (this.e1234 * other.e321))
+            float4(other.e423, other.e431, other.e412, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * other.e4) + (this.e1234 * other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -218,7 +218,7 @@ extension DualNum: AntiSandwich<Plane> {
     func anti_sandwich(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.group0.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
         ).geometric_anti_product(this.anti_reverse());
@@ -239,8 +239,8 @@ extension DualNum: AntiSandwich<Scalar> {
     associatedtype Output = Scalar;
     func anti_sandwich(other: Scalar) -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            this.e1234 * other.scalar
+            /* scalar, 0, 0, 0 */
+            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -268,7 +268,7 @@ extension Flector: AntiSandwich<DualNum> {
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group0.xyz) - (float3(other.scalar) * this.group1.xyz)), other.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 1.0) * float4(other.group0.yy, other.e1234, (other.e1234 * this.e321) - (other.scalar * this.e4))
+            float4(this.e423, this.e431, this.e412, 1.0) * float4(other.group0.xy.yy, other.e1234, (other.e1234 * this.e321) - (other.scalar * this.e4))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -299,9 +299,9 @@ extension Flector: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.zyz, other.e43)) - float4((other.group0.yzx * this.group0.zxy), this.e423 * other.e41), 
+            float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xyz.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.xyz.zyz, other.e43)) - float4((other.group0.xyz.yzx * this.group0.zxy), this.e423 * other.e41), 
             /* e423, e431, e412, e321 */
-            (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group0.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group0.zyz, other.e31)) + float4(float3(0.0), (this.e412 * other.e12) - (this.e2 * other.e42) - (this.e3 * other.e43)) - float4((other.group0.yzx * this.group1.zxy), this.e1 * other.e41)
+            (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group0.xyz.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group0.xyz.zyz, other.e31)) + float4(float3(0.0), (this.e412 * other.e12) - (this.e2 * other.e42) - (this.e3 * other.e43)) - float4((other.group0.xyz.yzx * this.group1.zxy), this.e1 * other.e41)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -320,16 +320,16 @@ extension Flector: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.e4 * other.e321) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group1.xw), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.e4 * other.e321) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group1.xw), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41) - (this.e431 * other.e12), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42) - (this.e4 * other.e31), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43) - (this.e4 * other.e12), 0.0) + (float4(other.e1234) * this.group0) - (float4(this.e4, this.e412, this.e423, this.e412) * float4(other.group3.xxy, other.e43)) - (this.group1.xyzx * float4(other.group0.xx, other.scalar, other.e41)) - float4((other.group2.yzx * this.group0.zxy), this.e431 * other.e42), 
-            /* e41, e42, e43 */
-            (this.group1.zxy * other.group4.yzx) - (float3(this.e4) * other.group4.xyz) - (float3(other.e4, other.e4, other.e431) * this.group1.xyx) - (float3(other.e412, other.e423, other.e4) * this.group1.yzz), 
-            /* e23, e31, e12 */
-            (float3(this.e4) * other.group1.xyz) + (float3(other.e3, other.e1, other.e321) * this.group1.yzz) + (float3(other.e321, other.e321, other.e2) * this.group1.xyx) + (this.group0.zxy * other.group4.yzx) - (float3(this.e321) * other.group4.xyz) - (float3(other.e4, other.e4, other.e431) * this.group0.xyx) - (float3(other.e412, other.e423, other.e4) * this.group0.yzz) - (this.group1.zxy * other.group1.yzx), 
+            float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41) - (this.e431 * other.e12), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42) - (this.e4 * other.e31), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43) - (this.e4 * other.e12), 0.0) + (float4(other.e1234) * this.group0) - (float4(this.e4, this.e412, this.e423, this.e412) * float4(other.group3.xyz.xxy, other.e43)) - (this.group1.xyzx * float4(other.group0.xy.xx, other.scalar, other.e41)) - float4((other.group2.xyz.yzx * this.group0.zxy), this.e431 * other.e42), 
+            /* e41, e42, e43, 0 */
+            float4((this.group1.zxy * other.group4.yzx) - (float3(this.e4) * other.group4.xyz) - (float3(other.e4, other.e4, other.e431) * this.group1.xyx) - (float3(other.e412, other.e423, other.e4) * this.group1.yzz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.e4) * other.group1.xyz) + (float3(other.e3, other.e1, other.e321) * this.group1.yzz) + (float3(other.e321, other.e321, other.e2) * this.group1.xyx) + (this.group0.zxy * other.group4.yzx) - (float3(this.e321) * other.group4.xyz) - (float3(other.e4, other.e4, other.e431) * this.group0.xyx) - (float3(other.e412, other.e423, other.e4) * this.group0.yzz) - (this.group1.zxy * other.group1.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            (float4(other.e1234) * this.group1) + (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group2.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group2.zyz, other.e31)) + float4(float3(0.0), (this.e412 * other.e12) - (this.e1 * other.e41) - (this.e2 * other.e42) - (this.e3 * other.e43)) - float4((other.group2.yzx * this.group1.zxy), this.e4 * other.scalar)
+            (float4(other.e1234) * this.group1) + (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group2.xyz.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group2.xyz.zyz, other.e31)) + float4(float3(0.0), (this.e412 * other.e12) - (this.e1 * other.e41) - (this.e2 * other.e42) - (this.e3 * other.e43)) - float4((other.group2.xyz.yzx * this.group1.zxy), this.e4 * other.scalar)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -399,7 +399,7 @@ extension Horizon: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -418,14 +418,14 @@ extension Horizon: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group2, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.e321) * other.group4.xyz * float3(-1.0), 
+            float4(this.e321, this.e321, this.e321, 0.0) * float4(other.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e321) * other.group4.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * other.e1234)
         ).geometric_anti_product(this.anti_reverse());
@@ -435,10 +435,10 @@ extension Horizon: AntiSandwich<Plane> {
     associatedtype Output = Point;
     func anti_sandwich(other: Plane) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.e321) * other.group0.xyz * float3(-1.0)
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e321) * other.group0.xyz * float3(-1.0), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -452,10 +452,10 @@ extension Line: AntiSandwich<AntiScalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: AntiScalar) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(other.e1234) * this.group0, 
-            /* e23, e31, e12 */
-            float3(other.e1234) * this.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e1234) * this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.e1234) * this.group1.xyz, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -463,10 +463,10 @@ extension Line: AntiSandwich<DualNum> {
     associatedtype Output = Motor;
     func anti_sandwich(other: DualNum) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(other.e1234) * this.group0, 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * this.group0) + (float3(other.e1234) * this.group1)
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e1234) * this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -475,9 +475,9 @@ extension Line: AntiSandwich<Flector> {
     func anti_sandwich(other: Flector) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group0.zxy * other.group0.yzx), other.e423 * this.e41), 
+            float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) - (other.group1.yzxy * float4(this.group1.xyz.zxy, this.e42)) - float4((this.group0.xyz.zxy * other.group0.yzx), other.e423 * this.e41), 
             /* e423, e431, e412, e321 */
-            float4((other.e4 * this.e41) + (other.e412 * this.e42), (other.e4 * this.e42) + (other.e423 * this.e43), (other.e4 * this.e43) + (other.e431 * this.e41), -(other.e2 * this.e42) - (other.e3 * this.e43) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) - float4((this.group0.zxy * other.group1.yzx), other.e1 * this.e41)
+            float4((other.e4 * this.e41) + (other.e412 * this.e42), (other.e4 * this.e42) + (other.e423 * this.e43), (other.e4 * this.e43) + (other.e431 * this.e41), -(other.e2 * this.e42) - (other.e3 * this.e43) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) - float4((this.group0.xyz.zxy * other.group1.yzx), other.e1 * this.e41)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -486,7 +486,7 @@ extension Line: AntiSandwich<Horizon> {
     func anti_sandwich(other: Horizon) -> Output {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -495,9 +495,9 @@ extension Line: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(other.e43 * this.e42, other.e41 * this.e43, other.e42 * this.e41, -(other.e42 * this.e42) - (other.e43 * this.e43)) - float4((other.group0.yzx * this.group0.zxy), other.e41 * this.e41), 
+            float4(other.e43 * this.e42, other.e41 * this.e43, other.e42 * this.e41, -(other.e42 * this.e42) - (other.e43 * this.e43)) - float4((other.group0.xyz.yzx * this.group0.xyz.zxy), other.e41 * this.e41), 
             /* e23, e31, e12, scalar */
-            float4((other.e43 * this.e31) + (other.e12 * this.e42), (other.e41 * this.e12) + (other.e23 * this.e43), (other.e42 * this.e23) + (other.e31 * this.e41), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - float4((other.group0.yzx * this.group1.zxy), other.e41 * this.e23) - float4((other.group1.yzx * this.group0.zxy), other.e42 * this.e31)
+            float4((other.e43 * this.e31) + (other.e12 * this.e42), (other.e41 * this.e12) + (other.e23 * this.e43), (other.e42 * this.e23) + (other.e31 * this.e41), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - float4((other.group0.xyz.yzx * this.group1.xyz.zxy), other.e41 * this.e23) - float4((other.group1.xyz.yzx * this.group0.xyz.zxy), other.e42 * this.e31)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -506,9 +506,9 @@ extension Line: AntiSandwich<Motor> {
     func anti_sandwich(other: Motor) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4((this.e41 * other.e1234) + (this.e42 * other.e43), (this.e42 * other.e1234) + (this.e43 * other.e41), (this.e41 * other.e42) + (this.e43 * other.e1234), -(this.e42 * other.e42) - (this.e43 * other.e43)) - (other.group0.yzxx * float4(this.group0.zxy, this.e41)), 
+            float4((this.e41 * other.e1234) + (this.e42 * other.e43), (this.e42 * other.e1234) + (this.e43 * other.e41), (this.e41 * other.e42) + (this.e43 * other.e1234), -(this.e42 * other.e42) - (this.e43 * other.e43)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e41)), 
             /* e23, e31, e12, scalar */
-            float4((this.e41 * other.scalar) + (this.e42 * other.e12) + (this.e23 * other.e1234) + (this.e31 * other.e43), (this.e42 * other.scalar) + (this.e43 * other.e23) + (this.e31 * other.e1234) + (this.e12 * other.e41), (this.e41 * other.e31) + (this.e43 * other.scalar) + (this.e23 * other.e42) + (this.e12 * other.e1234), -(this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)) - (other.group1.yzxx * float4(this.group0.zxy, this.e41)) - float4((this.group1.zxy * other.group0.yzx), this.e42 * other.e31)
+            float4((this.e41 * other.scalar) + (this.e42 * other.e12) + (this.e23 * other.e1234) + (this.e31 * other.e43), (this.e42 * other.scalar) + (this.e43 * other.e23) + (this.e31 * other.e1234) + (this.e12 * other.e41), (this.e41 * other.e31) + (this.e43 * other.scalar) + (this.e23 * other.e42) + (this.e12 * other.e1234), -(this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e41)) - float4((this.group1.xyz.zxy * other.group0.yzx), this.e42 * other.e31)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -516,16 +516,16 @@ extension Line: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.e41 * other.e321) + (this.e42 * other.e3) + (this.e23 * other.e4) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e43 * other.e1) + (this.e31 * other.e4) + (this.e12 * other.e423), (this.e41 * other.e2) + (this.e43 * other.e321) + (this.e23 * other.e431) + (this.e12 * other.e4), this.e43 * other.e412 * -1.0) - (other.group4.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group0.zxy * other.group1.yzx), this.e41 * other.e423), 
-            /* e41, e42, e43 */
-            (float3(other.e1234) * this.group0) + (this.group0.yzx * other.group2.zxy) - (this.group0.zxy * other.group2.yzx), 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * this.group0) + (float3(other.e1234) * this.group1) + (this.group0.yzx * other.group3.zxy) + (this.group1.yzx * other.group2.zxy) - (this.group0.zxy * other.group3.yzx) - (this.group1.zxy * other.group2.yzx), 
+            float4((this.e41 * other.e321) + (this.e42 * other.e3) + (this.e23 * other.e4) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e43 * other.e1) + (this.e31 * other.e4) + (this.e12 * other.e423), (this.e41 * other.e2) + (this.e43 * other.e321) + (this.e23 * other.e431) + (this.e12 * other.e4), this.e43 * other.e412 * -1.0) - (other.group4.yzxy * float4(this.group1.xyz.zxy, this.e42)) - float4((this.group0.xyz.zxy * other.group1.yzx), this.e41 * other.e423), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e1234) * this.group0.xyz) + (this.group0.xyz.yzx * other.group2.xyz.zxy) - (this.group0.xyz.zxy * other.group2.xyz.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.yzx * other.group3.xyz.zxy) + (this.group1.xyz.yzx * other.group2.xyz.zxy) - (this.group0.xyz.zxy * other.group3.xyz.yzx) - (this.group1.xyz.zxy * other.group2.xyz.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((this.e41 * other.e4) + (this.e42 * other.e412), (this.e42 * other.e4) + (this.e43 * other.e423), (this.e41 * other.e431) + (this.e43 * other.e4), -(this.e42 * other.e2) - (this.e43 * other.e3) - (this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412)) - float4((this.group0.zxy * other.group4.yzx), this.e41 * other.e1)
+            float4((this.e41 * other.e4) + (this.e42 * other.e412), (this.e42 * other.e4) + (this.e43 * other.e423), (this.e41 * other.e431) + (this.e43 * other.e4), -(this.e42 * other.e2) - (this.e43 * other.e3) - (this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412)) - float4((this.group0.xyz.zxy * other.group4.yzx), this.e41 * other.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -534,9 +534,9 @@ extension Line: AntiSandwich<Origin> {
     func anti_sandwich(other: Origin) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(other.e4, other.e4, other.e4, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -545,9 +545,9 @@ extension Line: AntiSandwich<Plane> {
     func anti_sandwich(other: Plane) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
+            float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.xyz.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
-            float4(this.e42 * other.e412, this.e43 * other.e423, this.e41 * other.e431, -(this.e31 * other.e431) - (this.e12 * other.e412)) - (other.group0.yzxx * float4(this.group0.zxy, this.e23))
+            float4(this.e42 * other.e412, this.e43 * other.e423, this.e41 * other.e431, -(this.e31 * other.e431) - (this.e12 * other.e412)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -556,9 +556,9 @@ extension Line: AntiSandwich<Point> {
     func anti_sandwich(other: Point) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((float3(other.e4) * this.group1), 0.0) + float4((this.group0.yzx * other.group0.zxy), 0.0) - float4((this.group0.zxy * other.group0.yzx), 0.0), 
+            float4((float3(other.e4) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * other.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * other.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 1.0) * float4(this.group0, -(this.e41 * other.e1) - (this.e42 * other.e2) - (this.e43 * other.e3))
+            float4(other.e4, other.e4, other.e4, 1.0) * float4(this.group0.xyz, -(this.e41 * other.e1) - (this.e42 * other.e2) - (this.e43 * other.e3))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -566,10 +566,10 @@ extension Line: AntiSandwich<Scalar> {
     associatedtype Output = Motor;
     func anti_sandwich(other: Scalar) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(other.scalar) * this.group0
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * this.group0.xyz, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -628,9 +628,9 @@ extension Motor: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4((other.e41 * this.e1234) + (other.e43 * this.e42), (other.e41 * this.e43) + (other.e42 * this.e1234), (other.e42 * this.e41) + (other.e43 * this.e1234), -(other.e42 * this.e42) - (other.e43 * this.e43)) - (this.group0.zxyx * float4(other.group0.yzx, other.e41)), 
+            float4((other.e41 * this.e1234) + (other.e43 * this.e42), (other.e41 * this.e43) + (other.e42 * this.e1234), (other.e42 * this.e41) + (other.e43 * this.e1234), -(other.e42 * this.e42) - (other.e43 * this.e43)) - (this.group0.zxyx * float4(other.group0.xyz.yzx, other.e41)), 
             /* e23, e31, e12, scalar */
-            float4((other.e41 * this.scalar) + (other.e43 * this.e31) + (other.e23 * this.e1234) + (other.e12 * this.e42), (other.e41 * this.e12) + (other.e42 * this.scalar) + (other.e23 * this.e43) + (other.e31 * this.e1234), (other.e42 * this.e23) + (other.e43 * this.scalar) + (other.e31 * this.e41) + (other.e12 * this.e1234), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - (this.group1.zxyx * float4(other.group0.yzx, other.e41)) - float4((other.group1.yzx * this.group0.zxy), other.e42 * this.e31)
+            float4((other.e41 * this.scalar) + (other.e43 * this.e31) + (other.e23 * this.e1234) + (other.e12 * this.e42), (other.e41 * this.e12) + (other.e42 * this.scalar) + (other.e23 * this.e43) + (other.e31 * this.e1234), (other.e42 * this.e23) + (other.e43 * this.scalar) + (other.e31 * this.e41) + (other.e12 * this.e1234), -(other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) - (this.group1.zxyx * float4(other.group0.xyz.yzx, other.e41)) - float4((other.group1.xyz.yzx * this.group0.zxy), other.e42 * this.e31)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -649,14 +649,14 @@ extension Motor: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12), 0.0) + (float2(this.e1234) * other.group0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12), 0.0) + (float2(this.e1234) * other.group0.xy) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e42 * other.e3) + (this.e1234 * other.e1) + (this.e23 * other.e4) + (this.e31 * other.e412) + (this.scalar * other.e423), (this.e43 * other.e1) + (this.e1234 * other.e2) + (this.e31 * other.e4) + (this.e12 * other.e423) + (this.scalar * other.e431), (this.e43 * other.e321) + (this.e1234 * other.e3) + (this.e23 * other.e431) + (this.e12 * other.e4) + (this.scalar * other.e412), this.e43 * other.e412 * -1.0) + (this.group0.xyxw * float4(other.group4.ww, other.e2, other.e4)) - (this.group0.zxyx * float4(other.group1.yzx, other.e423)) - (other.group4.yzxy * float4(this.group1.zxy, this.e42)), 
-            /* e41, e42, e43 */
-            (float3(other.e1234) * this.group0.xyz) + (other.group2.xxy * this.group0.wzx) + (other.group2.zyz * this.group0.yww) - (other.group2.yzx * this.group0.zxy), 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (other.group2.xxy * this.group1.wzx) + (other.group2.zyz * this.group1.yww) + (other.group3.xxy * this.group0.wzx) + (other.group3.zyz * this.group0.yww) - (other.group2.yzx * this.group1.zxy) - (other.group3.yzx * this.group0.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e1234) * this.group0.xyz) + (other.group2.xyz.xxy * this.group0.wzx) + (other.group2.xyz.zyz * this.group0.yww) - (other.group2.xyz.yzx * this.group0.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (other.group2.xyz.xxy * this.group1.wzx) + (other.group2.xyz.zyz * this.group1.yww) + (other.group3.xyz.xxy * this.group0.wzx) + (other.group3.xyz.zyz * this.group0.yww) - (other.group2.xyz.yzx * this.group1.zxy) - (other.group3.xyz.yzx * this.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234 * other.e423, this.e1234 * other.e431, this.e1234 * other.e412, -(this.e42 * other.e2) - (this.e43 * other.e3) - (this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412)) + (this.group0.xyxw * float4(other.group1.ww, other.e431, other.e321)) + (float4(other.group4.zx, other.e4, other.e4) * float4(this.group0.yzz, this.scalar)) - (this.group0.zxyx * float4(other.group4.yzx, other.e1))
         ).geometric_anti_product(this.anti_reverse());
@@ -716,14 +716,14 @@ extension MultiVector: AntiSandwich<AntiScalar> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.e1234) * this.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.e1234) * this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group1, 
-            /* e41, e42, e43 */
-            float3(other.e1234) * this.group2, 
-            /* e23, e31, e12 */
-            float3(other.e1234) * this.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e1234) * this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.e1234) * this.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group4
         ).geometric_anti_product(this.anti_reverse());
@@ -733,16 +733,16 @@ extension MultiVector: AntiSandwich<DualNum> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: DualNum) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group1.xyz) - (float3(other.scalar) * this.group4.xyz)), other.e1234 * this.e4), 
-            /* e41, e42, e43 */
-            float3(other.e1234) * this.group2, 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * this.group2) + (float3(other.e1234) * this.group3), 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e1234) * this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * this.group2.xyz) + (float3(other.e1234) * this.group3.xyz), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e423, this.e431, this.e412, 1.0) * float4(other.group0.yy, other.e1234, (other.e1234 * this.e321) - (other.scalar * this.e4))
+            float4(this.e423, this.e431, this.e412, 1.0) * float4(other.group0.xy.yy, other.e1234, (other.e1234 * this.e321) - (other.scalar * this.e4))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -750,16 +750,16 @@ extension MultiVector: AntiSandwich<Flector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Flector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group0.xw), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group0.xw), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((other.e1 * this.e1234) + (other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) + (float4(this.group0.xx, this.scalar, this.e1234) * float4(other.group1.xyz, other.e4)) - (other.group1.yzxy * float4(this.group3.zxy, this.e42)) - float4((this.group2.zxy * other.group0.yzx), other.e423 * this.e41), 
-            /* e41, e42, e43 */
-            (other.group1.yzx * this.group4.zxy) - (float3(other.e4) * this.group4.xyz) - (float3(this.e4, this.e412, this.e423) * other.group1.xxy) - (float3(this.e431, this.e4, this.e4) * other.group1.zyz), 
-            /* e23, e31, e12 */
-            (float3(other.e321) * this.group4.xyz) + (float3(this.e4, this.e412, this.e423) * other.group0.xxy) + (float3(this.e431, this.e4, this.e4) * other.group0.zyz) + (other.group1.yzx * this.group1.zxy) - (float3(other.e4) * this.group1.xyz) - (float3(this.e2, this.e321, this.e321) * other.group1.zyz) - (float3(this.e321, this.e3, this.e1) * other.group1.xxy) - (other.group0.yzx * this.group4.zxy), 
+            float4((other.e1 * this.e1234) + (other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) + (float4(this.group0.xy.xx, this.scalar, this.e1234) * float4(other.group1.xyz, other.e4)) - (other.group1.yzxy * float4(this.group3.xyz.zxy, this.e42)) - float4((this.group2.xyz.zxy * other.group0.yzx), other.e423 * this.e41), 
+            /* e41, e42, e43, 0 */
+            float4((other.group1.yzx * this.group4.zxy) - (float3(other.e4) * this.group4.xyz) - (float3(this.e4, this.e412, this.e423) * other.group1.xxy) - (float3(this.e431, this.e4, this.e4) * other.group1.zyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.e321) * this.group4.xyz) + (float3(this.e4, this.e412, this.e423) * other.group0.xxy) + (float3(this.e431, this.e4, this.e4) * other.group0.zyz) + (other.group1.yzx * this.group1.zxy) - (float3(other.e4) * this.group1.xyz) - (float3(this.e2, this.e321, this.e321) * other.group1.zyz) - (float3(this.e321, this.e3, this.e1) * other.group1.xxy) - (other.group0.yzx * this.group4.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e412 * this.e42, other.e423 * this.e43, other.e4 * this.e43, -(other.e2 * this.e42) - (other.e3 * this.e43) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) + (float4(this.group0.yy, this.e1234, this.scalar) * float4(other.group1.xyz, other.e4)) + (float4(other.group0.ww, other.e431, other.e321) * float4(this.group2.xyx, this.e1234)) - float4((this.group2.zxy * other.group1.yzx), other.e1 * this.e41)
+            float4(other.e412 * this.e42, other.e423 * this.e43, other.e4 * this.e43, -(other.e2 * this.e42) - (other.e3 * this.e43) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) + (float4(this.group0.xy.yy, this.e1234, this.scalar) * float4(other.group1.xyz, other.e4)) + (float4(other.group0.ww, other.e431, other.e321) * float4(this.group2.xyz.xyx, this.e1234)) - float4((this.group2.xyz.zxy * other.group1.yzx), other.e1 * this.e41)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -767,14 +767,14 @@ extension MultiVector: AntiSandwich<Horizon> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Horizon) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group2, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(other.e321) * this.group4.xyz, 
+            float4(other.e321, other.e321, other.e321, 0.0) * float4(this.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.e321) * this.group4.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * this.e1234)
         ).geometric_anti_product(this.anti_reverse());
@@ -784,16 +784,16 @@ extension MultiVector: AntiSandwich<Line> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Line) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((other.e41 * this.e321) + (other.e43 * this.e2) + (other.e31 * this.e412), (other.e41 * this.e3) + (other.e42 * this.e321) + (other.e12 * this.e423), (other.e42 * this.e1) + (other.e43 * this.e321) + (other.e23 * this.e431), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.zyz, other.e43)) - float4((other.group0.yzx * this.group1.zxy), other.e41 * this.e423), 
-            /* e41, e42, e43 */
-            (float3(this.e1234) * other.group0) + (other.group0.zxy * this.group2.yzx) - (other.group0.yzx * this.group2.zxy), 
-            /* e23, e31, e12 */
-            (float3(this.scalar) * other.group0) + (float3(this.e1234) * other.group1) + (other.group0.zxy * this.group3.yzx) + (other.group1.zxy * this.group2.yzx) - (other.group0.yzx * this.group3.zxy) - (other.group1.yzx * this.group2.zxy), 
+            float4((other.e41 * this.e321) + (other.e43 * this.e2) + (other.e31 * this.e412), (other.e41 * this.e3) + (other.e42 * this.e321) + (other.e12 * this.e423), (other.e42 * this.e1) + (other.e43 * this.e321) + (other.e23 * this.e431), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xyz.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.xyz.zyz, other.e43)) - float4((other.group0.xyz.yzx * this.group1.zxy), other.e41 * this.e423), 
+            /* e41, e42, e43, 0 */
+            float4((float3(this.e1234) * other.group0.xyz) + (other.group0.xyz.zxy * this.group2.xyz.yzx) - (other.group0.xyz.yzx * this.group2.xyz.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group3.xyz.yzx) + (other.group1.xyz.zxy * this.group2.xyz.yzx) - (other.group0.xyz.yzx * this.group3.xyz.zxy) - (other.group1.xyz.yzx * this.group2.xyz.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group0.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group0.zyz, other.e31)) + float4(float3(0.0), (other.e12 * this.e412) - (other.e42 * this.e2) - (other.e43 * this.e3)) - float4((other.group0.yzx * this.group4.zxy), other.e41 * this.e1)
+            (float4(this.e4, this.e412, this.e423, this.e423) * float4(other.group0.xyz.xxy, other.e23)) + (float4(this.e431, this.e4, this.e4, this.e431) * float4(other.group0.xyz.zyz, other.e31)) + float4(float3(0.0), (other.e12 * this.e412) - (other.e42 * this.e2) - (other.e43 * this.e3)) - float4((other.group0.xyz.yzx * this.group4.zxy), other.e41 * this.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -801,14 +801,14 @@ extension MultiVector: AntiSandwich<Motor> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Motor) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12), 0.0) + (float2(other.e1234) * this.group0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12), 0.0) + (float2(other.e1234) * this.group0.xy) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4((other.e43 * this.e2) + (other.e1234 * this.e1) + (other.e31 * this.e412) - (other.scalar * this.e423), (other.e42 * this.e321) + (other.e1234 * this.e2) + (other.e12 * this.e423) - (other.scalar * this.e431), (other.e43 * this.e321) + (other.e1234 * this.e3) + (other.e23 * this.e431) - (other.scalar * this.e412), 0.0) + (float4(this.e321, this.e3, this.e1, this.e4) * other.group0.xxyw) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.zyz, other.e43)) - (other.group0.yzxx * float4(this.group1.zxy, this.e423)), 
-            /* e41, e42, e43 */
-            (float3(this.e1234) * other.group0.xyz) + (this.group2.xyx * other.group0.wwy) + (this.group2.yzz * other.group0.zxw) - (this.group2.zxy * other.group0.yzx), 
-            /* e23, e31, e12 */
-            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (this.group2.xyx * other.group1.wwy) + (this.group2.yzz * other.group1.zxw) + (this.group3.xyx * other.group0.wwy) + (this.group3.yzz * other.group0.zxw) - (this.group2.zxy * other.group1.yzx) - (this.group3.zxy * other.group0.yzx), 
+            /* e41, e42, e43, 0 */
+            float4((float3(this.e1234) * other.group0.xyz) + (this.group2.xyz.xyx * other.group0.wwy) + (this.group2.xyz.yzz * other.group0.zxw) - (this.group2.xyz.zxy * other.group0.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (this.group2.xyz.xyx * other.group1.wwy) + (this.group2.xyz.yzz * other.group1.zxw) + (this.group3.xyz.xyx * other.group0.wwy) + (this.group3.xyz.yzz * other.group0.zxw) - (this.group2.xyz.zxy * other.group1.yzx) - (this.group3.xyz.zxy * other.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
             (float4(this.e4, this.e412, this.e423, this.e321) * other.group0.xxyw) + (float4(this.e431, this.e4, this.e4, this.e423) * float4(other.group0.zyz, other.e23)) + (this.group4.xyzy * float4(other.group0.www, other.e31)) + float4(float3(0.0), (other.e12 * this.e412) - (other.e42 * this.e2) - (other.e43 * this.e3) - (other.scalar * this.e4)) - (other.group0.yzxx * float4(this.group4.zxy, this.e1))
         ).geometric_anti_product(this.anti_reverse());
@@ -818,16 +818,16 @@ extension MultiVector: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((other.e1234 * this.scalar) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * other.group0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * other.group1.xw), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.e1234 * this.scalar) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * other.group0.xy) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * other.group1.xw), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((other.e1 * this.e1234) + (other.e3 * this.e42) + (other.e4 * this.e23) + (other.e41 * this.e321) + (other.e43 * this.e2) + (other.e31 * this.e412) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e41 * this.e3) + (other.e42 * this.e321) + (other.e12 * this.e423) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e42 * this.e1) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e431 * this.e23) + (other.e321 * this.e43), 0.0) + (float4(other.e1234) * this.group1) + (float4(this.group0.xx, this.scalar, this.e1234) * float4(other.group4.xyz, other.e4)) - (float4(this.e4, this.e412, this.e423, this.e412) * float4(other.group3.xxy, other.e43)) - (float4(this.e431, this.e4, this.e4, other.e423) * float4(other.group3.zyz, this.e41)) - (other.group4.yzxz * float4(this.group3.zxy, this.e43)) - (this.group4.xyzx * float4(other.group0.xx, other.scalar, other.e41)) - float4((other.group2.yzx * this.group1.zxy), other.e42 * this.e431) - float4((this.group2.zxy * other.group1.yzx), other.e431 * this.e42), 
-            /* e41, e42, e43 */
-            (float3(other.e1234) * this.group2) + (float3(this.e1234) * other.group2) + (other.group2.zxy * this.group2.yzx) + (other.group4.yzx * this.group4.zxy) - (float3(other.e4) * this.group4.xyz) - (float3(this.e4, this.e412, this.e423) * other.group4.xxy) - (float3(this.e431, this.e4, this.e4) * other.group4.zyz) - (other.group2.yzx * this.group2.zxy), 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * this.group2) + (float3(other.e1234) * this.group3) + (float3(other.e321) * this.group4.xyz) + (float3(this.scalar) * other.group2) + (float3(this.e1234) * other.group3) + (float3(this.e4, this.e412, this.e423) * other.group1.xxy) + (float3(this.e431, this.e4, this.e4) * other.group1.zyz) + (other.group2.zxy * this.group3.yzx) + (other.group3.zxy * this.group2.yzx) + (other.group4.yzx * this.group1.zxy) - (float3(other.e4) * this.group1.xyz) - (float3(this.e2, this.e321, this.e321) * other.group4.zyz) - (float3(this.e321, this.e3, this.e1) * other.group4.xxy) - (other.group2.yzx * this.group3.zxy) - (other.group3.yzx * this.group2.zxy) - (other.group1.yzx * this.group4.zxy), 
+            float4((other.e1 * this.e1234) + (other.e3 * this.e42) + (other.e4 * this.e23) + (other.e41 * this.e321) + (other.e43 * this.e2) + (other.e31 * this.e412) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e41 * this.e3) + (other.e42 * this.e321) + (other.e12 * this.e423) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e42 * this.e1) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e431 * this.e23) + (other.e321 * this.e43), 0.0) + (float4(other.e1234) * this.group1) + (float4(this.group0.xy.xx, this.scalar, this.e1234) * float4(other.group4.xyz, other.e4)) - (float4(this.e4, this.e412, this.e423, this.e412) * float4(other.group3.xyz.xxy, other.e43)) - (float4(this.e431, this.e4, this.e4, other.e423) * float4(other.group3.xyz.zyz, this.e41)) - (other.group4.yzxz * float4(this.group3.xyz.zxy, this.e43)) - (this.group4.xyzx * float4(other.group0.xy.xx, other.scalar, other.e41)) - float4((other.group2.xyz.yzx * this.group1.zxy), other.e42 * this.e431) - float4((this.group2.xyz.zxy * other.group1.yzx), other.e431 * this.e42), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e1234) * this.group2.xyz) + (float3(this.e1234) * other.group2.xyz) + (other.group2.xyz.zxy * this.group2.xyz.yzx) + (other.group4.yzx * this.group4.zxy) - (float3(other.e4) * this.group4.xyz) - (float3(this.e4, this.e412, this.e423) * other.group4.xxy) - (float3(this.e431, this.e4, this.e4) * other.group4.zyz) - (other.group2.xyz.yzx * this.group2.xyz.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * this.group2.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(other.e321) * this.group4.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(this.e4, this.e412, this.e423) * other.group1.xxy) + (float3(this.e431, this.e4, this.e4) * other.group1.zyz) + (other.group2.xyz.zxy * this.group3.xyz.yzx) + (other.group3.xyz.zxy * this.group2.xyz.yzx) + (other.group4.yzx * this.group1.zxy) - (float3(other.e4) * this.group1.xyz) - (float3(this.e2, this.e321, this.e321) * other.group4.zyz) - (float3(this.e321, this.e3, this.e1) * other.group4.xxy) - (other.group2.xyz.yzx * this.group3.xyz.zxy) - (other.group3.xyz.yzx * this.group2.xyz.zxy) - (other.group1.yzx * this.group4.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            (float4(other.e1234) * this.group4) + (float4(this.e4, this.e412, this.e423, other.e321) * float4(other.group2.xxy, this.e1234)) + (float4(this.e431, this.e4, this.e4, this.e423) * float4(other.group2.zyz, other.e23)) + (float4(this.group0.yy, this.e1234, this.scalar) * float4(other.group4.xyz, other.e4)) + (float4(other.group1.ww, other.e431, this.e431) * float4(this.group2.xyx, other.e31)) + (float4(other.group4.zx, other.e4, this.e412) * float4(this.group2.yzz, other.e12)) + float4(float3(0.0), -(other.e1 * this.e41) - (other.e2 * this.e42) - (other.e3 * this.e43) - (other.e42 * this.e2) - (other.e43 * this.e3) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) - float4((other.group2.yzx * this.group4.zxy), other.scalar * this.e4) - float4((this.group2.zxy * other.group4.yzx), other.e41 * this.e1)
+            (float4(other.e1234) * this.group4) + (float4(this.e4, this.e412, this.e423, other.e321) * float4(other.group2.xyz.xxy, this.e1234)) + (float4(this.e431, this.e4, this.e4, this.e423) * float4(other.group2.xyz.zyz, other.e23)) + (float4(this.group0.xy.yy, this.e1234, this.scalar) * float4(other.group4.xyz, other.e4)) + (float4(other.group1.ww, other.e431, this.e431) * float4(this.group2.xyz.xyx, other.e31)) + (float4(other.group4.zx, other.e4, this.e412) * float4(this.group2.xyz.yzz, other.e12)) + float4(float3(0.0), -(other.e1 * this.e41) - (other.e2 * this.e42) - (other.e3 * this.e43) - (other.e42 * this.e2) - (other.e43 * this.e3) - (other.e423 * this.e23) - (other.e431 * this.e31) - (other.e412 * this.e12)) - float4((other.group2.xyz.yzx * this.group4.zxy), other.scalar * this.e4) - float4((this.group2.xyz.zxy * other.group4.yzx), other.e41 * this.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -835,16 +835,16 @@ extension MultiVector: AntiSandwich<Origin> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Origin) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.e4) * float2(this.e321, this.e4) * float2(-1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.e4) * float2(this.e321, this.e4) * float2(-1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(other.e4) * float4(this.group3, this.e1234), 
-            /* e41, e42, e43 */
-            float3(other.e4) * this.group4.xyz * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(other.e4) * this.group1.xyz * float3(-1.0), 
+            float4(other.e4) * float4(this.group3.xyz, this.e1234), 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e4) * this.group4.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.e4) * this.group1.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e4) * float4(this.group2, this.scalar)
+            float4(other.e4) * float4(this.group2.xyz, this.scalar)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -852,16 +852,16 @@ extension MultiVector: AntiSandwich<Plane> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Plane) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e4 * other.e321, 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e4 * other.e321, 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.scalar * other.e423) + (this.e41 * other.e321) + (this.e31 * other.e412), (this.scalar * other.e431) + (this.e42 * other.e321) + (this.e12 * other.e423), (this.scalar * other.e412) + (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group3.zxy, this.e41)), 
-            /* e41, e42, e43 */
-            (this.group4.zxy * other.group0.yzx) - (float3(this.e4) * other.group0.xyz) - (this.group4.yzx * other.group0.zxy), 
-            /* e23, e31, e12 */
-            (float3(other.e321) * this.group4.xyz) + (this.group1.zxy * other.group0.yzx) - (float3(this.e321) * other.group0.xyz) - (this.group1.yzx * other.group0.zxy), 
+            float4((this.scalar * other.e423) + (this.e41 * other.e321) + (this.e31 * other.e412), (this.scalar * other.e431) + (this.e42 * other.e321) + (this.e12 * other.e423), (this.scalar * other.e412) + (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group3.xyz.zxy, this.e41)), 
+            /* e41, e42, e43, 0 */
+            float4((this.group4.zxy * other.group0.yzx) - (float3(this.e4) * other.group0.xyz) - (this.group4.yzx * other.group0.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.e321) * this.group4.xyz) + (this.group1.zxy * other.group0.yzx) - (float3(this.e321) * other.group0.xyz) - (this.group1.yzx * other.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e42 * other.e412, this.e43 * other.e423, this.e41 * other.e431, -(this.e31 * other.e431) - (this.e12 * other.e412)) + (float4(this.e1234) * other.group0) - (other.group0.yzxx * float4(this.group2.zxy, this.e23))
+            float4(this.e42 * other.e412, this.e43 * other.e423, this.e41 * other.e431, -(this.e31 * other.e431) - (this.e12 * other.e412)) + (float4(this.e1234) * other.group0) - (other.group0.yzxx * float4(this.group2.xyz.zxy, this.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -869,16 +869,16 @@ extension MultiVector: AntiSandwich<Point> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Point) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), this.e4 * other.e4) * float2(1.0, -1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), this.e4 * other.e4) * float2(1.0, -1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(((float3(this.e1234) * other.group0.xyz) + (float3(other.e4) * this.group3) + (this.group2.yzx * other.group0.zxy) - (this.group2.zxy * other.group0.yzx)), this.e1234 * other.e4), 
-            /* e41, e42, e43 */
-            float3(other.e4) * this.group4.xyz * float3(-1.0), 
-            /* e23, e31, e12 */
-            (float3(this.e4) * other.group0.xyz) + (this.group4.yzx * other.group0.zxy) - (float3(other.e4) * this.group1.xyz) - (this.group4.zxy * other.group0.yzx), 
+            float4(((float3(this.e1234) * other.group0.xyz) + (float3(other.e4) * this.group3.xyz) + (this.group2.xyz.yzx * other.group0.zxy) - (this.group2.xyz.zxy * other.group0.yzx)), this.e1234 * other.e4), 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.e4) * this.group4.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.e4) * other.group0.xyz) + (this.group4.yzx * other.group0.zxy) - (float3(other.e4) * this.group1.xyz) - (this.group4.zxy * other.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e4, other.e4, other.e4, 1.0) * float4(this.group2, (this.scalar * other.e4) - (this.e41 * other.e1) - (this.e42 * other.e2) - (this.e43 * other.e3))
+            float4(other.e4, other.e4, other.e4, 1.0) * float4(this.group2.xyz, (this.scalar * other.e4) - (this.e41 * other.e1) - (this.e42 * other.e2) - (this.e43 * other.e3))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -886,14 +886,14 @@ extension MultiVector: AntiSandwich<Scalar> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: Scalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e1234 * other.scalar, 1.0) * float2(1.0, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e1234 * other.scalar, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.scalar, other.scalar, other.scalar, 0.0) * float4(this.group4.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(other.scalar) * this.group2, 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * this.group2.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e4 * other.scalar * -1.0)
         ).geometric_anti_product(this.anti_reverse());
@@ -909,8 +909,8 @@ extension Origin: AntiSandwich<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_sandwich(other: AntiScalar) -> Output {
         return Origin.from_groups(
-            /* e4 */
-            other.e1234 * this.e4
+            /* e4, 0, 0, 0 */
+            float4(other.e1234 * this.e4, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -940,8 +940,8 @@ extension Origin: AntiSandwich<Horizon> {
     associatedtype Output = Horizon;
     func anti_sandwich(other: Horizon) -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            other.e321 * this.e4
+            /* scalar, 0, 0, 0 */
+            float4(other.e321 * this.e4, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -950,9 +950,9 @@ extension Origin: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group0, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(this.e4, this.e4, this.e4, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -971,16 +971,16 @@ extension Origin: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e4) * float2(other.e321, other.e4) * float2(1.0, -1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e4) * float2(other.e321, other.e4) * float2(1.0, -1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e4) * float4(other.group3, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e41, e42, e43 */
-            float3(this.e4) * other.group4.xyz * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(this.e4) * other.group1.xyz, 
+            float4(this.e4) * float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e4) * other.group4.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e4) * other.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4) * float4(other.group2, other.scalar) * float4(1.0, 1.0, 1.0, -1.0)
+            float4(this.e4) * float4(other.group2.xyz, other.scalar) * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -988,8 +988,8 @@ extension Origin: AntiSandwich<Origin> {
     associatedtype Output = Origin;
     func anti_sandwich(other: Origin) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4 * -1.0
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4 * -1.0, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1019,8 +1019,8 @@ extension Origin: AntiSandwich<Scalar> {
     associatedtype Output = Scalar;
     func anti_sandwich(other: Scalar) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e4 * other.scalar * -1.0
+            /* e321, 0, 0, 0 */
+            float4(this.e4 * other.scalar * -1.0, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1044,7 +1044,7 @@ extension Plane: AntiSandwich<DualNum> {
     func anti_sandwich(other: DualNum) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4(other.group0.xx, other.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
+            float4(other.group0.xy.xx, other.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
@@ -1065,10 +1065,10 @@ extension Plane: AntiSandwich<Horizon> {
     associatedtype Output = Flector;
     func anti_sandwich(other: Horizon) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(other.e321) * this.group0.xyz
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.e321) * this.group0.xyz, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1077,9 +1077,9 @@ extension Plane: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
+            float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.xyz.zxy, other.e41)), 
             /* e423, e431, e412, e321 */
-            float4(other.e42 * this.e412 * -1.0, other.e43 * this.e423 * -1.0, other.e41 * this.e431 * -1.0, (other.e31 * this.e431) + (other.e12 * this.e412)) + (this.group0.yzxx * float4(other.group0.zxy, other.e23))
+            float4(other.e42 * this.e412 * -1.0, other.e43 * this.e423 * -1.0, other.e41 * this.e431 * -1.0, (other.e31 * this.e431) + (other.e12 * this.e412)) + (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1098,16 +1098,16 @@ extension Plane: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), other.e43 * this.e412 * -1.0) - (this.group0.xyzx * float4(other.group0.xx, other.scalar, other.e41)) - (this.group0.yzxy * float4(other.group3.zxy, other.e42)), 
-            /* e41, e42, e43 */
-            (other.group4.yzx * this.group0.zxy) - (float3(other.e4) * this.group0.xyz) - (other.group4.zxy * this.group0.yzx), 
-            /* e23, e31, e12 */
-            (float3(other.e321) * this.group0.xyz) + (other.group1.zxy * this.group0.yzx) - (float3(this.e321) * other.group4.xyz) - (other.group1.yzx * this.group0.zxy), 
+            float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), other.e43 * this.e412 * -1.0) - (this.group0.xyzx * float4(other.group0.xy.xx, other.scalar, other.e41)) - (this.group0.yzxy * float4(other.group3.xyz.zxy, other.e42)), 
+            /* e41, e42, e43, 0 */
+            float4((other.group4.yzx * this.group0.zxy) - (float3(other.e4) * this.group0.xyz) - (other.group4.zxy * this.group0.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.e321) * this.group0.xyz) + (other.group1.zxy * this.group0.yzx) - (float3(this.e321) * other.group4.xyz) - (other.group1.yzx * this.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(other.e42 * this.e412 * -1.0, other.e43 * this.e423 * -1.0, other.e41 * this.e431 * -1.0, (other.e31 * this.e431) + (other.e12 * this.e412)) + (float4(other.e1234) * this.group0) + (this.group0.yzxx * float4(other.group2.zxy, other.e23))
+            float4(other.e42 * this.e412 * -1.0, other.e43 * this.e423 * -1.0, other.e41 * this.e431 * -1.0, (other.e31 * this.e431) + (other.e12 * this.e412)) + (float4(other.e1234) * this.group0) + (this.group0.yzxx * float4(other.group2.xyz.zxy, other.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1194,8 +1194,8 @@ extension Point: AntiSandwich<Horizon> {
     associatedtype Output = Horizon;
     func anti_sandwich(other: Horizon) -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            other.e321 * this.e4
+            /* scalar, 0, 0, 0 */
+            float4(other.e321 * this.e4, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1204,9 +1204,9 @@ extension Point: AntiSandwich<Line> {
     func anti_sandwich(other: Line) -> Output {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
-            float4((other.group0.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * other.group1), 0.0) - float4((other.group0.yzx * this.group0.zxy), 0.0), 
+            float4((other.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * other.group1.xyz), 0.0) - float4((other.group0.xyz.yzx * this.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 1.0) * float4(other.group0, -(other.e41 * this.e1) - (other.e42 * this.e2) - (other.e43 * this.e3))
+            float4(this.e4, this.e4, this.e4, 1.0) * float4(other.group0.xyz, -(other.e41 * this.e1) - (other.e42 * this.e2) - (other.e43 * this.e3))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1225,16 +1225,16 @@ extension Point: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), other.e4 * this.e4) * float2(1.0, -1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), other.e4 * this.e4) * float2(1.0, -1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(((float3(other.e1234) * this.group0.xyz) + (other.group2.zxy * this.group0.yzx) - (float3(this.e4) * other.group3) - (other.group2.yzx * this.group0.zxy)), other.e1234 * this.e4), 
-            /* e41, e42, e43 */
-            float3(this.e4) * other.group4.xyz * float3(-1.0), 
-            /* e23, e31, e12 */
-            (float3(this.e4) * other.group1.xyz) + (other.group4.yzx * this.group0.zxy) - (float3(other.e4) * this.group0.xyz) - (other.group4.zxy * this.group0.yzx), 
+            float4(((float3(other.e1234) * this.group0.xyz) + (other.group2.xyz.zxy * this.group0.yzx) - (float3(this.e4) * other.group3.xyz) - (other.group2.xyz.yzx * this.group0.zxy)), other.e1234 * this.e4), 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e4) * other.group4.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.e4) * other.group1.xyz) + (other.group4.yzx * this.group0.zxy) - (float3(other.e4) * this.group0.xyz) - (other.group4.zxy * this.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4(this.e4, this.e4, this.e4, 1.0) * float4(other.group2, -(other.scalar * this.e4) - (other.e41 * this.e1) - (other.e42 * this.e2) - (other.e43 * this.e3))
+            float4(this.e4, this.e4, this.e4, 1.0) * float4(other.group2.xyz, -(other.scalar * this.e4) - (other.e41 * this.e1) - (other.e42 * this.e2) - (other.e43 * this.e3))
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1275,8 +1275,8 @@ extension Point: AntiSandwich<Scalar> {
     associatedtype Output = Scalar;
     func anti_sandwich(other: Scalar) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e4 * other.scalar * -1.0
+            /* e321, 0, 0, 0 */
+            float4(this.e4 * other.scalar * -1.0, 0.0, 0.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1301,10 +1301,10 @@ extension Scalar: AntiSandwich<Line> {
     associatedtype Output = Line;
     func anti_sandwich(other: Line) -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.scalar) * other.group0
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.scalar) * other.group0.xyz, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
@@ -1323,14 +1323,14 @@ extension Scalar: AntiSandwich<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_sandwich(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.scalar, this.scalar, this.scalar, 0.0) * float4(other.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.scalar) * other.group2, 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.scalar) * other.group2.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e4 * this.scalar)
         ).geometric_anti_product(this.anti_reverse());

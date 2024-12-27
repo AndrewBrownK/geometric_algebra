@@ -65,8 +65,8 @@ extension Horizon: AntiAutoMorphism {
     associatedtype Output = Horizon;
     func anti_auto_morphism() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e321 * -1.0
+            /* e321, 0, 0, 0 */
+            float4(this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -116,14 +116,14 @@ extension MultiVector: AntiAutoMorphism {
     associatedtype Output = MultiVector;
     func anti_auto_morphism() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            this.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             this.group1 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group2, 
-            /* e23, e31, e12 */
-            this.group3, 
+            /* e41, e42, e43, 0 */
+            float4(this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             this.group4 * float4(-1.0)
         );
@@ -143,8 +143,8 @@ extension Origin: AntiAutoMorphism {
     associatedtype Output = Origin;
     func anti_auto_morphism() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e4 * -1.0
+            /* e4, 0, 0, 0 */
+            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }

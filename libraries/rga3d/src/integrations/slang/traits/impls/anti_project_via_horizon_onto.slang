@@ -8,21 +8,21 @@ extension AntiScalar: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.scalar, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension AntiScalar: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_dual.group0, 
             /* e423, e431, e412, e321 */
@@ -40,42 +40,42 @@ extension AntiScalar: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension AntiScalar: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            float3(this.e1234) * right_dual.group0, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * right_dual.group1
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * right_dual.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * right_dual.group1.xyz, 0.0)
         );
         return AntiScalar.from_groups(
-            /* e1234 */
-            -(anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)
+            /* e1234, 0, 0, 0 */
+            float4(-(anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43), 0.0, 0.0, 0.0)
         );
     }
 }
 extension AntiScalar: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * right_dual.group0, 
             /* e23, e31, e12, scalar */
@@ -92,41 +92,41 @@ Motor anti_wedge = Motor.from_groups(
 extension AntiScalar: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e1234) * right_dual.group0, 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e1234) * right_dual.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_dual.group1, 
-            /* e41, e42, e43 */
-            float3(this.e1234) * right_dual.group2, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * right_dual.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * right_dual.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * right_dual.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * right_dual.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -134,21 +134,21 @@ extension AntiScalar: AntiProjectViaHorizonOnto<Plane> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension AntiScalar: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane anti_wedge = Plane.from_groups(
+        Plane anti_wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * float4(other.e1, other.e2, other.e3, 0.0)
         );
         return AntiScalar.from_groups(
-            /* e1234 */
-            (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4)
+            /* e1234, 0, 0, 0 */
+            float4((anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -156,8 +156,8 @@ extension AntiScalar: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.scalar, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -170,26 +170,26 @@ extension DualNum {
 extension DualNum: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = DualNum;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-DualNum anti_wedge = DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar) * this.group0
+        DualNum anti_wedge = DualNum.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
         );
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar))
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar)), 0.0, 0.0)
         );
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_dual.group0, 
             /* e423, e431, e412, e321 */
@@ -207,46 +207,46 @@ extension DualNum: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            float3(this.e1234) * right_dual.group0, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * right_dual.group1
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * right_dual.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * right_dual.group1.xyz, 0.0)
         );
         return AntiScalar.from_groups(
-            /* e1234 */
-            -(anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)
+            /* e1234, 0, 0, 0 */
+            float4(-(anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43), 0.0, 0.0, 0.0)
         );
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * right_dual.group0, 
             /* e23, e31, e12, scalar */
-            float4(right_dual.e23, right_dual.e31, right_dual.e12, 1.0) * float4(this.group0.yy, this.e1234, (this.scalar * right_dual.e1234) + (this.e1234 * right_dual.scalar))
+            float4(right_dual.e23, right_dual.e31, right_dual.e12, 1.0) * float4(this.group0.xy.yy, this.e1234, (this.scalar * right_dual.e1234) + (this.e1234 * right_dual.scalar))
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -259,41 +259,41 @@ Motor anti_wedge = Motor.from_groups(
 extension DualNum: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.scalar * right_dual.e1234) + (this.e1234 * right_dual.scalar), this.e1234 * right_dual.e1234), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.scalar * right_dual.e1234) + (this.e1234 * right_dual.scalar), this.e1234 * right_dual.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_dual.group1, 
-            /* e41, e42, e43 */
-            float3(this.e1234) * right_dual.group2, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * right_dual.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * right_dual.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * right_dual.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * right_dual.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -301,34 +301,34 @@ extension DualNum: AntiProjectViaHorizonOnto<Plane> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane anti_wedge = Plane.from_groups(
+        Plane anti_wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * float4(other.e1, other.e2, other.e3, 0.0)
         );
         return AntiScalar.from_groups(
-            /* e1234 */
-            (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4)
+            /* e1234, 0, 0, 0 */
+            float4((anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4), 0.0, 0.0, 0.0)
         );
     }
 }
 extension DualNum: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = DualNum;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar) * float2(right_dual.e1234 * this.scalar, right_dual.e1234 * this.e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar) * float2(right_dual.e1234 * this.scalar, right_dual.e1234 * this.e1234), 0.0, 0.0)
         );
     }
 }
@@ -341,11 +341,11 @@ extension Flector {
 extension Flector: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(right_dual.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -362,13 +362,13 @@ Flector anti_wedge = Flector.from_groups(
 extension Flector: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((right_dual.group1.yzx * this.group1.zxy) - (right_dual.group1.zxy * this.group1.yzx)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -386,40 +386,40 @@ extension Flector: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            powi(other.e321, 2) * this.e321
+            /* e321, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Flector: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4((this.e412 * right_dual.e31) + (this.e321 * right_dual.e41), (this.e423 * right_dual.e12) + (this.e321 * right_dual.e42), (this.e431 * right_dual.e23) + (this.e321 * right_dual.e43), -(this.e431 * right_dual.e42) - (this.e412 * right_dual.e43)) - (this.group1.yzxx * float4(right_dual.group1.zxy, right_dual.e41))
+            float4((this.e412 * right_dual.e31) + (this.e321 * right_dual.e41), (this.e423 * right_dual.e12) + (this.e321 * right_dual.e42), (this.e431 * right_dual.e23) + (this.e321 * right_dual.e43), -(this.e431 * right_dual.e42) - (this.e412 * right_dual.e43)) - (this.group1.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e41))
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.zxy, other.e23))
+            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
 extension Flector: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_dual.e31) + (this.e321 * right_dual.e41), (this.e423 * right_dual.e12) + (this.e321 * right_dual.e42), (this.e431 * right_dual.e23) + (this.e321 * right_dual.e43), -(this.e431 * right_dual.e42) - (this.e412 * right_dual.e43)) + (float4(right_dual.e1234) * this.group0) - (this.group1.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
             /* e423, e431, e412, e321 */
@@ -436,41 +436,41 @@ Flector anti_wedge = Flector.from_groups(
 extension Flector: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.e1 * right_dual.e423) + (this.e2 * right_dual.e431) + (this.e3 * right_dual.e412) + (this.e4 * right_dual.e321) - (this.e423 * right_dual.e1) - (this.e431 * right_dual.e2) - (this.e412 * right_dual.e3) - (this.e321 * right_dual.e4), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.e1 * right_dual.e423) + (this.e2 * right_dual.e431) + (this.e3 * right_dual.e412) + (this.e4 * right_dual.e321) - (this.e423 * right_dual.e1) - (this.e431 * right_dual.e2) - (this.e412 * right_dual.e3) - (this.e321 * right_dual.e4), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.e412 * right_dual.e31) + (this.e321 * right_dual.e41), (this.e423 * right_dual.e12) + (this.e321 * right_dual.e42), (this.e431 * right_dual.e23) + (this.e321 * right_dual.e43), -(this.e431 * right_dual.e42) - (this.e412 * right_dual.e43)) + (float4(right_dual.e1234) * this.group0) - (this.group1.yzxx * float4(right_dual.group3.zxy, right_dual.e41)), 
-            /* e41, e42, e43 */
-            (this.group1.zxy * right_dual.group4.yzx) - (this.group1.yzx * right_dual.group4.zxy), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e321) * this.group1.xyz) - (float3(this.e321) * right_dual.group4.xyz), 
+            float4((this.e412 * right_dual.e31) + (this.e321 * right_dual.e41), (this.e423 * right_dual.e12) + (this.e321 * right_dual.e42), (this.e431 * right_dual.e23) + (this.e321 * right_dual.e43), -(this.e431 * right_dual.e42) - (this.e412 * right_dual.e43)) + (float4(right_dual.e1234) * this.group0) - (this.group1.yzxx * float4(right_dual.group3.xyz.zxy, right_dual.e41)), 
+            /* e41, e42, e43, 0 */
+            float4((this.group1.zxy * right_dual.group4.yzx) - (this.group1.yzx * right_dual.group4.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e321) * this.group1.xyz) - (float3(this.e321) * right_dual.group4.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * this.group1
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -486,11 +486,11 @@ extension Flector: AntiProjectViaHorizonOnto<Plane> {
 extension Flector: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((this.group1.zxy * right_dual.group0.yzx) - (this.group1.yzx * right_dual.group0.zxy)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -507,11 +507,11 @@ Motor anti_wedge = Motor.from_groups(
 extension Flector: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(right_dual.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -535,21 +535,21 @@ extension Horizon: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            powi(other.scalar, 2) * this.e321
+            /* e321, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Horizon: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -567,34 +567,34 @@ extension Horizon: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            powi(other.e321, 2) * this.e321
+            /* e321, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Horizon: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.zxy, other.e23))
+            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
 extension Horizon: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e321, this.e321, this.e321, 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e423, e431, e412, e321 */
@@ -611,41 +611,41 @@ Flector anti_wedge = Flector.from_groups(
 extension Horizon: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4(this.e321, this.e321, this.e321, 0.0) * float4(right_dual.group2, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.e321) * right_dual.group4.xyz * float3(-1.0), 
+            float4(this.e321, this.e321, this.e321, 0.0) * float4(right_dual.group2.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e321) * right_dual.group4.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * right_dual.e1234)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -661,15 +661,15 @@ extension Horizon: AntiProjectViaHorizonOnto<Plane> {
 extension Horizon: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(this.e321) * float4(other.e1, other.e2, other.e3, 0.0).xyz * float3(-1.0)
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e321) * float4(other.e1, other.e2, other.e3, 0.0).xyz * float3(-1.0), 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
+            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group0.xyz.zxy, anti_wedge.e23))
         );
     }
 }
@@ -677,8 +677,8 @@ extension Horizon: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            powi(other.scalar, 2) * this.e321
+            /* e321, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -691,36 +691,36 @@ extension Line {
 extension Line: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Line;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            float3(right_dual.e1234) * this.group0, 
-            /* e23, e31, e12 */
-            float3(right_dual.e1234) * this.group1
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(float3(right_dual.e1234) * this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(right_dual.e1234) * this.group1.xyz, 0.0)
         );
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(other.scalar) * anti_wedge.group0, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * anti_wedge.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * anti_wedge.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * anti_wedge.group1.xyz, 0.0)
         );
     }
 }
 extension Line: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4((right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) - (right_dual.group1.yzxx * float4(this.group1.zxy, this.e41))
+            float4((right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) - (right_dual.group1.yzxx * float4(this.group1.xyz.zxy, this.e41))
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -733,38 +733,38 @@ Point anti_wedge = Point.from_groups(
 extension Line: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = Line;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Scalar anti_wedge = Scalar.from_groups(
-            /* scalar */
-            -(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43)
+        Scalar anti_wedge = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(-(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), 0.0, 0.0, 0.0)
         );
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(anti_wedge.scalar) * other.group0, 
-            /* e23, e31, e12 */
-            float3(anti_wedge.scalar) * other.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(anti_wedge.scalar) * other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(anti_wedge.scalar) * other.group1.xyz, 0.0)
         );
     }
 }
 extension Line: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(float3(1.0), 0.0) * float4(this.group0, 0.0) * float4(right_dual.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_dual.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(right_dual.e1234, right_dual.e1234, right_dual.e1234, 1.0) * float4(this.group1, -(this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43))
+            float4(right_dual.e1234, right_dual.e1234, right_dual.e1234, 1.0) * float4(this.group1.xyz, -(this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43))
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -777,81 +777,81 @@ Motor anti_wedge = Motor.from_groups(
 extension Line: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group4.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e41, e42, e43 */
-            float3(right_dual.e1234) * this.group0, 
-            /* e23, e31, e12 */
-            float3(right_dual.e1234) * this.group1, 
+            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group4.yzxx * float4(this.group1.xyz.zxy, this.e41)), 
+            /* e41, e42, e43, 0 */
+            float4(float3(right_dual.e1234) * this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(right_dual.e1234) * this.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
 extension Line: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Line;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group0.yzxx * float4(this.group1.zxy, this.e41))
+            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group0.yzxx * float4(this.group1.xyz.zxy, this.e41))
         );
         return Line.from_groups(
-            /* e41, e42, e43 */
-            (float3(other.e4) * anti_wedge.group0.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 
-            /* e23, e31, e12 */
-            (anti_wedge.group0.zxy * other.group0.yzx) - (anti_wedge.group0.yzx * other.group0.zxy)
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e4) * anti_wedge.group0.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((anti_wedge.group0.zxy * other.group0.yzx) - (anti_wedge.group0.yzx * other.group0.zxy), 0.0)
         );
     }
 }
 extension Line: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Line;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            float3(right_dual.e1234) * this.group0, 
-            /* e23, e31, e12 */
-            float3(right_dual.e1234) * this.group1
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(float3(right_dual.e1234) * this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(right_dual.e1234) * this.group1.xyz, 0.0)
         );
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(other.scalar) * anti_wedge.group0, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * anti_wedge.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * anti_wedge.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * anti_wedge.group1.xyz, 0.0)
         );
     }
 }
@@ -864,11 +864,11 @@ extension Motor {
 extension Motor: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(right_dual.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -876,7 +876,7 @@ Motor anti_wedge = Motor.from_groups(
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(anti_wedge.e41, anti_wedge.e42, anti_wedge.e43, 1.0) * float4(other.group0.xx, other.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)), 
+            float4(anti_wedge.e41, anti_wedge.e42, anti_wedge.e43, 1.0) * float4(other.group0.xy.xx, other.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)), 
             /* e23, e31, e12, scalar */
             float4(other.scalar) * anti_wedge.group1
         );
@@ -885,13 +885,13 @@ Motor anti_wedge = Motor.from_groups(
 extension Motor: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) + (float4(this.e1234) * right_dual.group0) - (right_dual.group1.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -909,44 +909,44 @@ extension Motor: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Motor: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(float3(1.0), 0.0) * float4(right_dual.group0, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
+            float4(float3(1.0), 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
-            float4(this.e1234, this.e1234, this.e1234, 1.0) * float4(right_dual.group1, -(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43))
+            float4(this.e1234, this.e1234, this.e1234, 1.0) * float4(right_dual.group1.xyz, -(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43))
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
-            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 1.0) * float4(other.group0, -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
+            float4(anti_wedge.scalar, anti_wedge.scalar, anti_wedge.scalar, 1.0) * float4(other.group0.xyz, -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
             /* e23, e31, e12, scalar */
-            float4(float3(1.0), 0.0) * float4(other.group1, 0.0) * float4(anti_wedge.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
+            float4(float3(1.0), 0.0) * float4(other.group1.xyz, 0.0) * float4(anti_wedge.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
 extension Motor: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((float3(right_dual.e1234) * this.group0.xyz) + (float3(this.e1234) * right_dual.group0.xyz)), right_dual.e1234 * this.e1234), 
             /* e23, e31, e12, scalar */
@@ -963,41 +963,41 @@ Motor anti_wedge = Motor.from_groups(
 extension Motor: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.e1234 * right_dual.scalar) + (this.scalar * right_dual.e1234) - (this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43), this.e1234 * right_dual.e1234), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.e1234 * right_dual.scalar) + (this.scalar * right_dual.e1234) - (this.e41 * right_dual.e23) - (this.e42 * right_dual.e31) - (this.e43 * right_dual.e12) - (this.e23 * right_dual.e41) - (this.e31 * right_dual.e42) - (this.e12 * right_dual.e43), this.e1234 * right_dual.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e1234 * right_dual.e1) + (this.e31 * right_dual.e412), (this.e1234 * right_dual.e2) + (this.e12 * right_dual.e423), (this.e1234 * right_dual.e3) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) + (this.group0 * float4(right_dual.group4.www, right_dual.e4)) - (right_dual.group4.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e41, e42, e43 */
-            (float3(this.e1234) * right_dual.group2) + (float3(right_dual.e1234) * this.group0.xyz), 
-            /* e23, e31, e12 */
-            (float3(this.e1234) * right_dual.group3) + (float3(right_dual.e1234) * this.group1.xyz), 
+            /* e41, e42, e43, 0 */
+            float4((float3(this.e1234) * right_dual.group2.xyz) + (float3(right_dual.e1234) * this.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(this.e1234) * right_dual.group3.xyz) + (float3(right_dual.e1234) * this.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * right_dual.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -1005,19 +1005,19 @@ extension Motor: AntiProjectViaHorizonOnto<Plane> {
     associatedtype Output = AntiScalar;
     func anti_project_via_horizon_onto(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powi(other.e321, 2) * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Motor: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group0.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -1034,11 +1034,11 @@ Flector anti_wedge = Flector.from_groups(
 extension Motor: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(right_dual.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -1061,31 +1061,31 @@ extension MultiVector {
 extension MultiVector: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(right_dual.e1234) * this.group0, 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(right_dual.e1234) * this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_dual.e1234) * this.group1, 
-            /* e41, e42, e43 */
-            float3(right_dual.e1234) * this.group2, 
-            /* e23, e31, e12 */
-            float3(right_dual.e1234) * this.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(right_dual.e1234) * this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(right_dual.e1234) * this.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * this.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar * anti_wedge.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar * anti_wedge.scalar, (other.scalar * anti_wedge.e1234) + (other.e1234 * anti_wedge.scalar)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * anti_wedge.group1, 
-            /* e41, e42, e43 */
-            float3(other.scalar) * anti_wedge.group2, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * anti_wedge.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * anti_wedge.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * anti_wedge.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * anti_wedge.group4
         );
@@ -1094,66 +1094,66 @@ MultiVector anti_wedge = MultiVector.from_groups(
 extension MultiVector: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4) - (right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4) - (right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) + (float4(this.e1234) * right_dual.group0) - (right_dual.group1.yzxx * float4(this.group3.zxy, this.e41)), 
-            /* e41, e42, e43 */
-            (right_dual.group1.yzx * this.group4.zxy) - (right_dual.group1.zxy * this.group4.yzx), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e321) * this.group4.xyz) - (float3(this.e321) * right_dual.group1.xyz), 
+            float4((right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) + (float4(this.e1234) * right_dual.group0) - (right_dual.group1.yzxx * float4(this.group3.xyz.zxy, this.e41)), 
+            /* e41, e42, e43, 0 */
+            float4((right_dual.group1.yzx * this.group4.zxy) - (right_dual.group1.zxy * this.group4.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e321) * this.group4.xyz) - (float3(this.e321) * right_dual.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * right_dual.group1
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, (other.e1 * anti_wedge.e423) + (other.e2 * anti_wedge.e431) + (other.e3 * anti_wedge.e412) + (other.e4 * anti_wedge.e321) - (other.e423 * anti_wedge.e1) - (other.e431 * anti_wedge.e2) - (other.e412 * anti_wedge.e3) - (other.e321 * anti_wedge.e4)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, (other.e1 * anti_wedge.e423) + (other.e2 * anti_wedge.e431) + (other.e3 * anti_wedge.e412) + (other.e4 * anti_wedge.e321) - (other.e423 * anti_wedge.e1) - (other.e431 * anti_wedge.e2) - (other.e412 * anti_wedge.e3) - (other.e321 * anti_wedge.e4)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(anti_wedge.scalar) * other.group0, 
-            /* e41, e42, e43 */
-            (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 
-            /* e23, e31, e12 */
-            (other.group0.yzx * anti_wedge.group1.zxy) - (other.group0.zxy * anti_wedge.group1.yzx), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((other.group0.yzx * anti_wedge.group1.zxy) - (other.group0.zxy * anti_wedge.group1.yzx), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((other.e3 * anti_wedge.e42) + (other.e4 * anti_wedge.e23), (other.e1 * anti_wedge.e43) + (other.e4 * anti_wedge.e31), (other.e2 * anti_wedge.e41) + (other.e4 * anti_wedge.e12), -(other.e2 * anti_wedge.e31) - (other.e3 * anti_wedge.e12)) + (float4(anti_wedge.scalar) * other.group1) - (other.group0.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23))
+            float4((other.e3 * anti_wedge.e42) + (other.e4 * anti_wedge.e23), (other.e1 * anti_wedge.e43) + (other.e4 * anti_wedge.e31), (other.e2 * anti_wedge.e41) + (other.e4 * anti_wedge.e12), -(other.e2 * anti_wedge.e31) - (other.e3 * anti_wedge.e12)) + (float4(anti_wedge.scalar) * other.group1) - (other.group0.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23))
         );
     }
 }
 extension MultiVector: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
-Origin right_dual = Origin.from_groups(
-            /* e4 */
-            other.e321 * -1.0
+        Origin right_dual = Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * right_dual.e4), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(1.0, other.e321 * anti_wedge.e4) * float2(0.0, -1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(1.0, other.e321 * anti_wedge.e4) * float2(0.0, -1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * anti_wedge.scalar)
         );
@@ -1162,68 +1162,68 @@ MultiVector anti_wedge = MultiVector.from_groups(
 extension MultiVector: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group4.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
-            /* e41, e42, e43 */
-            float3(this.e1234) * right_dual.group0, 
-            /* e23, e31, e12 */
-            float3(this.e1234) * right_dual.group1, 
+            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group4.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e41)), 
+            /* e41, e42, e43, 0 */
+            float4(float3(this.e1234) * right_dual.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(this.e1234) * right_dual.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, -(other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(anti_wedge.scalar) * other.group0, 
-            /* e23, e31, e12 */
-            float3(anti_wedge.scalar) * other.group1, 
+            /* e41, e42, e43, 0 */
+            float4(float3(anti_wedge.scalar) * other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(anti_wedge.scalar) * other.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
-            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group1.yzxx * float4(other.group0.zxy, other.e23))
+            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group1.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
 extension MultiVector: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((right_dual.e1234 * this.scalar) + (right_dual.scalar * this.e1234) - (right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), right_dual.e1234 * this.e1234), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((right_dual.e1234 * this.scalar) + (right_dual.scalar * this.e1234) - (right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), right_dual.e1234 * this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4((right_dual.e1234 * this.e1) + (right_dual.e31 * this.e412), (right_dual.e1234 * this.e2) + (right_dual.e12 * this.e423), (right_dual.e1234 * this.e3) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) + (right_dual.group0 * float4(this.group4.www, this.e4)) - (this.group4.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
-            /* e41, e42, e43 */
-            (float3(right_dual.e1234) * this.group2) + (float3(this.e1234) * right_dual.group0.xyz), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e1234) * this.group3) + (float3(this.e1234) * right_dual.group1.xyz), 
+            /* e41, e42, e43, 0 */
+            float4((float3(right_dual.e1234) * this.group2.xyz) + (float3(this.e1234) * right_dual.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e1234) * this.group3.xyz) + (float3(this.e1234) * right_dual.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * this.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar * anti_wedge.scalar, (other.e1234 * anti_wedge.scalar) + (other.scalar * anti_wedge.e1234) - (other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar * anti_wedge.scalar, (other.e1234 * anti_wedge.scalar) + (other.scalar * anti_wedge.e1234) - (other.e41 * anti_wedge.e23) - (other.e42 * anti_wedge.e31) - (other.e43 * anti_wedge.e12) - (other.e23 * anti_wedge.e41) - (other.e31 * anti_wedge.e42) - (other.e12 * anti_wedge.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * anti_wedge.group1, 
-            /* e41, e42, e43 */
-            (float3(other.scalar) * anti_wedge.group2) + (float3(anti_wedge.scalar) * other.group0.xyz), 
-            /* e23, e31, e12 */
-            (float3(other.scalar) * anti_wedge.group3) + (float3(anti_wedge.scalar) * other.group1.xyz), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.scalar) * anti_wedge.group2.xyz) + (float3(anti_wedge.scalar) * other.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(other.scalar) * anti_wedge.group3.xyz) + (float3(anti_wedge.scalar) * other.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4((other.e23 * anti_wedge.e4) + (other.scalar * anti_wedge.e423), (other.e31 * anti_wedge.e4) + (other.scalar * anti_wedge.e431), (other.e12 * anti_wedge.e4) + (other.scalar * anti_wedge.e412), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) + float4((other.group0.yzx * anti_wedge.group1.zxy), other.scalar * anti_wedge.e321) - (anti_wedge.group1.yzxx * float4(other.group0.zxy, other.e23))
         );
@@ -1232,72 +1232,72 @@ MultiVector anti_wedge = MultiVector.from_groups(
 extension MultiVector: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((right_dual.scalar * this.e1234) + (right_dual.e1234 * this.scalar) + (right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4) - (right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321) - (right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), right_dual.e1234 * this.e1234), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((right_dual.scalar * this.e1234) + (right_dual.e1234 * this.scalar) + (right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4) - (right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321) - (right_dual.e41 * this.e23) - (right_dual.e42 * this.e31) - (right_dual.e43 * this.e12) - (right_dual.e23 * this.e41) - (right_dual.e31 * this.e42) - (right_dual.e12 * this.e43), right_dual.e1234 * this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412) + (right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423) + (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431) + (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e43 * this.e412) - (right_dual.e423 * this.e41) - (right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) + (float4(right_dual.e1234) * this.group1) + (float4(this.e1234) * right_dual.group1) - (this.group4.yzxx * float4(right_dual.group3.zxy, right_dual.e41)) - float4((this.group3.zxy * right_dual.group4.yzx), right_dual.e42 * this.e431), 
-            /* e41, e42, e43 */
-            (float3(right_dual.e1234) * this.group2) + (float3(this.e1234) * right_dual.group2) + (right_dual.group4.yzx * this.group4.zxy) - (right_dual.group4.zxy * this.group4.yzx), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e1234) * this.group3) + (float3(right_dual.e321) * this.group4.xyz) + (float3(this.e1234) * right_dual.group3) - (float3(this.e321) * right_dual.group4.xyz), 
+            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412) + (right_dual.e412 * this.e31) + (right_dual.e321 * this.e41), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423) + (right_dual.e423 * this.e12) + (right_dual.e321 * this.e42), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431) + (right_dual.e431 * this.e23) + (right_dual.e321 * this.e43), -(right_dual.e43 * this.e412) - (right_dual.e423 * this.e41) - (right_dual.e431 * this.e42) - (right_dual.e412 * this.e43)) + (float4(right_dual.e1234) * this.group1) + (float4(this.e1234) * right_dual.group1) - (this.group4.yzxx * float4(right_dual.group3.xyz.zxy, right_dual.e41)) - float4((this.group3.xyz.zxy * right_dual.group4.yzx), right_dual.e42 * this.e431), 
+            /* e41, e42, e43, 0 */
+            float4((float3(right_dual.e1234) * this.group2.xyz) + (float3(this.e1234) * right_dual.group2.xyz) + (right_dual.group4.yzx * this.group4.zxy) - (right_dual.group4.zxy * this.group4.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e1234) * this.group3.xyz) + (float3(right_dual.e321) * this.group4.xyz) + (float3(this.e1234) * right_dual.group3.xyz) - (float3(this.e321) * right_dual.group4.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             (float4(right_dual.e1234) * this.group4) + (float4(this.e1234) * right_dual.group4)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
 extension MultiVector: AntiProjectViaHorizonOnto<Plane> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Plane) -> Output {
-Origin right_dual = Origin.from_groups(
-            /* e4 */
-            other.e321 * -1.0
+        Origin right_dual = Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * right_dual.e4), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, -(anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, -(anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar) * other.group0
         );
@@ -1306,64 +1306,64 @@ MultiVector anti_wedge = MultiVector.from_groups(
 extension MultiVector: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((this.e1 * right_dual.e423) + (this.e2 * right_dual.e431) + (this.e3 * right_dual.e412) + (this.e4 * right_dual.e321), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((this.e1 * right_dual.e423) + (this.e2 * right_dual.e431) + (this.e3 * right_dual.e412) + (this.e4 * right_dual.e321), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group0.yzxx * float4(this.group3.zxy, this.e41)), 
-            /* e41, e42, e43 */
-            (this.group4.zxy * right_dual.group0.yzx) - (this.group4.yzx * right_dual.group0.zxy), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e321) * this.group4.xyz) - (float3(this.e321) * right_dual.group0.xyz), 
+            float4((this.e41 * right_dual.e321) + (this.e31 * right_dual.e412), (this.e42 * right_dual.e321) + (this.e12 * right_dual.e423), (this.e43 * right_dual.e321) + (this.e23 * right_dual.e431), -(this.e42 * right_dual.e431) - (this.e43 * right_dual.e412)) - (right_dual.group0.yzxx * float4(this.group3.xyz.zxy, this.e41)), 
+            /* e41, e42, e43, 0 */
+            float4((this.group4.zxy * right_dual.group0.yzx) - (this.group4.yzx * right_dual.group0.zxy), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e321) * this.group4.xyz) - (float3(this.e321) * right_dual.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e1234) * right_dual.group0
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(anti_wedge.scalar) * other.group0, 
-            /* e41, e42, e43 */
-            (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 
-            /* e23, e31, e12 */
-            (anti_wedge.group1.zxy * other.group0.yzx) - (anti_wedge.group1.yzx * other.group0.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group0.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((anti_wedge.group1.zxy * other.group0.yzx) - (anti_wedge.group1.yzx * other.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23))
+            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23))
         );
     }
 }
 extension MultiVector: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(right_dual.e1234) * this.group0, 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(right_dual.e1234) * this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_dual.e1234) * this.group1, 
-            /* e41, e42, e43 */
-            float3(right_dual.e1234) * this.group2, 
-            /* e23, e31, e12 */
-            float3(right_dual.e1234) * this.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(right_dual.e1234) * this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(right_dual.e1234) * this.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * this.group4
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar) * anti_wedge.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar) * anti_wedge.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * anti_wedge.group1, 
-            /* e41, e42, e43 */
-            float3(other.scalar) * anti_wedge.group2, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * anti_wedge.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * anti_wedge.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * anti_wedge.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * anti_wedge.group4
         );
@@ -1379,17 +1379,17 @@ extension Origin: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Origin;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
         return Origin.from_groups(
-            /* e4 */
-            powi(other.scalar, 2) * this.e4
+            /* e4, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Origin: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Scalar anti_wedge = Scalar.from_groups(
-            /* scalar */
-            this.e4 * 0.0
+        Scalar anti_wedge = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(this.e4 * 0.0, 0.0, 0.0, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1402,9 +1402,9 @@ Scalar anti_wedge = Scalar.from_groups(
 extension Origin: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Origin anti_wedge = Origin.from_groups(
-            /* e4 */
-            (other.group1 * float4(-1.0, -1.0, -1.0, 1.0))[3] * this.e4
+        Origin anti_wedge = Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4((other.group1 * float4(-1.0, -1.0, -1.0, 1.0))[3] * this.e4, 0.0, 0.0, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1417,41 +1417,41 @@ Origin anti_wedge = Origin.from_groups(
 extension Origin: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(right_dual.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(right_dual.e321 * this.e4, 1.0) * float2(1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), right_dual.e1234 * this.e4), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -1468,8 +1468,8 @@ extension Origin: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Origin;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
         return Origin.from_groups(
-            /* e4 */
-            powi(other.scalar, 2) * this.e4
+            /* e4, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -1482,9 +1482,9 @@ extension Plane {
 extension Plane: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -1495,13 +1495,13 @@ AntiScalar right_dual = AntiScalar.from_groups(
 extension Plane: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Motor anti_wedge = Motor.from_groups(
+        Motor anti_wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(((right_dual.group1.yzx * this.group0.zxy) - (right_dual.group1.zxy * this.group0.yzx)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1519,40 +1519,40 @@ extension Plane: AntiProjectViaHorizonOnto<Horizon> {
     associatedtype Output = Horizon;
     func anti_project_via_horizon_onto(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            powi(other.e321, 2) * this.e321
+            /* e321, 0, 0, 0 */
+            float4(powi(other.e321, 2) * this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
 extension Plane: AntiProjectViaHorizonOnto<Line> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Line) -> Output {
-Line right_dual = Line.from_groups(
-            /* e41, e42, e43 */
-            other.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0)
+        Line right_dual = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
-            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group0.yzxx * float4(right_dual.group1.zxy, right_dual.e41))
+            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group0.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e41))
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.zxy, other.e23))
+            float4((other.e42 * anti_wedge.e3) + (other.e23 * anti_wedge.e4), (other.e43 * anti_wedge.e1) + (other.e31 * anti_wedge.e4), (other.e41 * anti_wedge.e2) + (other.e12 * anti_wedge.e4), -(other.e31 * anti_wedge.e2) - (other.e12 * anti_wedge.e3)) - (anti_wedge.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
 extension Plane: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-Flector anti_wedge = Flector.from_groups(
+        Flector anti_wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group0.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
             /* e423, e431, e412, e321 */
@@ -1569,41 +1569,41 @@ Flector anti_wedge = Flector.from_groups(
 extension Plane: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(-(right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(-(right_dual.e1 * this.e423) - (right_dual.e2 * this.e431) - (right_dual.e3 * this.e412) - (right_dual.e4 * this.e321), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
-            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group0.yzxx * float4(right_dual.group3.zxy, right_dual.e41)), 
-            /* e41, e42, e43 */
-            (right_dual.group4.yzx * this.group0.zxy) - (right_dual.group4.zxy * this.group0.yzx), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e321) * this.group0.xyz) - (float3(this.e321) * right_dual.group4.xyz), 
+            float4((right_dual.e41 * this.e321) + (right_dual.e31 * this.e412), (right_dual.e42 * this.e321) + (right_dual.e12 * this.e423), (right_dual.e43 * this.e321) + (right_dual.e23 * this.e431), -(right_dual.e42 * this.e431) - (right_dual.e43 * this.e412)) - (this.group0.yzxx * float4(right_dual.group3.xyz.zxy, right_dual.e41)), 
+            /* e41, e42, e43, 0 */
+            float4((right_dual.group4.yzx * this.group0.zxy) - (right_dual.group4.zxy * this.group0.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e321) * this.group0.xyz) - (float3(this.e321) * right_dual.group4.xyz), 0.0), 
             /* e423, e431, e412, e321 */
             float4(right_dual.e1234) * this.group0
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
@@ -1619,28 +1619,28 @@ extension Plane: AntiProjectViaHorizonOnto<Plane> {
 extension Plane: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Line anti_wedge = Line.from_groups(
-            /* e41, e42, e43 */
-            (right_dual.group0.yzx * this.group0.zxy) - (right_dual.group0.zxy * this.group0.yzx), 
-            /* e23, e31, e12 */
-            (float3(right_dual.e321) * this.group0.xyz) - (float3(this.e321) * right_dual.group0.xyz)
+        Line anti_wedge = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4((right_dual.group0.yzx * this.group0.zxy) - (right_dual.group0.zxy * this.group0.yzx), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(right_dual.e321) * this.group0.xyz) - (float3(this.e321) * right_dual.group0.xyz), 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group0.zxy, anti_wedge.e23))
+            float4((anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e31 * other.e2) - (anti_wedge.e12 * other.e3)) - (other.group0.yzxx * float4(anti_wedge.group0.xyz.zxy, anti_wedge.e23))
         );
     }
 }
 extension Plane: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Plane;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -1657,9 +1657,9 @@ extension Point {
 extension Point: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = Point;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1670,15 +1670,15 @@ AntiScalar right_dual = AntiScalar.from_groups(
 extension Point: AntiProjectViaHorizonOnto<Flector> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Flector) -> Output {
-Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-Scalar anti_wedge = Scalar.from_groups(
-            /* scalar */
-            (right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4)
+        Scalar anti_wedge = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4((right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4), 0.0, 0.0, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1691,7 +1691,7 @@ Scalar anti_wedge = Scalar.from_groups(
 extension Point: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Flector;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Point anti_wedge = Point.from_groups(
+        Point anti_wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
         );
@@ -1706,48 +1706,48 @@ Point anti_wedge = Point.from_groups(
 extension Point: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.scalar), 
+        MultiVector right_dual = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.scalar), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43 */
-            other.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
-MultiVector anti_wedge = MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2((right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4), 0.0), 
+        MultiVector anti_wedge = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(float2((right_dual.e423 * this.e1) + (right_dual.e431 * this.e2) + (right_dual.e412 * this.e3) + (right_dual.e321 * this.e4), 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_dual.e1234) * this.group0, 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar * other.scalar, (anti_wedge.scalar * other.e1234) + (anti_wedge.e1234 * other.scalar) + (anti_wedge.e423 * other.e1) + (anti_wedge.e431 * other.e2) + (anti_wedge.e412 * other.e3) + (anti_wedge.e321 * other.e4) - (anti_wedge.e1 * other.e423) - (anti_wedge.e2 * other.e431) - (anti_wedge.e3 * other.e412) - (anti_wedge.e4 * other.e321) - (anti_wedge.e41 * other.e23) - (anti_wedge.e42 * other.e31) - (anti_wedge.e43 * other.e12) - (anti_wedge.e23 * other.e41) - (anti_wedge.e31 * other.e42) - (anti_wedge.e12 * other.e43)), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             (float4(anti_wedge.scalar) * other.group1) + (float4(other.scalar) * anti_wedge.group1), 
-            /* e41, e42, e43 */
-            (float3(anti_wedge.scalar) * other.group2) + (float3(other.scalar) * anti_wedge.group2) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 
-            /* e23, e31, e12 */
-            (float3(anti_wedge.scalar) * other.group3) + (float3(other.scalar) * anti_wedge.group3) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 
+            /* e41, e42, e43, 0 */
+            float4((float3(anti_wedge.scalar) * other.group2.xyz) + (float3(other.scalar) * anti_wedge.group2.xyz) + (float3(other.e4) * anti_wedge.group1.xyz) - (float3(anti_wedge.e4) * other.group1.xyz), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4((float3(anti_wedge.scalar) * other.group3.xyz) + (float3(other.scalar) * anti_wedge.group3.xyz) + (anti_wedge.group1.zxy * other.group1.yzx) - (anti_wedge.group1.yzx * other.group1.zxy), 0.0), 
             /* e423, e431, e412, e321 */
-            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.zxy, anti_wedge.e23)) - float4((other.group2.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
+            float4((anti_wedge.e3 * other.e42) + (anti_wedge.e4 * other.e23) + (anti_wedge.e42 * other.e3) + (anti_wedge.e23 * other.e4), (anti_wedge.e1 * other.e43) + (anti_wedge.e4 * other.e31) + (anti_wedge.e43 * other.e1) + (anti_wedge.e31 * other.e4), (anti_wedge.e2 * other.e41) + (anti_wedge.e4 * other.e12) + (anti_wedge.e41 * other.e2) + (anti_wedge.e12 * other.e4), -(anti_wedge.e1 * other.e23) - (anti_wedge.e2 * other.e31) - (anti_wedge.e3 * other.e12) - (anti_wedge.e12 * other.e3)) + (float4(anti_wedge.scalar) * other.group4) + (float4(other.scalar) * anti_wedge.group4) - (other.group1.yzxx * float4(anti_wedge.group2.xyz.zxy, anti_wedge.e23)) - float4((other.group2.xyz.zxy * anti_wedge.group1.yzx), anti_wedge.e31 * other.e2)
         );
     }
 }
 extension Point: AntiProjectViaHorizonOnto<Point> {
     associatedtype Output = Point;
     func anti_project_via_horizon_onto(other: Point) -> Output {
-Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1, other.e2, other.e3, 0.0)
         );
@@ -1760,9 +1760,9 @@ Plane right_dual = Plane.from_groups(
 extension Point: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Point;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
-AntiScalar right_dual = AntiScalar.from_groups(
-            /* e1234 */
-            other.scalar
+        AntiScalar right_dual = AntiScalar.from_groups(
+            /* e1234, 0, 0, 0 */
+            float4(other.scalar, 0.0, 0.0, 0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1780,17 +1780,17 @@ extension Scalar: AntiProjectViaHorizonOnto<DualNum> {
     associatedtype Output = DualNum;
     func anti_project_via_horizon_onto(other: DualNum) -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar * this.scalar) * other.group0
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar * this.scalar) * other.group0.xy, 0.0, 0.0)
         );
     }
 }
 extension Scalar: AntiProjectViaHorizonOnto<Motor> {
     associatedtype Output = Motor;
     func anti_project_via_horizon_onto(other: Motor) -> Output {
-Scalar anti_wedge = Scalar.from_groups(
-            /* scalar */
-            (other.group1 * float4(-1.0, -1.0, -1.0, 1.0))[3] * this.scalar
+        Scalar anti_wedge = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4((other.group1 * float4(-1.0, -1.0, -1.0, 1.0))[3] * this.scalar, 0.0, 0.0, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -1803,19 +1803,19 @@ Scalar anti_wedge = Scalar.from_groups(
 extension Scalar: AntiProjectViaHorizonOnto<MultiVector> {
     associatedtype Output = MultiVector;
     func anti_project_via_horizon_onto(other: MultiVector) -> Output {
-Scalar anti_wedge = Scalar.from_groups(
-            /* scalar */
-            other.scalar * this.scalar
+        Scalar anti_wedge = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(anti_wedge.scalar) * other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(anti_wedge.scalar) * other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(anti_wedge.scalar) * other.group1, 
-            /* e41, e42, e43 */
-            float3(anti_wedge.scalar) * other.group2, 
-            /* e23, e31, e12 */
-            float3(anti_wedge.scalar) * other.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(anti_wedge.scalar) * other.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(anti_wedge.scalar) * other.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(anti_wedge.scalar) * other.group4
         );
@@ -1825,8 +1825,8 @@ extension Scalar: AntiProjectViaHorizonOnto<Scalar> {
     associatedtype Output = Scalar;
     func anti_project_via_horizon_onto(other: Scalar) -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            powi(other.scalar, 2) * this.scalar
+            /* scalar, 0, 0, 0 */
+            float4(powi(other.scalar, 2) * this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }

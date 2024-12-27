@@ -8,8 +8,8 @@ extension AntiScalar: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -17,8 +17,8 @@ extension AntiScalar: AntiDotProduct<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: DualNum) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234 * other.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -26,8 +26,8 @@ extension AntiScalar: AntiDotProduct<Motor> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Motor) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234 * other.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -35,8 +35,8 @@ extension AntiScalar: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234 * other.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -50,8 +50,8 @@ extension DualNum: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -59,8 +59,8 @@ extension DualNum: AntiDotProduct<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: DualNum) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -68,8 +68,8 @@ extension DualNum: AntiDotProduct<Motor> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Motor) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234 * other.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -77,8 +77,8 @@ extension DualNum: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234 * other.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -92,8 +92,8 @@ extension Flector: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -101,8 +101,8 @@ extension Flector: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
+            /* e1234, 0, 0, 0 */
+            float4((this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -110,8 +110,8 @@ extension Flector: AntiDotProduct<Origin> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e4 * other.e4
+            /* e1234, 0, 0, 0 */
+            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -119,8 +119,8 @@ extension Flector: AntiDotProduct<Plane> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
+            /* e1234, 0, 0, 0 */
+            float4((this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -128,8 +128,8 @@ extension Flector: AntiDotProduct<Point> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Point) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e4 * other.e4
+            /* e1234, 0, 0, 0 */
+            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -143,8 +143,8 @@ extension Line: AntiDotProduct<Line> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Line) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
+            /* e1234, 0, 0, 0 */
+            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -152,8 +152,8 @@ extension Line: AntiDotProduct<Motor> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Motor) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
+            /* e1234, 0, 0, 0 */
+            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -161,8 +161,8 @@ extension Line: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
+            /* e1234, 0, 0, 0 */
+            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -176,8 +176,8 @@ extension Motor: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -185,8 +185,8 @@ extension Motor: AntiDotProduct<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: DualNum) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -194,8 +194,8 @@ extension Motor: AntiDotProduct<Line> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Line) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
+            /* e1234, 0, 0, 0 */
+            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -203,8 +203,8 @@ extension Motor: AntiDotProduct<Motor> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Motor) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
+            /* e1234, 0, 0, 0 */
+            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -212,8 +212,8 @@ extension Motor: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234)
+            /* e1234, 0, 0, 0 */
+            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -227,8 +227,8 @@ extension MultiVector: AntiDotProduct<AntiScalar> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: AntiScalar) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -236,8 +236,8 @@ extension MultiVector: AntiDotProduct<DualNum> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: DualNum) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e1234 * this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -245,8 +245,8 @@ extension MultiVector: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -254,8 +254,8 @@ extension MultiVector: AntiDotProduct<Line> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Line) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
+            /* e1234, 0, 0, 0 */
+            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -263,8 +263,8 @@ extension MultiVector: AntiDotProduct<Motor> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Motor) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
+            /* e1234, 0, 0, 0 */
+            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -272,8 +272,8 @@ extension MultiVector: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -281,8 +281,8 @@ extension MultiVector: AntiDotProduct<Origin> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e4 * other.e4
+            /* e1234, 0, 0, 0 */
+            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -290,8 +290,8 @@ extension MultiVector: AntiDotProduct<Plane> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
+            /* e1234, 0, 0, 0 */
+            float4((this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -299,8 +299,8 @@ extension MultiVector: AntiDotProduct<Point> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Point) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e4 * other.e4
+            /* e1234, 0, 0, 0 */
+            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -314,8 +314,8 @@ extension Origin: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -323,8 +323,8 @@ extension Origin: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -332,8 +332,8 @@ extension Origin: AntiDotProduct<Origin> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -341,8 +341,8 @@ extension Origin: AntiDotProduct<Point> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Point) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e4 * other.e4
+            /* e1234, 0, 0, 0 */
+            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -356,8 +356,8 @@ extension Plane: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -365,8 +365,8 @@ extension Plane: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -374,8 +374,8 @@ extension Plane: AntiDotProduct<Plane> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Plane) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
+            /* e1234, 0, 0, 0 */
+            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
         );
     }
 }
@@ -389,8 +389,8 @@ extension Point: AntiDotProduct<Flector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Flector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -398,8 +398,8 @@ extension Point: AntiDotProduct<MultiVector> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: MultiVector) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -407,8 +407,8 @@ extension Point: AntiDotProduct<Origin> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Origin) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -416,8 +416,8 @@ extension Point: AntiDotProduct<Point> {
     associatedtype Output = AntiScalar;
     func anti_dot_product(other: Point) -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            other.e4 * this.e4
+            /* e1234, 0, 0, 0 */
+            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
         );
     }
 }

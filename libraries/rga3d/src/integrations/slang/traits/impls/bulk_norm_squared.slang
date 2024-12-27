@@ -10,9 +10,9 @@ extension Flector {
 extension Flector: BulkNormSquared {
     associatedtype Output = Scalar;
     func bulk_norm_squared() -> Output {
-Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
-            /* e4 */
-            1.0
+        Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
@@ -26,9 +26,9 @@ extension Line {
 extension Line: BulkNormSquared {
     associatedtype Output = Scalar;
     func bulk_norm_squared() -> Output {
-Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
-            /* e4 */
-            1.0
+        Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
@@ -42,9 +42,9 @@ extension Motor {
 extension Motor: BulkNormSquared {
     associatedtype Output = Scalar;
     func bulk_norm_squared() -> Output {
-Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
-            /* e4 */
-            1.0
+        Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
@@ -58,9 +58,9 @@ extension MultiVector {
 extension MultiVector: BulkNormSquared {
     associatedtype Output = Scalar;
     func bulk_norm_squared() -> Output {
-MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
-            /* e4 */
-            1.0
+        MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
@@ -74,9 +74,9 @@ extension Point {
 extension Point: BulkNormSquared {
     associatedtype Output = Scalar;
     func bulk_norm_squared() -> Output {
-Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
-            /* e4 */
-            1.0
+        Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+            /* e4, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         ));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }

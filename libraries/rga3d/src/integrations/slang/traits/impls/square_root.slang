@@ -12,8 +12,8 @@ extension Scalar: SquareRoot {
     associatedtype Output = Scalar;
     func square_root() -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            powf(this.scalar, 0.5)
+            /* scalar, 0, 0, 0 */
+            float4(powf(this.scalar, 0.5), 0.0, 0.0, 0.0)
         );
     }
 }

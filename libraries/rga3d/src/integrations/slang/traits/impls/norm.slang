@@ -10,8 +10,8 @@ extension Flector: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
         );
     }
 }
@@ -25,8 +25,8 @@ extension Line: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
         );
     }
 }
@@ -40,8 +40,8 @@ extension Motor: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
         );
     }
 }
@@ -55,8 +55,8 @@ extension MultiVector: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
         );
     }
 }
@@ -70,8 +70,8 @@ extension Point: Norm {
     associatedtype Output = DualNum;
     func norm() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
         );
     }
 }

@@ -4,14 +4,14 @@ extension Horizon: Add<AntiScalar> {
     associatedtype Output = MultiVector;
     func operator+(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, other.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, other.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -21,14 +21,14 @@ extension Horizon: Add<DualNum> {
     associatedtype Output = MultiVector;
     func operator+(other: DualNum) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -49,8 +49,8 @@ extension Horizon: Add<Horizon> {
     associatedtype Output = Horizon;
     func operator+(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            other.e321 + this.e321
+            /* e321, 0, 0, 0 */
+            float4(other.e321 + this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -58,8 +58,8 @@ extension Horizon {
     associatedtype Output = Horizon;
     func operator+=(const Horizon& other) {
         *this = Horizon.from_groups(
-            /* e321 */
-            other.e321 + this.e321
+            /* e321, 0, 0, 0 */
+            float4(other.e321 + this.e321, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -67,14 +67,14 @@ extension Horizon: Add<Line> {
     associatedtype Output = MultiVector;
     func operator+(other: Line) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            other.group0, 
-            /* e23, e31, e12 */
-            other.group1, 
+            /* e41, e42, e43, 0 */
+            float4(other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -84,14 +84,14 @@ extension Horizon: Add<Motor> {
     associatedtype Output = MultiVector;
     func operator+(other: Motor) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar, other.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar, other.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            other.group0.xyz, 
-            /* e23, e31, e12 */
-            other.group1.xyz, 
+            /* e41, e42, e43, 0 */
+            float4(other.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group1.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -101,14 +101,14 @@ extension Horizon: Add<MultiVector> {
     associatedtype Output = MultiVector;
     func operator+(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            other.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(other.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e41, e42, e43 */
-            other.group2, 
-            /* e23, e31, e12 */
-            other.group3, 
+            /* e41, e42, e43, 0 */
+            float4(other.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             other.group4 + float4(float3(0.0), this.e321)
         );
@@ -149,14 +149,14 @@ extension Horizon: Add<Scalar> {
     associatedtype Output = MultiVector;
     func operator+(other: Scalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -238,8 +238,8 @@ extension Horizon: Neg {
     associatedtype Output = Horizon;
     func neg() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e321 * -1.0
+            /* e321, 0, 0, 0 */
+            float4(this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -253,14 +253,14 @@ extension Horizon: Sub<AntiScalar> {
     associatedtype Output = MultiVector;
     func operator-(other: AntiScalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(1.0, other.e1234) * float2(0.0, -1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(1.0, other.e1234) * float2(0.0, -1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -270,14 +270,14 @@ extension Horizon: Sub<DualNum> {
     associatedtype Output = MultiVector;
     func operator-(other: DualNum) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            other.group0 * float2(-1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(other.group0.xy * float2(-1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -298,8 +298,8 @@ extension Horizon: Sub<Horizon> {
     associatedtype Output = Horizon;
     func operator-(other: Horizon) -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e321 - other.e321
+            /* e321, 0, 0, 0 */
+            float4(this.e321 - other.e321, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -307,8 +307,8 @@ extension Horizon {
     associatedtype Output = Horizon;
     func operator-=(const Horizon& other) {
         *this = Horizon.from_groups(
-            /* e321 */
-            this.e321 - other.e321
+            /* e321, 0, 0, 0 */
+            float4(this.e321 - other.e321, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -316,14 +316,14 @@ extension Horizon: Sub<Line> {
     associatedtype Output = MultiVector;
     func operator-(other: Line) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            other.group0 * float3(-1.0), 
-            /* e23, e31, e12 */
-            other.group1 * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -333,14 +333,14 @@ extension Horizon: Sub<Motor> {
     associatedtype Output = MultiVector;
     func operator-(other: Motor) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar, other.e1234) * float2(-1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar, other.e1234) * float2(-1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            other.group0.xyz * float3(-1.0), 
-            /* e23, e31, e12 */
-            other.group1.xyz * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group1.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -350,14 +350,14 @@ extension Horizon: Sub<MultiVector> {
     associatedtype Output = MultiVector;
     func operator-(other: MultiVector) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            other.group0 * float2(-1.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(other.group0.xy * float2(-1.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e41, e42, e43 */
-            other.group2 * float3(-1.0), 
-            /* e23, e31, e12 */
-            other.group3 * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(other.group2.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(other.group3.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group4.xyz, this.e321 - other.e321) * float4(-1.0, -1.0, -1.0, 1.0)
         );
@@ -398,14 +398,14 @@ extension Horizon: Sub<Scalar> {
     associatedtype Output = MultiVector;
     func operator-(other: Scalar) -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -473,8 +473,8 @@ impl TryFrom<Flector> for Horizon {
             return Err(error);
         }
         return Ok(Horizon.from_groups(
-            /* e321 */
-            flector.e321
+            /* e321, 0, 0, 0 */
+            float4(flector.e321, 0.0, 0.0, 0.0)
         ));
     }
 }
@@ -596,8 +596,8 @@ impl TryFrom<MultiVector> for Horizon {
             return Err(error);
         }
         return Ok(Horizon.from_groups(
-            /* e321 */
-            multi_vector.e321
+            /* e321, 0, 0, 0 */
+            float4(multi_vector.e321, 0.0, 0.0, 0.0)
         ));
     }
 }
@@ -635,8 +635,8 @@ impl TryFrom<Plane> for Horizon {
             return Err(error);
         }
         return Ok(Horizon.from_groups(
-            /* e321 */
-            plane.e321
+            /* e321, 0, 0, 0 */
+            float4(plane.e321, 0.0, 0.0, 0.0)
         ));
     }
 }

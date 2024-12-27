@@ -12,8 +12,8 @@ extension Horizon: Fix {
     associatedtype Output = Horizon;
     func fix() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            1.0
+            /* e321, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -69,8 +69,8 @@ extension Scalar: Fix {
     associatedtype Output = Scalar;
     func fix() -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            1.0
+            /* scalar, 0, 0, 0 */
+            float4(1.0, 0.0, 0.0, 0.0)
         );
     }
 }

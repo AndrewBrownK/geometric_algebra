@@ -89,6 +89,11 @@ impl IntExpr {
         }
     }
 }
+
+// TODO something really fishy here:
+//  - extension AntiScalar: ProjectOrthogonallyOnto<Motor> {
+//  - impl ProjectOrthogonallyOnto<Motor> for AntiScalar {
+
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false, false, true, false, false);

@@ -8,8 +8,8 @@ extension DualNum: Bulk {
     associatedtype Output = Scalar;
     func bulk() -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            this.scalar
+            /* scalar, 0, 0, 0 */
+            float4(this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -64,10 +64,10 @@ extension Line: Bulk {
     associatedtype Output = Line;
     func bulk() -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            this.group1
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz, 0.0)
         );
     }
 }
@@ -106,14 +106,14 @@ extension MultiVector: Bulk {
     associatedtype Output = MultiVector;
     func bulk() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(this.scalar, 0.0), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(this.scalar, 0.0), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e1, this.e2, this.e3, 0.0), 
-            /* e41, e42, e43 */
-            float3(0.0), 
-            /* e23, e31, e12 */
-            this.group3, 
+            /* e41, e42, e43, 0 */
+            float4(0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
@@ -129,8 +129,8 @@ extension Plane: Bulk {
     associatedtype Output = Horizon;
     func bulk() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e321
+            /* e321, 0, 0, 0 */
+            float4(this.e321, 0.0, 0.0, 0.0)
         );
     }
 }

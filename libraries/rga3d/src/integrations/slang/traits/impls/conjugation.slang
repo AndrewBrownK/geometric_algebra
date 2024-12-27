@@ -81,10 +81,10 @@ extension Line: Conjugation {
     associatedtype Output = Line;
     func conjugation() -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            this.group0 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group1 * float3(-1.0)
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz * float3(-1.0), 0.0)
         );
     }
 }
@@ -123,14 +123,14 @@ extension MultiVector: Conjugation {
     associatedtype Output = MultiVector;
     func conjugation() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            this.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             this.group1 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group2 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group3 * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(this.group2.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group3.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             this.group4
         );
@@ -150,8 +150,8 @@ extension Origin: Conjugation {
     associatedtype Output = Origin;
     func conjugation() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e4 * -1.0
+            /* e4, 0, 0, 0 */
+            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }

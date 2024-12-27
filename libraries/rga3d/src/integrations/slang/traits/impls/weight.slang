@@ -24,8 +24,8 @@ extension DualNum: Weight {
     associatedtype Output = AntiScalar;
     func weight() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.e1234
+            /* e1234, 0, 0, 0 */
+            float4(this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -64,10 +64,10 @@ extension Line: Weight {
     associatedtype Output = Line;
     func weight() -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            this.group0, 
-            /* e23, e31, e12 */
-            float3(0.0)
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0)
         );
     }
 }
@@ -106,14 +106,14 @@ extension MultiVector: Weight {
     associatedtype Output = MultiVector;
     func weight() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(0.0, this.e1234), 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(0.0, this.e1234), 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
-            /* e41, e42, e43 */
-            this.group2, 
-            /* e23, e31, e12 */
-            float3(0.0), 
+            /* e41, e42, e43, 0 */
+            float4(this.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(0.0), 
             /* e423, e431, e412, e321 */
             float4(this.e423, this.e431, this.e412, 0.0)
         );
@@ -164,8 +164,8 @@ extension Point: Weight {
     associatedtype Output = Origin;
     func weight() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e4
+            /* e4, 0, 0, 0 */
+            float4(this.e4, 0.0, 0.0, 0.0)
         );
     }
 }

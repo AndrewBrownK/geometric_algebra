@@ -12,8 +12,8 @@ extension DualNum: Inverse {
     associatedtype Output = DualNum;
     func inverse() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            float2(powi(this.scalar, -2)) * this.group0
+            /* scalar, e1234, 0, 0 */
+            float4(float2(powi(this.scalar, -2)) * this.group0.xy, 0.0, 0.0)
         );
     }
 }
@@ -30,15 +30,15 @@ extension Flector {
 extension Flector: Inverse {
     associatedtype Output = Flector;
     func inverse() -> Output {
-Flector reverse = Flector.from_groups(
+        Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
             this.group1 * float4(-1.0)
         );
-Scalar other = Scalar.from_groups(
-            /* scalar */
-            powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e321, 2)
+        Scalar other = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e321, 2), 0.0, 0.0, 0.0)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -62,8 +62,8 @@ extension Horizon: Inverse {
     associatedtype Output = Horizon;
     func inverse() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            1.0/this.e321 * -1.0
+            /* e321, 0, 0, 0 */
+            float4(1.0/this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -80,21 +80,21 @@ extension Line {
 extension Line: Inverse {
     associatedtype Output = Line;
     func inverse() -> Output {
-Line reverse = Line.from_groups(
-            /* e41, e42, e43 */
-            this.group0 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group1 * float3(-1.0)
+        Line reverse = Line.from_groups(
+            /* e41, e42, e43, 0 */
+            float4(this.group0.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group1.xyz * float3(-1.0), 0.0)
         );
-Scalar other = Scalar.from_groups(
-            /* scalar */
-            powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2)
+        Scalar other = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2), 0.0, 0.0, 0.0)
         );
         return Line.from_groups(
-            /* e41, e42, e43 */
-            float3(other.scalar) * reverse.group0, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * reverse.group1
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * reverse.group1.xyz, 0.0)
         );
     }
 }
@@ -111,15 +111,15 @@ extension Motor {
 extension Motor: Inverse {
     associatedtype Output = Motor;
     func inverse() -> Output {
-Motor reverse = Motor.from_groups(
+        Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-Scalar other = Scalar.from_groups(
-            /* scalar */
-            powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.scalar, 2)
+        Scalar other = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.scalar, 2), 0.0, 0.0, 0.0)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -142,31 +142,31 @@ extension MultiVector {
 extension MultiVector: Inverse {
     associatedtype Output = MultiVector;
     func inverse() -> Output {
-MultiVector reverse = MultiVector.from_groups(
-            /* scalar, e1234 */
-            this.group0, 
+        MultiVector reverse = MultiVector.from_groups(
+            /* scalar, e1234, 0, 0 */
+            float4(this.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43 */
-            this.group2 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group3 * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(this.group2.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group3.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             this.group4 * float4(-1.0)
         );
-Scalar other = Scalar.from_groups(
-            /* scalar */
-            powi(this.scalar, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.e321, 2)
+        Scalar other = Scalar.from_groups(
+            /* scalar, 0, 0, 0 */
+            float4(powi(this.scalar, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.e321, 2), 0.0, 0.0, 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            float2(other.scalar) * reverse.group0, 
+            /* scalar, e1234, 0, 0 */
+            float4(float2(other.scalar) * reverse.group0.xy, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * reverse.group1, 
-            /* e41, e42, e43 */
-            float3(other.scalar) * reverse.group2, 
-            /* e23, e31, e12 */
-            float3(other.scalar) * reverse.group3, 
+            /* e41, e42, e43, 0 */
+            float4(float3(other.scalar) * reverse.group2.xyz, 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(float3(other.scalar) * reverse.group3.xyz, 0.0), 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * reverse.group4
         );
@@ -224,8 +224,8 @@ extension Scalar: Inverse {
     associatedtype Output = Scalar;
     func inverse() -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            1.0/this.scalar
+            /* scalar, 0, 0, 0 */
+            float4(1.0/this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }

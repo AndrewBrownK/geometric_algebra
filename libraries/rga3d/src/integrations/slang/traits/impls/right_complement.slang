@@ -8,8 +8,8 @@ extension AntiScalar: RightComplement {
     associatedtype Output = Scalar;
     func right_complement() -> Output {
         return Scalar.from_groups(
-            /* scalar */
-            this.e1234
+            /* scalar, 0, 0, 0 */
+            float4(this.e1234, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -27,8 +27,8 @@ extension DualNum: RightComplement {
     associatedtype Output = DualNum;
     func right_complement() -> Output {
         return DualNum.from_groups(
-            /* scalar, e1234 */
-            this.group0.yx
+            /* scalar, e1234, 0, 0 */
+            float4(this.group0.xy.yx, 0.0, 0.0)
         );
     }
 }
@@ -63,8 +63,8 @@ extension Horizon: RightComplement {
     associatedtype Output = Origin;
     func right_complement() -> Output {
         return Origin.from_groups(
-            /* e4 */
-            this.e321 * -1.0
+            /* e4, 0, 0, 0 */
+            float4(this.e321 * -1.0, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -82,10 +82,10 @@ extension Line: RightComplement {
     associatedtype Output = Line;
     func right_complement() -> Output {
         return Line.from_groups(
-            /* e41, e42, e43 */
-            this.group1 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group0 * float3(-1.0)
+            /* e41, e42, e43, 0 */
+            float4(this.group1.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group0.xyz * float3(-1.0), 0.0)
         );
     }
 }
@@ -124,14 +124,14 @@ extension MultiVector: RightComplement {
     associatedtype Output = MultiVector;
     func right_complement() -> Output {
         return MultiVector.from_groups(
-            /* scalar, e1234 */
-            this.group0.yx, 
+            /* scalar, e1234, 0, 0 */
+            float4(this.group0.xy.yx, 0.0, 0.0), 
             /* e1, e2, e3, e4 */
             this.group4 * float4(-1.0), 
-            /* e41, e42, e43 */
-            this.group3 * float3(-1.0), 
-            /* e23, e31, e12 */
-            this.group2 * float3(-1.0), 
+            /* e41, e42, e43, 0 */
+            float4(this.group3.xyz * float3(-1.0), 0.0), 
+            /* e23, e31, e12, 0 */
+            float4(this.group2.xyz * float3(-1.0), 0.0), 
             /* e423, e431, e412, e321 */
             this.group1
         );
@@ -147,8 +147,8 @@ extension Origin: RightComplement {
     associatedtype Output = Horizon;
     func right_complement() -> Output {
         return Horizon.from_groups(
-            /* e321 */
-            this.e4
+            /* e321, 0, 0, 0 */
+            float4(this.e4, 0.0, 0.0, 0.0)
         );
     }
 }
@@ -192,8 +192,8 @@ extension Scalar: RightComplement {
     associatedtype Output = AntiScalar;
     func right_complement() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            this.scalar
+            /* e1234, 0, 0, 0 */
+            float4(this.scalar, 0.0, 0.0, 0.0)
         );
     }
 }

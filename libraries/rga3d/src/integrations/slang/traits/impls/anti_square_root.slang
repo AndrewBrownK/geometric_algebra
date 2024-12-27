@@ -12,8 +12,8 @@ extension AntiScalar: AntiSquareRoot {
     associatedtype Output = AntiScalar;
     func anti_square_root() -> Output {
         return AntiScalar.from_groups(
-            /* e1234 */
-            powf(this.e1234, 0.5)
+            /* e1234, 0, 0, 0 */
+            float4(powf(this.e1234, 0.5), 0.0, 0.0, 0.0)
         );
     }
 }

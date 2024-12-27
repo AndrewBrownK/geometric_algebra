@@ -724,7 +724,7 @@ impl Slang {
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                write!(w, ".group{i}")?;
+                write!(w, ".group{i}.xy")?;
             }
             Vec2Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 2];
@@ -932,7 +932,7 @@ impl Slang {
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                write!(w, ".group{i}")?;
+                write!(w, ".group{i}.xyz")?;
             }
             Vec3Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 3];
@@ -1357,11 +1357,39 @@ impl Slang {
                         }
                         write!(w, "{el}")?;
                     }
+                    let l = groups[i].simd_width();
+                    match l {
+                        1 => write!(w, ", 0, 0, 0")?,
+                        2 => write!(w, ", 0, 0")?,
+                        3 => write!(w, ", 0")?,
+                        _ => (),
+                    }
                     write!(w, " */\n            ")?;
                     match g {
-                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
-                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
-                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
+                        MultiVectorGroupExpr::JustFloat(FloatExpr::Literal(0.0)) => {
+                            write!(w, "float4(0.0)")?;
+                        },
+                        MultiVectorGroupExpr::Vec2(Vec2Expr::Gather1(FloatExpr::Literal(0.0))) => {
+                            write!(w, "float4(0.0)")?;
+                        },
+                        MultiVectorGroupExpr::Vec3(Vec3Expr::Gather1(FloatExpr::Literal(0.0))) => {
+                            write!(w, "float4(0.0)")?;
+                        },
+                        MultiVectorGroupExpr::JustFloat(f) => {
+                            write!(w, "float4(")?;
+                            self.write_float(w, f, true)?;
+                            write!(w, ", 0.0, 0.0, 0.0)")?;
+                        },
+                        MultiVectorGroupExpr::Vec2(g) => {
+                            write!(w, "float4(")?;
+                            self.write_vec2(w, g, true)?;
+                            write!(w, ", 0.0, 0.0)")?;
+                        },
+                        MultiVectorGroupExpr::Vec3(g) => {
+                            write!(w, "float4(")?;
+                            self.write_vec3(w, g, true)?;
+                            write!(w, ", 0.0)")?;
+                        },
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
@@ -1907,6 +1935,7 @@ impl TryFrom<{other}> for {owner} {{
                     let no = var_dec.name.1;
                     let expr = expr.read();
                     let expr = expr.deref();
+                    write!(w, "        ")?;
                     self.write_type(w, expr.expression_type())?;
                     if no == 0 {
                         write!(w, " {name} = ")?;
@@ -1966,6 +1995,7 @@ impl TryFrom<{other}> for {owner} {{
                     let no = var_dec.name.1;
                     let expr = expr.read();
                     let expr = expr.deref();
+                    write!(w, "        ")?;
                     self.write_type(w, expr.expression_type())?;
                     if no == 0 {
                         write!(w, " {name} = ")?;
