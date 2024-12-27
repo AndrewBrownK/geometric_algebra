@@ -208,7 +208,7 @@ impl Slang {
             // let tx3 = finished_file.clone();
             let pb2 = trait_pb.clone();
             join_set.spawn(async move {
-                let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
+                let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("slang");
                 tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 // TODO remove these imports when they are unused
@@ -1707,7 +1707,7 @@ impl TryFrom<{other}> for {owner} {{
                 writeln!(w, "    associatedtype Output;")?;
             }
         }
-        write!(w, "    fn {lsc}(")?;
+        write!(w, "    func {lsc}(")?;
         match def.arity {
             TraitArity::Zero => {}
             TraitArity::One => {},
@@ -1715,9 +1715,9 @@ impl TryFrom<{other}> for {owner} {{
         }
         write!(w, ") -> ")?;
         match *output_ty {
-            TraitTypeConsensus::AlwaysSelf => write!(w, "{ucc}")?,
+            TraitTypeConsensus::AlwaysSelf => write!(w, "Output")?,
             TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
+            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Output")?,
         }
         writeln!(w, ";\n}}")?;
 
@@ -1727,38 +1727,37 @@ impl TryFrom<{other}> for {owner} {{
         }
 
         if let Some(op) = &self.fancy_infix {
-            writeln!(w, "public struct {lsc};")?;
+            writeln!(w, "public struct {lsc} {{}}")?;
             if let TraitArity::Two = def.arity {
                 writeln!(w, "public struct {lsc}_partial<A> {{ a: A }}")?;
             }
-            let operator_name = op.rust_trait_name();
             let operator_method = op.slang_trait_method();
             if let TraitArity::Two = def.arity {
-                write!(w, "extension {lsc}_partial<A> {{")?;
+                writeln!(w, "extension {lsc}_partial<A> for A: {ucc}<B> {{")?;
                 // writeln!(w, "impl<A: {ucc}<B>, B> {operator_name}<B> for {lsc}_partial<A> {{")?;
-                write!(w, "    associatedtype Output = ")?;
-                match *output_ty {
-                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
-                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}<B>>::Output")?,
-                }
-                writeln!(w, ";")?;
-                writeln!(w, "    func {operator_method}(rhs: B) -> Self::Output {{")?;
-                writeln!(w, "        this.a.{lsc}(rhs)")?;
+                // write!(w, "    associatedtype Output = ")?;
+                // match *output_ty {
+                //     TraitTypeConsensus::AlwaysSelf => write!(w, "A.Output")?,
+                //     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                //     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "A.Output")?,
+                // }
+                // writeln!(w, ";")?;
+                writeln!(w, "    func {operator_method}(rhs: B) -> A.Output {{")?;
+                writeln!(w, "        return this.a.{lsc}(rhs);")?;
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                write!(w, "extension {lsc} {{")?;
+                writeln!(w, "extension {lsc} for A: {ucc} {{")?;
                 // writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
-                write!(w, "    associatedtype Output = ")?;
-                match *output_ty {
-                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
-                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}>::Output")?,
-                }
-                writeln!(w, ";")?;
-                writeln!(w, "    func {operator_method}(rhs: A) -> Self::Output {{")?;
-                writeln!(w, "        rhs.{lsc}()")?;
+                // write!(w, "    associatedtype Output = ")?;
+                // match *output_ty {
+                //     TraitTypeConsensus::AlwaysSelf => write!(w, "A.Output")?,
+                //     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                //     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "A.Output")?,
+                // }
+                // writeln!(w, ";")?;
+                writeln!(w, "    func {operator_method}(rhs: A) -> A.Output {{")?;
+                writeln!(w, "        return rhs.{lsc}();")?;
                 writeln!(w, "    }}\n}}")?;
             }
         }
