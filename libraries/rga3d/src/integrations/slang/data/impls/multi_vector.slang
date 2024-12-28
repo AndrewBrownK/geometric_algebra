@@ -1,903 +1,870 @@
-using traits::GeometricProduct;
-using traits::RightDual;
-extension MultiVector: Add<AntiScalar> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiScalar) -> Output {
+using traits;
+using traits;
+public extension MultiVector: Add<AntiScalar> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: AntiScalar) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const AntiScalar& other) {
+public extension MultiVector {
+    public func operator+=(const AntiScalar& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<DualNum> {
-    associatedtype Output = MultiVector;
-    func operator+(other: DualNum) -> Output {
+public extension MultiVector: Add<DualNum> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: DualNum) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const DualNum& other) {
+public extension MultiVector {
+    public func operator+=(const DualNum& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<Flector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Flector) -> Output {
+public extension MultiVector: Add<Flector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0 + this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group1 + this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Flector& other) {
+public extension MultiVector {
+    public func operator+=(const Flector& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0 + this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group1 + this.group4
         );
     }
 }
-extension MultiVector: Add<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Horizon) -> Output {
+public extension MultiVector: Add<Horizon> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + float4(float3(0.0), other.e321)
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Horizon& other) {
+public extension MultiVector {
+    public func operator+=(const Horizon& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + float4(float3(0.0), other.e321)
         );
     }
 }
-extension MultiVector: Add<Line> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Line) -> Output {
+public extension MultiVector: Add<Line> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Line) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz + this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz + this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz + this.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz + this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Line& other) {
+public extension MultiVector {
+    public func operator+=(const Line& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz + this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz + this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz + this.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz + this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<Motor> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Motor) -> Output {
+public extension MultiVector: Add<Motor> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Motor) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, other.e1234) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz + other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz + other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz + other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz + other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Motor& other) {
+public extension MultiVector {
+    public func operator+=(const Motor& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, other.e1234) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz + other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz + other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz + other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz + other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: MultiVector) -> Output {
+public extension MultiVector: Add<MultiVector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1 + this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz + this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz + this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz + this.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group3.xyz + this.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group4 + this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const MultiVector& other) {
+public extension MultiVector {
+    public func operator+=(const MultiVector& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1 + this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz + this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz + this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz + this.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group3.xyz + this.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group4 + this.group4
         );
     }
 }
-extension MultiVector: Add<Origin> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Origin) -> Output {
+public extension MultiVector: Add<Origin> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + float4(float3(0.0), other.e4), 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Origin& other) {
+public extension MultiVector {
+    public func operator+=(const Origin& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + float4(float3(0.0), other.e4), 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<Plane> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Plane) -> Output {
+public extension MultiVector: Add<Plane> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + other.group0
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Plane& other) {
+public extension MultiVector {
+    public func operator+=(const Plane& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + other.group0
         );
     }
 }
-extension MultiVector: Add<Point> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Point) -> Output {
+public extension MultiVector: Add<Point> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Point& other) {
+public extension MultiVector {
+    public func operator+=(const Point& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Add<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Scalar) -> Output {
+public extension MultiVector: Add<Scalar> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Scalar) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, 0.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator+=(const Scalar& other) {
+public extension MultiVector {
+    public func operator+=(const Scalar& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, 0.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Mul<AntiScalar> {
-    associatedtype Output = MultiVector;
-    func operator*(other: AntiScalar) -> Output {
+public extension MultiVector: Mul<AntiScalar> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: AntiScalar) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const AntiScalar& other) {
+public extension MultiVector {
+    public func operator*=(const AntiScalar& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<DualNum> {
-    associatedtype Output = MultiVector;
-    func operator*(other: DualNum) -> Output {
+public extension MultiVector: Mul<DualNum> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: DualNum) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const DualNum& other) {
+public extension MultiVector {
+    public func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Flector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Flector) -> Output {
+public extension MultiVector: Mul<Flector> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Flector) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Flector& other) {
+public extension MultiVector {
+    public func operator*=(const Flector& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Horizon) -> Output {
+public extension MultiVector: Mul<Horizon> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Horizon) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Horizon& other) {
+public extension MultiVector {
+    public func operator*=(const Horizon& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Line> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Line) -> Output {
+public extension MultiVector: Mul<Line> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Line) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Line& other) {
+public extension MultiVector {
+    public func operator*=(const Line& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Motor> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Motor) -> Output {
+public extension MultiVector: Mul<Motor> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Motor) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Motor& other) {
+public extension MultiVector {
+    public func operator*=(const Motor& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: MultiVector) -> Output {
+public extension MultiVector: Mul<MultiVector> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: MultiVector) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const MultiVector& other) {
+public extension MultiVector {
+    public func operator*=(const MultiVector& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Origin> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Origin) -> Output {
+public extension MultiVector: Mul<Origin> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Origin) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Origin& other) {
+public extension MultiVector {
+    public func operator*=(const Origin& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Plane> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Plane) -> Output {
+public extension MultiVector: Mul<Plane> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Plane) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Plane& other) {
+public extension MultiVector {
+    public func operator*=(const Plane& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Point> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Point) -> Output {
+public extension MultiVector: Mul<Point> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Point) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Point& other) {
+public extension MultiVector {
+    public func operator*=(const Point& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Mul<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator*(other: Scalar) -> Output {
+public extension MultiVector: Mul<Scalar> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: Scalar) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator*=(const Scalar& other) {
+public extension MultiVector {
+    public func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
-extension MultiVector: Neg {
-    associatedtype Output = MultiVector;
-    func neg() -> Output {
+public extension MultiVector: Neg {
+    public typedef MultiVector NegOutput;
+    public func neg() -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy * float2(-1.0), 
             /* e1, e2, e3, e4 */
             this.group1 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group3.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
             this.group4 * float4(-1.0)
         );
     }
 }
-extension MultiVector: Not {
-    associatedtype Output = MultiVector;
-    func not() -> Output {
+public extension MultiVector: Not {
+    public typedef MultiVector NotOutput;
+    public func not() -> MultiVector {
         return this.right_dual();
     }
 }
-extension MultiVector: Sub<AntiScalar> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiScalar) -> Output {
+public extension MultiVector: Sub<AntiScalar> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: AntiScalar) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const AntiScalar& other) {
+public extension MultiVector {
+    public func operator-=(const AntiScalar& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<DualNum> {
-    associatedtype Output = MultiVector;
-    func operator-(other: DualNum) -> Output {
+public extension MultiVector: Sub<DualNum> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: DualNum) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const DualNum& other) {
+public extension MultiVector {
+    public func operator-=(const DualNum& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<Flector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Flector) -> Output {
+public extension MultiVector: Sub<Flector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group1
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Flector& other) {
+public extension MultiVector {
+    public func operator-=(const Flector& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group1
         );
     }
 }
-extension MultiVector: Sub<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Horizon) -> Output {
+public extension MultiVector: Sub<Horizon> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Horizon& other) {
+public extension MultiVector {
+    public func operator-=(const Horizon& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 + float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
-extension MultiVector: Sub<Line> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Line) -> Output {
+public extension MultiVector: Sub<Line> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Line) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Line& other) {
+public extension MultiVector {
+    public func operator-=(const Line& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<Motor> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Motor) -> Output {
+public extension MultiVector: Sub<Motor> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Motor) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Motor& other) {
+public extension MultiVector {
+    public func operator-=(const Motor& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group0.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group1.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: MultiVector) -> Output {
+public extension MultiVector: Sub<MultiVector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const MultiVector& other) {
+public extension MultiVector {
+    public func operator-=(const MultiVector& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz - other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz - other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz - other.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz - other.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group4
         );
     }
 }
-extension MultiVector: Sub<Origin> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Origin) -> Output {
+public extension MultiVector: Sub<Origin> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + float4(float3(0.0), other.e4 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Origin& other) {
+public extension MultiVector {
+    public func operator-=(const Origin& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 + float4(float3(0.0), other.e4 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<Plane> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Plane) -> Output {
+public extension MultiVector: Sub<Plane> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group0
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Plane& other) {
+public extension MultiVector {
+    public func operator-=(const Plane& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4 - other.group0
         );
     }
 }
-extension MultiVector: Sub<Point> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Point) -> Output {
+public extension MultiVector: Sub<Point> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Point& other) {
+public extension MultiVector {
+    public func operator-=(const Point& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1 - other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector: Sub<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Scalar) -> Output {
+public extension MultiVector: Sub<Scalar> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Scalar) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, 0.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );
     }
 }
-extension MultiVector {
-    associatedtype Output = MultiVector;
-    func operator-=(const Scalar& other) {
+public extension MultiVector {
+    public func operator-=(const Scalar& other) {
         *this = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, 0.0) + this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group2.xyz, 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             this.group4
         );

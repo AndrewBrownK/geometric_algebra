@@ -1,72 +1,84 @@
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<AntiScalar> {
-        return WedgeInfixPartial { a: this };
+public extension AntiScalar {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<AntiScalar> {
+        return WedgeInfixPartial(this);
     }
 }
-extension AntiScalar: Wedge<DualNum> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<AntiScalar> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> AntiScalar.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension AntiScalar: Wedge<DualNum> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: DualNum) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.scalar
         );
     }
 }
-extension AntiScalar: Wedge<Motor> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Motor) -> Output {
+public extension AntiScalar: Wedge<Motor> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.scalar
         );
     }
 }
-extension AntiScalar: Wedge<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: MultiVector) -> Output {
+public extension AntiScalar: Wedge<MultiVector> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.scalar
         );
     }
 }
-extension AntiScalar: Wedge<Scalar> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Scalar) -> Output {
+public extension AntiScalar: Wedge<Scalar> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Scalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.scalar
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<DualNum> {
-        return WedgeInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<DualNum> {
+        return WedgeInfixPartial(this);
     }
 }
-extension DualNum: Wedge<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: AntiScalar) -> Output {
+public extension WedgeInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> DualNum.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension DualNum: Wedge<AntiScalar> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.scalar
         );
     }
 }
-extension DualNum: Wedge<DualNum> {
-    associatedtype Output = DualNum;
-    func wedge(other: DualNum) -> Output {
+public extension DualNum: Wedge<DualNum> {
+    public typedef DualNum WedgeOutput;
+    public func wedge(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
         );
     }
 }
-extension DualNum: Wedge<Flector> {
-    associatedtype Output = Flector;
-    func wedge(other: Flector) -> Output {
+public extension DualNum: Wedge<Flector> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Flector) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -75,29 +87,29 @@ extension DualNum: Wedge<Flector> {
         );
     }
 }
-extension DualNum: Wedge<Horizon> {
-    associatedtype Output = Horizon;
-    func wedge(other: Horizon) -> Output {
+public extension DualNum: Wedge<Horizon> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: Horizon) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(this.scalar * other.e321, 0.0, 0.0, 0.0)
+            /* e321 */
+            this.scalar * other.e321
         );
     }
 }
-extension DualNum: Wedge<Line> {
-    associatedtype Output = Line;
-    func wedge(other: Line) -> Output {
+public extension DualNum: Wedge<Line> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Line) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group1.xyz
         );
     }
 }
-extension DualNum: Wedge<Motor> {
-    associatedtype Output = Motor;
-    func wedge(other: Motor) -> Output {
+public extension DualNum: Wedge<Motor> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group0.xyz, 1.0), 
@@ -106,68 +118,74 @@ extension DualNum: Wedge<Motor> {
         );
     }
 }
-extension DualNum: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension DualNum: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.scalar * other.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(this.scalar * other.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group4
         );
     }
 }
-extension DualNum: Wedge<Origin> {
-    associatedtype Output = Origin;
-    func wedge(other: Origin) -> Output {
+public extension DualNum: Wedge<Origin> {
+    public typedef Origin WedgeOutput;
+    public func wedge(other: Origin) -> Origin {
         return Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(this.scalar * other.e4, 0.0, 0.0, 0.0)
+            /* e4 */
+            this.scalar * other.e4
         );
     }
 }
-extension DualNum: Wedge<Plane> {
-    associatedtype Output = Plane;
-    func wedge(other: Plane) -> Output {
+public extension DualNum: Wedge<Plane> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Plane) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension DualNum: Wedge<Point> {
-    associatedtype Output = Point;
-    func wedge(other: Point) -> Output {
+public extension DualNum: Wedge<Point> {
+    public typedef Point WedgeOutput;
+    public func wedge(other: Point) -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension DualNum: Wedge<Scalar> {
-    associatedtype Output = DualNum;
-    func wedge(other: Scalar) -> Output {
+public extension DualNum: Wedge<Scalar> {
+    public typedef DualNum WedgeOutput;
+    public func wedge(other: Scalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar) * this.group0.xy
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Flector> {
-        return WedgeInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Flector> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Flector: Wedge<DualNum> {
-    associatedtype Output = Flector;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Flector.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Flector: Wedge<DualNum> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: DualNum) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -176,9 +194,9 @@ extension Flector: Wedge<DualNum> {
         );
     }
 }
-extension Flector: Wedge<Flector> {
-    associatedtype Output = Motor;
-    func wedge(other: Flector) -> Output {
+public extension Flector: Wedge<Flector> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Flector) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (this.group0.wwwx * float4(other.group0.xyz, other.e423)) + float4(float3(0.0), (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -187,27 +205,27 @@ extension Flector: Wedge<Flector> {
         );
     }
 }
-extension Flector: Wedge<Horizon> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Horizon) -> Output {
+public extension Flector: Wedge<Horizon> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Horizon) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e321, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e321
         );
     }
 }
-extension Flector: Wedge<Line> {
-    associatedtype Output = Plane;
-    func wedge(other: Line) -> Output {
+public extension Flector: Wedge<Line> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Line) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e3 * other.e42) + (this.e4 * other.e23), (this.e1 * other.e43) + (this.e4 * other.e31), (this.e2 * other.e41) + (this.e4 * other.e12), -(this.e2 * other.e31) - (this.e3 * other.e12)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
-extension Flector: Wedge<Motor> {
-    associatedtype Output = Flector;
-    func wedge(other: Motor) -> Output {
+public extension Flector: Wedge<Motor> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Motor) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -216,26 +234,26 @@ extension Flector: Wedge<Motor> {
         );
     }
 }
-extension Flector: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Flector: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.yzx * other.group1.zxy) - (this.group0.zxy * other.group1.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (this.group0.yzx * other.group1.zxy) - (this.group0.zxy * other.group1.yzx), 
             /* e423, e431, e412, e321 */
             float4((this.e3 * other.e42) + (this.e4 * other.e23), (this.e1 * other.e43) + (this.e4 * other.e31), (this.e2 * other.e41) + (this.e4 * other.e12), -(this.e2 * other.e31) - (this.e3 * other.e12)) + (float4(other.scalar) * this.group1) - (this.group0.yzxx * float4(other.group2.xyz.zxy, other.e23))
         );
     }
 }
-extension Flector: Wedge<Origin> {
-    associatedtype Output = Motor;
-    func wedge(other: Origin) -> Output {
+public extension Flector: Wedge<Origin> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Origin) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -244,18 +262,18 @@ extension Flector: Wedge<Origin> {
         );
     }
 }
-extension Flector: Wedge<Plane> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Plane) -> Output {
+public extension Flector: Wedge<Plane> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)
         );
     }
 }
-extension Flector: Wedge<Point> {
-    associatedtype Output = Motor;
-    func wedge(other: Point) -> Output {
+public extension Flector: Wedge<Point> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Point) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4 * other.e1, this.e4 * other.e2, this.e4 * other.e3, -(this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -264,9 +282,9 @@ extension Flector: Wedge<Point> {
         );
     }
 }
-extension Flector: Wedge<Scalar> {
-    associatedtype Output = Flector;
-    func wedge(other: Scalar) -> Output {
+public extension Flector: Wedge<Scalar> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Scalar) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -275,121 +293,133 @@ extension Flector: Wedge<Scalar> {
         );
     }
 }
-extension Horizon {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Horizon> {
-        return WedgeInfixPartial { a: this };
+public extension Horizon {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Horizon> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Horizon: Wedge<DualNum> {
-    associatedtype Output = Horizon;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Horizon> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Horizon.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Horizon: Wedge<DualNum> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: DualNum) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(other.scalar * this.e321, 0.0, 0.0, 0.0)
+            /* e321 */
+            other.scalar * this.e321
         );
     }
 }
-extension Horizon: Wedge<Flector> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Flector) -> Output {
+public extension Horizon: Wedge<Flector> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e321 * -1.0
         );
     }
 }
-extension Horizon: Wedge<Motor> {
-    associatedtype Output = Horizon;
-    func wedge(other: Motor) -> Output {
+public extension Horizon: Wedge<Motor> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: Motor) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(this.e321 * other.scalar, 0.0, 0.0, 0.0)
+            /* e321 */
+            this.e321 * other.scalar
         );
     }
 }
-extension Horizon: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Horizon: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321 * other.scalar)
         );
     }
 }
-extension Horizon: Wedge<Origin> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Origin) -> Output {
+public extension Horizon: Wedge<Origin> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e321 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e321 * other.e4 * -1.0
         );
     }
 }
-extension Horizon: Wedge<Point> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Point) -> Output {
+public extension Horizon: Wedge<Point> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e321 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e321 * other.e4 * -1.0
         );
     }
 }
-extension Horizon: Wedge<Scalar> {
-    associatedtype Output = Horizon;
-    func wedge(other: Scalar) -> Output {
+public extension Horizon: Wedge<Scalar> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: Scalar) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(this.e321 * other.scalar, 0.0, 0.0, 0.0)
+            /* e321 */
+            this.e321 * other.scalar
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Line> {
-        return WedgeInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Line> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Line: Wedge<DualNum> {
-    associatedtype Output = Line;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Line.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Line: Wedge<DualNum> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: DualNum) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group1.xyz
         );
     }
 }
-extension Line: Wedge<Flector> {
-    associatedtype Output = Plane;
-    func wedge(other: Flector) -> Output {
+public extension Line: Wedge<Flector> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Flector) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23), (other.e1 * this.e43) + (other.e4 * this.e31), (other.e2 * this.e41) + (other.e4 * this.e12), -(other.e2 * this.e31) - (other.e3 * this.e12)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
 }
-extension Line: Wedge<Line> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Line) -> Output {
+public extension Line: Wedge<Line> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Line) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
 }
-extension Line: Wedge<Motor> {
-    associatedtype Output = Motor;
-    func wedge(other: Motor) -> Output {
+public extension Line: Wedge<Motor> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(other.scalar) * this.group0.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -398,70 +428,76 @@ extension Line: Wedge<Motor> {
         );
     }
 }
-extension Line: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Line: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group1.xyz, 
             /* e423, e431, e412, e321 */
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
 }
-extension Line: Wedge<Origin> {
-    associatedtype Output = Plane;
-    func wedge(other: Origin) -> Output {
+public extension Line: Wedge<Origin> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Origin) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(other.e4) * this.group1.xyz), 0.0)
         );
     }
 }
-extension Line: Wedge<Point> {
-    associatedtype Output = Plane;
-    func wedge(other: Point) -> Output {
+public extension Line: Wedge<Point> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Point) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
 }
-extension Line: Wedge<Scalar> {
-    associatedtype Output = Line;
-    func wedge(other: Scalar) -> Output {
+public extension Line: Wedge<Scalar> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Scalar) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group1.xyz
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Motor> {
-        return WedgeInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Motor> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Motor: Wedge<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: AntiScalar) -> Output {
+public extension WedgeInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Motor.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Motor: Wedge<AntiScalar> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.scalar
         );
     }
 }
-extension Motor: Wedge<DualNum> {
-    associatedtype Output = Motor;
-    func wedge(other: DualNum) -> Output {
+public extension Motor: Wedge<DualNum> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: DualNum) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group0.xyz, 1.0), 
@@ -470,9 +506,9 @@ extension Motor: Wedge<DualNum> {
         );
     }
 }
-extension Motor: Wedge<Flector> {
-    associatedtype Output = Flector;
-    func wedge(other: Flector) -> Output {
+public extension Motor: Wedge<Flector> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Flector) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -481,18 +517,18 @@ extension Motor: Wedge<Flector> {
         );
     }
 }
-extension Motor: Wedge<Horizon> {
-    associatedtype Output = Horizon;
-    func wedge(other: Horizon) -> Output {
+public extension Motor: Wedge<Horizon> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: Horizon) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(other.e321 * this.scalar, 0.0, 0.0, 0.0)
+            /* e321 */
+            other.e321 * this.scalar
         );
     }
 }
-extension Motor: Wedge<Line> {
-    associatedtype Output = Motor;
-    func wedge(other: Line) -> Output {
+public extension Motor: Wedge<Line> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Line) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(this.scalar) * other.group0.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -501,9 +537,9 @@ extension Motor: Wedge<Line> {
         );
     }
 }
-extension Motor: Wedge<Motor> {
-    associatedtype Output = Motor;
-    func wedge(other: Motor) -> Output {
+public extension Motor: Wedge<Motor> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(other.scalar) * this.group0) + (float4(this.scalar) * other.group0) + float4(float3(0.0), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -512,26 +548,26 @@ extension Motor: Wedge<Motor> {
         );
     }
 }
-extension Motor: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Motor: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.scalar * other.scalar, (this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(this.scalar * other.scalar, (this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group1, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.scalar) * other.group2.xyz) + (float3(other.scalar) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.scalar) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.scalar) * other.group2.xyz) + (float3(other.scalar) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (float3(this.scalar) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz), 
             /* e423, e431, e412, e321 */
             float4((this.e23 * other.e4) + (this.scalar * other.e423), (this.e31 * other.e4) + (this.scalar * other.e431), (this.e12 * other.e4) + (this.scalar * other.e412), -(this.e31 * other.e2) - (this.e12 * other.e3)) + float4((this.group0.yzx * other.group1.zxy), this.scalar * other.e321) - (other.group1.yzxx * float4(this.group0.zxy, this.e23))
         );
     }
 }
-extension Motor: Wedge<Origin> {
-    associatedtype Output = Flector;
-    func wedge(other: Origin) -> Output {
+public extension Motor: Wedge<Origin> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Origin) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * other.e4), 
@@ -540,18 +576,18 @@ extension Motor: Wedge<Origin> {
         );
     }
 }
-extension Motor: Wedge<Plane> {
-    associatedtype Output = Plane;
-    func wedge(other: Plane) -> Output {
+public extension Motor: Wedge<Plane> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Plane) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension Motor: Wedge<Point> {
-    associatedtype Output = Flector;
-    func wedge(other: Point) -> Output {
+public extension Motor: Wedge<Point> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Point) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -560,9 +596,9 @@ extension Motor: Wedge<Point> {
         );
     }
 }
-extension Motor: Wedge<Scalar> {
-    associatedtype Output = Motor;
-    func wedge(other: Scalar) -> Output {
+public extension Motor: Wedge<Scalar> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Scalar) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.scalar) * this.group0, 
@@ -571,209 +607,221 @@ extension Motor: Wedge<Scalar> {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<MultiVector> {
-        return WedgeInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<MultiVector> {
+        return WedgeInfixPartial(this);
     }
 }
-extension MultiVector: Wedge<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: AntiScalar) -> Output {
+public extension WedgeInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> MultiVector.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension MultiVector: Wedge<AntiScalar> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.scalar
         );
     }
 }
-extension MultiVector: Wedge<DualNum> {
-    associatedtype Output = MultiVector;
-    func wedge(other: DualNum) -> Output {
+public extension MultiVector: Wedge<DualNum> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: DualNum) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group4
         );
     }
 }
-extension MultiVector: Wedge<Flector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Flector) -> Output {
+public extension MultiVector: Wedge<Flector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group1.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.zxy * this.group1.yzx) - (other.group0.yzx * this.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group1.xyz), 
+            /* e23, e31, e12 */
+            (other.group0.zxy * this.group1.yzx) - (other.group0.yzx * this.group1.zxy), 
             /* e423, e431, e412, e321 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23), (other.e1 * this.e43) + (other.e4 * this.e31), (other.e2 * this.e41) + (other.e4 * this.e12), -(other.e2 * this.e31) - (other.e3 * this.e12)) + (float4(this.scalar) * other.group1) - (other.group0.yzxx * float4(this.group2.xyz.zxy, this.e23))
         );
     }
 }
-extension MultiVector: Wedge<Horizon> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Horizon) -> Output {
+public extension MultiVector: Wedge<Horizon> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * this.scalar)
         );
     }
 }
-extension MultiVector: Wedge<Line> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Line) -> Output {
+public extension MultiVector: Wedge<Line> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Line) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group1.xyz, 
             /* e423, e431, e412, e321 */
             float4((other.e42 * this.e3) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group1.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
-extension MultiVector: Wedge<Motor> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Motor) -> Output {
+public extension MultiVector: Wedge<Motor> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Motor) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar, (other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar, (other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group1, 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group2.xyz) + (float3(this.scalar) * other.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group3.xyz) + (float3(this.scalar) * other.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group2.xyz) + (float3(this.scalar) * other.group0.xyz), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group3.xyz) + (float3(this.scalar) * other.group1.xyz), 
             /* e423, e431, e412, e321 */
             float4((other.e23 * this.e4) + (other.scalar * this.e423), (other.e31 * this.e4) + (other.scalar * this.e431), (other.e12 * this.e4) + (other.scalar * this.e412), -(other.e31 * this.e2) - (other.e12 * this.e3)) + float4((other.group0.yzx * this.group1.zxy), other.scalar * this.e321) - (this.group1.yzxx * float4(other.group0.zxy, other.e23))
         );
     }
 }
-extension MultiVector: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension MultiVector: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             (float4(other.scalar) * this.group1) + (float4(this.scalar) * other.group1), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group2.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group1.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group3.xyz) + (float3(this.scalar) * other.group3.xyz) + (other.group1.zxy * this.group1.yzx) - (other.group1.yzx * this.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group2.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group1.xyz), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group3.xyz) + (float3(this.scalar) * other.group3.xyz) + (other.group1.zxy * this.group1.yzx) - (other.group1.yzx * this.group1.zxy), 
             /* e423, e431, e412, e321 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e42 * this.e3) + (other.e23 * this.e4), (other.e1 * this.e43) + (other.e4 * this.e31) + (other.e43 * this.e1) + (other.e31 * this.e4), (other.e2 * this.e41) + (other.e4 * this.e12) + (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e1 * this.e23) - (other.e2 * this.e31) - (other.e3 * this.e12) - (other.e12 * this.e3)) + (float4(other.scalar) * this.group4) + (float4(this.scalar) * other.group4) - (this.group1.yzxx * float4(other.group2.xyz.zxy, other.e23)) - float4((this.group2.xyz.zxy * other.group1.yzx), other.e31 * this.e2)
         );
     }
 }
-extension MultiVector: Wedge<Origin> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Origin) -> Output {
+public extension MultiVector: Wedge<Origin> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * other.e4), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e4) * this.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(other.e4) * this.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(other.e4) * this.group3.xyz), 0.0)
         );
     }
 }
-extension MultiVector: Wedge<Plane> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Plane) -> Output {
+public extension MultiVector: Wedge<Plane> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension MultiVector: Wedge<Point> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Point) -> Output {
+public extension MultiVector: Wedge<Point> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group1.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group1.yzx * other.group0.zxy) - (this.group1.zxy * other.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group1.xyz), 
+            /* e23, e31, e12 */
+            (this.group1.yzx * other.group0.zxy) - (this.group1.zxy * other.group0.yzx), 
             /* e423, e431, e412, e321 */
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.yzxx * float4(this.group2.xyz.zxy, this.e23))
         );
     }
 }
-extension MultiVector: Wedge<Scalar> {
-    associatedtype Output = MultiVector;
-    func wedge(other: Scalar) -> Output {
+public extension MultiVector: Wedge<Scalar> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: Scalar) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar) * this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group4
         );
     }
 }
-extension Origin {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Origin> {
-        return WedgeInfixPartial { a: this };
+public extension Origin {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Origin> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Origin: Wedge<DualNum> {
-    associatedtype Output = Origin;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Origin> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Origin.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Origin: Wedge<DualNum> {
+    public typedef Origin WedgeOutput;
+    public func wedge(other: DualNum) -> Origin {
         return Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.scalar * this.e4, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.scalar * this.e4
         );
     }
 }
-extension Origin: Wedge<Flector> {
-    associatedtype Output = Motor;
-    func wedge(other: Flector) -> Output {
+public extension Origin: Wedge<Flector> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Flector) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group0.xyz, other.e321), 
@@ -782,27 +830,27 @@ extension Origin: Wedge<Flector> {
         );
     }
 }
-extension Origin: Wedge<Horizon> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Horizon) -> Output {
+public extension Origin: Wedge<Horizon> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Horizon) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e321 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e321 * this.e4
         );
     }
 }
-extension Origin: Wedge<Line> {
-    associatedtype Output = Plane;
-    func wedge(other: Line) -> Output {
+public extension Origin: Wedge<Line> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Line) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
     }
 }
-extension Origin: Wedge<Motor> {
-    associatedtype Output = Flector;
-    func wedge(other: Motor) -> Output {
+public extension Origin: Wedge<Motor> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Motor) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
@@ -811,147 +859,159 @@ extension Origin: Wedge<Motor> {
         );
     }
 }
-extension Origin: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Origin: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * other.group1.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(this.e4) * other.group1.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * other.group3.xyz), 0.0)
         );
     }
 }
-extension Origin: Wedge<Plane> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Plane) -> Output {
+public extension Origin: Wedge<Plane> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e321, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e321
         );
     }
 }
-extension Origin: Wedge<Point> {
-    associatedtype Output = Line;
-    func wedge(other: Point) -> Output {
+public extension Origin: Wedge<Point> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Point) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(this.e4) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
     }
 }
-extension Origin: Wedge<Scalar> {
-    associatedtype Output = Origin;
-    func wedge(other: Scalar) -> Output {
+public extension Origin: Wedge<Scalar> {
+    public typedef Origin WedgeOutput;
+    public func wedge(other: Scalar) -> Origin {
         return Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(this.e4 * other.scalar, 0.0, 0.0, 0.0)
+            /* e4 */
+            this.e4 * other.scalar
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Plane> {
-        return WedgeInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Plane> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Plane: Wedge<DualNum> {
-    associatedtype Output = Plane;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Plane.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Plane: Wedge<DualNum> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: DualNum) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Plane: Wedge<Flector> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Flector) -> Output {
+public extension Plane: Wedge<Flector> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)
         );
     }
 }
-extension Plane: Wedge<Motor> {
-    associatedtype Output = Plane;
-    func wedge(other: Motor) -> Output {
+public extension Plane: Wedge<Motor> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Motor) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Plane: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Plane: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Plane: Wedge<Origin> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Origin) -> Output {
+public extension Plane: Wedge<Origin> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e321 * -1.0
         );
     }
 }
-extension Plane: Wedge<Point> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Point) -> Output {
+public extension Plane: Wedge<Point> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
 }
-extension Plane: Wedge<Scalar> {
-    associatedtype Output = Plane;
-    func wedge(other: Scalar) -> Output {
+public extension Plane: Wedge<Scalar> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Scalar) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Point {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Point> {
-        return WedgeInfixPartial { a: this };
+public extension Point {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Point> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Point: Wedge<DualNum> {
-    associatedtype Output = Point;
-    func wedge(other: DualNum) -> Output {
+public extension WedgeInfixPartial<Point> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Point.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Point: Wedge<DualNum> {
+    public typedef Point WedgeOutput;
+    public func wedge(other: DualNum) -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Point: Wedge<Flector> {
-    associatedtype Output = Motor;
-    func wedge(other: Flector) -> Output {
+public extension Point: Wedge<Flector> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Flector) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)) + (this.group0.wwwx * float4(other.group0.xyz, other.e423)), 
@@ -960,27 +1020,27 @@ extension Point: Wedge<Flector> {
         );
     }
 }
-extension Point: Wedge<Horizon> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Horizon) -> Output {
+public extension Point: Wedge<Horizon> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Horizon) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e321 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e321 * this.e4
         );
     }
 }
-extension Point: Wedge<Line> {
-    associatedtype Output = Plane;
-    func wedge(other: Line) -> Output {
+public extension Point: Wedge<Line> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Line) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e42 * this.e3) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
-extension Point: Wedge<Motor> {
-    associatedtype Output = Flector;
-    func wedge(other: Motor) -> Output {
+public extension Point: Wedge<Motor> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Motor) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -989,90 +1049,96 @@ extension Point: Wedge<Motor> {
         );
     }
 }
-extension Point: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Point: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)), 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group1.zxy * this.group0.yzx) - (other.group1.yzx * this.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (other.group1.zxy * this.group0.yzx) - (other.group1.yzx * this.group0.zxy), 
             /* e423, e431, e412, e321 */
             float4((other.e42 * this.e3) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.yzxx * float4(other.group2.xyz.zxy, other.e23))
         );
     }
 }
-extension Point: Wedge<Origin> {
-    associatedtype Output = Line;
-    func wedge(other: Origin) -> Output {
+public extension Point: Wedge<Origin> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Origin) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e4) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(other.e4) * this.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
     }
 }
-extension Point: Wedge<Plane> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: Plane) -> Output {
+public extension Point: Wedge<Plane> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
 }
-extension Point: Wedge<Point> {
-    associatedtype Output = Line;
-    func wedge(other: Point) -> Output {
+public extension Point: Wedge<Point> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Point) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.zxy * this.group0.yzx) - (other.group0.yzx * this.group0.zxy), 0.0)
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (other.group0.zxy * this.group0.yzx) - (other.group0.yzx * this.group0.zxy)
         );
     }
 }
-extension Point: Wedge<Scalar> {
-    associatedtype Output = Point;
-    func wedge(other: Scalar) -> Output {
+public extension Point: Wedge<Scalar> {
+    public typedef Point WedgeOutput;
+    public func wedge(other: Scalar) -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Scalar> {
-        return WedgeInfixPartial { a: this };
+public extension Scalar {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Scalar> {
+        return WedgeInfixPartial(this);
     }
 }
-extension Scalar: Wedge<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func wedge(other: AntiScalar) -> Output {
+public extension WedgeInfixPartial<Scalar> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Scalar.Output {
+        return this.a.wedge(rhs);
+    }
+}
+public extension Scalar: Wedge<AntiScalar> {
+    public typedef AntiScalar WedgeOutput;
+    public func wedge(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.scalar
         );
     }
 }
-extension Scalar: Wedge<DualNum> {
-    associatedtype Output = DualNum;
-    func wedge(other: DualNum) -> Output {
+public extension Scalar: Wedge<DualNum> {
+    public typedef DualNum WedgeOutput;
+    public func wedge(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.scalar) * other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.scalar) * other.group0.xy
         );
     }
 }
-extension Scalar: Wedge<Flector> {
-    associatedtype Output = Flector;
-    func wedge(other: Flector) -> Output {
+public extension Scalar: Wedge<Flector> {
+    public typedef Flector WedgeOutput;
+    public func wedge(other: Flector) -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -1081,29 +1147,29 @@ extension Scalar: Wedge<Flector> {
         );
     }
 }
-extension Scalar: Wedge<Horizon> {
-    associatedtype Output = Horizon;
-    func wedge(other: Horizon) -> Output {
+public extension Scalar: Wedge<Horizon> {
+    public typedef Horizon WedgeOutput;
+    public func wedge(other: Horizon) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(other.e321 * this.scalar, 0.0, 0.0, 0.0)
+            /* e321 */
+            other.e321 * this.scalar
         );
     }
 }
-extension Scalar: Wedge<Line> {
-    associatedtype Output = Line;
-    func wedge(other: Line) -> Output {
+public extension Scalar: Wedge<Line> {
+    public typedef Line WedgeOutput;
+    public func wedge(other: Line) -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group1.xyz
         );
     }
 }
-extension Scalar: Wedge<Motor> {
-    associatedtype Output = Motor;
-    func wedge(other: Motor) -> Output {
+public extension Scalar: Wedge<Motor> {
+    public typedef Motor WedgeOutput;
+    public func wedge(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * other.group0, 
@@ -1112,56 +1178,56 @@ extension Scalar: Wedge<Motor> {
         );
     }
 }
-extension Scalar: Wedge<MultiVector> {
-    associatedtype Output = MultiVector;
-    func wedge(other: MultiVector) -> Output {
+public extension Scalar: Wedge<MultiVector> {
+    public typedef MultiVector WedgeOutput;
+    public func wedge(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.scalar) * other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(this.scalar) * other.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group4
         );
     }
 }
-extension Scalar: Wedge<Origin> {
-    associatedtype Output = Origin;
-    func wedge(other: Origin) -> Output {
+public extension Scalar: Wedge<Origin> {
+    public typedef Origin WedgeOutput;
+    public func wedge(other: Origin) -> Origin {
         return Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e4 * this.scalar, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e4 * this.scalar
         );
     }
 }
-extension Scalar: Wedge<Plane> {
-    associatedtype Output = Plane;
-    func wedge(other: Plane) -> Output {
+public extension Scalar: Wedge<Plane> {
+    public typedef Plane WedgeOutput;
+    public func wedge(other: Plane) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension Scalar: Wedge<Point> {
-    associatedtype Output = Point;
-    func wedge(other: Point) -> Output {
+public extension Scalar: Wedge<Point> {
+    public typedef Point WedgeOutput;
+    public func wedge(other: Point) -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
         );
     }
 }
-extension Scalar: Wedge<Scalar> {
-    associatedtype Output = Scalar;
-    func wedge(other: Scalar) -> Output {
+public extension Scalar: Wedge<Scalar> {
+    public typedef Scalar WedgeOutput;
+    public func wedge(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }

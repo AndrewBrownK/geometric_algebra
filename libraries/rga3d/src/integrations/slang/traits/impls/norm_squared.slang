@@ -1,77 +1,107 @@
-using traits::FlatBulkNormSquared;
-using traits::FlatWeightNormSquared;
-extension Flector {
-    // Fancy infix trick
+using traits;
+using traits;
+public extension Flector {
+    // Fancy postfix trick
     func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
         return this.norm_squared();
     }
 }
-extension Flector: NormSquared {
-    associatedtype Output = DualNum;
-    func norm_squared() -> Output {
+public extension NormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Flector) -> Flector.Output {
+        return rhs.norm_squared();
+    }
+}
+public extension Flector: NormSquared {
+    public typedef DualNum NormSquaredOutput;
+    public func norm_squared() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
-extension Line {
-    // Fancy infix trick
+public extension Line {
+    // Fancy postfix trick
     func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
         return this.norm_squared();
     }
 }
-extension Line: NormSquared {
-    associatedtype Output = DualNum;
-    func norm_squared() -> Output {
+public extension NormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Line) -> Line.Output {
+        return rhs.norm_squared();
+    }
+}
+public extension Line: NormSquared {
+    public typedef DualNum NormSquaredOutput;
+    public func norm_squared() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
+public extension Motor {
+    // Fancy postfix trick
     func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
         return this.norm_squared();
     }
 }
-extension Motor: NormSquared {
-    associatedtype Output = DualNum;
-    func norm_squared() -> Output {
+public extension NormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Motor) -> Motor.Output {
+        return rhs.norm_squared();
+    }
+}
+public extension Motor: NormSquared {
+    public typedef DualNum NormSquaredOutput;
+    public func norm_squared() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
+public extension MultiVector {
+    // Fancy postfix trick
     func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
         return this.norm_squared();
     }
 }
-extension MultiVector: NormSquared {
-    associatedtype Output = DualNum;
-    func norm_squared() -> Output {
+public extension NormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+        return rhs.norm_squared();
+    }
+}
+public extension MultiVector: NormSquared {
+    public typedef DualNum NormSquaredOutput;
+    public func norm_squared() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }
-extension Point {
-    // Fancy infix trick
+public extension Point {
+    // Fancy postfix trick
     func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
         return this.norm_squared();
     }
 }
-extension Point: NormSquared {
-    associatedtype Output = DualNum;
-    func norm_squared() -> Output {
+public extension NormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Point) -> Point.Output {
+        return rhs.norm_squared();
+    }
+}
+public extension Point: NormSquared {
+    public typedef DualNum NormSquaredOutput;
+    public func norm_squared() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
         );
     }
 }

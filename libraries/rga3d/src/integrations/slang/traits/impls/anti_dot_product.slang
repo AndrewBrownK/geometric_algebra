@@ -1,423 +1,477 @@
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<AntiScalar> {
-        return AntiDotProductInfixPartial { a: this };
+public extension AntiScalar {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<AntiScalar> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension AntiScalar: AntiDotProduct<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: AntiScalar) -> Output {
+public extension AntiDotProductInfixPartial<AntiScalar> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> AntiScalar.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension AntiScalar: AntiDotProduct<AntiScalar> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension AntiScalar: AntiDotProduct<DualNum> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: DualNum) -> Output {
+public extension AntiScalar: AntiDotProduct<DualNum> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: DualNum) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.e1234
         );
     }
 }
-extension AntiScalar: AntiDotProduct<Motor> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Motor) -> Output {
+public extension AntiScalar: AntiDotProduct<Motor> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.e1234
         );
     }
 }
-extension AntiScalar: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension AntiScalar: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.e1234
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<DualNum> {
-        return AntiDotProductInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<DualNum> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension DualNum: AntiDotProduct<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: AntiScalar) -> Output {
+public extension AntiDotProductInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> DualNum.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension DualNum: AntiDotProduct<AntiScalar> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension DualNum: AntiDotProduct<DualNum> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: DualNum) -> Output {
+public extension DualNum: AntiDotProduct<DualNum> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: DualNum) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension DualNum: AntiDotProduct<Motor> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Motor) -> Output {
+public extension DualNum: AntiDotProduct<Motor> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.e1234
         );
     }
 }
-extension DualNum: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension DualNum: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.e1234
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Flector> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Flector> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Flector: AntiDotProduct<Flector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Flector) -> Output {
+public extension AntiDotProductInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Flector.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Flector: AntiDotProduct<Flector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension Flector: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Flector: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-extension Flector: AntiDotProduct<Origin> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Origin) -> Output {
+public extension Flector: AntiDotProduct<Origin> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e4
         );
     }
 }
-extension Flector: AntiDotProduct<Plane> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Plane) -> Output {
+public extension Flector: AntiDotProduct<Plane> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-extension Flector: AntiDotProduct<Point> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Point) -> Output {
+public extension Flector: AntiDotProduct<Point> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e4
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Line> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Line> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Line: AntiDotProduct<Line> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Line) -> Output {
+public extension AntiDotProductInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Line.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Line: AntiDotProduct<Line> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Line) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-extension Line: AntiDotProduct<Motor> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Motor) -> Output {
+public extension Line: AntiDotProduct<Motor> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
     }
 }
-extension Line: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Line: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Motor> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Motor> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Motor: AntiDotProduct<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: AntiScalar) -> Output {
+public extension AntiDotProductInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Motor.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Motor: AntiDotProduct<AntiScalar> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension Motor: AntiDotProduct<DualNum> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: DualNum) -> Output {
+public extension Motor: AntiDotProduct<DualNum> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: DualNum) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension Motor: AntiDotProduct<Line> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Line) -> Output {
+public extension Motor: AntiDotProduct<Line> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Line) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-extension Motor: AntiDotProduct<Motor> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Motor) -> Output {
+public extension Motor: AntiDotProduct<Motor> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
     }
 }
-extension Motor: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Motor: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234)
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<MultiVector> {
-        return AntiDotProductInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<MultiVector> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension MultiVector: AntiDotProduct<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: AntiScalar) -> Output {
+public extension AntiDotProductInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> MultiVector.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension MultiVector: AntiDotProduct<AntiScalar> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension MultiVector: AntiDotProduct<DualNum> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: DualNum) -> Output {
+public extension MultiVector: AntiDotProduct<DualNum> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: DualNum) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.e1234
         );
     }
 }
-extension MultiVector: AntiDotProduct<Flector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Flector) -> Output {
+public extension MultiVector: AntiDotProduct<Flector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension MultiVector: AntiDotProduct<Line> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Line) -> Output {
+public extension MultiVector: AntiDotProduct<Line> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Line) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-extension MultiVector: AntiDotProduct<Motor> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Motor) -> Output {
+public extension MultiVector: AntiDotProduct<Motor> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Motor) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
     }
 }
-extension MultiVector: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension MultiVector: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension MultiVector: AntiDotProduct<Origin> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Origin) -> Output {
+public extension MultiVector: AntiDotProduct<Origin> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e4
         );
     }
 }
-extension MultiVector: AntiDotProduct<Plane> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Plane) -> Output {
+public extension MultiVector: AntiDotProduct<Plane> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-extension MultiVector: AntiDotProduct<Point> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Point) -> Output {
+public extension MultiVector: AntiDotProduct<Point> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e4
         );
     }
 }
-extension Origin {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Origin> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Origin {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Origin> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Origin: AntiDotProduct<Flector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Flector) -> Output {
+public extension AntiDotProductInfixPartial<Origin> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Origin.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Origin: AntiDotProduct<Flector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Origin: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Origin: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Origin: AntiDotProduct<Origin> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Origin) -> Output {
+public extension Origin: AntiDotProduct<Origin> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Origin: AntiDotProduct<Point> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Point) -> Output {
+public extension Origin: AntiDotProduct<Point> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * other.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * other.e4
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Plane> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Plane> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Plane: AntiDotProduct<Flector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Flector) -> Output {
+public extension AntiDotProductInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Plane.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Plane: AntiDotProduct<Flector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension Plane: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Plane: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension Plane: AntiDotProduct<Plane> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Plane) -> Output {
+public extension Plane: AntiDotProduct<Plane> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Plane) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-extension Point {
-    // Fancy infix trick
-    func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Point> {
-        return AntiDotProductInfixPartial { a: this };
+public extension Point {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Point> {
+        return AntiDotProductInfixPartial(this);
     }
 }
-extension Point: AntiDotProduct<Flector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Flector) -> Output {
+public extension AntiDotProductInfixPartial<Point> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Point.Output {
+        return this.a.anti_dot_product(rhs);
+    }
+}
+public extension Point: AntiDotProduct<Flector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Flector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Point: AntiDotProduct<MultiVector> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: MultiVector) -> Output {
+public extension Point: AntiDotProduct<MultiVector> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: MultiVector) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Point: AntiDotProduct<Origin> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Origin) -> Output {
+public extension Point: AntiDotProduct<Origin> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Origin) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }
-extension Point: AntiDotProduct<Point> {
-    associatedtype Output = AntiScalar;
-    func anti_dot_product(other: Point) -> Output {
+public extension Point: AntiDotProduct<Point> {
+    public typedef AntiScalar AntiDotProductOutput;
+    public func anti_dot_product(other: Point) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * this.e4
         );
     }
 }

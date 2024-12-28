@@ -1,15 +1,10 @@
-using data::*;
+implementing rga3d;using data;
 
 /// Fix
 /// Automatically fix the geometric constraint by adjusting the weight to comply with the bulk, and then bulk normalize the result.
 public interface Fix {
-    func fix() -> Output;
+    func fix() -> This;
 }
-public static const fix: FixPrefixOrPostfix = FixPrefixOrPostfix {};
+public static const FixPrefixOrPostfix fix = FixPrefixOrPostfix();
 public struct FixPrefixOrPostfix {}
-extension FixPrefixOrPostfix for A: Fix {
-    func operator/(rhs: A) -> A.Output {
-        return rhs.fix();
-    }
-}
-__include ./impls/fix;
+__include "./impls/fix";

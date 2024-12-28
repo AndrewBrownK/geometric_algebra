@@ -1,14 +1,14 @@
 implementing rga3d;
-using data::*;
+using data;
 
 /// Flector
 public struct Flector {
     // e1, e2, e3, e4
-    internal group0: float4,
+    internal float4 group0;
     // e423, e431, e412, e321
-    internal group1: float4
+    internal float4 group1;
 }
-extension Flector {
+public extension Flector {
     public property e1: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -44,26 +44,27 @@ extension Flector {
     public static func from_elements(
         e1: float, e2: float, e3: float, e4: float, e423: float, e431: float, e412: float, e321: float
     ) -> Flector {
-        return Flector { float4(e1, e2, e3, e4), float4(e423, e431, e412, e321) };
+        return Flector(float4(e1, e2, e3, e4), float4(e423, e431, e412, e321));
     }
     internal static func from_groups(
         g0: float4, g1: float4
     ) -> Flector {
-        return Flector {
-            group0: g0, group1: g1
-        };
+        return Flector(g0, g1);
     }
 }
-extension Flector: IComparable {
-    bool lessThan(IComparable another) {
-        Flector other = (Flector)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        return this.group1.lessThan(other.group1);
+public extension Flector: IComparable {
+    public bool equals(Flector other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1);
     }
-    bool equals(IComparable another) {
-        Flector other = (Flector)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
+    public bool lessThan(Flector other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        return lessThanHelper(this.group1, other.group1);
+    }
+    public bool lessThanOrEquals(Flector other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        return lessThanOrEqualsHelper(this.group1, other.group1);
     }
 }
 __include "impls/flector";

@@ -1,96 +1,138 @@
-extension AntiScalar {
-    // Fancy infix trick
+public extension AntiScalar {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> AntiScalar {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> AntiScalar& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> AntiScalar& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension AntiScalar: AntiConstraintValid {
-    associatedtype Output = AntiScalar;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension AntiScalar: AntiConstraintValid {
+    public typedef AntiScalar AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> AntiScalar {
         return this;
     }
 }
-extension Horizon {
-    // Fancy infix trick
+public extension Horizon {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Horizon {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Horizon& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension Horizon: AntiConstraintValid {
-    associatedtype Output = Horizon;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Horizon) -> Horizon.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension Horizon: AntiConstraintValid {
+    public typedef Horizon AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> Horizon {
         return this;
     }
 }
-extension Origin {
-    // Fancy infix trick
+public extension Origin {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Origin {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Origin& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Origin& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension Origin: AntiConstraintValid {
-    associatedtype Output = Origin;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Origin) -> Origin.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension Origin: AntiConstraintValid {
+    public typedef Origin AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> Origin {
         return this;
     }
 }
-extension Plane {
-    // Fancy infix trick
+public extension Plane {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Plane {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Plane& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Plane& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension Plane: AntiConstraintValid {
-    associatedtype Output = Plane;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Plane) -> Plane.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension Plane: AntiConstraintValid {
+    public typedef Plane AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> Plane {
         return this;
     }
 }
-extension Point {
-    // Fancy infix trick
+public extension Point {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Point {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Point& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Point& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension Point: AntiConstraintValid {
-    associatedtype Output = Point;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Point) -> Point.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension Point: AntiConstraintValid {
+    public typedef Point AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> Point {
         return this;
     }
 }
-extension Scalar {
-    // Fancy infix trick
+public extension Scalar {
+    // Fancy postfix trick
     func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Scalar {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Scalar& {
+    // Fancy postfix self-assign
+    public func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.anti_constraint_valid();
         return *this;
     }
 }
-extension Scalar: AntiConstraintValid {
-    associatedtype Output = Scalar;
-    func anti_constraint_valid() -> Output {
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Scalar) -> Scalar.Output {
+        return rhs.anti_constraint_valid();
+    }
+}
+public extension Scalar: AntiConstraintValid {
+    public typedef Scalar AntiConstraintValidOutput;
+    public func anti_constraint_valid() -> Scalar {
         return this;
     }
 }

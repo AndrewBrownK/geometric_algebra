@@ -1,423 +1,477 @@
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<DualNum> {
-        return DotProductInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<DualNum> {
+        return DotProductInfixPartial(this);
     }
 }
-extension DualNum: DotProduct<DualNum> {
-    associatedtype Output = Scalar;
-    func dot_product(other: DualNum) -> Output {
+public extension DotProductInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> DualNum.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension DualNum: DotProduct<DualNum> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: DualNum) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension DualNum: DotProduct<Motor> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Motor) -> Output {
+public extension DualNum: DotProduct<Motor> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Motor) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension DualNum: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension DualNum: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension DualNum: DotProduct<Scalar> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Scalar) -> Output {
+public extension DualNum: DotProduct<Scalar> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Flector> {
-        return DotProductInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Flector> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Flector: DotProduct<Flector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Flector) -> Output {
+public extension DotProductInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Flector.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Flector: DotProduct<Flector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Flector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321)
         );
     }
 }
-extension Flector: DotProduct<Horizon> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Horizon) -> Output {
+public extension Flector: DotProduct<Horizon> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.e321 * other.e321
         );
     }
 }
-extension Flector: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Flector: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3) + (this.e321 * other.e321), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3) + (this.e321 * other.e321)
         );
     }
 }
-extension Flector: DotProduct<Plane> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Plane) -> Output {
+public extension Flector: DotProduct<Plane> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.e321 * other.e321
         );
     }
 }
-extension Flector: DotProduct<Point> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Point) -> Output {
+public extension Flector: DotProduct<Point> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Point) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)
         );
     }
 }
-extension Horizon {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Horizon> {
-        return DotProductInfixPartial { a: this };
+public extension Horizon {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Horizon> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Horizon: DotProduct<Flector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Flector) -> Output {
+public extension DotProductInfixPartial<Horizon> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Horizon.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Horizon: DotProduct<Flector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Flector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Horizon: DotProduct<Horizon> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Horizon) -> Output {
+public extension Horizon: DotProduct<Horizon> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Horizon: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Horizon: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.e321 * other.e321
         );
     }
 }
-extension Horizon: DotProduct<Plane> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Plane) -> Output {
+public extension Horizon: DotProduct<Plane> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.e321 * other.e321
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Line> {
-        return DotProductInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Line> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Line: DotProduct<Line> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Line) -> Output {
+public extension DotProductInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Line.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Line: DotProduct<Line> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Line) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
     }
 }
-extension Line: DotProduct<Motor> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Motor) -> Output {
+public extension Line: DotProduct<Motor> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Motor) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12)
         );
     }
 }
-extension Line: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Line: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Motor> {
-        return DotProductInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Motor> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Motor: DotProduct<DualNum> {
-    associatedtype Output = Scalar;
-    func dot_product(other: DualNum) -> Output {
+public extension DotProductInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Motor.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Motor: DotProduct<DualNum> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: DualNum) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Motor: DotProduct<Line> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Line) -> Output {
+public extension Motor: DotProduct<Line> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Line) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
     }
 }
-extension Motor: DotProduct<Motor> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Motor) -> Output {
+public extension Motor: DotProduct<Motor> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Motor) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
     }
 }
-extension Motor: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Motor: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12) + (this.scalar * other.scalar), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12) + (this.scalar * other.scalar)
         );
     }
 }
-extension Motor: DotProduct<Scalar> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Scalar) -> Output {
+public extension Motor: DotProduct<Scalar> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<MultiVector> {
-        return DotProductInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<MultiVector> {
+        return DotProductInfixPartial(this);
     }
 }
-extension MultiVector: DotProduct<DualNum> {
-    associatedtype Output = Scalar;
-    func dot_product(other: DualNum) -> Output {
+public extension DotProductInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> MultiVector.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension MultiVector: DotProduct<DualNum> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: DualNum) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension MultiVector: DotProduct<Flector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Flector) -> Output {
+public extension MultiVector: DotProduct<Flector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Flector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321)
         );
     }
 }
-extension MultiVector: DotProduct<Horizon> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Horizon) -> Output {
+public extension MultiVector: DotProduct<Horizon> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension MultiVector: DotProduct<Line> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Line) -> Output {
+public extension MultiVector: DotProduct<Line> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Line) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
     }
 }
-extension MultiVector: DotProduct<Motor> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Motor) -> Output {
+public extension MultiVector: DotProduct<Motor> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Motor) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
     }
 }
-extension MultiVector: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension MultiVector: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.scalar * this.scalar) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.e321 * this.e321), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.scalar * this.scalar) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.e321 * this.e321)
         );
     }
 }
-extension MultiVector: DotProduct<Plane> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Plane) -> Output {
+public extension MultiVector: DotProduct<Plane> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e321 * other.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.e321 * other.e321
         );
     }
 }
-extension MultiVector: DotProduct<Point> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Point) -> Output {
+public extension MultiVector: DotProduct<Point> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Point) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3), 0.0, 0.0, 0.0)
+            /* scalar */
+            (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)
         );
     }
 }
-extension MultiVector: DotProduct<Scalar> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Scalar) -> Output {
+public extension MultiVector: DotProduct<Scalar> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Plane> {
-        return DotProductInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Plane> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Plane: DotProduct<Flector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Flector) -> Output {
+public extension DotProductInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Plane.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Plane: DotProduct<Flector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Flector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Plane: DotProduct<Horizon> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Horizon) -> Output {
+public extension Plane: DotProduct<Horizon> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Plane: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Plane: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Plane: DotProduct<Plane> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Plane) -> Output {
+public extension Plane: DotProduct<Plane> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e321 * this.e321, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.e321 * this.e321
         );
     }
 }
-extension Point {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Point> {
-        return DotProductInfixPartial { a: this };
+public extension Point {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Point> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Point: DotProduct<Flector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Flector) -> Output {
+public extension DotProductInfixPartial<Point> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Point.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Point: DotProduct<Flector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Flector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
     }
 }
-extension Point: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Point: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
     }
 }
-extension Point: DotProduct<Point> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Point) -> Output {
+public extension Point: DotProduct<Point> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Point) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3), 0.0, 0.0, 0.0)
+            /* scalar */
+            (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Scalar> {
-        return DotProductInfixPartial { a: this };
+public extension Scalar {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Scalar> {
+        return DotProductInfixPartial(this);
     }
 }
-extension Scalar: DotProduct<DualNum> {
-    associatedtype Output = Scalar;
-    func dot_product(other: DualNum) -> Output {
+public extension DotProductInfixPartial<Scalar> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Scalar.Output {
+        return this.a.dot_product(rhs);
+    }
+}
+public extension Scalar: DotProduct<DualNum> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: DualNum) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: DotProduct<Motor> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Motor) -> Output {
+public extension Scalar: DotProduct<Motor> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Motor) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: DotProduct<MultiVector> {
-    associatedtype Output = Scalar;
-    func dot_product(other: MultiVector) -> Output {
+public extension Scalar: DotProduct<MultiVector> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: MultiVector) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: DotProduct<Scalar> {
-    associatedtype Output = Scalar;
-    func dot_product(other: Scalar) -> Output {
+public extension Scalar: DotProduct<Scalar> {
+    public typedef Scalar DotProductOutput;
+    public func dot_product(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }

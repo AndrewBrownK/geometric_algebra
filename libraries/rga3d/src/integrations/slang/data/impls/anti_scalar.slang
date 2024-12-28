@@ -1,68 +1,67 @@
-using traits::GeometricProduct;
-extension AntiScalar: Add<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func operator+(other: AntiScalar) -> Output {
+using traits;
+public extension AntiScalar: Add<AntiScalar> {
+    public typedef AntiScalar AddOutput;
+    public func operator+(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 + this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 + this.e1234
         );
     }
 }
-extension AntiScalar {
-    associatedtype Output = AntiScalar;
-    func operator+=(const AntiScalar& other) {
+public extension AntiScalar {
+    public func operator+=(const AntiScalar& other) {
         *this = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 + this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 + this.e1234
         );
     }
 }
-extension AntiScalar: Add<DualNum> {
-    associatedtype Output = DualNum;
-    func operator+(other: DualNum) -> Output {
+public extension AntiScalar: Add<DualNum> {
+    public typedef DualNum AddOutput;
+    public func operator+(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234) + other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(0.0, this.e1234) + other.group0.xy
         );
     }
 }
-extension AntiScalar: Add<Flector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Flector) -> Output {
+public extension AntiScalar: Add<Flector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
     }
 }
-extension AntiScalar: Add<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Horizon) -> Output {
+public extension AntiScalar: Add<Horizon> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321)
         );
     }
 }
-extension AntiScalar: Add<Line> {
-    associatedtype Output = Motor;
-    func operator+(other: Line) -> Output {
+public extension AntiScalar: Add<Line> {
+    public typedef Motor AddOutput;
+    public func operator+(other: Line) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234), 
@@ -71,9 +70,9 @@ extension AntiScalar: Add<Line> {
         );
     }
 }
-extension AntiScalar: Add<Motor> {
-    associatedtype Output = Motor;
-    func operator+(other: Motor) -> Output {
+public extension AntiScalar: Add<Motor> {
+    public typedef Motor AddOutput;
+    public func operator+(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 + float4(float3(0.0), this.e1234), 
@@ -82,222 +81,219 @@ extension AntiScalar: Add<Motor> {
         );
     }
 }
-extension AntiScalar: Add<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: MultiVector) -> Output {
+public extension AntiScalar: Add<MultiVector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234) + other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234) + other.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group4
         );
     }
 }
-extension AntiScalar: Add<Origin> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Origin) -> Output {
+public extension AntiScalar: Add<Origin> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension AntiScalar: Add<Plane> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Plane) -> Output {
+public extension AntiScalar: Add<Plane> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group0
         );
     }
 }
-extension AntiScalar: Add<Point> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Point) -> Output {
+public extension AntiScalar: Add<Point> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension AntiScalar: Add<Scalar> {
-    associatedtype Output = DualNum;
-    func operator+(other: Scalar) -> Output {
+public extension AntiScalar: Add<Scalar> {
+    public typedef DualNum AddOutput;
+    public func operator+(other: Scalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, this.e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar, this.e1234)
         );
     }
 }
-extension AntiScalar: Mul<DualNum> {
-    associatedtype Output = AntiScalar;
-    func operator*(other: DualNum) -> Output {
+public extension AntiScalar: Mul<DualNum> {
+    public typedef AntiScalar MulOutput;
+    public func operator*(other: DualNum) -> AntiScalar {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar {
-    associatedtype Output = AntiScalar;
-    func operator*=(const DualNum& other) {
+public extension AntiScalar {
+    public func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Flector> {
-    associatedtype Output = Flector;
-    func operator*(other: Flector) -> Output {
+public extension AntiScalar: Mul<Flector> {
+    public typedef Flector MulOutput;
+    public func operator*(other: Flector) -> Flector {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Horizon> {
-    associatedtype Output = Origin;
-    func operator*(other: Horizon) -> Output {
+public extension AntiScalar: Mul<Horizon> {
+    public typedef Origin MulOutput;
+    public func operator*(other: Horizon) -> Origin {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Line> {
-    associatedtype Output = Line;
-    func operator*(other: Line) -> Output {
+public extension AntiScalar: Mul<Line> {
+    public typedef Line MulOutput;
+    public func operator*(other: Line) -> Line {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Motor> {
-    associatedtype Output = Motor;
-    func operator*(other: Motor) -> Output {
+public extension AntiScalar: Mul<Motor> {
+    public typedef Motor MulOutput;
+    public func operator*(other: Motor) -> Motor {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: MultiVector) -> Output {
+public extension AntiScalar: Mul<MultiVector> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: MultiVector) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Plane> {
-    associatedtype Output = Origin;
-    func operator*(other: Plane) -> Output {
+public extension AntiScalar: Mul<Plane> {
+    public typedef Origin MulOutput;
+    public func operator*(other: Plane) -> Origin {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Point> {
-    associatedtype Output = Plane;
-    func operator*(other: Point) -> Output {
+public extension AntiScalar: Mul<Point> {
+    public typedef Plane MulOutput;
+    public func operator*(other: Point) -> Plane {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar: Mul<Scalar> {
-    associatedtype Output = AntiScalar;
-    func operator*(other: Scalar) -> Output {
+public extension AntiScalar: Mul<Scalar> {
+    public typedef AntiScalar MulOutput;
+    public func operator*(other: Scalar) -> AntiScalar {
         return this.geometric_product(other);
     }
 }
-extension AntiScalar {
-    associatedtype Output = AntiScalar;
-    func operator*=(const Scalar& other) {
+public extension AntiScalar {
+    public func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
-extension AntiScalar: Neg {
-    associatedtype Output = AntiScalar;
-    func neg() -> Output {
+public extension AntiScalar: Neg {
+    public typedef AntiScalar NegOutput;
+    public func neg() -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * -1.0
         );
     }
 }
-extension AntiScalar: Sub<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func operator-(other: AntiScalar) -> Output {
+public extension AntiScalar: Sub<AntiScalar> {
+    public typedef AntiScalar SubOutput;
+    public func operator-(other: AntiScalar) -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 - other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 - other.e1234
         );
     }
 }
-extension AntiScalar {
-    associatedtype Output = AntiScalar;
-    func operator-=(const AntiScalar& other) {
+public extension AntiScalar {
+    public func operator-=(const AntiScalar& other) {
         *this = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 - other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 - other.e1234
         );
     }
 }
-extension AntiScalar: Sub<DualNum> {
-    associatedtype Output = DualNum;
-    func operator-(other: DualNum) -> Output {
+public extension AntiScalar: Sub<DualNum> {
+    public typedef DualNum SubOutput;
+    public func operator-(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0)
         );
     }
 }
-extension AntiScalar: Sub<Flector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Flector) -> Output {
+public extension AntiScalar: Sub<Flector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
     }
 }
-extension AntiScalar: Sub<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Horizon) -> Output {
+public extension AntiScalar: Sub<Horizon> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
-extension AntiScalar: Sub<Line> {
-    associatedtype Output = Motor;
-    func operator-(other: Line) -> Output {
+public extension AntiScalar: Sub<Line> {
+    public typedef Motor SubOutput;
+    public func operator-(other: Line) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -306,9 +302,9 @@ extension AntiScalar: Sub<Line> {
         );
     }
 }
-extension AntiScalar: Sub<Motor> {
-    associatedtype Output = Motor;
-    func operator-(other: Motor) -> Output {
+public extension AntiScalar: Sub<Motor> {
+    public typedef Motor SubOutput;
+    public func operator-(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234 - other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -317,80 +313,80 @@ extension AntiScalar: Sub<Motor> {
         );
     }
 }
-extension AntiScalar: Sub<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: MultiVector) -> Output {
+public extension AntiScalar: Sub<MultiVector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group3.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
     }
 }
-extension AntiScalar: Sub<Origin> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Origin) -> Output {
+public extension AntiScalar: Sub<Origin> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension AntiScalar: Sub<Plane> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Plane) -> Output {
+public extension AntiScalar: Sub<Plane> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
         );
     }
 }
-extension AntiScalar: Sub<Point> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Point) -> Output {
+public extension AntiScalar: Sub<Point> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, this.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension AntiScalar: Sub<Scalar> {
-    associatedtype Output = DualNum;
-    func operator-(other: Scalar) -> Output {
+public extension AntiScalar: Sub<Scalar> {
+    public typedef DualNum SubOutput;
+    public func operator-(other: Scalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, this.e1234) * float2(-1.0, 1.0), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar, this.e1234) * float2(-1.0, 1.0)
         );
     }
 }

@@ -1,12 +1,12 @@
 implementing rga3d;
-using data::*;
+using data;
 
 /// DualNum
 public struct DualNum {
     // scalar, e1234, 0, 0
-    internal group0: float4
+    internal float4 group0;
 }
-extension DualNum {
+public extension DualNum {
     public property scalar: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -18,24 +18,23 @@ extension DualNum {
     public static func from_elements(
         scalar: float, e1234: float
     ) -> DualNum {
-        return DualNum { float4(scalar, e1234, 0.0, 0.0) };
+        return DualNum(float4(scalar, e1234, 0.0, 0.0));
     }
     internal static func from_groups(
         g0: float2
     ) -> DualNum {
-        return DualNum {
-            group0: g0
-        };
+        return DualNum(float4(g0, 0.0, 0.0));
     }
 }
-extension DualNum: IComparable {
-    bool lessThan(IComparable another) {
-        DualNum other = (DualNum)another;
-        return this.group0.lessThan(other.group0);
+public extension DualNum: IComparable {
+    public bool equals(DualNum other) {
+        return equalsHelper(this.group0, other.group0);
     }
-    bool equals(IComparable another) {
-        DualNum other = (DualNum)another;
-        return this.group0.equals(other.group0);
+    public bool lessThan(DualNum other) {
+        return lessThanHelper(this.group0, other.group0);
+    }
+    public bool lessThanOrEquals(DualNum other) {
+        return lessThanOrEqualsHelper(this.group0, other.group0);
     }
 }
 __include "impls/dual_num";

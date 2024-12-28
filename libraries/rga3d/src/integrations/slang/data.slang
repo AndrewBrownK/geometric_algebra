@@ -1,5 +1,15 @@
 implementing rga3d;
-__include "data/anti_scalar";
+
+internal bool lessThanHelper<T: IComparable>(T a, T b) {
+    return a.lessThan(b);
+}
+internal bool equalsHelper<T: IComparable>(T a, T b) {
+    return a.equals(b);
+}
+internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {
+    return a.lessThanOrEquals(b);
+}
+            __include "data/anti_scalar";
 __include "data/dual_num";
 __include "data/flector";
 __include "data/horizon";

@@ -1,17 +1,12 @@
-using data::*;
+implementing rga3d;using data;
 
 /// AntiProjectViaHorizonOnto
 /// Outward (to horizon) AntiProjection.
 public interface AntiProjectViaHorizonOnto<T> {
-    associatedtype Output;
+    associatedtype AntiProjectViaHorizonOntoOutput;
     func anti_project_via_horizon_onto(other: T) -> Output;
 }
-public static const anti_project_via_horizon_onto: AntiProjectViaHorizonOntoInfix = AntiProjectViaHorizonOntoInfix {};
+public static const AntiProjectViaHorizonOntoInfix anti_project_via_horizon_onto = AntiProjectViaHorizonOntoInfix();
 public struct AntiProjectViaHorizonOntoInfix {}
-public struct AntiProjectViaHorizonOntoInfixPartial<A> { a: A }
-extension AntiProjectViaHorizonOntoInfixPartial<A> for A: AntiProjectViaHorizonOnto<B> {
-    func operator/(rhs: B) -> A.Output {
-        return this.a.anti_project_via_horizon_onto(rhs);
-    }
-}
-__include ./impls/anti_project_via_horizon_onto;
+public struct AntiProjectViaHorizonOntoInfixPartial<A> { a: A; }
+__include "./impls/anti_project_via_horizon_onto";

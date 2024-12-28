@@ -1,24 +1,24 @@
-extension AntiScalar: Unit {
-    associatedtype Output = AntiScalar;
-    func unit() -> Output {
+public extension AntiScalar: Unit {
+    public typedef AntiScalar UnitOutput;
+    public func unit() -> AntiScalar {
         return AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            1.0
         );
     }
 }
-extension DualNum: Unit {
-    associatedtype Output = DualNum;
-    func unit() -> Output {
+public extension DualNum: Unit {
+    public typedef DualNum UnitOutput;
+    public func unit() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(1.0)
         );
     }
 }
-extension Flector: Unit {
-    associatedtype Output = Flector;
-    func unit() -> Output {
+public extension Flector: Unit {
+    public typedef Flector UnitOutput;
+    public func unit() -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0), 
@@ -27,29 +27,29 @@ extension Flector: Unit {
         );
     }
 }
-extension Horizon: Unit {
-    associatedtype Output = Horizon;
-    func unit() -> Output {
+public extension Horizon: Unit {
+    public typedef Horizon UnitOutput;
+    public func unit() -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
+            /* e321 */
+            1.0
         );
     }
 }
-extension Line: Unit {
-    associatedtype Output = Line;
-    func unit() -> Output {
+public extension Line: Unit {
+    public typedef Line UnitOutput;
+    public func unit() -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(1.0), 0.0)
+            /* e41, e42, e43 */
+            float3(1.0), 
+            /* e23, e31, e12 */
+            float3(1.0)
         );
     }
 }
-extension Motor: Unit {
-    associatedtype Output = Motor;
-    func unit() -> Output {
+public extension Motor: Unit {
+    public typedef Motor UnitOutput;
+    public func unit() -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(1.0), 
@@ -58,56 +58,56 @@ extension Motor: Unit {
         );
     }
 }
-extension MultiVector: Unit {
-    associatedtype Output = MultiVector;
-    func unit() -> Output {
+public extension MultiVector: Unit {
+    public typedef MultiVector UnitOutput;
+    public func unit() -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0), 
             /* e1, e2, e3, e4 */
             float4(1.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(1.0), 
+            /* e23, e31, e12 */
+            float3(1.0), 
             /* e423, e431, e412, e321 */
             float4(1.0)
         );
     }
 }
-extension Origin: Unit {
-    associatedtype Output = Origin;
-    func unit() -> Output {
+public extension Origin: Unit {
+    public typedef Origin UnitOutput;
+    public func unit() -> Origin {
         return Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            1.0
         );
     }
 }
-extension Plane: Unit {
-    associatedtype Output = Plane;
-    func unit() -> Output {
+public extension Plane: Unit {
+    public typedef Plane UnitOutput;
+    public func unit() -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0)
         );
     }
 }
-extension Point: Unit {
-    associatedtype Output = Point;
-    func unit() -> Output {
+public extension Point: Unit {
+    public typedef Point UnitOutput;
+    public func unit() -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0)
         );
     }
 }
-extension Scalar: Unit {
-    associatedtype Output = Scalar;
-    func unit() -> Output {
+public extension Scalar: Unit {
+    public typedef Scalar UnitOutput;
+    public func unit() -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
+            /* scalar */
+            1.0
         );
     }
 }

@@ -1,21 +1,27 @@
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<DualNum> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<DualNum> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<DualNum> {
-    associatedtype Output = DualNum;
-    func project_orthogonally_onto(other: DualNum) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> DualNum.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension DualNum: ProjectOrthogonallyOnto<DualNum> {
+    public typedef DualNum ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar) * other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Flector> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Motor {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -36,33 +42,33 @@ extension DualNum: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.e321, 2) * this.scalar
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Line> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Scalar {
         Line wedge = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(this.scalar) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), 0.0, 0.0, 0.0)
+            /* scalar */
+            -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43)
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Motor> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Motor {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -83,87 +89,93 @@ extension DualNum: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.scalar * right_anti_dual.e1234) + (this.e1234 * right_anti_dual.scalar)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.scalar * right_anti_dual.e1234) + (this.e1234 * right_anti_dual.scalar)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * right_anti_dual.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * right_anti_dual.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * right_anti_dual.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Plane> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.e321, 2) * this.scalar
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Point> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> Scalar {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* scalar */
+            (wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4)
         );
     }
 }
-extension DualNum: ProjectOrthogonallyOnto<Scalar> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Scalar) -> Output {
+public extension DualNum: ProjectOrthogonallyOnto<Scalar> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.scalar, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.scalar, 2) * this.scalar
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Flector> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Flector> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Flector.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Flector: ProjectOrthogonallyOnto<Flector> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Flector {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -184,9 +196,9 @@ extension Flector: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Flector {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321 * -1.0) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -201,14 +213,14 @@ extension Flector: ProjectOrthogonallyOnto<Horizon> {
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<Line> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Point {
         Line right_anti_dual = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            other.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -220,9 +232,9 @@ extension Flector: ProjectOrthogonallyOnto<Line> {
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<Motor> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Flector {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -241,50 +253,50 @@ extension Flector: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.e1 * right_anti_dual.e423) + (this.e2 * right_anti_dual.e431) + (this.e3 * right_anti_dual.e412) + (this.e4 * right_anti_dual.e321) - (this.e423 * right_anti_dual.e1) - (this.e431 * right_anti_dual.e2) - (this.e412 * right_anti_dual.e3) - (this.e321 * right_anti_dual.e4)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.e1 * right_anti_dual.e423) + (this.e2 * right_anti_dual.e431) + (this.e3 * right_anti_dual.e412) + (this.e4 * right_anti_dual.e321) - (this.e423 * right_anti_dual.e1) - (this.e431 * right_anti_dual.e2) - (this.e412 * right_anti_dual.e3) - (this.e321 * right_anti_dual.e4)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.yzx * right_anti_dual.group1.zxy) - (this.group0.zxy * right_anti_dual.group1.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (this.group0.yzx * right_anti_dual.group1.zxy) - (this.group0.zxy * right_anti_dual.group1.yzx), 
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * right_anti_dual.group3.xyz), 0.0) + float4((float3(right_anti_dual.scalar) * this.group1.xyz), 0.0) + float4((right_anti_dual.group2.xyz.yzx * this.group0.zxy), 0.0) - float4((right_anti_dual.group2.xyz.zxy * this.group0.yzx), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<Plane> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Flector {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e321 * -1.0) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -299,9 +311,9 @@ extension Flector: ProjectOrthogonallyOnto<Plane> {
         );
     }
 }
-extension Flector: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension Flector: ProjectOrthogonallyOnto<Point> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> Point {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.group0.xyz, 0.0)
@@ -312,18 +324,24 @@ extension Flector: ProjectOrthogonallyOnto<Point> {
         );
     }
 }
-extension Horizon {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Horizon> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Horizon {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Horizon> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Horizon: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Horizon> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Horizon.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Horizon: ProjectOrthogonallyOnto<Flector> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Flector {
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(float4(float3(0.0), other.e321 * -1.0)[3] * this.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            float4(float3(0.0), other.e321 * -1.0)[3] * this.e321 * -1.0
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -333,54 +351,60 @@ extension Horizon: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Horizon: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Horizon;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Horizon: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Horizon ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.e321, 0.0, 0.0, 0.0)
+            /* e321 */
+            pow(other.e321, 2) * this.e321
         );
     }
 }
-extension Horizon: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Horizon: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(float4(float3(0.0), other.e321 * -1.0)[3] * this.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            float4(float3(0.0), other.e321 * -1.0)[3] * this.e321 * -1.0
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(wedge.e1234) * other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(wedge.e1234) * other.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(wedge.e1234) * other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(wedge.e1234) * other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(wedge.e1234) * other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(wedge.e1234) * other.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(wedge.e1234) * other.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group4
         );
     }
 }
-extension Horizon: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Plane;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Horizon: ProjectOrthogonallyOnto<Plane> {
+    public typedef Plane ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e321 * other.e321) * other.group0
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Line> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Line> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Line: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Line.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Line: ProjectOrthogonallyOnto<Flector> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Motor {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -399,45 +423,45 @@ extension Line: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Line: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Line;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Line: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Line ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Line {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e321) * float4(this.e23 * right_anti_dual.e4, this.e31 * right_anti_dual.e4, this.e12 * right_anti_dual.e4, 0.0).xyz * float3(-1.0), 0.0)
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(other.e321) * float4(this.e23 * right_anti_dual.e4, this.e31 * right_anti_dual.e4, this.e12 * right_anti_dual.e4, 0.0).xyz * float3(-1.0)
         );
     }
 }
-extension Line: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Line;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension Line: ProjectOrthogonallyOnto<Line> {
+    public typedef Line ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Line {
         Line right_anti_dual = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            other.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)
         );
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(wedge.e1234) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(wedge.e1234) * other.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(wedge.e1234) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(wedge.e1234) * other.group1.xyz
         );
     }
 }
-extension Line: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension Line: ProjectOrthogonallyOnto<Motor> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Motor {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -445,8 +469,8 @@ extension Line: ProjectOrthogonallyOnto<Motor> {
             float4(0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43)
         );
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -456,80 +480,86 @@ extension Line: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension Line: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Line: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((this.e42 * right_anti_dual.e3) + (this.e23 * right_anti_dual.e4), (this.e43 * right_anti_dual.e1) + (this.e31 * right_anti_dual.e4), (this.e41 * right_anti_dual.e2) + (this.e12 * right_anti_dual.e4), -(this.e31 * right_anti_dual.e2) - (this.e12 * right_anti_dual.e3)) - (right_anti_dual.group1.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension Line: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Line;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Line: ProjectOrthogonallyOnto<Plane> {
+    public typedef Line ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Line {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(other.e321 * -1.0) * this.group1.xyz), 0.0)
         );
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.zxy * wedge.group0.yzx) - (other.group0.yzx * wedge.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(wedge.e321) * other.group0.xyz) - (float3(other.e321) * wedge.group0.xyz), 0.0)
+            /* e41, e42, e43 */
+            (other.group0.zxy * wedge.group0.yzx) - (other.group0.yzx * wedge.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(wedge.e321) * other.group0.xyz) - (float3(other.e321) * wedge.group0.xyz)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Motor> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Motor> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Motor: ProjectOrthogonallyOnto<DualNum> {
-    associatedtype Output = DualNum;
-    func project_orthogonally_onto(other: DualNum) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Motor.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Motor: ProjectOrthogonallyOnto<DualNum> {
+    public typedef DualNum ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar) * other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Flector> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Motor {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -550,12 +580,12 @@ extension Motor: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Motor {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -571,14 +601,14 @@ extension Motor: ProjectOrthogonallyOnto<Horizon> {
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Line> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Motor {
         Line right_anti_dual = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            other.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
@@ -594,9 +624,9 @@ extension Motor: ProjectOrthogonallyOnto<Line> {
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Motor> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Motor {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -617,53 +647,53 @@ extension Motor: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.e1234 * right_anti_dual.scalar) + (this.scalar * right_anti_dual.e1234) - (this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.e1234 * right_anti_dual.scalar) + (this.scalar * right_anti_dual.e1234) - (this.e41 * right_anti_dual.e23) - (this.e42 * right_anti_dual.e31) - (this.e43 * right_anti_dual.e12) - (this.e23 * right_anti_dual.e41) - (this.e31 * right_anti_dual.e42) - (this.e12 * right_anti_dual.e43)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * right_anti_dual.group1, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.scalar) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.scalar) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            (float3(this.scalar) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.scalar) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((this.e23 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e423), (this.e31 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e431), (this.e12 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e412), -(this.e31 * right_anti_dual.e2) - (this.e12 * right_anti_dual.e3)) + float4((this.group0.yzx * right_anti_dual.group1.zxy), this.scalar * right_anti_dual.e321) - (right_anti_dual.group1.yzxx * float4(this.group0.zxy, this.e23))
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Plane> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Motor {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -679,46 +709,52 @@ extension Motor: ProjectOrthogonallyOnto<Plane> {
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Point> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> Scalar {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* scalar */
+            (wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4)
         );
     }
 }
-extension Motor: ProjectOrthogonallyOnto<Scalar> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Scalar) -> Output {
+public extension Motor: ProjectOrthogonallyOnto<Scalar> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.scalar, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.scalar, 2) * this.scalar
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<MultiVector> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<MultiVector> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<DualNum> {
-    associatedtype Output = DualNum;
-    func project_orthogonally_onto(other: DualNum) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> MultiVector.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension MultiVector: ProjectOrthogonallyOnto<DualNum> {
+    public typedef DualNum ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar) * other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Flector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> MultiVector {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -726,102 +762,102 @@ extension MultiVector: ProjectOrthogonallyOnto<Flector> {
             float4(other.group0.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4) - (right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4) - (right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321)), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * right_anti_dual.group0, 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e4) * this.group1.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((right_anti_dual.group0.zxy * this.group1.yzx) - (right_anti_dual.group0.yzx * this.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e4) * this.group1.xyz), 
+            /* e23, e31, e12 */
+            (right_anti_dual.group0.zxy * this.group1.yzx) - (right_anti_dual.group0.yzx * this.group1.zxy), 
             /* e423, e431, e412, e321 */
             float4((right_anti_dual.e3 * this.e42) + (right_anti_dual.e4 * this.e23), (right_anti_dual.e1 * this.e43) + (right_anti_dual.e4 * this.e31), (right_anti_dual.e2 * this.e41) + (right_anti_dual.e4 * this.e12), -(right_anti_dual.e2 * this.e31) - (right_anti_dual.e3 * this.e12)) + (float4(this.scalar) * right_anti_dual.group1) - (right_anti_dual.group0.yzxx * float4(this.group2.xyz.zxy, this.e23))
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), 0.0), 
             /* e1, e2, e3, e4 */
             float4((other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(wedge.e1234) * other.group0) - (other.group1.yzxx * float4(wedge.group3.xyz.zxy, wedge.e41)), 
-            /* e41, e42, e43, 0 */
-            float4((other.group1.zxy * wedge.group4.yzx) - (other.group1.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(wedge.e321) * other.group1.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (other.group1.zxy * wedge.group4.yzx) - (other.group1.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(wedge.e321) * other.group1.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group1
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Horizon> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> MultiVector {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, this.e321 * right_anti_dual.e4) * float2(0.0, -1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, this.e321 * right_anti_dual.e4) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * right_anti_dual.e4), 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e4) * this.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e4) * this.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(right_anti_dual.e4) * this.group3.xyz), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.e321 * wedge.e4, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(other.e321 * wedge.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(other.e321) * wedge.group2.xyz), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e321) * wedge.group4.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(other.e321) * wedge.group4.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * wedge.e1234)
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Line> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> MultiVector {
         Line right_anti_dual = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            other.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, -(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, -(right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * right_anti_dual.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * right_anti_dual.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * right_anti_dual.group1.xyz), 0.0) + float4((right_anti_dual.group0.xyz.yzx * this.group1.zxy), 0.0) - float4((right_anti_dual.group0.xyz.zxy * this.group1.yzx), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(-(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(-(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412), (other.e42 * wedge.e321) + (other.e12 * wedge.e423), (other.e43 * wedge.e321) + (other.e23 * wedge.e431), -(other.e42 * wedge.e431) - (other.e43 * wedge.e412)) - (wedge.group4.yzxx * float4(other.group1.xyz.zxy, other.e41)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(wedge.e1234) * other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(wedge.e1234) * other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(wedge.e1234) * other.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(wedge.e1234) * other.group1.xyz, 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Motor> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> MultiVector {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -829,161 +865,167 @@ extension MultiVector: ProjectOrthogonallyOnto<Motor> {
             float4(0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (right_anti_dual.e1234 * this.scalar) + (right_anti_dual.scalar * this.e1234) - (right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (right_anti_dual.e1234 * this.scalar) + (right_anti_dual.scalar * this.e1234) - (right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.scalar) * this.group2.xyz) + (float3(this.scalar) * right_anti_dual.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.scalar) * this.group2.xyz) + (float3(this.scalar) * right_anti_dual.group0.xyz), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(right_anti_dual.scalar) * this.group4.xyz), 0.0) + float4((float3(this.e4) * right_anti_dual.group1.xyz), 0.0) + float4((right_anti_dual.group0.yzx * this.group1.zxy), 0.0) - float4((right_anti_dual.group0.zxy * this.group1.yzx), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.e1234 * wedge.scalar) + (other.scalar * wedge.e1234) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.e1234 * wedge.scalar) + (other.scalar * wedge.e1234) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e1234 * wedge.e1) + (other.e31 * wedge.e412), (other.e1234 * wedge.e2) + (other.e12 * wedge.e423), (other.e1234 * wedge.e3) + (other.e23 * wedge.e431), -(other.e42 * wedge.e431) - (other.e43 * wedge.e412)) + (other.group0 * float4(wedge.group4.www, wedge.e4)) - (wedge.group4.yzxx * float4(other.group1.zxy, other.e41)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group0.xyz), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group1.xyz), 
             /* e423, e431, e412, e321 */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(wedge.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (right_anti_dual.scalar * this.e1234) + (right_anti_dual.e1234 * this.scalar) + (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4) - (right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321) - (right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (right_anti_dual.scalar * this.e1234) + (right_anti_dual.e1234 * this.scalar) + (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4) - (right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321) - (right_anti_dual.e41 * this.e23) - (right_anti_dual.e42 * this.e31) - (right_anti_dual.e43 * this.e12) - (right_anti_dual.e23 * this.e41) - (right_anti_dual.e31 * this.e42) - (right_anti_dual.e12 * this.e43)), 
             /* e1, e2, e3, e4 */
             (float4(right_anti_dual.scalar) * this.group1) + (float4(this.scalar) * right_anti_dual.group1), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.scalar) * this.group2.xyz) + (float3(this.scalar) * right_anti_dual.group2.xyz) + (float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group1.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.scalar) * this.group3.xyz) + (float3(this.scalar) * right_anti_dual.group3.xyz) + (right_anti_dual.group1.zxy * this.group1.yzx) - (right_anti_dual.group1.yzx * this.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.scalar) * this.group2.xyz) + (float3(this.scalar) * right_anti_dual.group2.xyz) + (float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group1.xyz), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.scalar) * this.group3.xyz) + (float3(this.scalar) * right_anti_dual.group3.xyz) + (right_anti_dual.group1.zxy * this.group1.yzx) - (right_anti_dual.group1.yzx * this.group1.zxy), 
             /* e423, e431, e412, e321 */
             float4((right_anti_dual.e3 * this.e42) + (right_anti_dual.e4 * this.e23) + (right_anti_dual.e42 * this.e3) + (right_anti_dual.e23 * this.e4), (right_anti_dual.e1 * this.e43) + (right_anti_dual.e4 * this.e31) + (right_anti_dual.e43 * this.e1) + (right_anti_dual.e31 * this.e4), (right_anti_dual.e2 * this.e41) + (right_anti_dual.e4 * this.e12) + (right_anti_dual.e41 * this.e2) + (right_anti_dual.e12 * this.e4), -(right_anti_dual.e1 * this.e23) - (right_anti_dual.e2 * this.e31) - (right_anti_dual.e3 * this.e12) - (right_anti_dual.e12 * this.e3)) + (float4(right_anti_dual.scalar) * this.group4) + (float4(this.scalar) * right_anti_dual.group4) - (this.group1.yzxx * float4(right_anti_dual.group2.xyz.zxy, right_anti_dual.e23)) - float4((this.group2.xyz.zxy * right_anti_dual.group1.yzx), right_anti_dual.e31 * this.e2)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Plane> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> MultiVector {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, this.e321 * right_anti_dual.e4) * float2(0.0, -1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, this.e321 * right_anti_dual.e4) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * right_anti_dual.e4), 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e4) * this.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e4) * this.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(right_anti_dual.e4) * this.group3.xyz), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(-(wedge.e1 * other.e423) - (wedge.e2 * other.e431) - (wedge.e3 * other.e412) - (wedge.e4 * other.e321), 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(-(wedge.e1 * other.e423) - (wedge.e2 * other.e431) - (wedge.e3 * other.e412) - (wedge.e4 * other.e321), 0.0), 
             /* e1, e2, e3, e4 */
             float4((wedge.e41 * other.e321) + (wedge.e31 * other.e412), (wedge.e42 * other.e321) + (wedge.e12 * other.e423), (wedge.e43 * other.e321) + (wedge.e23 * other.e431), -(wedge.e42 * other.e431) - (wedge.e43 * other.e412)) - (other.group0.yzxx * float4(wedge.group3.xyz.zxy, wedge.e41)), 
-            /* e41, e42, e43, 0 */
-            float4((wedge.group4.yzx * other.group0.zxy) - (wedge.group4.zxy * other.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(wedge.e321) * other.group0.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (wedge.group4.yzx * other.group0.zxy) - (wedge.group4.zxy * other.group0.yzx), 
+            /* e23, e31, e12 */
+            (float3(wedge.e321) * other.group0.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group0
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Point> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> MultiVector {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.group0.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (this.e1 * right_anti_dual.e423) + (this.e2 * right_anti_dual.e431) + (this.e3 * right_anti_dual.e412) + (this.e4 * right_anti_dual.e321)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (this.e1 * right_anti_dual.e423) + (this.e2 * right_anti_dual.e431) + (this.e3 * right_anti_dual.e412) + (this.e4 * right_anti_dual.e321)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4), 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4), 0.0), 
             /* e1, e2, e3, e4 */
             float4(wedge.e1234) * other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension MultiVector: ProjectOrthogonallyOnto<Scalar> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Scalar) -> Output {
+public extension MultiVector: ProjectOrthogonallyOnto<Scalar> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.scalar, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.scalar, 2) * this.scalar
         );
     }
 }
-extension Origin {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Origin> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Origin {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Origin> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Origin: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Origin> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Origin.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Origin: ProjectOrthogonallyOnto<Flector> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Point {
         Line wedge = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -991,38 +1033,44 @@ extension Origin: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Origin: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Origin: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         Line wedge = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(-(wedge.e41 * other.e23) - (wedge.e42 * other.e31) - (wedge.e43 * other.e12) - (wedge.e23 * other.e41) - (wedge.e31 * other.e42) - (wedge.e12 * other.e43), 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(-(wedge.e41 * other.e23) - (wedge.e42 * other.e31) - (wedge.e43 * other.e12) - (wedge.e23 * other.e41) - (wedge.e31 * other.e42) - (wedge.e12 * other.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((wedge.e41 * other.e321) + (wedge.e31 * other.e412), (wedge.e42 * other.e321) + (wedge.e12 * other.e423), (wedge.e43 * other.e321) + (wedge.e23 * other.e431), -(wedge.e42 * other.e431) - (wedge.e43 * other.e412)) - (other.group4.yzxx * float4(wedge.group1.xyz.zxy, wedge.e41)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e1234) * wedge.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(other.e1234) * wedge.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Plane> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Plane> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Plane: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Plane.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Plane: ProjectOrthogonallyOnto<Flector> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Flector {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1030,8 +1078,8 @@ extension Plane: ProjectOrthogonallyOnto<Flector> {
             float4(other.group0.xyz, 0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321)
         );
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
@@ -1041,66 +1089,72 @@ extension Plane: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Plane: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Horizon;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Plane: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Horizon ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.e321, 0.0, 0.0, 0.0)
+            /* e321 */
+            pow(other.e321, 2) * this.e321
         );
     }
 }
-extension Plane: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Plane: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         AntiScalar wedge = AntiScalar.from_groups(
-            /* e1234, 0, 0, 0 */
-            float4(-(right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(right_anti_dual.e1 * this.e423) - (right_anti_dual.e2 * this.e431) - (right_anti_dual.e3 * this.e412) - (right_anti_dual.e4 * this.e321)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(wedge.e1234) * other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(wedge.e1234) * other.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(wedge.e1234) * other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(wedge.e1234) * other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(wedge.e1234) * other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(wedge.e1234) * other.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(wedge.e1234) * other.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(wedge.e1234) * other.group4
         );
     }
 }
-extension Plane: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Plane;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Plane: ProjectOrthogonallyOnto<Plane> {
+    public typedef Plane ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Plane {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e321 * this.e321) * other.group0
         );
     }
 }
-extension Point {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Point> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Point {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Point> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Point: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Point> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Point.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Point: ProjectOrthogonallyOnto<Flector> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Flector {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1121,12 +1175,12 @@ extension Point: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Point: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Point {
         Origin right_anti_dual = Origin.from_groups(
-            /* e4, 0, 0, 0 */
-            float4(other.e321 * -1.0, 0.0, 0.0, 0.0)
+            /* e4 */
+            other.e321 * -1.0
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1134,14 +1188,14 @@ extension Point: ProjectOrthogonallyOnto<Horizon> {
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension Point: ProjectOrthogonallyOnto<Line> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Point {
         Line right_anti_dual = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            other.group1.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
@@ -1153,9 +1207,9 @@ extension Point: ProjectOrthogonallyOnto<Line> {
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Flector;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension Point: ProjectOrthogonallyOnto<Motor> {
+    public typedef Flector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Flector {
         Motor right_anti_dual = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1174,55 +1228,55 @@ extension Point: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Point: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4)), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, (right_anti_dual.e423 * this.e1) + (right_anti_dual.e431 * this.e2) + (right_anti_dual.e412 * this.e3) + (right_anti_dual.e321 * this.e4)), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((right_anti_dual.group1.zxy * this.group0.yzx) - (right_anti_dual.group1.yzx * this.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * right_anti_dual.group1.xyz) - (float3(right_anti_dual.e4) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (right_anti_dual.group1.zxy * this.group0.yzx) - (right_anti_dual.group1.yzx * this.group0.zxy), 
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * right_anti_dual.group3.xyz), 0.0) + float4((right_anti_dual.group2.xyz.yzx * this.group0.zxy), 0.0) - float4((right_anti_dual.group2.xyz.zxy * this.group0.yzx), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Point: ProjectOrthogonallyOnto<Plane> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Point {
         Line wedge = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e321 * -1.0) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(other.e321 * -1.0) * this.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         return Point.from_groups(
             /* e1, e2, e3, e4 */
@@ -1230,9 +1284,9 @@ extension Point: ProjectOrthogonallyOnto<Plane> {
         );
     }
 }
-extension Point: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = Point;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension Point: ProjectOrthogonallyOnto<Point> {
+    public typedef Point ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> Point {
         Plane right_anti_dual = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.group0.xyz, 0.0)
@@ -1243,24 +1297,30 @@ extension Point: ProjectOrthogonallyOnto<Point> {
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Scalar> {
-        return ProjectOrthogonallyOntoInfixPartial { a: this };
+public extension Scalar {
+    // Fancy infix trick (first half)
+    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Scalar> {
+        return ProjectOrthogonallyOntoInfixPartial(this);
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<DualNum> {
-    associatedtype Output = DualNum;
-    func project_orthogonally_onto(other: DualNum) -> Output {
+public extension ProjectOrthogonallyOntoInfixPartial<Scalar> {
+    // Fancy infix trick (second half)
+    public func operator/(rhs: B) -> Scalar.Output {
+        return this.a.project_orthogonally_onto(rhs);
+    }
+}
+public extension Scalar: ProjectOrthogonallyOnto<DualNum> {
+    public typedef DualNum ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * this.scalar) * other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Flector> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Flector) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Flector> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Flector) -> Motor {
         Flector right_anti_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
@@ -1281,33 +1341,33 @@ extension Scalar: ProjectOrthogonallyOnto<Flector> {
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Horizon> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Horizon) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Horizon> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Horizon) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.e321, 2) * this.scalar
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Line> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Line) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Line> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Line) -> Scalar {
         Line wedge = Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0)
+            /* e41, e42, e43 */
+            float3(this.scalar) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 
+            /* e23, e31, e12 */
+            float3(0.0)
         );
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43), 0.0, 0.0, 0.0)
+            /* scalar */
+            -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43)
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Motor> {
-    associatedtype Output = Motor;
-    func project_orthogonally_onto(other: Motor) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Motor> {
+    public typedef Motor ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Motor) -> Motor {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * float4(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0, other.scalar), 
@@ -1322,75 +1382,75 @@ extension Scalar: ProjectOrthogonallyOnto<Motor> {
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<MultiVector> {
-    associatedtype Output = MultiVector;
-    func project_orthogonally_onto(other: MultiVector) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<MultiVector> {
+    public typedef MultiVector ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: MultiVector) -> MultiVector {
         MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.scalar), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(0.0, other.scalar), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            other.group3.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(other.group1.xyz, 0.0)
         );
         MultiVector wedge = MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(1.0, right_anti_dual.e1234 * this.scalar) * float2(0.0, 1.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(1.0, right_anti_dual.e1234 * this.scalar) * float2(0.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * right_anti_dual.group1, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * right_anti_dual.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * right_anti_dual.group2.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4((float3(this.scalar) * right_anti_dual.group4.xyz), 0.0)
         );
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2((other.scalar * wedge.e1234) + (other.e1234 * wedge.scalar) + (other.e1 * wedge.e423) + (other.e2 * wedge.e431) + (other.e3 * wedge.e412) + (other.e4 * wedge.e321) - (other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43) - (other.e423 * wedge.e1) - (other.e431 * wedge.e2) - (other.e412 * wedge.e3) - (other.e321 * wedge.e4), other.e1234 * wedge.e1234), 
             /* e1, e2, e3, e4 */
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412) + (other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e42 * wedge.e321) + (other.e12 * wedge.e423) + (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e43 * wedge.e321) + (other.e23 * wedge.e431) + (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e43 * wedge.e412) - (other.e423 * wedge.e41) - (other.e431 * wedge.e42) - (other.e412 * wedge.e43)) + (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) - (wedge.group4.yzxx * float4(other.group3.xyz.zxy, other.e41)) - float4((wedge.group3.xyz.zxy * other.group4.yzx), other.e42 * wedge.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * wedge.group2.xyz) + (float3(wedge.e1234) * other.group2.xyz) + (other.group4.zxy * wedge.group4.yzx) - (other.group4.yzx * wedge.group4.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e1234) * wedge.group3.xyz) + (float3(wedge.e1234) * other.group3.xyz) + (float3(wedge.e321) * other.group4.xyz) - (float3(other.e321) * wedge.group4.xyz), 
             /* e423, e431, e412, e321 */
             (float4(other.e1234) * wedge.group4) + (float4(wedge.e1234) * other.group4)
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Plane> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Plane) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Plane> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Plane) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.e321, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.e321, 2) * this.scalar
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Point> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Point) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Point> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Point) -> Scalar {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(this.scalar) * other.group0.xyz), 0.0)
         );
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* scalar */
+            (wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4)
         );
     }
 }
-extension Scalar: ProjectOrthogonallyOnto<Scalar> {
-    associatedtype Output = Scalar;
-    func project_orthogonally_onto(other: Scalar) -> Output {
+public extension Scalar: ProjectOrthogonallyOnto<Scalar> {
+    public typedef Scalar ProjectOrthogonallyOntoOutput;
+    public func project_orthogonally_onto(other: Scalar) -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(other.scalar, 2) * this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(other.scalar, 2) * this.scalar
         );
     }
 }

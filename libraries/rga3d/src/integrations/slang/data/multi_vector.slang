@@ -1,20 +1,20 @@
 implementing rga3d;
-using data::*;
+using data;
 
 /// MultiVector
 public struct MultiVector {
     // scalar, e1234, 0, 0
-    internal group0: float4,
+    internal float4 group0;
     // e1, e2, e3, e4
-    internal group1: float4,
+    internal float4 group1;
     // e41, e42, e43, 0
-    internal group2: float4,
+    internal float4 group2;
     // e23, e31, e12, 0
-    internal group3: float4,
+    internal float4 group3;
     // e423, e431, e412, e321
-    internal group4: float4
+    internal float4 group4;
 }
-extension MultiVector {
+public extension MultiVector {
     public property scalar: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -82,32 +82,39 @@ extension MultiVector {
     public static func from_elements(
         scalar: float, e1234: float, e1: float, e2: float, e3: float, e4: float, e41: float, e42: float, e43: float, e23: float, e31: float, e12: float, e423: float, e431: float, e412: float, e321: float
     ) -> MultiVector {
-        return MultiVector { float4(scalar, e1234, 0.0, 0.0), float4(e1, e2, e3, e4), float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0), float4(e423, e431, e412, e321) };
+        return MultiVector(float4(scalar, e1234, 0.0, 0.0), float4(e1, e2, e3, e4), float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0), float4(e423, e431, e412, e321));
     }
     internal static func from_groups(
         g0: float2, g1: float4, g2: float3, g3: float3, g4: float4
     ) -> MultiVector {
-        return MultiVector {
-            group0: g0, group1: g1, group2: g2, group3: g3, group4: g4
-        };
+        return MultiVector(float4(g0, 0.0, 0.0), g1, float4(g2, 0.0), float4(g3, 0.0), g4);
     }
 }
-extension MultiVector: IComparable {
-    bool lessThan(IComparable another) {
-        MultiVector other = (MultiVector)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        if (this.group1 != other.group1)
-            return this.group1.lessThan(other.group1);
-        if (this.group2 != other.group2)
-            return this.group2.lessThan(other.group2);
-        if (this.group3 != other.group3)
-            return this.group3.lessThan(other.group3);
-        return this.group4.lessThan(other.group4);
+public extension MultiVector: IComparable {
+    public bool equals(MultiVector other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1) && equalsHelper(this.group2, other.group2) && equalsHelper(this.group3, other.group3) && equalsHelper(this.group4, other.group4);
     }
-    bool equals(IComparable another) {
-        MultiVector other = (MultiVector)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1) && this.group2.equals(other.group2) && this.group3.equals(other.group3) && this.group4.equals(other.group4);
+    public bool lessThan(MultiVector other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanHelper(this.group2, other.group2);
+        if (!equalsHelper(this.group3, other.group3))
+            return lessThanHelper(this.group3, other.group3);
+        return lessThanHelper(this.group4, other.group4);
+    }
+    public bool lessThanOrEquals(MultiVector other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanOrEqualsHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanOrEqualsHelper(this.group2, other.group2);
+        if (!equalsHelper(this.group3, other.group3))
+            return lessThanOrEqualsHelper(this.group3, other.group3);
+        return lessThanOrEqualsHelper(this.group4, other.group4);
     }
 }
 __include "impls/multi_vector";

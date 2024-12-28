@@ -1,77 +1,107 @@
-using traits::FlatBulkNorm;
-using traits::FlatWeightNorm;
-extension Flector {
-    // Fancy infix trick
+using traits;
+using traits;
+public extension Flector {
+    // Fancy postfix trick
     func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
-extension Flector: Norm {
-    associatedtype Output = DualNum;
-    func norm() -> Output {
+public extension NormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Flector) -> Flector.Output {
+        return rhs.norm();
+    }
+}
+public extension Flector: Norm {
+    public typedef DualNum NormOutput;
+    public func norm() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
-extension Line {
-    // Fancy infix trick
+public extension Line {
+    // Fancy postfix trick
     func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
-extension Line: Norm {
-    associatedtype Output = DualNum;
-    func norm() -> Output {
+public extension NormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Line) -> Line.Output {
+        return rhs.norm();
+    }
+}
+public extension Line: Norm {
+    public typedef DualNum NormOutput;
+    public func norm() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
+public extension Motor {
+    // Fancy postfix trick
     func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
-extension Motor: Norm {
-    associatedtype Output = DualNum;
-    func norm() -> Output {
+public extension NormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Motor) -> Motor.Output {
+        return rhs.norm();
+    }
+}
+public extension Motor: Norm {
+    public typedef DualNum NormOutput;
+    public func norm() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
+public extension MultiVector {
+    // Fancy postfix trick
     func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
-extension MultiVector: Norm {
-    associatedtype Output = DualNum;
-    func norm() -> Output {
+public extension NormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+        return rhs.norm();
+    }
+}
+public extension MultiVector: Norm {
+    public typedef DualNum NormOutput;
+    public func norm() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }
-extension Point {
-    // Fancy infix trick
+public extension Point {
+    // Fancy postfix trick
     func operator/(_rhs: NormPrefixOrPostfix) -> DualNum {
         return this.norm();
     }
 }
-extension Point: Norm {
-    associatedtype Output = DualNum;
-    func norm() -> Output {
+public extension NormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Point) -> Point.Output {
+        return rhs.norm();
+    }
+}
+public extension Point: Norm {
+    public typedef DualNum NormOutput;
+    public func norm() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234), 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
     }
 }

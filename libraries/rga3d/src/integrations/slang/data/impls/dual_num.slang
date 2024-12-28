@@ -1,78 +1,76 @@
-using traits::GeometricProduct;
-using traits::RightDual;
-extension DualNum: Add<AntiScalar> {
-    associatedtype Output = DualNum;
-    func operator+(other: AntiScalar) -> Output {
+using traits;
+using traits;
+public extension DualNum: Add<AntiScalar> {
+    public typedef DualNum AddOutput;
+    public func operator+(other: AntiScalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(0.0, other.e1234) + this.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator+=(const AntiScalar& other) {
+public extension DualNum {
+    public func operator+=(const AntiScalar& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(0.0, other.e1234) + this.group0.xy
         );
     }
 }
-extension DualNum: Add<DualNum> {
-    associatedtype Output = DualNum;
-    func operator+(other: DualNum) -> Output {
+public extension DualNum: Add<DualNum> {
+    public typedef DualNum AddOutput;
+    public func operator+(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator+=(const DualNum& other) {
+public extension DualNum {
+    public func operator+=(const DualNum& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(other.group0.xy + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            other.group0.xy + this.group0.xy
         );
     }
 }
-extension DualNum: Add<Flector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Flector) -> Output {
+public extension DualNum: Add<Flector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
     }
 }
-extension DualNum: Add<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Horizon) -> Output {
+public extension DualNum: Add<Horizon> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321)
         );
     }
 }
-extension DualNum: Add<Line> {
-    associatedtype Output = Motor;
-    func operator+(other: Line) -> Output {
+public extension DualNum: Add<Line> {
+    public typedef Motor AddOutput;
+    public func operator+(other: Line) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234), 
@@ -81,9 +79,9 @@ extension DualNum: Add<Line> {
         );
     }
 }
-extension DualNum: Add<Motor> {
-    associatedtype Output = Motor;
-    func operator+(other: Motor) -> Output {
+public extension DualNum: Add<Motor> {
+    public typedef Motor AddOutput;
+    public func operator+(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234 + other.e1234), 
@@ -92,258 +90,253 @@ extension DualNum: Add<Motor> {
         );
     }
 }
-extension DualNum: Add<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: MultiVector) -> Output {
+public extension DualNum: Add<MultiVector> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy + other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy + other.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz, 
+            /* e23, e31, e12 */
+            other.group3.xyz, 
             /* e423, e431, e412, e321 */
             other.group4
         );
     }
 }
-extension DualNum: Add<Origin> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Origin) -> Output {
+public extension DualNum: Add<Origin> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension DualNum: Add<Plane> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Plane) -> Output {
+public extension DualNum: Add<Plane> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group0
         );
     }
 }
-extension DualNum: Add<Point> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Point) -> Output {
+public extension DualNum: Add<Point> {
+    public typedef MultiVector AddOutput;
+    public func operator+(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension DualNum: Add<Scalar> {
-    associatedtype Output = DualNum;
-    func operator+(other: Scalar) -> Output {
+public extension DualNum: Add<Scalar> {
+    public typedef DualNum AddOutput;
+    public func operator+(other: Scalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, 0.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar, 0.0) + this.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator+=(const Scalar& other) {
+public extension DualNum {
+    public func operator+=(const Scalar& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar, 0.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar, 0.0) + this.group0.xy
         );
     }
 }
-extension DualNum: Mul<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func operator*(other: AntiScalar) -> Output {
+public extension DualNum: Mul<AntiScalar> {
+    public typedef AntiScalar MulOutput;
+    public func operator*(other: AntiScalar) -> AntiScalar {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<DualNum> {
-    associatedtype Output = DualNum;
-    func operator*(other: DualNum) -> Output {
+public extension DualNum: Mul<DualNum> {
+    public typedef DualNum MulOutput;
+    public func operator*(other: DualNum) -> DualNum {
         return this.geometric_product(other);
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator*=(const DualNum& other) {
+public extension DualNum {
+    public func operator*=(const DualNum& other) {
         *this = this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Flector> {
-    associatedtype Output = Flector;
-    func operator*(other: Flector) -> Output {
+public extension DualNum: Mul<Flector> {
+    public typedef Flector MulOutput;
+    public func operator*(other: Flector) -> Flector {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Horizon> {
-    associatedtype Output = Flector;
-    func operator*(other: Horizon) -> Output {
+public extension DualNum: Mul<Horizon> {
+    public typedef Flector MulOutput;
+    public func operator*(other: Horizon) -> Flector {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Line> {
-    associatedtype Output = Line;
-    func operator*(other: Line) -> Output {
+public extension DualNum: Mul<Line> {
+    public typedef Line MulOutput;
+    public func operator*(other: Line) -> Line {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Motor> {
-    associatedtype Output = Motor;
-    func operator*(other: Motor) -> Output {
+public extension DualNum: Mul<Motor> {
+    public typedef Motor MulOutput;
+    public func operator*(other: Motor) -> Motor {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: MultiVector) -> Output {
+public extension DualNum: Mul<MultiVector> {
+    public typedef MultiVector MulOutput;
+    public func operator*(other: MultiVector) -> MultiVector {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Origin> {
-    associatedtype Output = Origin;
-    func operator*(other: Origin) -> Output {
+public extension DualNum: Mul<Origin> {
+    public typedef Origin MulOutput;
+    public func operator*(other: Origin) -> Origin {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Plane> {
-    associatedtype Output = Flector;
-    func operator*(other: Plane) -> Output {
+public extension DualNum: Mul<Plane> {
+    public typedef Flector MulOutput;
+    public func operator*(other: Plane) -> Flector {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Point> {
-    associatedtype Output = Flector;
-    func operator*(other: Point) -> Output {
+public extension DualNum: Mul<Point> {
+    public typedef Flector MulOutput;
+    public func operator*(other: Point) -> Flector {
         return this.geometric_product(other);
     }
 }
-extension DualNum: Mul<Scalar> {
-    associatedtype Output = DualNum;
-    func operator*(other: Scalar) -> Output {
+public extension DualNum: Mul<Scalar> {
+    public typedef DualNum MulOutput;
+    public func operator*(other: Scalar) -> DualNum {
         return this.geometric_product(other);
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator*=(const Scalar& other) {
+public extension DualNum {
+    public func operator*=(const Scalar& other) {
         *this = this.geometric_product(other);
     }
 }
-extension DualNum: Neg {
-    associatedtype Output = DualNum;
-    func neg() -> Output {
+public extension DualNum: Neg {
+    public typedef DualNum NegOutput;
+    public func neg() -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+            /* scalar, e1234 */
+            this.group0.xy * float2(-1.0)
         );
     }
 }
-extension DualNum: Not {
-    associatedtype Output = AntiScalar;
-    func not() -> Output {
+public extension DualNum: Not {
+    public typedef AntiScalar NotOutput;
+    public func not() -> AntiScalar {
         return this.right_dual();
     }
 }
-extension DualNum: Sub<AntiScalar> {
-    associatedtype Output = DualNum;
-    func operator-(other: AntiScalar) -> Output {
+public extension DualNum: Sub<AntiScalar> {
+    public typedef DualNum SubOutput;
+    public func operator-(other: AntiScalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(0.0, other.e1234 * -1.0) + this.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator-=(const AntiScalar& other) {
+public extension DualNum {
+    public func operator-=(const AntiScalar& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(0.0, other.e1234 * -1.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(0.0, other.e1234 * -1.0) + this.group0.xy
         );
     }
 }
-extension DualNum: Sub<DualNum> {
-    associatedtype Output = DualNum;
-    func operator-(other: DualNum) -> Output {
+public extension DualNum: Sub<DualNum> {
+    public typedef DualNum SubOutput;
+    public func operator-(other: DualNum) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator-=(const DualNum& other) {
+public extension DualNum {
+    public func operator-=(const DualNum& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy
         );
     }
 }
-extension DualNum: Sub<Flector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Flector) -> Output {
+public extension DualNum: Sub<Flector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Flector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
     }
 }
-extension DualNum: Sub<Horizon> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Horizon) -> Output {
+public extension DualNum: Sub<Horizon> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Horizon) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), other.e321 * -1.0)
         );
     }
 }
-extension DualNum: Sub<Line> {
-    associatedtype Output = Motor;
-    func operator-(other: Line) -> Output {
+public extension DualNum: Sub<Line> {
+    public typedef Motor SubOutput;
+    public func operator-(other: Line) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -352,9 +345,9 @@ extension DualNum: Sub<Line> {
         );
     }
 }
-extension DualNum: Sub<Motor> {
-    associatedtype Output = Motor;
-    func operator-(other: Motor) -> Output {
+public extension DualNum: Sub<Motor> {
+    public typedef Motor SubOutput;
+    public func operator-(other: Motor) -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234 - other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -363,89 +356,88 @@ extension DualNum: Sub<Motor> {
         );
     }
 }
-extension DualNum: Sub<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: MultiVector) -> Output {
+public extension DualNum: Sub<MultiVector> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: MultiVector) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy - other.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group2.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group3.xyz * float3(-1.0), 
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
     }
 }
-extension DualNum: Sub<Origin> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Origin) -> Output {
+public extension DualNum: Sub<Origin> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Origin) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension DualNum: Sub<Plane> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Plane) -> Output {
+public extension DualNum: Sub<Plane> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Plane) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
         );
     }
 }
-extension DualNum: Sub<Point> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Point) -> Output {
+public extension DualNum: Sub<Point> {
+    public typedef MultiVector SubOutput;
+    public func operator-(other: Point) -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+            /* scalar, e1234 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
     }
 }
-extension DualNum: Sub<Scalar> {
-    associatedtype Output = DualNum;
-    func operator-(other: Scalar) -> Output {
+public extension DualNum: Sub<Scalar> {
+    public typedef DualNum SubOutput;
+    public func operator-(other: Scalar) -> DualNum {
         return DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, 0.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, 0.0) + this.group0.xy
         );
     }
 }
-extension DualNum {
-    associatedtype Output = DualNum;
-    func operator-=(const Scalar& other) {
+public extension DualNum {
+    public func operator-=(const Scalar& other) {
         *this = DualNum.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(other.scalar * -1.0, 0.0) + this.group0.xy, 0.0, 0.0)
+            /* scalar, e1234 */
+            float2(other.scalar * -1.0, 0.0) + this.group0.xy
         );
     }
 }

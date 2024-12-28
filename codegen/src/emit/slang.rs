@@ -177,7 +177,7 @@ impl Slang {
                 let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut file = BufWriter::new(file);
                 writeln!(&mut file, "implementing {algebra_name};")?;
-                writeln!(&mut file, "using data::*;")?;
+                writeln!(&mut file, "using data;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 writeln!(&mut file, "__include \"impls/{lsc}\";")?;
                 // tx3.send(file_path)?;
@@ -216,10 +216,11 @@ impl Slang {
                 tx2.send(file_path.clone())?;
                 let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut file = BufWriter::new(file);
+                write!(&mut file, "implementing {algebra_name};")?;
                 // TODO remove these imports when they are unused
-                writeln!(&mut file, "using data::*;")?;
+                writeln!(&mut file, "using data;")?;
                 self.declare_trait_def(&mut file, td)?;
-                writeln!(&mut file, "__include ./impls/{lsc};")?;
+                writeln!(&mut file, "__include \"./impls/{lsc}\";")?;
                 // tx3.send(file_path)?;
                 pb2.inc(1);
                 Ok(())
@@ -297,10 +298,10 @@ impl Slang {
                     if skip_dependencies { continue }
                     if self.prefer_fancy_infix {
                         let lsc = dep.as_lower_snake();
-                        writeln!(&mut file, "using traits::{lsc};")?;
+                        writeln!(&mut file, "using traits;")?;
                     } else {
                         let ucc = dep.as_upper_camel();
-                        writeln!(&mut file, "using traits::{ucc};")?;
+                        writeln!(&mut file, "using traits;")?;
                     }
                 }
                 sort_trait_impls(&mut impls, deps_set)?;
@@ -342,12 +343,23 @@ impl Slang {
             let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let mut file = BufWriter::new(file);
             writeln!(&mut file, "implementing {algebra_name};")?;
+            write!(&mut file, r#"
+internal bool lessThanHelper<T: IComparable>(T a, T b) {{
+    return a.lessThan(b);
+}}
+internal bool equalsHelper<T: IComparable>(T a, T b) {{
+    return a.equals(b);
+}}
+internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
+    return a.lessThanOrEquals(b);
+}}
+            "#)?;
+
             for mv in mvs {
                 let n = mv.name;
                 let lsc = TraitKey::new(n).as_lower_snake();
                 writeln!(&mut file, "__include \"data/{lsc}\";")?;
             }
-            // tx3.send(file_path)?;
             Ok(())
         });
 
@@ -568,11 +580,11 @@ impl Slang {
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, "powi(")?;
+                                write!(w, "pow(")?;
                                 self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, "powf(")?;
+                                write!(w, "pow(")?;
                                 self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -590,11 +602,11 @@ impl Slang {
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, " * powi(")?;
+                                write!(w, " * pow(")?;
                                 self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, " * powf(")?;
+                                write!(w, " * pow(")?;
                                 self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -676,9 +688,9 @@ impl Slang {
             FloatExpr::Exp(factor, exponent, last_exponent) => {
 
                 if exponent.is_none() && last_exponent.fract() == 0.0 {
-                    write!(w, "powi(")?;
+                    write!(w, "pow(")?;
                 } else {
-                    write!(w, "powf(")?;
+                    write!(w, "pow(")?;
                 }
                 self.write_float(w, factor, true)?;
                 write!(w, ", ")?;
@@ -754,11 +766,11 @@ impl Slang {
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, "Simd32x2::powi(")?;
+                                write!(w, "Simd32x2::pow(")?;
                                 self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, "Simd32x2::powf(")?;
+                                write!(w, "Simd32x2::pow(")?;
                                 self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -776,11 +788,11 @@ impl Slang {
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, " * Simd32x2::powi(")?;
+                                write!(w, " * Simd32x2::pow(")?;
                                 self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, " * Simd32x2::powf(")?;
+                                write!(w, " * Simd32x2::pow(")?;
                                 self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -962,11 +974,11 @@ impl Slang {
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, "powi(")?;
+                                write!(w, "pow(")?;
                                 self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, "powf(")?;
+                                write!(w, "pow(")?;
                                 self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -984,11 +996,11 @@ impl Slang {
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, " * powi(")?;
+                                write!(w, " * pow(")?;
                                 self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, " * powf(")?;
+                                write!(w, " * pow(")?;
                                 self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -1183,11 +1195,11 @@ impl Slang {
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, "powi(")?;
+                                write!(w, "pow(")?;
                                 self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, "powf(")?;
+                                write!(w, "pow(")?;
                                 self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -1205,11 +1217,11 @@ impl Slang {
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
-                                write!(w, " * powi(")?;
+                                write!(w, " * pow(")?;
                                 self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
-                                write!(w, " * powf(")?;
+                                write!(w, " * pow(")?;
                                 self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
@@ -1344,7 +1356,6 @@ impl Slang {
             }
             MultiVectorVia::Construct(v) => {
                 let n = mv.name();
-                // TODO
                 write!(w, "{n}.from_groups(")?;
                 let groups = mv.groups();
                 for (i, g) in v.iter().enumerate() {
@@ -1358,39 +1369,11 @@ impl Slang {
                         }
                         write!(w, "{el}")?;
                     }
-                    let l = groups[i].simd_width();
-                    match l {
-                        1 => write!(w, ", 0, 0, 0")?,
-                        2 => write!(w, ", 0, 0")?,
-                        3 => write!(w, ", 0")?,
-                        _ => (),
-                    }
                     write!(w, " */\n            ")?;
                     match g {
-                        MultiVectorGroupExpr::JustFloat(FloatExpr::Literal(0.0)) => {
-                            write!(w, "float4(0.0)")?;
-                        },
-                        MultiVectorGroupExpr::Vec2(Vec2Expr::Gather1(FloatExpr::Literal(0.0))) => {
-                            write!(w, "float4(0.0)")?;
-                        },
-                        MultiVectorGroupExpr::Vec3(Vec3Expr::Gather1(FloatExpr::Literal(0.0))) => {
-                            write!(w, "float4(0.0)")?;
-                        },
-                        MultiVectorGroupExpr::JustFloat(f) => {
-                            write!(w, "float4(")?;
-                            self.write_float(w, f, true)?;
-                            write!(w, ", 0.0, 0.0, 0.0)")?;
-                        },
-                        MultiVectorGroupExpr::Vec2(g) => {
-                            write!(w, "float4(")?;
-                            self.write_vec2(w, g, true)?;
-                            write!(w, ", 0.0, 0.0)")?;
-                        },
-                        MultiVectorGroupExpr::Vec3(g) => {
-                            write!(w, "float4(")?;
-                            self.write_vec3(w, g, true)?;
-                            write!(w, ", 0.0)")?;
-                        },
+                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
+                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
+                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
@@ -1503,9 +1486,8 @@ impl Slang {
         let other_lsc = TraitKey::new(other).as_lower_snake();
         let other_lsc = format!("from_{other_lsc}");
 
-        writeln!(w, "extension {owner}: From<{other}> {{")?;
-        writeln!(w, "    associatedtype Self = {owner}:")?;
-        writeln!(w, "    static func from({other_lsc}: {other}) -> Self {{")?;
+        writeln!(w, "public extension {owner}: From<{other}> {{")?;
+        writeln!(w, "    public static func from({other} {other_lsc}) -> This {{")?;
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1522,7 +1504,7 @@ impl Slang {
         self.write_expression(w, &ret, true)?;
         writeln!(w, ";\n    }}")?;
         writeln!(w, "}}")?;
-        writeln!(w, "extension {other}: Into<{owner}> {{")?;
+        writeln!(w, "public extension {other}: Into<{owner}> {{")?;
         writeln!(w, "    public func into() -> {owner} {{")?;
         writeln!(w, "        return {owner}.from(this);")?;
         writeln!(w, "    }}")?;
@@ -1546,13 +1528,9 @@ impl Slang {
         write!(
             w,
             r#"
-extension {owner}: TryFrom<{other}> {{
-    associatedtype Self = {owner};
-    static func try_from({lsc}: {other}) -> Option<Self> {{"#
+public extension {owner}: TryFrom<{other}> {{
+    public static func try_from({other} {lsc}) -> Optional<This> {{"#
         )?;
-        // if impls.statistics.basis_element_struct_access {
-        //     writeln!(w, "        use crate::elements::*;")?;
-        // }
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1579,7 +1557,7 @@ extension {owner}: TryFrom<{other}> {{
         self.write_expression(w, &ret, true)?;
         writeln!(w, ";\n    }}\n}}")?;
 
-        writeln!(w, "extension {other}: TryInto<{owner}> {{")?;
+        writeln!(w, "public extension {other}: TryInto<{owner}> {{")?;
         writeln!(w, "    public func try_into() -> Optional<{owner}> {{")?;
         writeln!(w, "        return {owner}.try_from(this);")?;
         writeln!(w, "    }}")?;
@@ -1605,12 +1583,9 @@ extension {owner}: TryFrom<{other}> {{
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
         // let lcc = name.as_lower_camel();
-        writeln!(w, "public struct {ucc} {{")?;
+        write!(w, "public struct {ucc} {{")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
-            if i > 0 {
-                writeln!(w, ",")?;
-            }
-            write!(w, "    // ")?;
+            write!(w, "\n    // ")?;
             let g = g.into_vec();
             for (i, el) in g.clone().into_iter().enumerate() {
                 if i > 0 {
@@ -1626,13 +1601,13 @@ extension {owner}: TryFrom<{other}> {{
                 _ => (),
             }
             // TODO consider modifying visibility of groups in rust implementation
-            write!(w, "\n    internal group{i}: float4")?;
+            write!(w, "\n    internal float4 group{i};")?;
         }
         writeln!(w, "\n}}")?;
 
 
 
-        writeln!(w, "extension {ucc} {{")?;
+        writeln!(w, "public extension {ucc} {{")?;
         for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
             let g = g.into_vec();
             for (inner_idx, el) in g.clone().into_iter().enumerate() {
@@ -1654,7 +1629,7 @@ extension {owner}: TryFrom<{other}> {{
             write!(w, "{el}: float")?;
         }
         writeln!(w, "\n    ) -> {ucc} {{")?;
-        write!(w, "        return {ucc} {{ ")?;
+        write!(w, "        return {ucc}(")?;
         for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
             if outer_idx > 0 {
                 write!(w, ", ")?;
@@ -1674,7 +1649,7 @@ extension {owner}: TryFrom<{other}> {{
             }
             write!(w, ")")?;
         }
-        writeln!(w, " }};")?;
+        writeln!(w, ");")?;
         writeln!(w, "    }}")?;
         writeln!(w, "    internal static func from_groups(")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
@@ -1687,39 +1662,51 @@ extension {owner}: TryFrom<{other}> {{
             self.write_type(w, g.expr_type())?;
         }
         writeln!(w, "\n    ) -> {ucc} {{")?;
-        writeln!(w, "        return {ucc} {{")?;
-        for (i, _) in multi_vec.groups().into_iter().enumerate() {
+        write!(w, "        return {ucc}(")?;
+        for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
-            } else {
-                write!(w, "            ")?;
             }
-            write!(w, "group{i}: g{i}")?;
+            match g.simd_width() {
+                1 => write!(w, "float4(g{i}, 0.0, 0.0, 0.0)")?,
+                2 => write!(w, "float4(g{i}, 0.0, 0.0)")?,
+                3 => write!(w, "float4(g{i}, 0.0)")?,
+                4 => write!(w, "g{i}")?,
+                _ => unreachable!("Simd widths can only be 1-4")
+            }
         }
-        writeln!(w, "\n        }};\n    }}\n}}")?;
+        writeln!(w, ");\n    }}\n}}")?;
 
 
-        writeln!(w, "extension {ucc}: IComparable {{")?;
-        writeln!(w, "    bool lessThan(IComparable another) {{")?;
-        writeln!(w, "        {ucc} other = ({ucc})another;")?;
-        let len = multi_vec.groups().len();
-        for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
-            if outer_idx < len - 1 {
-                write!(w, "        if (this.group{outer_idx} != other.group{outer_idx})\n    ")?;
-            }
-            writeln!(w, "        return this.group{outer_idx}.lessThan(other.group{outer_idx});")?;
-        }
-        writeln!(w, "    }}")?;
-        writeln!(w, "    bool equals(IComparable another) {{")?;
-        writeln!(w, "        {ucc} other = ({ucc})another;")?;
+        writeln!(w, "public extension {ucc}: IComparable {{")?;
+        writeln!(w, "    public bool equals({ucc} other) {{")?;
+        // writeln!(w, "        {ucc} other = ({ucc})another;")?;
         write!(w, "        return ")?;
         for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
             if outer_idx > 0 {
                 write!(w, " && ")?;
             }
-            write!(w, "this.group{outer_idx}.equals(other.group{outer_idx})")?;
+            write!(w, "equalsHelper(this.group{outer_idx}, other.group{outer_idx})")?;
         }
         writeln!(w, ";\n    }}")?;
+        writeln!(w, "    public bool lessThan({ucc} other) {{")?;
+        let len = multi_vec.groups().len();
+        for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
+            if outer_idx < len - 1 {
+                write!(w, "        if (!equalsHelper(this.group{outer_idx}, other.group{outer_idx}))\n    ")?;
+            }
+            writeln!(w, "        return lessThanHelper(this.group{outer_idx}, other.group{outer_idx});")?;
+        }
+        writeln!(w, "    }}")?;
+        writeln!(w, "    public bool lessThanOrEquals({ucc} other) {{")?;
+        let len = multi_vec.groups().len();
+        for (outer_idx, _) in multi_vec.groups().into_iter().enumerate() {
+            if outer_idx < len - 1 {
+                write!(w, "        if (!equalsHelper(this.group{outer_idx}, other.group{outer_idx}))\n    ")?;
+            }
+            writeln!(w, "        return lessThanOrEqualsHelper(this.group{outer_idx}, other.group{outer_idx});")?;
+        }
+        writeln!(w, "    }}")?;
         writeln!(w, "}}")?;
 
 
@@ -1752,7 +1739,7 @@ extension {owner}: TryFrom<{other}> {{
             }
             TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
                 if ucc != "Into" && ucc != "TryInto" {
-                    writeln!(w, "    associatedtype Output;")?;
+                    writeln!(w, "    associatedtype {ucc}Output;")?;
                 }
             }
         }
@@ -1767,7 +1754,8 @@ extension {owner}: TryFrom<{other}> {{
             write!(w, "Optional<Output>")?;
         } else {
             match *output_ty {
-                TraitTypeConsensus::AlwaysSelf => write!(w, "Output")?,
+                // TODO is "This" a valid type? If so, update 'From' and 'TryFrom' to be rid of redundant associated type
+                TraitTypeConsensus::AlwaysSelf => write!(w, "This")?,
                 TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
                 TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Output")?,
             }
@@ -1776,15 +1764,13 @@ extension {owner}: TryFrom<{other}> {{
 
         if ucc == "Into" {
             writeln!(w, "public interface From<Other> {{")?;
-            writeln!(w, "    associatedtype Self;")?;
-            writeln!(w, "    static func from(other: Other) -> Self;")?;
+            writeln!(w, "    static func from(Other other) -> This;")?;
             writeln!(w, "}}")?;
             return Ok(())
         }
         if ucc == "TryInto" {
             writeln!(w, "public interface TryFrom<Other> {{")?;
-            writeln!(w, "    associatedtype Self;")?;
-            writeln!(w, "    static func try_from(other: Other) -> Optional<Self>;")?;
+            writeln!(w, "    static func try_from(Other other) -> Optional<This>;")?;
             writeln!(w, "}}")?;
             return Ok(())
         }
@@ -1798,39 +1784,10 @@ extension {owner}: TryFrom<{other}> {{
 
         if let Some(op) = &self.fancy_infix {
             // TODO work around the empty brace clutter.
-            writeln!(w, "public static const {lsc}: {ucc}{infix_term} = {ucc}{infix_term} {{}};")?;
+            writeln!(w, "public static const {ucc}{infix_term} {lsc} = {ucc}{infix_term}();")?;
             writeln!(w, "public struct {ucc}{infix_term} {{}}")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "public struct {ucc}{infix_term}Partial<A> {{ a: A }}")?;
-            }
-            let operator_method = op.slang_trait_method();
-            if let TraitArity::Two = def.arity {
-                writeln!(w, "extension {ucc}{infix_term}Partial<A> for A: {ucc}<B> {{")?;
-                // writeln!(w, "impl<A: {ucc}<B>, B> {operator_name}<B> for {lsc}_partial<A> {{")?;
-                // write!(w, "    associatedtype Output = ")?;
-                // match *output_ty {
-                //     TraitTypeConsensus::AlwaysSelf => write!(w, "A.Output")?,
-                //     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                //     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "A.Output")?,
-                // }
-                // writeln!(w, ";")?;
-                writeln!(w, "    func {operator_method}(rhs: B) -> A.Output {{")?;
-                writeln!(w, "        return this.a.{lsc}(rhs);")?;
-                writeln!(w, "    }}\n}}")?;
-            }
-            if let TraitArity::One = def.arity {
-                writeln!(w, "extension {ucc}{infix_term} for A: {ucc} {{")?;
-                // writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
-                // write!(w, "    associatedtype Output = ")?;
-                // match *output_ty {
-                //     TraitTypeConsensus::AlwaysSelf => write!(w, "A.Output")?,
-                //     TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                //     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "A.Output")?,
-                // }
-                // writeln!(w, ";")?;
-                writeln!(w, "    func {operator_method}(rhs: A) -> A.Output {{")?;
-                writeln!(w, "        return rhs.{lsc}();")?;
-                writeln!(w, "    }}\n}}")?;
+                writeln!(w, "public struct {ucc}{infix_term}Partial<A> {{ a: A; }}")?;
             }
         }
 
@@ -1891,27 +1848,51 @@ extension {owner}: TryFrom<{other}> {{
                     let n = mv.name();
                     if !is_op && !already_granted_infix.contains(n) {
                         already_granted_infix.insert(n);
-                        write!(w, "extension ")?;
+                        write!(w, "public extension ")?;
                         self.write_type(w, *owner_ty)?;
                         writeln!(w, " {{")?;
-                        writeln!(w, "    // Fancy infix trick")?;
                         if let TraitArity::Two = def.arity {
-                            writeln!(w, "    func {operator_method}(_rhs: {ucc}Infix) -> {ucc}{infix_term}Partial<{n}> {{")?;
-                            writeln!(w, "        return {ucc}{infix_term}Partial {{ a: this }};")?;
+                            writeln!(w, "    // Fancy infix trick (first half)")?;
+                            writeln!(w, "    public func {operator_method}(_rhs: {ucc}Infix) -> {ucc}{infix_term}Partial<{n}> {{")?;
+                            writeln!(w, "        return {ucc}{infix_term}Partial(this);")?;
                             writeln!(w, "    }}")?;
                         }
                         if let TraitArity::One = def.arity {
+                            writeln!(w, "    // Fancy postfix trick")?;
                             write!(w, "    func {operator_method}(_rhs: {ucc}{infix_term}) -> ")?;
                             self.write_type(w, output_ty)?;
                             writeln!(w, " {{\n        return this.{lsc}();\n    }}")?;
                             if &output_ty == owner_ty {
                                 // TODO it's really dubious that this is correct yet
-                                writeln!(w, "    func {operator_method}=(const {ucc}{infix_term}& _rhs) -> {n}& {{")?;
+                                writeln!(w, "    // Fancy postfix self-assign")?;
+                                writeln!(w, "    public func {operator_method}=(const {ucc}{infix_term}& _rhs) -> {n}& {{")?;
                                 writeln!(w, "        this = this.{lsc}();")?;
                                 writeln!(w, "        return *this;\n    }}")?;
                             }
                         }
                         writeln!(w, "}}")?;
+                        if let TraitArity::Two = def.arity {
+                            write!(w, "public extension {ucc}{infix_term}Partial<")?;
+                            self.write_type(w, *owner_ty)?;
+                            writeln!(w, "> {{")?;
+                            writeln!(w, "    // Fancy infix trick (second half)")?;
+                            write!(w, "    public func {operator_method}(rhs: B) -> ")?;
+                            self.write_type(w, *owner_ty)?;
+                            writeln!(w, ".Output {{")?;
+                            writeln!(w, "        return this.a.{lsc}(rhs);")?;
+                            writeln!(w, "    }}\n}}")?;
+                        }
+                        if let TraitArity::One = def.arity {
+                            writeln!(w, "public extension {ucc}{infix_term} {{")?;
+                            writeln!(w, "    // Fancy prefix trick")?;
+                            write!(w, "    public func {operator_method}(rhs: ")?;
+                            self.write_type(w, *owner_ty)?;
+                            write!(w, ") -> ")?;
+                            self.write_type(w, *owner_ty)?;
+                            writeln!(w, ".Output {{")?;
+                            writeln!(w, "        return rhs.{lsc}();")?;
+                            writeln!(w, "    }}\n}}")?;
+                        }
                     }
                 }
             }
@@ -1919,7 +1900,7 @@ extension {owner}: TryFrom<{other}> {{
 
 
         // todo alias documentation
-        write!(w, "extension ")?;
+        write!(w, "public extension ")?;
         self.write_type(w, *owner_ty)?;
         write!(w, ": {ucc}")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
@@ -1928,10 +1909,10 @@ extension {owner}: TryFrom<{other}> {{
             write!(w, ">")?;
         }
         writeln!(w, " {{")?;
-        write!(w, "    associatedtype Output = ")?;
+        write!(w, "    public typedef ")?;
         self.write_type(w, output_ty)?;
-        writeln!(w, ";")?;
-        write!(w, "    func {lsc}(")?;
+        writeln!(w, " {ucc}Output;")?;
+        write!(w, "    public func {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {},
@@ -1941,7 +1922,9 @@ extension {owner}: TryFrom<{other}> {{
             }
             _ => panic!("Arity 2 should always have other type"),
         }
-        writeln!(w, ") -> Output {{")?;
+        write!(w, ") -> ")?;
+        self.write_type(w, output_ty)?;
+        writeln!(w, " {{")?;
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
@@ -1984,13 +1967,10 @@ extension {owner}: TryFrom<{other}> {{
             return Ok(());
         }
 
-        write!(w, "extension ")?;
+        write!(w, "public extension ")?;
         self.write_type(w, *owner_ty)?;
         writeln!(w, " {{")?;
-        write!(w, "    associatedtype Output = ")?;
-        self.write_type(w, output_ty)?;
-        writeln!(w, ";")?;
-        write!(w, "    func {lsc}=(")?;
+        write!(w, "    public func {lsc}=(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {},

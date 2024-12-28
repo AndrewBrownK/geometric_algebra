@@ -1,42 +1,42 @@
-extension AntiScalar: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension AntiScalar: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 0;
     }
 }
-extension Horizon: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Horizon: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 1;
     }
 }
-extension Line: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Line: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 2;
     }
 }
-extension Origin: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Origin: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 3;
     }
 }
-extension Plane: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Plane: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 1;
     }
 }
-extension Point: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Point: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 3;
     }
 }
-extension Scalar: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Scalar: AntiGrade {
+    public typedef uint AntiGradeOutput;
+    public func anti_grade() -> uint {
         return 4;
     }
 }

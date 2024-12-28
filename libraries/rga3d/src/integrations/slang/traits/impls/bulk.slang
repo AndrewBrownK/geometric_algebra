@@ -1,31 +1,44 @@
-extension DualNum {
-    // Fancy infix trick
+public extension DualNum {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Scalar {
         return this.bulk();
     }
 }
-extension DualNum: Bulk {
-    associatedtype Output = Scalar;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: DualNum) -> DualNum.Output {
+        return rhs.bulk();
+    }
+}
+public extension DualNum: Bulk {
+    public typedef Scalar BulkOutput;
+    public func bulk() -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar, 0.0, 0.0, 0.0)
+            /* scalar */
+            this.scalar
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
+public extension Flector {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Flector {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Flector& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Flector& {
         this = this.bulk();
         return *this;
     }
 }
-extension Flector: Bulk {
-    associatedtype Output = Flector;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Flector) -> Flector.Output {
+        return rhs.bulk();
+    }
+}
+public extension Flector: Bulk {
+    public typedef Flector BulkOutput;
+    public func bulk() -> Flector {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, 0.0), 
@@ -34,56 +47,77 @@ extension Flector: Bulk {
         );
     }
 }
-extension Horizon {
-    // Fancy infix trick
+public extension Horizon {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Horizon {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Horizon& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Horizon& {
         this = this.bulk();
         return *this;
     }
 }
-extension Horizon: Bulk {
-    associatedtype Output = Horizon;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Horizon) -> Horizon.Output {
+        return rhs.bulk();
+    }
+}
+public extension Horizon: Bulk {
+    public typedef Horizon BulkOutput;
+    public func bulk() -> Horizon {
         return this;
     }
 }
-extension Line {
-    // Fancy infix trick
+public extension Line {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Line {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Line& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Line& {
         this = this.bulk();
         return *this;
     }
 }
-extension Line: Bulk {
-    associatedtype Output = Line;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Line) -> Line.Output {
+        return rhs.bulk();
+    }
+}
+public extension Line: Bulk {
+    public typedef Line BulkOutput;
+    public func bulk() -> Line {
         return Line.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group1.xyz, 0.0)
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            this.group1.xyz
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
+public extension Motor {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Motor {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Motor& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Motor& {
         this = this.bulk();
         return *this;
     }
 }
-extension Motor: Bulk {
-    associatedtype Output = Motor;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Motor) -> Motor.Output {
+        return rhs.bulk();
+    }
+}
+public extension Motor: Bulk {
+    public typedef Motor BulkOutput;
+    public func bulk() -> Motor {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -92,80 +126,107 @@ extension Motor: Bulk {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
+public extension MultiVector {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> MultiVector {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> MultiVector& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> MultiVector& {
         this = this.bulk();
         return *this;
     }
 }
-extension MultiVector: Bulk {
-    associatedtype Output = MultiVector;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+        return rhs.bulk();
+    }
+}
+public extension MultiVector: Bulk {
+    public typedef MultiVector BulkOutput;
+    public func bulk() -> MultiVector {
         return MultiVector.from_groups(
-            /* scalar, e1234, 0, 0 */
-            float4(float2(this.scalar, 0.0), 0.0, 0.0), 
+            /* scalar, e1234 */
+            float2(this.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group3.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            this.group3.xyz, 
             /* e423, e431, e412, e321 */
             float4(float3(0.0), this.e321)
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
+public extension Plane {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Horizon {
         return this.bulk();
     }
 }
-extension Plane: Bulk {
-    associatedtype Output = Horizon;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Plane) -> Plane.Output {
+        return rhs.bulk();
+    }
+}
+public extension Plane: Bulk {
+    public typedef Horizon BulkOutput;
+    public func bulk() -> Horizon {
         return Horizon.from_groups(
-            /* e321, 0, 0, 0 */
-            float4(this.e321, 0.0, 0.0, 0.0)
+            /* e321 */
+            this.e321
         );
     }
 }
-extension Point {
-    // Fancy infix trick
+public extension Point {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Point {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Point& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Point& {
         this = this.bulk();
         return *this;
     }
 }
-extension Point: Bulk {
-    associatedtype Output = Point;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Point) -> Point.Output {
+        return rhs.bulk();
+    }
+}
+public extension Point: Bulk {
+    public typedef Point BulkOutput;
+    public func bulk() -> Point {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, 0.0)
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
+public extension Scalar {
+    // Fancy postfix trick
     func operator/(_rhs: BulkPrefixOrPostfix) -> Scalar {
         return this.bulk();
     }
-    func operator/=(const BulkPrefixOrPostfix& _rhs) -> Scalar& {
+    // Fancy postfix self-assign
+    public func operator/=(const BulkPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.bulk();
         return *this;
     }
 }
-extension Scalar: Bulk {
-    associatedtype Output = Scalar;
-    func bulk() -> Output {
+public extension BulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Scalar) -> Scalar.Output {
+        return rhs.bulk();
+    }
+}
+public extension Scalar: Bulk {
+    public typedef Scalar BulkOutput;
+    public func bulk() -> Scalar {
         return this;
     }
 }

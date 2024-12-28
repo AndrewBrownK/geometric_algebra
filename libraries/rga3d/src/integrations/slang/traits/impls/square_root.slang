@@ -1,19 +1,26 @@
-extension Scalar {
-    // Fancy infix trick
+public extension Scalar {
+    // Fancy postfix trick
     func operator/(_rhs: SquareRootPrefixOrPostfix) -> Scalar {
         return this.square_root();
     }
-    func operator/=(const SquareRootPrefixOrPostfix& _rhs) -> Scalar& {
+    // Fancy postfix self-assign
+    public func operator/=(const SquareRootPrefixOrPostfix& _rhs) -> Scalar& {
         this = this.square_root();
         return *this;
     }
 }
-extension Scalar: SquareRoot {
-    associatedtype Output = Scalar;
-    func square_root() -> Output {
+public extension SquareRootPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Scalar) -> Scalar.Output {
+        return rhs.square_root();
+    }
+}
+public extension Scalar: SquareRoot {
+    public typedef Scalar SquareRootOutput;
+    public func square_root() -> Scalar {
         return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powf(this.scalar, 0.5), 0.0, 0.0, 0.0)
+            /* scalar */
+            pow(this.scalar, 0.5)
         );
     }
 }

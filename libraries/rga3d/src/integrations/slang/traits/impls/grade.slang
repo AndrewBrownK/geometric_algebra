@@ -1,42 +1,42 @@
-extension AntiScalar: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension AntiScalar: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 4;
     }
 }
-extension Horizon: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Horizon: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 3;
     }
 }
-extension Line: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Line: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 2;
     }
 }
-extension Origin: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Origin: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 1;
     }
 }
-extension Plane: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Plane: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 3;
     }
 }
-extension Point: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Point: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 1;
     }
 }
-extension Scalar: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Scalar: Grade {
+    public typedef uint GradeOutput;
+    public func grade() -> uint {
         return 0;
     }
 }

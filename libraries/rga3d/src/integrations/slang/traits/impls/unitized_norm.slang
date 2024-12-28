@@ -1,61 +1,91 @@
-using traits::UnitizedFlatNormSquared;
-extension Flector {
-    // Fancy infix trick
+using traits;
+public extension Flector {
+    // Fancy postfix trick
     func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
         return this.unitized_norm();
     }
 }
-extension Flector: UnitizedNorm {
-    associatedtype Output = float;
-    func unitized_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Flector) -> Flector.Output {
+        return rhs.unitized_norm();
     }
 }
-extension Line {
-    // Fancy infix trick
+public extension Flector: UnitizedNorm {
+    public typedef float UnitizedNormOutput;
+    public func unitized_norm() -> float {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Line {
+    // Fancy postfix trick
     func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
         return this.unitized_norm();
     }
 }
-extension Line: UnitizedNorm {
-    associatedtype Output = float;
-    func unitized_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Line) -> Line.Output {
+        return rhs.unitized_norm();
     }
 }
-extension Motor {
-    // Fancy infix trick
+public extension Line: UnitizedNorm {
+    public typedef float UnitizedNormOutput;
+    public func unitized_norm() -> float {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Motor {
+    // Fancy postfix trick
     func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
         return this.unitized_norm();
     }
 }
-extension Motor: UnitizedNorm {
-    associatedtype Output = float;
-    func unitized_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Motor) -> Motor.Output {
+        return rhs.unitized_norm();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
+public extension Motor: UnitizedNorm {
+    public typedef float UnitizedNormOutput;
+    public func unitized_norm() -> float {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension MultiVector {
+    // Fancy postfix trick
     func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
         return this.unitized_norm();
     }
 }
-extension MultiVector: UnitizedNorm {
-    associatedtype Output = float;
-    func unitized_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+        return rhs.unitized_norm();
     }
 }
-extension Point {
-    // Fancy infix trick
+public extension MultiVector: UnitizedNorm {
+    public typedef float UnitizedNormOutput;
+    public func unitized_norm() -> float {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Point {
+    // Fancy postfix trick
     func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
         return this.unitized_norm();
     }
 }
-extension Point: UnitizedNorm {
-    associatedtype Output = float;
-    func unitized_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public func operator/(rhs: Point) -> Point.Output {
+        return rhs.unitized_norm();
+    }
+}
+public extension Point: UnitizedNorm {
+    public typedef float UnitizedNormOutput;
+    public func unitized_norm() -> float {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }
