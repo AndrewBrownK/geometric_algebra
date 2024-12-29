@@ -4,7 +4,7 @@ implementing rga3d;using data;
 /// This characterizes the flat aspect's relationship with the horizon.
 public interface Weight {
     associatedtype WeightOutput;
-    func weight() -> Output;
+    func weight() -> WeightOutput;
 }
 public static const WeightPrefixOrPostfix weight = WeightPrefixOrPostfix();
 public struct WeightPrefixOrPostfix {}

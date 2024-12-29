@@ -7,5 +7,5 @@ public interface AntiDotProduct<T> {
 }
 public static const AntiDotProductInfix anti_dot_product = AntiDotProductInfix();
 public struct AntiDotProductInfix {}
-public struct AntiDotProductInfixPartial<A> { a: A; }
+public struct AntiDotProductInfixPartial<A> { internal A a; }
 __include "./impls/anti_dot_product";

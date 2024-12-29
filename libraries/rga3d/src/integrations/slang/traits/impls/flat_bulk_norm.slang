@@ -1,14 +1,14 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm();
     }
 }
 public extension FlatBulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Scalar operator /(Flector rhs) {
         return rhs.flat_bulk_norm();
     }
 }
@@ -20,13 +20,13 @@ public extension Flector: FlatBulkNorm {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm();
     }
 }
 public extension FlatBulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Scalar operator /(Line rhs) {
         return rhs.flat_bulk_norm();
     }
 }
@@ -38,13 +38,13 @@ public extension Line: FlatBulkNorm {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm();
     }
 }
 public extension FlatBulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Scalar operator /(Motor rhs) {
         return rhs.flat_bulk_norm();
     }
 }
@@ -56,13 +56,13 @@ public extension Motor: FlatBulkNorm {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm();
     }
 }
 public extension FlatBulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public Scalar operator /(MultiVector rhs) {
         return rhs.flat_bulk_norm();
     }
 }
@@ -74,13 +74,13 @@ public extension MultiVector: FlatBulkNorm {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm();
     }
 }
 public extension FlatBulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Scalar operator /(Point rhs) {
         return rhs.flat_bulk_norm();
     }
 }

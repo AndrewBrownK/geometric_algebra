@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -23,18 +25,18 @@ public extension AntiScalar: AutoMorphism {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> DualNum& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> DualNum& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -46,18 +48,18 @@ public extension DualNum: AutoMorphism {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Flector {
+    public Flector operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Flector& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -74,18 +76,18 @@ public extension Flector: AutoMorphism {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Horizon& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Horizon& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Horizon operator /(Horizon rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -100,18 +102,18 @@ public extension Horizon: AutoMorphism {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Line {
+    public Line operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Line& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -123,18 +125,18 @@ public extension Line: AutoMorphism {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Motor {
+    public Motor operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Motor& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -146,18 +148,18 @@ public extension Motor: AutoMorphism {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -180,18 +182,18 @@ public extension MultiVector: AutoMorphism {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Origin {
+    public Origin operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Origin& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -206,18 +208,18 @@ public extension Origin: AutoMorphism {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Plane {
+    public Plane operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Plane& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -232,18 +234,18 @@ public extension Plane: AutoMorphism {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Point {
+    public Point operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Point& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.auto_morphism();
     }
 }
@@ -258,18 +260,18 @@ public extension Point: AutoMorphism {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: AutoMorphismPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AutoMorphismPrefixOrPostfix rhs)  {
         return this.auto_morphism();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AutoMorphismPrefixOrPostfix& _rhs) -> Scalar& {
+    public func operator /=(const AutoMorphismPrefixOrPostfix& rhs) -> Scalar& {
         this = this.auto_morphism();
         return *this;
     }
 }
 public extension AutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public Scalar operator /(Scalar rhs) {
         return rhs.auto_morphism();
     }
 }

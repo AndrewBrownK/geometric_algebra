@@ -289,6 +289,8 @@ impl Slang {
                 tx2.send(file_path.clone())?;
                 let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut file = BufWriter::new(file);
+                writeln!(&mut file, "implementing {algebra_name};")?;
+                writeln!(&mut file, "using traits;")?;
                 let mut deps_set = HashSet::new();
                 for dep in deps {
                     if let Some(pb) = &pb {
@@ -296,13 +298,13 @@ impl Slang {
                     }
                     deps_set.insert(dep);
                     if skip_dependencies { continue }
-                    if self.prefer_fancy_infix {
-                        let lsc = dep.as_lower_snake();
-                        writeln!(&mut file, "using traits;")?;
-                    } else {
-                        let ucc = dep.as_upper_camel();
-                        writeln!(&mut file, "using traits;")?;
-                    }
+                    // if self.prefer_fancy_infix {
+                    //     let lsc = dep.as_lower_snake();
+                    //     writeln!(&mut file, "using traits;")?;
+                    // } else {
+                    //     let ucc = dep.as_upper_camel();
+                    //     writeln!(&mut file, "using traits;")?;
+                    // }
                 }
                 sort_trait_impls(&mut impls, deps_set)?;
                 if let Some(pb) = &pb {
@@ -1548,7 +1550,7 @@ public extension {owner}: TryFrom<{other}> {{
                 w,
                 r#"
         float disallowed_{el} = {lsc}.{el};
-        if disallowed_{el} != 0.0 {{
+        if (disallowed_{el} != 0.0) {{
             return none;
         }}"#
             )?;
@@ -1757,7 +1759,7 @@ public extension {owner}: TryFrom<{other}> {{
                 // TODO is "This" a valid type? If so, update 'From' and 'TryFrom' to be rid of redundant associated type
                 TraitTypeConsensus::AlwaysSelf => write!(w, "This")?,
                 TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Output")?,
+                TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "{ucc}Output")?,
             }
         }
         writeln!(w, ";\n}}")?;
@@ -1782,12 +1784,12 @@ public extension {owner}: TryFrom<{other}> {{
         };
         let Some(infix_term) = infix_term else { return Ok(()) };
 
-        if let Some(op) = &self.fancy_infix {
+        if let Some(_op) = &self.fancy_infix {
             // TODO work around the empty brace clutter.
             writeln!(w, "public static const {ucc}{infix_term} {lsc} = {ucc}{infix_term}();")?;
             writeln!(w, "public struct {ucc}{infix_term} {{}}")?;
             if let TraitArity::Two = def.arity {
-                writeln!(w, "public struct {ucc}{infix_term}Partial<A> {{ a: A; }}")?;
+                writeln!(w, "public struct {ucc}{infix_term}Partial<A> {{ internal A a; }}")?;
             }
         }
 
@@ -1835,7 +1837,6 @@ public extension {owner}: TryFrom<{other}> {{
             var_param = Some(v_param);
         }
 
-
         if let Some(op) = self.fancy_infix {
             let operator_method = op.slang_trait_method();
             let infix_term = match def.arity {
@@ -1853,43 +1854,47 @@ public extension {owner}: TryFrom<{other}> {{
                         writeln!(w, " {{")?;
                         if let TraitArity::Two = def.arity {
                             writeln!(w, "    // Fancy infix trick (first half)")?;
-                            writeln!(w, "    public func {operator_method}(_rhs: {ucc}Infix) -> {ucc}{infix_term}Partial<{n}> {{")?;
-                            writeln!(w, "        return {ucc}{infix_term}Partial(this);")?;
+                            writeln!(w, "    public {ucc}{infix_term}Partial<{n}> {operator_method}({ucc}Infix rhs) {{")?;
+                            writeln!(w, "        return {ucc}{infix_term}Partial<{n}>(this);")?;
                             writeln!(w, "    }}")?;
                         }
                         if let TraitArity::One = def.arity {
                             writeln!(w, "    // Fancy postfix trick")?;
-                            write!(w, "    func {operator_method}(_rhs: {ucc}{infix_term}) -> ")?;
+                            write!(w, "    public ")?;
                             self.write_type(w, output_ty)?;
-                            writeln!(w, " {{\n        return this.{lsc}();\n    }}")?;
+                            writeln!(w, " {operator_method}({ucc}{infix_term} rhs)  {{")?;
+                            writeln!(w, "        return this.{lsc}();\n    }}")?;
                             if &output_ty == owner_ty {
                                 // TODO it's really dubious that this is correct yet
                                 writeln!(w, "    // Fancy postfix self-assign")?;
-                                writeln!(w, "    public func {operator_method}=(const {ucc}{infix_term}& _rhs) -> {n}& {{")?;
+                                writeln!(w, "    public func {operator_method}=(const {ucc}{infix_term}& rhs) -> {n}& {{")?;
                                 writeln!(w, "        this = this.{lsc}();")?;
                                 writeln!(w, "        return *this;\n    }}")?;
                             }
                         }
                         writeln!(w, "}}")?;
-                        if let TraitArity::Two = def.arity {
+                        if let (TraitArity::Two, Some(other_ty)) = (def.arity, var_param) {
+
                             write!(w, "public extension {ucc}{infix_term}Partial<")?;
                             self.write_type(w, *owner_ty)?;
                             writeln!(w, "> {{")?;
                             writeln!(w, "    // Fancy infix trick (second half)")?;
-                            write!(w, "    public func {operator_method}(rhs: B) -> ")?;
-                            self.write_type(w, *owner_ty)?;
-                            writeln!(w, ".Output {{")?;
+                            write!(w, "    public ")?;
+                            self.write_type(w, output_ty)?;
+                            write!(w, " {operator_method}(")?;
+                            self.write_type(w, *other_ty)?;
+                            writeln!(w, " rhs) {{")?;
                             writeln!(w, "        return this.a.{lsc}(rhs);")?;
                             writeln!(w, "    }}\n}}")?;
                         }
                         if let TraitArity::One = def.arity {
                             writeln!(w, "public extension {ucc}{infix_term} {{")?;
                             writeln!(w, "    // Fancy prefix trick")?;
-                            write!(w, "    public func {operator_method}(rhs: ")?;
+                            write!(w, "    public ")?;
+                            self.write_type(w, output_ty)?;
+                            write!(w, " {operator_method}(")?;
                             self.write_type(w, *owner_ty)?;
-                            write!(w, ") -> ")?;
-                            self.write_type(w, *owner_ty)?;
-                            writeln!(w, ".Output {{")?;
+                            writeln!(w, " rhs) {{")?;
                             writeln!(w, "        return rhs.{lsc}();")?;
                             writeln!(w, "    }}\n}}")?;
                         }
@@ -1902,11 +1907,13 @@ public extension {owner}: TryFrom<{other}> {{
         // todo alias documentation
         write!(w, "public extension ")?;
         self.write_type(w, *owner_ty)?;
-        write!(w, ": {ucc}")?;
-        if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
-            write!(w, "<")?;
-            self.write_type(w, *var_param)?;
-            write!(w, ">")?;
+        if !is_op {
+            write!(w, ": {ucc}")?;
+            if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
+                write!(w, "<")?;
+                self.write_type(w, *var_param)?;
+                write!(w, ">")?;
+            }
         }
         writeln!(w, " {{")?;
         write!(w, "    public typedef ")?;
@@ -1925,6 +1932,9 @@ public extension {owner}: TryFrom<{other}> {{
         write!(w, ") -> ")?;
         self.write_type(w, output_ty)?;
         writeln!(w, " {{")?;
+        // write!(w, ") -> ")?;
+        // self.write_type(w, *owner_ty)?;
+        // writeln!(w, ".{ucc}Output {{")?;
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {

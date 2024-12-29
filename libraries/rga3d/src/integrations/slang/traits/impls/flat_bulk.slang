@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public Scalar operator /(DualNum rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -21,18 +23,18 @@ public extension DualNum: FlatBulk {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
+    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Flector& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -49,18 +51,18 @@ public extension Flector: FlatBulk {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Horizon& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Horizon& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Horizon operator /(Horizon rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -72,18 +74,18 @@ public extension Horizon: FlatBulk {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Line {
+    public Line operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Line& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -100,18 +102,18 @@ public extension Line: FlatBulk {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Motor {
+    public Motor operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Motor& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -128,18 +130,18 @@ public extension Motor: FlatBulk {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -162,13 +164,13 @@ public extension MultiVector: FlatBulk {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Horizon operator /(Plane rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -183,18 +185,18 @@ public extension Plane: FlatBulk {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Point {
+    public Point operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Point& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.flat_bulk();
     }
 }
@@ -209,18 +211,18 @@ public extension Point: FlatBulk {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Scalar& {
+    public func operator /=(const FlatBulkPrefixOrPostfix& rhs) -> Scalar& {
         this = this.flat_bulk();
         return *this;
     }
 }
 public extension FlatBulkPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public Scalar operator /(Scalar rhs) {
         return rhs.flat_bulk();
     }
 }

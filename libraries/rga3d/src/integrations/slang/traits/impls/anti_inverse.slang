@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -26,18 +28,18 @@ public extension AntiScalar: AntiInverse {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> DualNum {
+    public DualNum operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> DualNum& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> DualNum& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -52,18 +54,18 @@ public extension DualNum: AntiInverse {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Flector {
+    public Flector operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Flector& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -90,18 +92,18 @@ public extension Flector: AntiInverse {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Line {
+    public Line operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Line& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -128,18 +130,18 @@ public extension Line: AntiInverse {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Motor {
+    public Motor operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Motor& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -166,18 +168,18 @@ public extension Motor: AntiInverse {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> MultiVector& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -216,18 +218,18 @@ public extension MultiVector: AntiInverse {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Origin {
+    public Origin operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Origin& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -242,18 +244,18 @@ public extension Origin: AntiInverse {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Plane {
+    public Plane operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Plane& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.anti_inverse();
     }
 }
@@ -268,18 +270,18 @@ public extension Plane: AntiInverse {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Point {
+    public Point operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const AntiInversePrefixOrPostfix& rhs) -> Point& {
         this = this.anti_inverse();
         return *this;
     }
 }
 public extension AntiInversePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.anti_inverse();
     }
 }

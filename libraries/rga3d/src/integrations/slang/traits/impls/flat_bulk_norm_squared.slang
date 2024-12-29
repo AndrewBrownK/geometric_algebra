@@ -1,15 +1,14 @@
-using traits;
-using traits;
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm_squared();
     }
 }
 public extension FlatBulkNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Scalar operator /(Flector rhs) {
         return rhs.flat_bulk_norm_squared();
     }
 }
@@ -25,13 +24,13 @@ public extension Flector: FlatBulkNormSquared {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm_squared();
     }
 }
 public extension FlatBulkNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Scalar operator /(Line rhs) {
         return rhs.flat_bulk_norm_squared();
     }
 }
@@ -47,13 +46,13 @@ public extension Line: FlatBulkNormSquared {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm_squared();
     }
 }
 public extension FlatBulkNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Scalar operator /(Motor rhs) {
         return rhs.flat_bulk_norm_squared();
     }
 }
@@ -69,13 +68,13 @@ public extension Motor: FlatBulkNormSquared {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm_squared();
     }
 }
 public extension FlatBulkNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public Scalar operator /(MultiVector rhs) {
         return rhs.flat_bulk_norm_squared();
     }
 }
@@ -91,13 +90,13 @@ public extension MultiVector: FlatBulkNormSquared {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FlatBulkNormSquaredPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_bulk_norm_squared();
     }
 }
 public extension FlatBulkNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Scalar operator /(Point rhs) {
         return rhs.flat_bulk_norm_squared();
     }
 }

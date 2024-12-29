@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const AntiFixPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.anti_fix();
         return *this;
     }
 }
 public extension AntiFixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.anti_fix();
     }
 }
@@ -26,18 +28,18 @@ public extension AntiScalar: AntiFix {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Origin {
+    public Origin operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const AntiFixPrefixOrPostfix& rhs) -> Origin& {
         this = this.anti_fix();
         return *this;
     }
 }
 public extension AntiFixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.anti_fix();
     }
 }
@@ -52,18 +54,18 @@ public extension Origin: AntiFix {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Plane {
+    public Plane operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const AntiFixPrefixOrPostfix& rhs) -> Plane& {
         this = this.anti_fix();
         return *this;
     }
 }
 public extension AntiFixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.anti_fix();
     }
 }
@@ -78,18 +80,18 @@ public extension Plane: AntiFix {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Point {
+    public Point operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const AntiFixPrefixOrPostfix& rhs) -> Point& {
         this = this.anti_fix();
         return *this;
     }
 }
 public extension AntiFixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.anti_fix();
     }
 }

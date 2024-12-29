@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<DualNum> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<DualNum> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<DualNum>(this);
     }
 }
 public extension DotProductInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public Scalar operator /(DualNum rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -48,13 +50,13 @@ public extension DualNum: DotProduct<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Flector> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Flector> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Flector>(this);
     }
 }
 public extension DotProductInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Scalar operator /(Flector rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -105,13 +107,13 @@ public extension Flector: DotProduct<Point> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Horizon> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Horizon> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Horizon>(this);
     }
 }
 public extension DotProductInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Scalar operator /(Flector rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -153,13 +155,13 @@ public extension Horizon: DotProduct<Plane> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Line> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Line> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Line>(this);
     }
 }
 public extension DotProductInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Scalar operator /(Line rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -192,13 +194,13 @@ public extension Line: DotProduct<MultiVector> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Motor> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Motor> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Motor>(this);
     }
 }
 public extension DotProductInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Scalar operator /(DualNum rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -249,13 +251,13 @@ public extension Motor: DotProduct<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<MultiVector> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<MultiVector> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<MultiVector>(this);
     }
 }
 public extension DotProductInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public Scalar operator /(DualNum rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -342,13 +344,13 @@ public extension MultiVector: DotProduct<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Plane> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Plane> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Plane>(this);
     }
 }
 public extension DotProductInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Scalar operator /(Flector rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -390,13 +392,13 @@ public extension Plane: DotProduct<Plane> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Point> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Point> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Point>(this);
     }
 }
 public extension DotProductInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Scalar operator /(Flector rhs) {
         return this.a.dot_product(rhs);
     }
 }
@@ -429,13 +431,13 @@ public extension Point: DotProduct<Point> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: DotProductInfix) -> DotProductInfixPartial<Scalar> {
-        return DotProductInfixPartial(this);
+    public DotProductInfixPartial<Scalar> operator /(DotProductInfix rhs) {
+        return DotProductInfixPartial<Scalar>(this);
     }
 }
 public extension DotProductInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public Scalar operator /(DualNum rhs) {
         return this.a.dot_product(rhs);
     }
 }

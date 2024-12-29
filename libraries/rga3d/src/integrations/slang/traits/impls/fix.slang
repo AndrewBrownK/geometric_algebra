@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: FixPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(FixPrefixOrPostfix rhs)  {
         return this.fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FixPrefixOrPostfix& _rhs) -> Horizon& {
+    public func operator /=(const FixPrefixOrPostfix& rhs) -> Horizon& {
         this = this.fix();
         return *this;
     }
 }
 public extension FixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Horizon operator /(Horizon rhs) {
         return rhs.fix();
     }
 }
@@ -26,18 +28,18 @@ public extension Horizon: Fix {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: FixPrefixOrPostfix) -> Plane {
+    public Plane operator /(FixPrefixOrPostfix rhs)  {
         return this.fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FixPrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const FixPrefixOrPostfix& rhs) -> Plane& {
         this = this.fix();
         return *this;
     }
 }
 public extension FixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.fix();
     }
 }
@@ -52,18 +54,18 @@ public extension Plane: Fix {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FixPrefixOrPostfix) -> Point {
+    public Point operator /(FixPrefixOrPostfix rhs)  {
         return this.fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FixPrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const FixPrefixOrPostfix& rhs) -> Point& {
         this = this.fix();
         return *this;
     }
 }
 public extension FixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.fix();
     }
 }
@@ -78,18 +80,18 @@ public extension Point: Fix {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: FixPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(FixPrefixOrPostfix rhs)  {
         return this.fix();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FixPrefixOrPostfix& _rhs) -> Scalar& {
+    public func operator /=(const FixPrefixOrPostfix& rhs) -> Scalar& {
         this = this.fix();
         return *this;
     }
 }
 public extension FixPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public Scalar operator /(Scalar rhs) {
         return rhs.fix();
     }
 }

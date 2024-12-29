@@ -4,9 +4,9 @@ implementing rga3d;using data;
 /// Counterpart to ProjectOrthogonallyOnto.
 public interface RejectOrthogonallyFrom<T> {
     associatedtype RejectOrthogonallyFromOutput;
-    func reject_orthogonally_from(other: T) -> Output;
+    func reject_orthogonally_from(other: T) -> RejectOrthogonallyFromOutput;
 }
 public static const RejectOrthogonallyFromInfix reject_orthogonally_from = RejectOrthogonallyFromInfix();
 public struct RejectOrthogonallyFromInfix {}
-public struct RejectOrthogonallyFromInfixPartial<A> { a: A; }
+public struct RejectOrthogonallyFromInfixPartial<A> { internal A a; }
 __include "./impls/reject_orthogonally_from";

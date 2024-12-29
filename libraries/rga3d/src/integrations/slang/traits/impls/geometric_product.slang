@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<AntiScalar> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<AntiScalar> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<AntiScalar>(this);
     }
 }
 public extension GeometricProductInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -107,13 +109,13 @@ public extension AntiScalar: GeometricProduct<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<DualNum> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<DualNum> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<DualNum>(this);
     }
 }
 public extension GeometricProductInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -238,13 +240,13 @@ public extension DualNum: GeometricProduct<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Flector> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Flector> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Flector>(this);
     }
 }
 public extension GeometricProductInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -377,13 +379,13 @@ public extension Flector: GeometricProduct<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Horizon> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Horizon> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Horizon>(this);
     }
 }
 public extension GeometricProductInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Origin operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -508,13 +510,13 @@ public extension Horizon: GeometricProduct<Scalar> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Line> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Line> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Line>(this);
     }
 }
 public extension GeometricProductInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -645,13 +647,13 @@ public extension Line: GeometricProduct<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Motor> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Motor> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Motor>(this);
     }
 }
 public extension GeometricProductInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -784,13 +786,13 @@ public extension Motor: GeometricProduct<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<MultiVector> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<MultiVector> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<MultiVector>(this);
     }
 }
 public extension GeometricProductInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -983,13 +985,13 @@ public extension MultiVector: GeometricProduct<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Origin> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Origin> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Origin>(this);
     }
 }
 public extension GeometricProductInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(DualNum rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -1090,13 +1092,13 @@ public extension Origin: GeometricProduct<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Plane> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Plane> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Plane>(this);
     }
 }
 public extension GeometricProductInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Origin operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -1223,13 +1225,13 @@ public extension Plane: GeometricProduct<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Point> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Point> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Point>(this);
     }
 }
 public extension GeometricProductInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Plane operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }
@@ -1358,13 +1360,13 @@ public extension Point: GeometricProduct<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricProductInfix) -> GeometricProductInfixPartial<Scalar> {
-        return GeometricProductInfixPartial(this);
+    public GeometricProductInfixPartial<Scalar> operator /(GeometricProductInfix rhs) {
+        return GeometricProductInfixPartial<Scalar>(this);
     }
 }
 public extension GeometricProductInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.geometric_product(rhs);
     }
 }

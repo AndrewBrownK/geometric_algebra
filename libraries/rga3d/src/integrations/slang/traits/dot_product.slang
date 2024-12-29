@@ -7,5 +7,5 @@ public interface DotProduct<T> {
 }
 public static const DotProductInfix dot_product = DotProductInfix();
 public struct DotProductInfix {}
-public struct DotProductInfixPartial<A> { a: A; }
+public struct DotProductInfixPartial<A> { internal A a; }
 __include "./impls/dot_product";

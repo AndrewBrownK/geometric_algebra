@@ -1,8 +1,10 @@
+implementing rga3d;
+using traits;
 
 public extension AntiScalar: TryFrom<DualNum> {
     public static func try_from(DualNum dual_num) -> Optional<This> {
         float disallowed_scalar = dual_num.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         return AntiScalar.from_groups(
@@ -20,7 +22,7 @@ public extension DualNum: TryInto<AntiScalar> {
 public extension Scalar: TryFrom<DualNum> {
     public static func try_from(DualNum dual_num) -> Optional<This> {
         float disallowed_e1234 = dual_num.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         return Scalar.from_groups(
@@ -38,31 +40,31 @@ public extension DualNum: TryInto<Scalar> {
 public extension Horizon: TryFrom<Flector> {
     public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = flector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = flector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = flector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e423 = flector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = flector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = flector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         return Horizon.from_groups(
@@ -80,31 +82,31 @@ public extension Flector: TryInto<Horizon> {
 public extension Origin: TryFrom<Flector> {
     public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = flector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = flector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e423 = flector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = flector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = flector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = flector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Origin.from_groups(
@@ -122,19 +124,19 @@ public extension Flector: TryInto<Origin> {
 public extension Plane: TryFrom<Flector> {
     public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = flector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = flector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = flector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         return Plane.from_groups(
@@ -152,19 +154,19 @@ public extension Flector: TryInto<Plane> {
 public extension Point: TryFrom<Flector> {
     public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e423 = flector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = flector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = flector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = flector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Point.from_groups(
@@ -182,31 +184,31 @@ public extension Flector: TryInto<Point> {
 public extension AntiScalar: TryFrom<Motor> {
     public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = motor.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = motor.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = motor.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = motor.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = motor.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_scalar = motor.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         return AntiScalar.from_groups(
@@ -224,27 +226,27 @@ public extension Motor: TryInto<AntiScalar> {
 public extension DualNum: TryFrom<Motor> {
     public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = motor.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = motor.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = motor.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = motor.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = motor.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         return DualNum.from_groups(
@@ -262,11 +264,11 @@ public extension Motor: TryInto<DualNum> {
 public extension Line: TryFrom<Motor> {
     public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e1234 = motor.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_scalar = motor.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         return Line.from_groups(
@@ -286,31 +288,31 @@ public extension Motor: TryInto<Line> {
 public extension Scalar: TryFrom<Motor> {
     public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = motor.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = motor.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e1234 = motor.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e23 = motor.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = motor.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = motor.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         return Scalar.from_groups(
@@ -328,63 +330,63 @@ public extension Motor: TryInto<Scalar> {
 public extension AntiScalar: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return AntiScalar.from_groups(
@@ -402,59 +404,59 @@ public extension MultiVector: TryInto<AntiScalar> {
 public extension DualNum: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return DualNum.from_groups(
@@ -472,35 +474,35 @@ public extension MultiVector: TryInto<DualNum> {
 public extension Flector: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         return Flector.from_groups(
@@ -520,63 +522,63 @@ public extension MultiVector: TryInto<Flector> {
 public extension Horizon: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         return Horizon.from_groups(
@@ -594,43 +596,43 @@ public extension MultiVector: TryInto<Horizon> {
 public extension Line: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Line.from_groups(
@@ -650,35 +652,35 @@ public extension MultiVector: TryInto<Line> {
 public extension Motor: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Motor.from_groups(
@@ -698,63 +700,63 @@ public extension MultiVector: TryInto<Motor> {
 public extension Origin: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Origin.from_groups(
@@ -772,51 +774,51 @@ public extension MultiVector: TryInto<Origin> {
 public extension Plane: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         return Plane.from_groups(
@@ -834,51 +836,51 @@ public extension MultiVector: TryInto<Plane> {
 public extension Point: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
-        if disallowed_scalar != 0.0 {
+        if (disallowed_scalar != 0.0) {
             return none;
         }
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Point.from_groups(
@@ -896,63 +898,63 @@ public extension MultiVector: TryInto<Point> {
 public extension Scalar: TryFrom<MultiVector> {
     public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1234 = multi_vector.e1234;
-        if disallowed_e1234 != 0.0 {
+        if (disallowed_e1234 != 0.0) {
             return none;
         }
         float disallowed_e1 = multi_vector.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = multi_vector.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = multi_vector.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         float disallowed_e4 = multi_vector.e4;
-        if disallowed_e4 != 0.0 {
+        if (disallowed_e4 != 0.0) {
             return none;
         }
         float disallowed_e41 = multi_vector.e41;
-        if disallowed_e41 != 0.0 {
+        if (disallowed_e41 != 0.0) {
             return none;
         }
         float disallowed_e42 = multi_vector.e42;
-        if disallowed_e42 != 0.0 {
+        if (disallowed_e42 != 0.0) {
             return none;
         }
         float disallowed_e43 = multi_vector.e43;
-        if disallowed_e43 != 0.0 {
+        if (disallowed_e43 != 0.0) {
             return none;
         }
         float disallowed_e23 = multi_vector.e23;
-        if disallowed_e23 != 0.0 {
+        if (disallowed_e23 != 0.0) {
             return none;
         }
         float disallowed_e31 = multi_vector.e31;
-        if disallowed_e31 != 0.0 {
+        if (disallowed_e31 != 0.0) {
             return none;
         }
         float disallowed_e12 = multi_vector.e12;
-        if disallowed_e12 != 0.0 {
+        if (disallowed_e12 != 0.0) {
             return none;
         }
         float disallowed_e423 = multi_vector.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = multi_vector.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = multi_vector.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         float disallowed_e321 = multi_vector.e321;
-        if disallowed_e321 != 0.0 {
+        if (disallowed_e321 != 0.0) {
             return none;
         }
         return Scalar.from_groups(
@@ -970,15 +972,15 @@ public extension MultiVector: TryInto<Scalar> {
 public extension Horizon: TryFrom<Plane> {
     public static func try_from(Plane plane) -> Optional<This> {
         float disallowed_e423 = plane.e423;
-        if disallowed_e423 != 0.0 {
+        if (disallowed_e423 != 0.0) {
             return none;
         }
         float disallowed_e431 = plane.e431;
-        if disallowed_e431 != 0.0 {
+        if (disallowed_e431 != 0.0) {
             return none;
         }
         float disallowed_e412 = plane.e412;
-        if disallowed_e412 != 0.0 {
+        if (disallowed_e412 != 0.0) {
             return none;
         }
         return Horizon.from_groups(
@@ -996,15 +998,15 @@ public extension Plane: TryInto<Horizon> {
 public extension Origin: TryFrom<Point> {
     public static func try_from(Point point) -> Optional<This> {
         float disallowed_e1 = point.e1;
-        if disallowed_e1 != 0.0 {
+        if (disallowed_e1 != 0.0) {
             return none;
         }
         float disallowed_e2 = point.e2;
-        if disallowed_e2 != 0.0 {
+        if (disallowed_e2 != 0.0) {
             return none;
         }
         float disallowed_e3 = point.e3;
-        if disallowed_e3 != 0.0 {
+        if (disallowed_e3 != 0.0) {
             return none;
         }
         return Origin.from_groups(

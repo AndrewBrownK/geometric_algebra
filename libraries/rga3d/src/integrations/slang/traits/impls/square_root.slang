@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: SquareRootPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(SquareRootPrefixOrPostfix rhs)  {
         return this.square_root();
     }
     // Fancy postfix self-assign
-    public func operator/=(const SquareRootPrefixOrPostfix& _rhs) -> Scalar& {
+    public func operator /=(const SquareRootPrefixOrPostfix& rhs) -> Scalar& {
         this = this.square_root();
         return *this;
     }
 }
 public extension SquareRootPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public Scalar operator /(Scalar rhs) {
         return rhs.square_root();
     }
 }

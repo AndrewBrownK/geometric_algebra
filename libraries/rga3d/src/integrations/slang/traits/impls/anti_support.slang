@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public Horizon operator /(DualNum rhs) {
         return rhs.anti_support();
     }
 }
@@ -21,13 +23,13 @@ public extension DualNum: AntiSupport {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Motor {
+    public Motor operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Motor operator /(Flector rhs) {
         return rhs.anti_support();
     }
 }
@@ -50,13 +52,13 @@ public extension Flector: AntiSupport {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Scalar operator /(Horizon rhs) {
         return rhs.anti_support();
     }
 }
@@ -71,13 +73,13 @@ public extension Horizon: AntiSupport {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Point {
+    public Point operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Point operator /(Line rhs) {
         return rhs.anti_support();
     }
 }
@@ -92,13 +94,13 @@ public extension Line: AntiSupport {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Flector {
+    public Flector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Flector operator /(Motor rhs) {
         return rhs.anti_support();
     }
 }
@@ -125,18 +127,18 @@ public extension Motor: AntiSupport {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const AntiSupportPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.anti_support();
         return *this;
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.anti_support();
     }
 }
@@ -175,13 +177,13 @@ public extension MultiVector: AntiSupport {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Scalar operator /(Plane rhs) {
         return rhs.anti_support();
     }
 }
@@ -196,13 +198,13 @@ public extension Plane: AntiSupport {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Line {
+    public Line operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Line operator /(Point rhs) {
         return rhs.anti_support();
     }
 }
@@ -219,13 +221,13 @@ public extension Point: AntiSupport {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public Horizon operator /(Scalar rhs) {
         return rhs.anti_support();
     }
 }

@@ -1,14 +1,14 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
 public extension FlatWeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public AntiScalar operator /(Flector rhs) {
         return rhs.flat_weight_norm();
     }
 }
@@ -20,13 +20,13 @@ public extension Flector: FlatWeightNorm {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
 public extension FlatWeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public AntiScalar operator /(Line rhs) {
         return rhs.flat_weight_norm();
     }
 }
@@ -38,13 +38,13 @@ public extension Line: FlatWeightNorm {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
 public extension FlatWeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public AntiScalar operator /(Motor rhs) {
         return rhs.flat_weight_norm();
     }
 }
@@ -56,13 +56,13 @@ public extension Motor: FlatWeightNorm {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
 public extension FlatWeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public AntiScalar operator /(MultiVector rhs) {
         return rhs.flat_weight_norm();
     }
 }
@@ -74,13 +74,13 @@ public extension MultiVector: FlatWeightNorm {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
 public extension FlatWeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public AntiScalar operator /(Point rhs) {
         return rhs.flat_weight_norm();
     }
 }

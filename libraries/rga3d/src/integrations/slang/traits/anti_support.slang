@@ -4,7 +4,7 @@ implementing rga3d;using data;
 /// The anti-support is the anti-vector furthest from the origin that encloses the object.
 public interface AntiSupport {
     associatedtype AntiSupportOutput;
-    func anti_support() -> Output;
+    func anti_support() -> AntiSupportOutput;
 }
 public static const AntiSupportPrefixOrPostfix anti_support = AntiSupportPrefixOrPostfix();
 public struct AntiSupportPrefixOrPostfix {}

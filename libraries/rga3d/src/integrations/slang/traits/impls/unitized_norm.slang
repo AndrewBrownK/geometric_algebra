@@ -1,13 +1,14 @@
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
+    public float operator /(UnitizedNormPrefixOrPostfix rhs)  {
         return this.unitized_norm();
     }
 }
 public extension UnitizedNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public float operator /(Flector rhs) {
         return rhs.unitized_norm();
     }
 }
@@ -19,13 +20,13 @@ public extension Flector: UnitizedNorm {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
+    public float operator /(UnitizedNormPrefixOrPostfix rhs)  {
         return this.unitized_norm();
     }
 }
 public extension UnitizedNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public float operator /(Line rhs) {
         return rhs.unitized_norm();
     }
 }
@@ -37,13 +38,13 @@ public extension Line: UnitizedNorm {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
+    public float operator /(UnitizedNormPrefixOrPostfix rhs)  {
         return this.unitized_norm();
     }
 }
 public extension UnitizedNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public float operator /(Motor rhs) {
         return rhs.unitized_norm();
     }
 }
@@ -55,13 +56,13 @@ public extension Motor: UnitizedNorm {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
+    public float operator /(UnitizedNormPrefixOrPostfix rhs)  {
         return this.unitized_norm();
     }
 }
 public extension UnitizedNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public float operator /(MultiVector rhs) {
         return rhs.unitized_norm();
     }
 }
@@ -73,13 +74,13 @@ public extension MultiVector: UnitizedNorm {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizedNormPrefixOrPostfix) -> float {
+    public float operator /(UnitizedNormPrefixOrPostfix rhs)  {
         return this.unitized_norm();
     }
 }
 public extension UnitizedNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public float operator /(Point rhs) {
         return rhs.unitized_norm();
     }
 }

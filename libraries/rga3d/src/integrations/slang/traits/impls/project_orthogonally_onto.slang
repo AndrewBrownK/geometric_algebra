@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<DualNum> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<DualNum> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<DualNum>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -163,13 +165,13 @@ public extension DualNum: ProjectOrthogonallyOnto<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Flector> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Flector> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Flector>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -326,13 +328,13 @@ public extension Flector: ProjectOrthogonallyOnto<Point> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Horizon> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Horizon> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Horizon>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -392,13 +394,13 @@ public extension Horizon: ProjectOrthogonallyOnto<Plane> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Line> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Line> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Line>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Motor operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -538,13 +540,13 @@ public extension Line: ProjectOrthogonallyOnto<Plane> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Motor> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Motor> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Motor>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -733,13 +735,13 @@ public extension Motor: ProjectOrthogonallyOnto<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<MultiVector> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<MultiVector> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<MultiVector>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -1008,13 +1010,13 @@ public extension MultiVector: ProjectOrthogonallyOnto<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Origin> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Origin> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Origin>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Point operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -1058,13 +1060,13 @@ public extension Origin: ProjectOrthogonallyOnto<MultiVector> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Plane> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Plane> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Plane>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -1142,13 +1144,13 @@ public extension Plane: ProjectOrthogonallyOnto<Plane> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Point> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Point> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Point>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }
@@ -1299,13 +1301,13 @@ public extension Point: ProjectOrthogonallyOnto<Point> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectOrthogonallyOntoInfix) -> ProjectOrthogonallyOntoInfixPartial<Scalar> {
-        return ProjectOrthogonallyOntoInfixPartial(this);
+    public ProjectOrthogonallyOntoInfixPartial<Scalar> operator /(ProjectOrthogonallyOntoInfix rhs) {
+        return ProjectOrthogonallyOntoInfixPartial<Scalar>(this);
     }
 }
 public extension ProjectOrthogonallyOntoInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_orthogonally_onto(rhs);
     }
 }

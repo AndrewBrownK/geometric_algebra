@@ -1,14 +1,14 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
         return this.norm_squared();
     }
 }
 public extension NormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public DualNum operator /(Flector rhs) {
         return rhs.norm_squared();
     }
 }
@@ -23,13 +23,13 @@ public extension Flector: NormSquared {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
         return this.norm_squared();
     }
 }
 public extension NormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public DualNum operator /(Line rhs) {
         return rhs.norm_squared();
     }
 }
@@ -44,13 +44,13 @@ public extension Line: NormSquared {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
         return this.norm_squared();
     }
 }
 public extension NormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public DualNum operator /(Motor rhs) {
         return rhs.norm_squared();
     }
 }
@@ -65,13 +65,13 @@ public extension Motor: NormSquared {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
         return this.norm_squared();
     }
 }
 public extension NormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public DualNum operator /(MultiVector rhs) {
         return rhs.norm_squared();
     }
 }
@@ -86,13 +86,13 @@ public extension MultiVector: NormSquared {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: NormSquaredPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
         return this.norm_squared();
     }
 }
 public extension NormSquaredPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public DualNum operator /(Point rhs) {
         return rhs.norm_squared();
     }
 }

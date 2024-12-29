@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<AntiScalar> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<AntiScalar> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<AntiScalar>(this);
     }
 }
 public extension AntiDotProductInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -48,13 +50,13 @@ public extension AntiScalar: AntiDotProduct<MultiVector> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<DualNum> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<DualNum> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<DualNum>(this);
     }
 }
 public extension AntiDotProductInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -96,13 +98,13 @@ public extension DualNum: AntiDotProduct<MultiVector> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Flector> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Flector> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Flector>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public AntiScalar operator /(Flector rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -153,13 +155,13 @@ public extension Flector: AntiDotProduct<Point> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Line> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Line> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Line>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public AntiScalar operator /(Line rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -192,13 +194,13 @@ public extension Line: AntiDotProduct<MultiVector> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Motor> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Motor> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Motor>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -249,13 +251,13 @@ public extension Motor: AntiDotProduct<MultiVector> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<MultiVector> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<MultiVector> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<MultiVector>(this);
     }
 }
 public extension AntiDotProductInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -342,13 +344,13 @@ public extension MultiVector: AntiDotProduct<Point> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Origin> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Origin> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Origin>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public AntiScalar operator /(Flector rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -390,13 +392,13 @@ public extension Origin: AntiDotProduct<Point> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Plane> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Plane> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Plane>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public AntiScalar operator /(Flector rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }
@@ -429,13 +431,13 @@ public extension Plane: AntiDotProduct<Plane> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiDotProductInfix) -> AntiDotProductInfixPartial<Point> {
-        return AntiDotProductInfixPartial(this);
+    public AntiDotProductInfixPartial<Point> operator /(AntiDotProductInfix rhs) {
+        return AntiDotProductInfixPartial<Point>(this);
     }
 }
 public extension AntiDotProductInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public AntiScalar operator /(Flector rhs) {
         return this.a.anti_dot_product(rhs);
     }
 }

@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: AntiSquareRootPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(AntiSquareRootPrefixOrPostfix rhs)  {
         return this.anti_square_root();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiSquareRootPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const AntiSquareRootPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.anti_square_root();
         return *this;
     }
 }
 public extension AntiSquareRootPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.anti_square_root();
     }
 }

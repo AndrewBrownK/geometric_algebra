@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public Scalar operator /(AntiScalar rhs) {
         return rhs.left_complement();
     }
 }
@@ -21,18 +23,18 @@ public extension AntiScalar: LeftComplement {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const LeftComplementPrefixOrPostfix& _rhs) -> DualNum& {
+    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> DualNum& {
         this = this.left_complement();
         return *this;
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return rhs.left_complement();
     }
 }
@@ -47,18 +49,18 @@ public extension DualNum: LeftComplement {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Flector {
+    public Flector operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const LeftComplementPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Flector& {
         this = this.left_complement();
         return *this;
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.left_complement();
     }
 }
@@ -75,13 +77,13 @@ public extension Flector: LeftComplement {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Origin {
+    public Origin operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Origin operator /(Horizon rhs) {
         return rhs.left_complement();
     }
 }
@@ -96,18 +98,18 @@ public extension Horizon: LeftComplement {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Line {
+    public Line operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const LeftComplementPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Line& {
         this = this.left_complement();
         return *this;
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.left_complement();
     }
 }
@@ -124,18 +126,18 @@ public extension Line: LeftComplement {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Motor {
+    public Motor operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const LeftComplementPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Motor& {
         this = this.left_complement();
         return *this;
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.left_complement();
     }
 }
@@ -152,18 +154,18 @@ public extension Motor: LeftComplement {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const LeftComplementPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.left_complement();
         return *this;
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.left_complement();
     }
 }
@@ -186,13 +188,13 @@ public extension MultiVector: LeftComplement {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Horizon operator /(Origin rhs) {
         return rhs.left_complement();
     }
 }
@@ -207,13 +209,13 @@ public extension Origin: LeftComplement {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Point {
+    public Point operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Point operator /(Plane rhs) {
         return rhs.left_complement();
     }
 }
@@ -228,13 +230,13 @@ public extension Plane: LeftComplement {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> Plane {
+    public Plane operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Plane operator /(Point rhs) {
         return rhs.left_complement();
     }
 }
@@ -249,13 +251,13 @@ public extension Point: LeftComplement {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: LeftComplementPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public AntiScalar operator /(Scalar rhs) {
         return rhs.left_complement();
     }
 }

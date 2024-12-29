@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<AntiScalar> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<AntiScalar> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<AntiScalar>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -199,13 +201,13 @@ public extension AntiScalar: GeometricAntiQuotient<Point> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<DualNum> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<DualNum> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<DualNum>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -404,13 +406,13 @@ public extension DualNum: GeometricAntiQuotient<Point> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Flector> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Flector> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Flector>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -617,13 +619,13 @@ public extension Flector: GeometricAntiQuotient<Point> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Horizon> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Horizon> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Horizon>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Horizon operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -798,13 +800,13 @@ public extension Horizon: GeometricAntiQuotient<Point> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Line> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Line> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Line>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -1011,13 +1013,13 @@ public extension Line: GeometricAntiQuotient<Point> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Motor> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Motor> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Motor>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -1224,13 +1226,13 @@ public extension Motor: GeometricAntiQuotient<Point> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<MultiVector> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<MultiVector> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<MultiVector>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -1485,13 +1487,13 @@ public extension MultiVector: GeometricAntiQuotient<Point> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Origin> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Origin> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Origin>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -1686,13 +1688,13 @@ public extension Origin: GeometricAntiQuotient<Point> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Plane> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Plane> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Plane>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Plane operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -1893,13 +1895,13 @@ public extension Plane: GeometricAntiQuotient<Point> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Point> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Point> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Point>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Point operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }
@@ -2100,13 +2102,13 @@ public extension Point: GeometricAntiQuotient<Point> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricAntiQuotientInfix) -> GeometricAntiQuotientInfixPartial<Scalar> {
-        return GeometricAntiQuotientInfixPartial(this);
+    public GeometricAntiQuotientInfixPartial<Scalar> operator /(GeometricAntiQuotientInfix rhs) {
+        return GeometricAntiQuotientInfixPartial<Scalar>(this);
     }
 }
 public extension GeometricAntiQuotientInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public Scalar operator /(AntiScalar rhs) {
         return this.a.geometric_anti_quotient(rhs);
     }
 }

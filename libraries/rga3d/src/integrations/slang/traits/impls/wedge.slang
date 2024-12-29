@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<AntiScalar> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<AntiScalar> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<AntiScalar>(this);
     }
 }
 public extension WedgeInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -48,13 +50,13 @@ public extension AntiScalar: Wedge<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<DualNum> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<DualNum> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<DualNum>(this);
     }
 }
 public extension WedgeInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -173,13 +175,13 @@ public extension DualNum: Wedge<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Flector> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Flector> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Flector>(this);
     }
 }
 public extension WedgeInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -295,13 +297,13 @@ public extension Flector: Wedge<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Horizon> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Horizon> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Horizon>(this);
     }
 }
 public extension WedgeInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Horizon operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -378,13 +380,13 @@ public extension Horizon: Wedge<Scalar> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Line> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Line> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Line>(this);
     }
 }
 public extension WedgeInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -476,13 +478,13 @@ public extension Line: Wedge<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Motor> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Motor> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Motor>(this);
     }
 }
 public extension WedgeInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -609,13 +611,13 @@ public extension Motor: Wedge<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<MultiVector> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<MultiVector> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<MultiVector>(this);
     }
 }
 public extension WedgeInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -800,13 +802,13 @@ public extension MultiVector: Wedge<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Origin> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Origin> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Origin>(this);
     }
 }
 public extension WedgeInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -907,13 +909,13 @@ public extension Origin: Wedge<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Plane> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Plane> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Plane>(this);
     }
 }
 public extension WedgeInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Plane operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -990,13 +992,13 @@ public extension Plane: Wedge<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Point> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Point> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Point>(this);
     }
 }
 public extension WedgeInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Point operator /(DualNum rhs) {
         return this.a.wedge(rhs);
     }
 }
@@ -1108,13 +1110,13 @@ public extension Point: Wedge<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: WedgeInfix) -> WedgeInfixPartial<Scalar> {
-        return WedgeInfixPartial(this);
+    public WedgeInfixPartial<Scalar> operator /(WedgeInfix rhs) {
+        return WedgeInfixPartial<Scalar>(this);
     }
 }
 public extension WedgeInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.wedge(rhs);
     }
 }

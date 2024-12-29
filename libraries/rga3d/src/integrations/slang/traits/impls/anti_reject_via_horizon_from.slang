@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<AntiScalar> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<AntiScalar> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<AntiScalar>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -74,13 +76,13 @@ public extension AntiScalar: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<DualNum> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<DualNum> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<DualNum>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -247,13 +249,13 @@ public extension DualNum: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Flector> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Flector> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Flector>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -446,13 +448,13 @@ public extension Flector: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Horizon> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Horizon> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Horizon>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Horizon operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -568,13 +570,13 @@ public extension Horizon: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Line> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Line> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Line>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -737,13 +739,13 @@ public extension Line: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Motor> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Motor> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Motor>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -940,13 +942,13 @@ public extension Motor: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<MultiVector> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<MultiVector> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<MultiVector>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -1263,13 +1265,13 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Origin> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Origin> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Origin>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -1436,13 +1438,13 @@ public extension Origin: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Plane> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Plane> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Plane>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Plane operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -1558,13 +1560,13 @@ public extension Plane: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Point> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Point> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Point>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Point operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
@@ -1731,13 +1733,13 @@ public extension Point: AntiRejectViaHorizonFrom<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiRejectViaHorizonFromInfix) -> AntiRejectViaHorizonFromInfixPartial<Scalar> {
-        return AntiRejectViaHorizonFromInfixPartial(this);
+    public AntiRejectViaHorizonFromInfixPartial<Scalar> operator /(AntiRejectViaHorizonFromInfix rhs) {
+        return AntiRejectViaHorizonFromInfixPartial<Scalar>(this);
     }
 }
 public extension AntiRejectViaHorizonFromInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }

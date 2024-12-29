@@ -1395,14 +1395,14 @@ impl BinaryOps {
     // TODO return a result type here, the panics are terrible
     pub fn slang_trait_method(self) -> &'static str {
         match self {
-            BinaryOps::Add => "operator+",
-            BinaryOps::Sub => "operator-",
-            BinaryOps::Mul => "operator*",
-            BinaryOps::Div => "operator/",
+            BinaryOps::Add => "operator +",
+            BinaryOps::Sub => "operator -",
+            BinaryOps::Mul => "operator *",
+            BinaryOps::Div => "operator /",
             BinaryOps::Shl => panic!("Shl operator not supported in slang"),
             BinaryOps::Shr => panic!("Shr operator not supported in slang"),
-            BinaryOps::BitAnd => "operator&",
-            BinaryOps::BitOr => "operator|",
+            BinaryOps::BitAnd => "operator &",
+            BinaryOps::BitOr => "operator |",
             BinaryOps::BitXor => panic!("bitxor operator not supported in slang"),
         }
     }

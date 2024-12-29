@@ -1,14 +1,14 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<AntiScalar> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<AntiScalar> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<AntiScalar>(this);
     }
 }
 public extension AntiSandwichInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -127,13 +127,13 @@ public extension AntiScalar: AntiSandwich<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<DualNum> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<DualNum> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<DualNum>(this);
     }
 }
 public extension AntiSandwichInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -258,13 +258,13 @@ public extension DualNum: AntiSandwich<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Flector> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Flector> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Flector>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -397,13 +397,13 @@ public extension Flector: AntiSandwich<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Horizon> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Horizon> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Horizon>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -468,13 +468,13 @@ public extension Horizon: AntiSandwich<Plane> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Line> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Line> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Line>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -605,13 +605,13 @@ public extension Line: AntiSandwich<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Motor> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Motor> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Motor>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -744,13 +744,13 @@ public extension Motor: AntiSandwich<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<MultiVector> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<MultiVector> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<MultiVector>(this);
     }
 }
 public extension AntiSandwichInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -943,13 +943,13 @@ public extension MultiVector: AntiSandwich<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Origin> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Origin> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Origin>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -1074,13 +1074,13 @@ public extension Origin: AntiSandwich<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Plane> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Plane> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Plane>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -1209,13 +1209,13 @@ public extension Plane: AntiSandwich<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Point> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Point> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Point>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Motor operator /(AntiScalar rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }
@@ -1342,13 +1342,13 @@ public extension Point: AntiSandwich<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiSandwichInfix) -> AntiSandwichInfixPartial<Scalar> {
-        return AntiSandwichInfixPartial(this);
+    public AntiSandwichInfixPartial<Scalar> operator /(AntiSandwichInfix rhs) {
+        return AntiSandwichInfixPartial<Scalar>(this);
     }
 }
 public extension AntiSandwichInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.anti_sandwich(rhs);
     }
 }

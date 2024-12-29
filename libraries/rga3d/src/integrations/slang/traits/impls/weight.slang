@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.weight();
     }
 }
@@ -23,13 +25,13 @@ public extension AntiScalar: Weight {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return rhs.weight();
     }
 }
@@ -44,18 +46,18 @@ public extension DualNum: Weight {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Flector {
+    public Flector operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> Flector& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.weight();
     }
 }
@@ -72,18 +74,18 @@ public extension Flector: Weight {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Line {
+    public Line operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> Line& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.weight();
     }
 }
@@ -100,18 +102,18 @@ public extension Line: Weight {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Motor {
+    public Motor operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> Motor& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.weight();
     }
 }
@@ -128,18 +130,18 @@ public extension Motor: Weight {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.weight();
     }
 }
@@ -162,18 +164,18 @@ public extension MultiVector: Weight {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Origin {
+    public Origin operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> Origin& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.weight();
     }
 }
@@ -185,18 +187,18 @@ public extension Origin: Weight {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Plane {
+    public Plane operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightPrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const WeightPrefixOrPostfix& rhs) -> Plane& {
         this = this.weight();
         return *this;
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.weight();
     }
 }
@@ -211,13 +213,13 @@ public extension Plane: Weight {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: WeightPrefixOrPostfix) -> Origin {
+    public Origin operator /(WeightPrefixOrPostfix rhs)  {
         return this.weight();
     }
 }
 public extension WeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Origin operator /(Point rhs) {
         return rhs.weight();
     }
 }

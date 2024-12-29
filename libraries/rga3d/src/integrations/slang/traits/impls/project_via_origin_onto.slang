@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<DualNum> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<DualNum> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<DualNum>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -163,13 +165,13 @@ public extension DualNum: ProjectViaOriginOnto<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Flector> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Flector> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Flector>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -326,13 +328,13 @@ public extension Flector: ProjectViaOriginOnto<Point> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Horizon> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Horizon> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Horizon>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -392,13 +394,13 @@ public extension Horizon: ProjectViaOriginOnto<Plane> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Line> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Line> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Line>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Motor operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -538,13 +540,13 @@ public extension Line: ProjectViaOriginOnto<Plane> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Motor> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Motor> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Motor>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -733,13 +735,13 @@ public extension Motor: ProjectViaOriginOnto<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<MultiVector> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<MultiVector> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<MultiVector>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -1008,13 +1010,13 @@ public extension MultiVector: ProjectViaOriginOnto<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Origin> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Origin> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Origin>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Point operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -1058,13 +1060,13 @@ public extension Origin: ProjectViaOriginOnto<MultiVector> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Plane> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Plane> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Plane>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -1142,13 +1144,13 @@ public extension Plane: ProjectViaOriginOnto<Plane> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Point> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Point> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Point>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }
@@ -1299,13 +1301,13 @@ public extension Point: ProjectViaOriginOnto<Point> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: ProjectViaOriginOntoInfix) -> ProjectViaOriginOntoInfixPartial<Scalar> {
-        return ProjectViaOriginOntoInfixPartial(this);
+    public ProjectViaOriginOntoInfixPartial<Scalar> operator /(ProjectViaOriginOntoInfix rhs) {
+        return ProjectViaOriginOntoInfixPartial<Scalar>(this);
     }
 }
 public extension ProjectViaOriginOntoInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.project_via_origin_onto(rhs);
     }
 }

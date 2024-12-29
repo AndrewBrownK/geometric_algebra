@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return rhs.right_dual();
     }
 }
@@ -21,18 +23,18 @@ public extension DualNum: RightDual {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Flector {
+    public Flector operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Flector& {
         this = this.right_dual();
         return *this;
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.right_dual();
     }
 }
@@ -49,13 +51,13 @@ public extension Flector: RightDual {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Origin {
+    public Origin operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Origin operator /(Horizon rhs) {
         return rhs.right_dual();
     }
 }
@@ -70,18 +72,18 @@ public extension Horizon: RightDual {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Line {
+    public Line operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Line& {
         this = this.right_dual();
         return *this;
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.right_dual();
     }
 }
@@ -98,18 +100,18 @@ public extension Line: RightDual {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Motor {
+    public Motor operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightDualPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Motor& {
         this = this.right_dual();
         return *this;
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.right_dual();
     }
 }
@@ -126,18 +128,18 @@ public extension Motor: RightDual {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightDualPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.right_dual();
         return *this;
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.right_dual();
     }
 }
@@ -160,13 +162,13 @@ public extension MultiVector: RightDual {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Origin {
+    public Origin operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Origin operator /(Plane rhs) {
         return rhs.right_dual();
     }
 }
@@ -181,13 +183,13 @@ public extension Plane: RightDual {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> Plane {
+    public Plane operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Plane operator /(Point rhs) {
         return rhs.right_dual();
     }
 }
@@ -202,13 +204,13 @@ public extension Point: RightDual {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: RightDualPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public AntiScalar operator /(Scalar rhs) {
         return rhs.right_dual();
     }
 }

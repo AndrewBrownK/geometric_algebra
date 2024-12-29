@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<AntiScalar> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<AntiScalar> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<AntiScalar>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -173,13 +175,13 @@ public extension AntiScalar: RejectOrthogonallyFrom<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<DualNum> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<DualNum> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<DualNum>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -346,13 +348,13 @@ public extension DualNum: RejectOrthogonallyFrom<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Flector> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Flector> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Flector>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -513,13 +515,13 @@ public extension Flector: RejectOrthogonallyFrom<Point> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Horizon> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Horizon> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Horizon>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -647,13 +649,13 @@ public extension Horizon: RejectOrthogonallyFrom<Point> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Line> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Line> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Line>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Motor operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -777,13 +779,13 @@ public extension Line: RejectOrthogonallyFrom<Plane> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Motor> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Motor> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Motor>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -968,13 +970,13 @@ public extension Motor: RejectOrthogonallyFrom<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<MultiVector> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<MultiVector> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<MultiVector>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -1243,13 +1245,13 @@ public extension MultiVector: RejectOrthogonallyFrom<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Origin> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Origin> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Origin>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -1335,13 +1337,13 @@ public extension Origin: RejectOrthogonallyFrom<Plane> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Plane> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Plane> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Plane>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -1478,13 +1480,13 @@ public extension Plane: RejectOrthogonallyFrom<Point> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Point> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Point> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Point>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Flector operator /(Flector rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }
@@ -1589,13 +1591,13 @@ public extension Point: RejectOrthogonallyFrom<Plane> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: RejectOrthogonallyFromInfix) -> RejectOrthogonallyFromInfixPartial<Scalar> {
-        return RejectOrthogonallyFromInfixPartial(this);
+    public RejectOrthogonallyFromInfixPartial<Scalar> operator /(RejectOrthogonallyFromInfix rhs) {
+        return RejectOrthogonallyFromInfixPartial<Scalar>(this);
     }
 }
 public extension RejectOrthogonallyFromInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.reject_orthogonally_from(rhs);
     }
 }

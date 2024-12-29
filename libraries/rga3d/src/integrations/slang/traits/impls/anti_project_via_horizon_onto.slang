@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<AntiScalar> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<AntiScalar> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<AntiScalar>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -157,13 +159,13 @@ public extension AntiScalar: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<DualNum> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<DualNum> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<DualNum>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -328,13 +330,13 @@ public extension DualNum: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Flector> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Flector> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Flector>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -527,13 +529,13 @@ public extension Flector: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Horizon> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Horizon> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Horizon>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Horizon operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -690,13 +692,13 @@ public extension Horizon: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Line> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Line> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Line>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -869,13 +871,13 @@ public extension Line: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Motor> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Motor> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Motor>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -1072,13 +1074,13 @@ public extension Motor: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<MultiVector> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<MultiVector> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<MultiVector>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -1395,13 +1397,13 @@ public extension MultiVector: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Origin> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Origin> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Origin>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -1461,13 +1463,13 @@ public extension Origin: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Plane> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Plane> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Plane>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Plane operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -1642,13 +1644,13 @@ public extension Plane: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Point> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Point> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Point>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Point operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }
@@ -1770,13 +1772,13 @@ public extension Point: AntiProjectViaHorizonOnto<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: AntiProjectViaHorizonOntoInfix) -> AntiProjectViaHorizonOntoInfixPartial<Scalar> {
-        return AntiProjectViaHorizonOntoInfixPartial(this);
+    public AntiProjectViaHorizonOntoInfixPartial<Scalar> operator /(AntiProjectViaHorizonOntoInfix rhs) {
+        return AntiProjectViaHorizonOntoInfixPartial<Scalar>(this);
     }
 }
 public extension AntiProjectViaHorizonOntoInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.anti_project_via_horizon_onto(rhs);
     }
 }

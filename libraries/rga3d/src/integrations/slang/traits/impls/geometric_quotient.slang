@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<AntiScalar> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<AntiScalar> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<AntiScalar>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<AntiScalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> AntiScalar.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -175,13 +177,13 @@ public extension AntiScalar: GeometricQuotient<Scalar> {
 }
 public extension DualNum {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<DualNum> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<DualNum> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<DualNum>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<DualNum> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -380,13 +382,13 @@ public extension DualNum: GeometricQuotient<Scalar> {
 }
 public extension Flector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Flector> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Flector> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Flector>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Flector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Flector.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -593,13 +595,13 @@ public extension Flector: GeometricQuotient<Scalar> {
 }
 public extension Horizon {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Horizon> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Horizon> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Horizon>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Horizon> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Horizon.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -794,13 +796,13 @@ public extension Horizon: GeometricQuotient<Scalar> {
 }
 public extension Line {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Line> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Line> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Line>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Line> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Line.Output {
+    public Line operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -1007,13 +1009,13 @@ public extension Line: GeometricQuotient<Scalar> {
 }
 public extension Motor {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Motor> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Motor> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Motor>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Motor> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Motor.Output {
+    public Motor operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -1220,13 +1222,13 @@ public extension Motor: GeometricQuotient<Scalar> {
 }
 public extension MultiVector {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<MultiVector> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<MultiVector> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<MultiVector>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<MultiVector> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> MultiVector.Output {
+    public MultiVector operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -1481,13 +1483,13 @@ public extension MultiVector: GeometricQuotient<Scalar> {
 }
 public extension Origin {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Origin> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Origin> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Origin>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Origin> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Origin.Output {
+    public Origin operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -1662,13 +1664,13 @@ public extension Origin: GeometricQuotient<Scalar> {
 }
 public extension Plane {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Plane> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Plane> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Plane>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Plane> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Plane.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -1869,13 +1871,13 @@ public extension Plane: GeometricQuotient<Scalar> {
 }
 public extension Point {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Point> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Point> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Point>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Point> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Point.Output {
+    public Flector operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }
@@ -2076,13 +2078,13 @@ public extension Point: GeometricQuotient<Scalar> {
 }
 public extension Scalar {
     // Fancy infix trick (first half)
-    public func operator/(_rhs: GeometricQuotientInfix) -> GeometricQuotientInfixPartial<Scalar> {
-        return GeometricQuotientInfixPartial(this);
+    public GeometricQuotientInfixPartial<Scalar> operator /(GeometricQuotientInfix rhs) {
+        return GeometricQuotientInfixPartial<Scalar>(this);
     }
 }
 public extension GeometricQuotientInfixPartial<Scalar> {
     // Fancy infix trick (second half)
-    public func operator/(rhs: B) -> Scalar.Output {
+    public DualNum operator /(DualNum rhs) {
         return this.a.geometric_quotient(rhs);
     }
 }

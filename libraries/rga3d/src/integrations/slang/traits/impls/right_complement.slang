@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public Scalar operator /(AntiScalar rhs) {
         return rhs.right_complement();
     }
 }
@@ -21,18 +23,18 @@ public extension AntiScalar: RightComplement {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> DualNum {
+    public DualNum operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> DualNum& {
+    public func operator /=(const RightComplementPrefixOrPostfix& rhs) -> DualNum& {
         this = this.right_complement();
         return *this;
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return rhs.right_complement();
     }
 }
@@ -47,18 +49,18 @@ public extension DualNum: RightComplement {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Flector {
+    public Flector operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const RightComplementPrefixOrPostfix& rhs) -> Flector& {
         this = this.right_complement();
         return *this;
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.right_complement();
     }
 }
@@ -75,13 +77,13 @@ public extension Flector: RightComplement {
 }
 public extension Horizon {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Origin {
+    public Origin operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Horizon) -> Horizon.Output {
+    public Origin operator /(Horizon rhs) {
         return rhs.right_complement();
     }
 }
@@ -96,18 +98,18 @@ public extension Horizon: RightComplement {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Line {
+    public Line operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const RightComplementPrefixOrPostfix& rhs) -> Line& {
         this = this.right_complement();
         return *this;
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.right_complement();
     }
 }
@@ -124,18 +126,18 @@ public extension Line: RightComplement {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Motor {
+    public Motor operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const RightComplementPrefixOrPostfix& rhs) -> Motor& {
         this = this.right_complement();
         return *this;
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.right_complement();
     }
 }
@@ -152,18 +154,18 @@ public extension Motor: RightComplement {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
     // Fancy postfix self-assign
-    public func operator/=(const RightComplementPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const RightComplementPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.right_complement();
         return *this;
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.right_complement();
     }
 }
@@ -186,13 +188,13 @@ public extension MultiVector: RightComplement {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Horizon {
+    public Horizon operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Horizon operator /(Origin rhs) {
         return rhs.right_complement();
     }
 }
@@ -207,13 +209,13 @@ public extension Origin: RightComplement {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Point {
+    public Point operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Point operator /(Plane rhs) {
         return rhs.right_complement();
     }
 }
@@ -228,13 +230,13 @@ public extension Plane: RightComplement {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> Plane {
+    public Plane operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Plane operator /(Point rhs) {
         return rhs.right_complement();
     }
 }
@@ -249,13 +251,13 @@ public extension Point: RightComplement {
 }
 public extension Scalar {
     // Fancy postfix trick
-    func operator/(_rhs: RightComplementPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(RightComplementPrefixOrPostfix rhs)  {
         return this.right_complement();
     }
 }
 public extension RightComplementPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Scalar) -> Scalar.Output {
+    public AntiScalar operator /(Scalar rhs) {
         return rhs.right_complement();
     }
 }

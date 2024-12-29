@@ -1,19 +1,19 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
     // Fancy postfix self-assign
-    public func operator/=(const WeightNormPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const WeightNormPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.weight_norm();
         return *this;
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.weight_norm();
     }
 }
@@ -25,13 +25,13 @@ public extension AntiScalar: WeightNorm {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return rhs.weight_norm();
     }
 }
@@ -43,13 +43,13 @@ public extension DualNum: WeightNorm {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public AntiScalar operator /(Flector rhs) {
         return rhs.weight_norm();
     }
 }
@@ -61,13 +61,13 @@ public extension Flector: WeightNorm {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public AntiScalar operator /(Line rhs) {
         return rhs.weight_norm();
     }
 }
@@ -79,13 +79,13 @@ public extension Line: WeightNorm {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public AntiScalar operator /(Motor rhs) {
         return rhs.weight_norm();
     }
 }
@@ -97,13 +97,13 @@ public extension Motor: WeightNorm {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public AntiScalar operator /(MultiVector rhs) {
         return rhs.weight_norm();
     }
 }
@@ -115,13 +115,13 @@ public extension MultiVector: WeightNorm {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public AntiScalar operator /(Origin rhs) {
         return rhs.weight_norm();
     }
 }
@@ -133,13 +133,13 @@ public extension Origin: WeightNorm {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public AntiScalar operator /(Plane rhs) {
         return rhs.weight_norm();
     }
 }
@@ -151,13 +151,13 @@ public extension Plane: WeightNorm {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: WeightNormPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public AntiScalar operator /(Point rhs) {
         return rhs.weight_norm();
     }
 }

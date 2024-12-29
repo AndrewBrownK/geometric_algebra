@@ -1,19 +1,19 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.unitize();
     }
 }
@@ -28,18 +28,18 @@ public extension AntiScalar: Unitize {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> DualNum {
+    public DualNum operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> DualNum& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> DualNum& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public DualNum operator /(DualNum rhs) {
         return rhs.unitize();
     }
 }
@@ -54,18 +54,18 @@ public extension DualNum: Unitize {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Flector {
+    public Flector operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Flector& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.unitize();
     }
 }
@@ -86,18 +86,18 @@ public extension Flector: Unitize {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Line {
+    public Line operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Line& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.unitize();
     }
 }
@@ -118,18 +118,18 @@ public extension Line: Unitize {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Motor {
+    public Motor operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Motor& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.unitize();
     }
 }
@@ -150,18 +150,18 @@ public extension Motor: Unitize {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> MultiVector& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.unitize();
     }
 }
@@ -188,18 +188,18 @@ public extension MultiVector: Unitize {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Origin {
+    public Origin operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Origin& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.unitize();
     }
 }
@@ -214,18 +214,18 @@ public extension Origin: Unitize {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Plane {
+    public Plane operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Plane& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.unitize();
     }
 }
@@ -240,18 +240,18 @@ public extension Plane: Unitize {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Point {
+    public Point operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
     // Fancy postfix self-assign
-    public func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Point& {
+    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Point& {
         this = this.unitize();
         return *this;
     }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Point operator /(Point rhs) {
         return rhs.unitize();
     }
 }

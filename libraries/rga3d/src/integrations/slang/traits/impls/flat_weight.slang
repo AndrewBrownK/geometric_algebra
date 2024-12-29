@@ -1,17 +1,19 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> AntiScalar& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> AntiScalar& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: AntiScalar) -> AntiScalar.Output {
+    public AntiScalar operator /(AntiScalar rhs) {
         return rhs.flat_weight();
     }
 }
@@ -23,13 +25,13 @@ public extension AntiScalar: FlatWeight {
 }
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> AntiScalar {
+    public AntiScalar operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public AntiScalar operator /(DualNum rhs) {
         return rhs.flat_weight();
     }
 }
@@ -44,18 +46,18 @@ public extension DualNum: FlatWeight {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Flector {
+    public Flector operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Flector& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> Flector& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Flector operator /(Flector rhs) {
         return rhs.flat_weight();
     }
 }
@@ -72,18 +74,18 @@ public extension Flector: FlatWeight {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Line {
+    public Line operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Line& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> Line& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Line operator /(Line rhs) {
         return rhs.flat_weight();
     }
 }
@@ -100,18 +102,18 @@ public extension Line: FlatWeight {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Motor {
+    public Motor operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Motor& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> Motor& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Motor operator /(Motor rhs) {
         return rhs.flat_weight();
     }
 }
@@ -128,18 +130,18 @@ public extension Motor: FlatWeight {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.flat_weight();
     }
 }
@@ -162,18 +164,18 @@ public extension MultiVector: FlatWeight {
 }
 public extension Origin {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Origin {
+    public Origin operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Origin& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> Origin& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Origin) -> Origin.Output {
+    public Origin operator /(Origin rhs) {
         return rhs.flat_weight();
     }
 }
@@ -185,18 +187,18 @@ public extension Origin: FlatWeight {
 }
 public extension Plane {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Plane {
+    public Plane operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
     // Fancy postfix self-assign
-    public func operator/=(const FlatWeightPrefixOrPostfix& _rhs) -> Plane& {
+    public func operator /=(const FlatWeightPrefixOrPostfix& rhs) -> Plane& {
         this = this.flat_weight();
         return *this;
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Plane) -> Plane.Output {
+    public Plane operator /(Plane rhs) {
         return rhs.flat_weight();
     }
 }
@@ -211,13 +213,13 @@ public extension Plane: FlatWeight {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: FlatWeightPrefixOrPostfix) -> Origin {
+    public Origin operator /(FlatWeightPrefixOrPostfix rhs)  {
         return this.flat_weight();
     }
 }
 public extension FlatWeightPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Origin operator /(Point rhs) {
         return rhs.flat_weight();
     }
 }

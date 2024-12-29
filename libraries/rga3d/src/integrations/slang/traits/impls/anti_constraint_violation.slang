@@ -1,12 +1,14 @@
+implementing rga3d;
+using traits;
 public extension DualNum {
     // Fancy postfix trick
-    func operator/(_rhs: AntiConstraintViolationPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
         return this.anti_constraint_violation();
     }
 }
 public extension AntiConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: DualNum) -> DualNum.Output {
+    public Scalar operator /(DualNum rhs) {
         return rhs.anti_constraint_violation();
     }
 }
@@ -21,13 +23,13 @@ public extension DualNum: AntiConstraintViolation {
 }
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiConstraintViolationPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
         return this.anti_constraint_violation();
     }
 }
 public extension AntiConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Scalar operator /(Flector rhs) {
         return rhs.anti_constraint_violation();
     }
 }
@@ -48,13 +50,13 @@ public extension Flector: AntiConstraintViolation {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: AntiConstraintViolationPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
         return this.anti_constraint_violation();
     }
 }
 public extension AntiConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Scalar operator /(Line rhs) {
         return rhs.anti_constraint_violation();
     }
 }
@@ -75,13 +77,13 @@ public extension Line: AntiConstraintViolation {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: AntiConstraintViolationPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
         return this.anti_constraint_violation();
     }
 }
 public extension AntiConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Scalar operator /(Motor rhs) {
         return rhs.anti_constraint_violation();
     }
 }
@@ -102,18 +104,18 @@ public extension Motor: AntiConstraintViolation {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: AntiConstraintViolationPrefixOrPostfix) -> MultiVector {
+    public MultiVector operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
         return this.anti_constraint_violation();
     }
     // Fancy postfix self-assign
-    public func operator/=(const AntiConstraintViolationPrefixOrPostfix& _rhs) -> MultiVector& {
+    public func operator /=(const AntiConstraintViolationPrefixOrPostfix& rhs) -> MultiVector& {
         this = this.anti_constraint_violation();
         return *this;
     }
 }
 public extension AntiConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public MultiVector operator /(MultiVector rhs) {
         return rhs.anti_constraint_violation();
     }
 }

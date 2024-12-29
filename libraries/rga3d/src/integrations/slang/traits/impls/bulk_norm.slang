@@ -1,14 +1,14 @@
-using traits;
+implementing rga3d;
 using traits;
 public extension Flector {
     // Fancy postfix trick
-    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(BulkNormPrefixOrPostfix rhs)  {
         return this.bulk_norm();
     }
 }
 public extension BulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Flector) -> Flector.Output {
+    public Scalar operator /(Flector rhs) {
         return rhs.bulk_norm();
     }
 }
@@ -20,13 +20,13 @@ public extension Flector: BulkNorm {
 }
 public extension Line {
     // Fancy postfix trick
-    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(BulkNormPrefixOrPostfix rhs)  {
         return this.bulk_norm();
     }
 }
 public extension BulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Line) -> Line.Output {
+    public Scalar operator /(Line rhs) {
         return rhs.bulk_norm();
     }
 }
@@ -38,13 +38,13 @@ public extension Line: BulkNorm {
 }
 public extension Motor {
     // Fancy postfix trick
-    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(BulkNormPrefixOrPostfix rhs)  {
         return this.bulk_norm();
     }
 }
 public extension BulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Motor) -> Motor.Output {
+    public Scalar operator /(Motor rhs) {
         return rhs.bulk_norm();
     }
 }
@@ -56,13 +56,13 @@ public extension Motor: BulkNorm {
 }
 public extension MultiVector {
     // Fancy postfix trick
-    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(BulkNormPrefixOrPostfix rhs)  {
         return this.bulk_norm();
     }
 }
 public extension BulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: MultiVector) -> MultiVector.Output {
+    public Scalar operator /(MultiVector rhs) {
         return rhs.bulk_norm();
     }
 }
@@ -74,13 +74,13 @@ public extension MultiVector: BulkNorm {
 }
 public extension Point {
     // Fancy postfix trick
-    func operator/(_rhs: BulkNormPrefixOrPostfix) -> Scalar {
+    public Scalar operator /(BulkNormPrefixOrPostfix rhs)  {
         return this.bulk_norm();
     }
 }
 public extension BulkNormPrefixOrPostfix {
     // Fancy prefix trick
-    public func operator/(rhs: Point) -> Point.Output {
+    public Scalar operator /(Point rhs) {
         return rhs.bulk_norm();
     }
 }

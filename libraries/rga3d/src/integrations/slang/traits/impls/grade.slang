@@ -1,3 +1,5 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar: Grade {
     public typedef uint GradeOutput;
     public func grade() -> uint {

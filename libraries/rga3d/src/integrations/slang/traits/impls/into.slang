@@ -1,3 +1,5 @@
+implementing rga3d;
+using traits;
 public extension DualNum: From<AntiScalar> {
     public static func from(AntiScalar from_anti_scalar) -> This {
         return DualNum.from_groups(

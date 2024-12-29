@@ -1,3 +1,5 @@
+implementing rga3d;
+using traits;
 public extension AntiScalar: Zero {
     public typedef AntiScalar ZeroOutput;
     public func zero() -> AntiScalar {
