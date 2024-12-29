@@ -12,9 +12,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension AntiScalar: LeftComplement {
-    public typedef Scalar LeftComplementOutput;
-    public func left_complement() -> Scalar {
+public extension AntiScalar {
+    public Scalar left_complement() {
         return Scalar.from_groups(
             /* scalar */
             this.e1234
@@ -26,11 +25,6 @@ public extension DualNum {
     public DualNum operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> DualNum& {
-        this = this.left_complement();
-        return *this;
-    }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -38,9 +32,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension DualNum: LeftComplement {
-    public typedef DualNum LeftComplementOutput;
-    public func left_complement() -> DualNum {
+public extension DualNum {
+    public DualNum left_complement() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             this.group0.xy.yx
@@ -52,11 +45,6 @@ public extension Flector {
     public Flector operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Flector& {
-        this = this.left_complement();
-        return *this;
-    }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -64,9 +52,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Flector: LeftComplement {
-    public typedef Flector LeftComplementOutput;
-    public func left_complement() -> Flector {
+public extension Flector {
+    public Flector left_complement() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group1, 
@@ -87,9 +74,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Horizon: LeftComplement {
-    public typedef Origin LeftComplementOutput;
-    public func left_complement() -> Origin {
+public extension Horizon {
+    public Origin left_complement() {
         return Origin.from_groups(
             /* e4 */
             this.e321
@@ -101,11 +87,6 @@ public extension Line {
     public Line operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Line& {
-        this = this.left_complement();
-        return *this;
-    }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -113,9 +94,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Line: LeftComplement {
-    public typedef Line LeftComplementOutput;
-    public func left_complement() -> Line {
+public extension Line {
+    public Line left_complement() {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group1.xyz * float3(-1.0), 
@@ -129,11 +109,6 @@ public extension Motor {
     public Motor operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> Motor& {
-        this = this.left_complement();
-        return *this;
-    }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -141,9 +116,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Motor: LeftComplement {
-    public typedef Motor LeftComplementOutput;
-    public func left_complement() -> Motor {
+public extension Motor {
+    public Motor left_complement() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -157,11 +131,6 @@ public extension MultiVector {
     public MultiVector operator /(LeftComplementPrefixOrPostfix rhs)  {
         return this.left_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const LeftComplementPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.left_complement();
-        return *this;
-    }
 }
 public extension LeftComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -169,9 +138,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension MultiVector: LeftComplement {
-    public typedef MultiVector LeftComplementOutput;
-    public func left_complement() -> MultiVector {
+public extension MultiVector {
+    public MultiVector left_complement() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy.yx, 
@@ -198,9 +166,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Origin: LeftComplement {
-    public typedef Horizon LeftComplementOutput;
-    public func left_complement() -> Horizon {
+public extension Origin {
+    public Horizon left_complement() {
         return Horizon.from_groups(
             /* e321 */
             this.e4 * -1.0
@@ -219,9 +186,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Plane: LeftComplement {
-    public typedef Point LeftComplementOutput;
-    public func left_complement() -> Point {
+public extension Plane {
+    public Point left_complement() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0
@@ -240,9 +206,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Point: LeftComplement {
-    public typedef Plane LeftComplementOutput;
-    public func left_complement() -> Plane {
+public extension Point {
+    public Plane left_complement() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
@@ -261,9 +226,8 @@ public extension LeftComplementPrefixOrPostfix {
         return rhs.left_complement();
     }
 }
-public extension Scalar: LeftComplement {
-    public typedef AntiScalar LeftComplementOutput;
-    public func left_complement() -> AntiScalar {
+public extension Scalar {
+    public AntiScalar left_complement() {
         return AntiScalar.from_groups(
             /* e1234 */
             this.scalar

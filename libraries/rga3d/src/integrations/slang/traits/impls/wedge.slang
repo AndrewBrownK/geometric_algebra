@@ -12,36 +12,32 @@ public extension WedgeInfixPartial<AntiScalar> {
         return this.a.wedge(rhs);
     }
 }
-public extension AntiScalar: Wedge<DualNum> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: DualNum) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar wedge(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
         );
     }
 }
-public extension AntiScalar: Wedge<Motor> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Motor) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar wedge(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
         );
     }
 }
-public extension AntiScalar: Wedge<MultiVector> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: MultiVector) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar wedge(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
         );
     }
 }
-public extension AntiScalar: Wedge<Scalar> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Scalar) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar wedge(Scalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
@@ -60,27 +56,24 @@ public extension WedgeInfixPartial<DualNum> {
         return this.a.wedge(rhs);
     }
 }
-public extension DualNum: Wedge<AntiScalar> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: AntiScalar) -> AntiScalar {
+public extension DualNum {
+    public AntiScalar wedge(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
 }
-public extension DualNum: Wedge<DualNum> {
-    public typedef DualNum WedgeOutput;
-    public func wedge(other: DualNum) -> DualNum {
+public extension DualNum {
+    public DualNum wedge(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
         );
     }
 }
-public extension DualNum: Wedge<Flector> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Flector) -> Flector {
+public extension DualNum {
+    public Flector wedge(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -89,18 +82,16 @@ public extension DualNum: Wedge<Flector> {
         );
     }
 }
-public extension DualNum: Wedge<Horizon> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: Horizon) -> Horizon {
+public extension DualNum {
+    public Horizon wedge(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             this.scalar * other.e321
         );
     }
 }
-public extension DualNum: Wedge<Line> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Line) -> Line {
+public extension DualNum {
+    public Line wedge(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.scalar) * other.group0.xyz, 
@@ -109,9 +100,8 @@ public extension DualNum: Wedge<Line> {
         );
     }
 }
-public extension DualNum: Wedge<Motor> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Motor) -> Motor {
+public extension DualNum {
+    public Motor wedge(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group0.xyz, 1.0), 
@@ -120,9 +110,8 @@ public extension DualNum: Wedge<Motor> {
         );
     }
 }
-public extension DualNum: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension DualNum {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar * other.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
@@ -137,36 +126,32 @@ public extension DualNum: Wedge<MultiVector> {
         );
     }
 }
-public extension DualNum: Wedge<Origin> {
-    public typedef Origin WedgeOutput;
-    public func wedge(other: Origin) -> Origin {
+public extension DualNum {
+    public Origin wedge(Origin other) {
         return Origin.from_groups(
             /* e4 */
             this.scalar * other.e4
         );
     }
 }
-public extension DualNum: Wedge<Plane> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Plane) -> Plane {
+public extension DualNum {
+    public Plane wedge(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-public extension DualNum: Wedge<Point> {
-    public typedef Point WedgeOutput;
-    public func wedge(other: Point) -> Point {
+public extension DualNum {
+    public Point wedge(Point other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
         );
     }
 }
-public extension DualNum: Wedge<Scalar> {
-    public typedef DualNum WedgeOutput;
-    public func wedge(other: Scalar) -> DualNum {
+public extension DualNum {
+    public DualNum wedge(Scalar other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * this.group0.xy
@@ -185,9 +170,8 @@ public extension WedgeInfixPartial<Flector> {
         return this.a.wedge(rhs);
     }
 }
-public extension Flector: Wedge<DualNum> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: DualNum) -> Flector {
+public extension Flector {
+    public Flector wedge(DualNum other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -196,9 +180,8 @@ public extension Flector: Wedge<DualNum> {
         );
     }
 }
-public extension Flector: Wedge<Flector> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Flector) -> Motor {
+public extension Flector {
+    public Motor wedge(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (this.group0.wwwx * float4(other.group0.xyz, other.e423)) + float4(float3(0.0), (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -207,27 +190,24 @@ public extension Flector: Wedge<Flector> {
         );
     }
 }
-public extension Flector: Wedge<Horizon> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Horizon) -> AntiScalar {
+public extension Flector {
+    public AntiScalar wedge(Horizon other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e321
         );
     }
 }
-public extension Flector: Wedge<Line> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Line) -> Plane {
+public extension Flector {
+    public Plane wedge(Line other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e3 * other.e42) + (this.e4 * other.e23), (this.e1 * other.e43) + (this.e4 * other.e31), (this.e2 * other.e41) + (this.e4 * other.e12), -(this.e2 * other.e31) - (this.e3 * other.e12)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
-public extension Flector: Wedge<Motor> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Motor) -> Flector {
+public extension Flector {
+    public Flector wedge(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -236,9 +216,8 @@ public extension Flector: Wedge<Motor> {
         );
     }
 }
-public extension Flector: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Flector {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
@@ -253,9 +232,8 @@ public extension Flector: Wedge<MultiVector> {
         );
     }
 }
-public extension Flector: Wedge<Origin> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Origin) -> Motor {
+public extension Flector {
+    public Motor wedge(Origin other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group0.xyz, this.e321) * float4(-1.0), 
@@ -264,18 +242,16 @@ public extension Flector: Wedge<Origin> {
         );
     }
 }
-public extension Flector: Wedge<Plane> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Plane) -> AntiScalar {
+public extension Flector {
+    public AntiScalar wedge(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)
         );
     }
 }
-public extension Flector: Wedge<Point> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Point) -> Motor {
+public extension Flector {
+    public Motor wedge(Point other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4 * other.e1, this.e4 * other.e2, this.e4 * other.e3, -(this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -284,9 +260,8 @@ public extension Flector: Wedge<Point> {
         );
     }
 }
-public extension Flector: Wedge<Scalar> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Scalar) -> Flector {
+public extension Flector {
+    public Flector wedge(Scalar other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -307,36 +282,32 @@ public extension WedgeInfixPartial<Horizon> {
         return this.a.wedge(rhs);
     }
 }
-public extension Horizon: Wedge<DualNum> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: DualNum) -> Horizon {
+public extension Horizon {
+    public Horizon wedge(DualNum other) {
         return Horizon.from_groups(
             /* e321 */
             other.scalar * this.e321
         );
     }
 }
-public extension Horizon: Wedge<Flector> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Flector) -> AntiScalar {
+public extension Horizon {
+    public AntiScalar wedge(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e321 * -1.0
         );
     }
 }
-public extension Horizon: Wedge<Motor> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: Motor) -> Horizon {
+public extension Horizon {
+    public Horizon wedge(Motor other) {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * other.scalar
         );
     }
 }
-public extension Horizon: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Horizon {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
@@ -351,27 +322,24 @@ public extension Horizon: Wedge<MultiVector> {
         );
     }
 }
-public extension Horizon: Wedge<Origin> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Origin) -> AntiScalar {
+public extension Horizon {
+    public AntiScalar wedge(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e321 * other.e4 * -1.0
         );
     }
 }
-public extension Horizon: Wedge<Point> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Point) -> AntiScalar {
+public extension Horizon {
+    public AntiScalar wedge(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e321 * other.e4 * -1.0
         );
     }
 }
-public extension Horizon: Wedge<Scalar> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: Scalar) -> Horizon {
+public extension Horizon {
+    public Horizon wedge(Scalar other) {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * other.scalar
@@ -390,9 +358,8 @@ public extension WedgeInfixPartial<Line> {
         return this.a.wedge(rhs);
     }
 }
-public extension Line: Wedge<DualNum> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: DualNum) -> Line {
+public extension Line {
+    public Line wedge(DualNum other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.scalar) * this.group0.xyz, 
@@ -401,27 +368,24 @@ public extension Line: Wedge<DualNum> {
         );
     }
 }
-public extension Line: Wedge<Flector> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Flector) -> Plane {
+public extension Line {
+    public Plane wedge(Flector other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23), (other.e1 * this.e43) + (other.e4 * this.e31), (other.e2 * this.e41) + (other.e4 * this.e12), -(other.e2 * this.e31) - (other.e3 * this.e12)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
 }
-public extension Line: Wedge<Line> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Line) -> AntiScalar {
+public extension Line {
+    public AntiScalar wedge(Line other) {
         return AntiScalar.from_groups(
             /* e1234 */
             -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
 }
-public extension Line: Wedge<Motor> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Motor) -> Motor {
+public extension Line {
+    public Motor wedge(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(other.scalar) * this.group0.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -430,9 +394,8 @@ public extension Line: Wedge<Motor> {
         );
     }
 }
-public extension Line: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Line {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -447,27 +410,24 @@ public extension Line: Wedge<MultiVector> {
         );
     }
 }
-public extension Line: Wedge<Origin> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Origin) -> Plane {
+public extension Line {
+    public Plane wedge(Origin other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(other.e4) * this.group1.xyz), 0.0)
         );
     }
 }
-public extension Line: Wedge<Point> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Point) -> Plane {
+public extension Line {
+    public Plane wedge(Point other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
 }
-public extension Line: Wedge<Scalar> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Scalar) -> Line {
+public extension Line {
+    public Line wedge(Scalar other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.scalar) * this.group0.xyz, 
@@ -488,18 +448,16 @@ public extension WedgeInfixPartial<Motor> {
         return this.a.wedge(rhs);
     }
 }
-public extension Motor: Wedge<AntiScalar> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: AntiScalar) -> AntiScalar {
+public extension Motor {
+    public AntiScalar wedge(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
 }
-public extension Motor: Wedge<DualNum> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: DualNum) -> Motor {
+public extension Motor {
+    public Motor wedge(DualNum other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group0.xyz, 1.0), 
@@ -508,9 +466,8 @@ public extension Motor: Wedge<DualNum> {
         );
     }
 }
-public extension Motor: Wedge<Flector> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Flector) -> Flector {
+public extension Motor {
+    public Flector wedge(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -519,18 +476,16 @@ public extension Motor: Wedge<Flector> {
         );
     }
 }
-public extension Motor: Wedge<Horizon> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: Horizon) -> Horizon {
+public extension Motor {
+    public Horizon wedge(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             other.e321 * this.scalar
         );
     }
 }
-public extension Motor: Wedge<Line> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Line) -> Motor {
+public extension Motor {
+    public Motor wedge(Line other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(this.scalar) * other.group0.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -539,9 +494,8 @@ public extension Motor: Wedge<Line> {
         );
     }
 }
-public extension Motor: Wedge<Motor> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Motor) -> Motor {
+public extension Motor {
+    public Motor wedge(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(other.scalar) * this.group0) + (float4(this.scalar) * other.group0) + float4(float3(0.0), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -550,9 +504,8 @@ public extension Motor: Wedge<Motor> {
         );
     }
 }
-public extension Motor: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Motor {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar * other.scalar, (this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -567,9 +520,8 @@ public extension Motor: Wedge<MultiVector> {
         );
     }
 }
-public extension Motor: Wedge<Origin> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Origin) -> Flector {
+public extension Motor {
+    public Flector wedge(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.scalar * other.e4), 
@@ -578,18 +530,16 @@ public extension Motor: Wedge<Origin> {
         );
     }
 }
-public extension Motor: Wedge<Plane> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Plane) -> Plane {
+public extension Motor {
+    public Plane wedge(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-public extension Motor: Wedge<Point> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Point) -> Flector {
+public extension Motor {
+    public Flector wedge(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -598,9 +548,8 @@ public extension Motor: Wedge<Point> {
         );
     }
 }
-public extension Motor: Wedge<Scalar> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Scalar) -> Motor {
+public extension Motor {
+    public Motor wedge(Scalar other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.scalar) * this.group0, 
@@ -621,18 +570,16 @@ public extension WedgeInfixPartial<MultiVector> {
         return this.a.wedge(rhs);
     }
 }
-public extension MultiVector: Wedge<AntiScalar> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: AntiScalar) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar wedge(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
 }
-public extension MultiVector: Wedge<DualNum> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: DualNum) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
@@ -647,9 +594,8 @@ public extension MultiVector: Wedge<DualNum> {
         );
     }
 }
-public extension MultiVector: Wedge<Flector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Flector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Flector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
@@ -664,9 +610,8 @@ public extension MultiVector: Wedge<Flector> {
         );
     }
 }
-public extension MultiVector: Wedge<Horizon> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Horizon) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Horizon other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
@@ -681,9 +626,8 @@ public extension MultiVector: Wedge<Horizon> {
         );
     }
 }
-public extension MultiVector: Wedge<Line> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Line) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -698,9 +642,8 @@ public extension MultiVector: Wedge<Line> {
         );
     }
 }
-public extension MultiVector: Wedge<Motor> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Motor) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -715,9 +658,8 @@ public extension MultiVector: Wedge<Motor> {
         );
     }
 }
-public extension MultiVector: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -732,9 +674,8 @@ public extension MultiVector: Wedge<MultiVector> {
         );
     }
 }
-public extension MultiVector: Wedge<Origin> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Origin) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Origin other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
@@ -749,9 +690,8 @@ public extension MultiVector: Wedge<Origin> {
         );
     }
 }
-public extension MultiVector: Wedge<Plane> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Plane) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Plane other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)), 
@@ -766,9 +706,8 @@ public extension MultiVector: Wedge<Plane> {
         );
     }
 }
-public extension MultiVector: Wedge<Point> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Point) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Point other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
@@ -783,9 +722,8 @@ public extension MultiVector: Wedge<Point> {
         );
     }
 }
-public extension MultiVector: Wedge<Scalar> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: Scalar) -> MultiVector {
+public extension MultiVector {
+    public MultiVector wedge(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * this.group0.xy, 
@@ -812,18 +750,16 @@ public extension WedgeInfixPartial<Origin> {
         return this.a.wedge(rhs);
     }
 }
-public extension Origin: Wedge<DualNum> {
-    public typedef Origin WedgeOutput;
-    public func wedge(other: DualNum) -> Origin {
+public extension Origin {
+    public Origin wedge(DualNum other) {
         return Origin.from_groups(
             /* e4 */
             other.scalar * this.e4
         );
     }
 }
-public extension Origin: Wedge<Flector> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Flector) -> Motor {
+public extension Origin {
+    public Motor wedge(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group0.xyz, other.e321), 
@@ -832,27 +768,24 @@ public extension Origin: Wedge<Flector> {
         );
     }
 }
-public extension Origin: Wedge<Horizon> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Horizon) -> AntiScalar {
+public extension Origin {
+    public AntiScalar wedge(Horizon other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e321 * this.e4
         );
     }
 }
-public extension Origin: Wedge<Line> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Line) -> Plane {
+public extension Origin {
+    public Plane wedge(Line other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * other.group1.xyz), 0.0)
         );
     }
 }
-public extension Origin: Wedge<Motor> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Motor) -> Flector {
+public extension Origin {
+    public Flector wedge(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
@@ -861,9 +794,8 @@ public extension Origin: Wedge<Motor> {
         );
     }
 }
-public extension Origin: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Origin {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
@@ -878,18 +810,16 @@ public extension Origin: Wedge<MultiVector> {
         );
     }
 }
-public extension Origin: Wedge<Plane> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Plane) -> AntiScalar {
+public extension Origin {
+    public AntiScalar wedge(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e321
         );
     }
 }
-public extension Origin: Wedge<Point> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Point) -> Line {
+public extension Origin {
+    public Line wedge(Point other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e4) * other.group0.xyz, 
@@ -898,9 +828,8 @@ public extension Origin: Wedge<Point> {
         );
     }
 }
-public extension Origin: Wedge<Scalar> {
-    public typedef Origin WedgeOutput;
-    public func wedge(other: Scalar) -> Origin {
+public extension Origin {
+    public Origin wedge(Scalar other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 * other.scalar
@@ -919,36 +848,32 @@ public extension WedgeInfixPartial<Plane> {
         return this.a.wedge(rhs);
     }
 }
-public extension Plane: Wedge<DualNum> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: DualNum) -> Plane {
+public extension Plane {
+    public Plane wedge(DualNum other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-public extension Plane: Wedge<Flector> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Flector) -> AntiScalar {
+public extension Plane {
+    public AntiScalar wedge(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)
         );
     }
 }
-public extension Plane: Wedge<Motor> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Motor) -> Plane {
+public extension Plane {
+    public Plane wedge(Motor other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-public extension Plane: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Plane {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
@@ -963,27 +888,24 @@ public extension Plane: Wedge<MultiVector> {
         );
     }
 }
-public extension Plane: Wedge<Origin> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Origin) -> AntiScalar {
+public extension Plane {
+    public AntiScalar wedge(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e321 * -1.0
         );
     }
 }
-public extension Plane: Wedge<Point> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Point) -> AntiScalar {
+public extension Plane {
+    public AntiScalar wedge(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
 }
-public extension Plane: Wedge<Scalar> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Scalar) -> Plane {
+public extension Plane {
+    public Plane wedge(Scalar other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
@@ -1002,18 +924,16 @@ public extension WedgeInfixPartial<Point> {
         return this.a.wedge(rhs);
     }
 }
-public extension Point: Wedge<DualNum> {
-    public typedef Point WedgeOutput;
-    public func wedge(other: DualNum) -> Point {
+public extension Point {
+    public Point wedge(DualNum other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
         );
     }
 }
-public extension Point: Wedge<Flector> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Flector) -> Motor {
+public extension Point {
+    public Motor wedge(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)) + (this.group0.wwwx * float4(other.group0.xyz, other.e423)), 
@@ -1022,27 +942,24 @@ public extension Point: Wedge<Flector> {
         );
     }
 }
-public extension Point: Wedge<Horizon> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Horizon) -> AntiScalar {
+public extension Point {
+    public AntiScalar wedge(Horizon other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e321 * this.e4
         );
     }
 }
-public extension Point: Wedge<Line> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Line) -> Plane {
+public extension Point {
+    public Plane wedge(Line other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e42 * this.e3) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
 }
-public extension Point: Wedge<Motor> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Motor) -> Flector {
+public extension Point {
+    public Flector wedge(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -1051,9 +968,8 @@ public extension Point: Wedge<Motor> {
         );
     }
 }
-public extension Point: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Point {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)), 
@@ -1068,9 +984,8 @@ public extension Point: Wedge<MultiVector> {
         );
     }
 }
-public extension Point: Wedge<Origin> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Origin) -> Line {
+public extension Point {
+    public Line wedge(Origin other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e4) * this.group0.xyz * float3(-1.0), 
@@ -1079,18 +994,16 @@ public extension Point: Wedge<Origin> {
         );
     }
 }
-public extension Point: Wedge<Plane> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: Plane) -> AntiScalar {
+public extension Point {
+    public AntiScalar wedge(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
 }
-public extension Point: Wedge<Point> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Point) -> Line {
+public extension Point {
+    public Line wedge(Point other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 
@@ -1099,9 +1012,8 @@ public extension Point: Wedge<Point> {
         );
     }
 }
-public extension Point: Wedge<Scalar> {
-    public typedef Point WedgeOutput;
-    public func wedge(other: Scalar) -> Point {
+public extension Point {
+    public Point wedge(Scalar other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0
@@ -1120,27 +1032,24 @@ public extension WedgeInfixPartial<Scalar> {
         return this.a.wedge(rhs);
     }
 }
-public extension Scalar: Wedge<AntiScalar> {
-    public typedef AntiScalar WedgeOutput;
-    public func wedge(other: AntiScalar) -> AntiScalar {
+public extension Scalar {
+    public AntiScalar wedge(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.scalar
         );
     }
 }
-public extension Scalar: Wedge<DualNum> {
-    public typedef DualNum WedgeOutput;
-    public func wedge(other: DualNum) -> DualNum {
+public extension Scalar {
+    public DualNum wedge(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * other.group0.xy
         );
     }
 }
-public extension Scalar: Wedge<Flector> {
-    public typedef Flector WedgeOutput;
-    public func wedge(other: Flector) -> Flector {
+public extension Scalar {
+    public Flector wedge(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -1149,18 +1058,16 @@ public extension Scalar: Wedge<Flector> {
         );
     }
 }
-public extension Scalar: Wedge<Horizon> {
-    public typedef Horizon WedgeOutput;
-    public func wedge(other: Horizon) -> Horizon {
+public extension Scalar {
+    public Horizon wedge(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             other.e321 * this.scalar
         );
     }
 }
-public extension Scalar: Wedge<Line> {
-    public typedef Line WedgeOutput;
-    public func wedge(other: Line) -> Line {
+public extension Scalar {
+    public Line wedge(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.scalar) * other.group0.xyz, 
@@ -1169,9 +1076,8 @@ public extension Scalar: Wedge<Line> {
         );
     }
 }
-public extension Scalar: Wedge<Motor> {
-    public typedef Motor WedgeOutput;
-    public func wedge(other: Motor) -> Motor {
+public extension Scalar {
+    public Motor wedge(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * other.group0, 
@@ -1180,9 +1086,8 @@ public extension Scalar: Wedge<Motor> {
         );
     }
 }
-public extension Scalar: Wedge<MultiVector> {
-    public typedef MultiVector WedgeOutput;
-    public func wedge(other: MultiVector) -> MultiVector {
+public extension Scalar {
+    public MultiVector wedge(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * other.group0.xy, 
@@ -1197,36 +1102,32 @@ public extension Scalar: Wedge<MultiVector> {
         );
     }
 }
-public extension Scalar: Wedge<Origin> {
-    public typedef Origin WedgeOutput;
-    public func wedge(other: Origin) -> Origin {
+public extension Scalar {
+    public Origin wedge(Origin other) {
         return Origin.from_groups(
             /* e4 */
             other.e4 * this.scalar
         );
     }
 }
-public extension Scalar: Wedge<Plane> {
-    public typedef Plane WedgeOutput;
-    public func wedge(other: Plane) -> Plane {
+public extension Scalar {
+    public Plane wedge(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * other.group0
         );
     }
 }
-public extension Scalar: Wedge<Point> {
-    public typedef Point WedgeOutput;
-    public func wedge(other: Point) -> Point {
+public extension Scalar {
+    public Point wedge(Point other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
         );
     }
 }
-public extension Scalar: Wedge<Scalar> {
-    public typedef Scalar WedgeOutput;
-    public func wedge(other: Scalar) -> Scalar {
+public extension Scalar {
+    public Scalar wedge(Scalar other) {
         return Scalar.from_groups(
             /* scalar */
             other.scalar * this.scalar

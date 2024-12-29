@@ -11,14 +11,14 @@ public extension Scalar {
         get { return group0[0]; }
         set { group0[0] = newValue; }
     }
-    public static func from_elements(
-        scalar: float
-    ) -> Scalar {
+    public static Scalar from_elements(
+        float scalar
+    ) {
         return Scalar(float4(scalar, 0.0, 0.0, 0.0));
     }
-    internal static func from_groups(
-        g0: float
-    ) -> Scalar {
+    internal static Scalar from_groups(
+        float g0
+    ) {
         return Scalar(float4(g0, 0.0, 0.0, 0.0));
     }
 }

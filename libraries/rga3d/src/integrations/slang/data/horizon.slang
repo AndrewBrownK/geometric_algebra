@@ -11,14 +11,14 @@ public extension Horizon {
         get { return group0[0]; }
         set { group0[0] = newValue; }
     }
-    public static func from_elements(
-        e321: float
-    ) -> Horizon {
+    public static Horizon from_elements(
+        float e321
+    ) {
         return Horizon(float4(e321, 0.0, 0.0, 0.0));
     }
-    internal static func from_groups(
-        g0: float
-    ) -> Horizon {
+    internal static Horizon from_groups(
+        float g0
+    ) {
         return Horizon(float4(g0, 0.0, 0.0, 0.0));
     }
 }

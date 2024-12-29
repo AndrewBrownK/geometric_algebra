@@ -12,9 +12,8 @@ public extension FlatBulkNormPrefixOrPostfix {
         return rhs.flat_bulk_norm();
     }
 }
-public extension Flector: FlatBulkNorm {
-    public typedef Scalar FlatBulkNormOutput;
-    public func flat_bulk_norm() -> Scalar {
+public extension Flector {
+    public Scalar flat_bulk_norm() {
         return this.flat_bulk_norm_squared().square_root();
     }
 }
@@ -30,9 +29,8 @@ public extension FlatBulkNormPrefixOrPostfix {
         return rhs.flat_bulk_norm();
     }
 }
-public extension Line: FlatBulkNorm {
-    public typedef Scalar FlatBulkNormOutput;
-    public func flat_bulk_norm() -> Scalar {
+public extension Line {
+    public Scalar flat_bulk_norm() {
         return this.flat_bulk_norm_squared().square_root();
     }
 }
@@ -48,9 +46,8 @@ public extension FlatBulkNormPrefixOrPostfix {
         return rhs.flat_bulk_norm();
     }
 }
-public extension Motor: FlatBulkNorm {
-    public typedef Scalar FlatBulkNormOutput;
-    public func flat_bulk_norm() -> Scalar {
+public extension Motor {
+    public Scalar flat_bulk_norm() {
         return this.flat_bulk_norm_squared().square_root();
     }
 }
@@ -66,9 +63,8 @@ public extension FlatBulkNormPrefixOrPostfix {
         return rhs.flat_bulk_norm();
     }
 }
-public extension MultiVector: FlatBulkNorm {
-    public typedef Scalar FlatBulkNormOutput;
-    public func flat_bulk_norm() -> Scalar {
+public extension MultiVector {
+    public Scalar flat_bulk_norm() {
         return this.flat_bulk_norm_squared().square_root();
     }
 }
@@ -84,9 +80,8 @@ public extension FlatBulkNormPrefixOrPostfix {
         return rhs.flat_bulk_norm();
     }
 }
-public extension Point: FlatBulkNorm {
-    public typedef Scalar FlatBulkNormOutput;
-    public func flat_bulk_norm() -> Scalar {
+public extension Point {
+    public Scalar flat_bulk_norm() {
         return this.flat_bulk_norm_squared().square_root();
     }
 }

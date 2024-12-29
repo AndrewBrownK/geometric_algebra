@@ -12,9 +12,8 @@ public extension BulkNormSquaredPrefixOrPostfix {
         return rhs.bulk_norm_squared();
     }
 }
-public extension Flector: BulkNormSquared {
-    public typedef Scalar BulkNormSquaredOutput;
-    public func bulk_norm_squared() -> Scalar {
+public extension Flector {
+    public Scalar bulk_norm_squared() {
         Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
@@ -34,9 +33,8 @@ public extension BulkNormSquaredPrefixOrPostfix {
         return rhs.bulk_norm_squared();
     }
 }
-public extension Line: BulkNormSquared {
-    public typedef Scalar BulkNormSquaredOutput;
-    public func bulk_norm_squared() -> Scalar {
+public extension Line {
+    public Scalar bulk_norm_squared() {
         Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
@@ -56,9 +54,8 @@ public extension BulkNormSquaredPrefixOrPostfix {
         return rhs.bulk_norm_squared();
     }
 }
-public extension Motor: BulkNormSquared {
-    public typedef Scalar BulkNormSquaredOutput;
-    public func bulk_norm_squared() -> Scalar {
+public extension Motor {
+    public Scalar bulk_norm_squared() {
         Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
@@ -78,9 +75,8 @@ public extension BulkNormSquaredPrefixOrPostfix {
         return rhs.bulk_norm_squared();
     }
 }
-public extension MultiVector: BulkNormSquared {
-    public typedef Scalar BulkNormSquaredOutput;
-    public func bulk_norm_squared() -> Scalar {
+public extension MultiVector {
+    public Scalar bulk_norm_squared() {
         MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0
@@ -100,9 +96,8 @@ public extension BulkNormSquaredPrefixOrPostfix {
         return rhs.bulk_norm_squared();
     }
 }
-public extension Point: BulkNormSquared {
-    public typedef Scalar BulkNormSquaredOutput;
-    public func bulk_norm_squared() -> Scalar {
+public extension Point {
+    public Scalar bulk_norm_squared() {
         Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
             /* e4 */
             1.0

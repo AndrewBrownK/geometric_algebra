@@ -12,9 +12,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension DualNum: AntiSupport {
-    public typedef Horizon AntiSupportOutput;
-    public func anti_support() -> Horizon {
+public extension DualNum {
+    public Horizon anti_support() {
         return Horizon.from_groups(
             /* e321 */
             this.scalar
@@ -33,9 +32,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Flector: AntiSupport {
-    public typedef Motor AntiSupportOutput;
-    public func anti_support() -> Motor {
+public extension Flector {
+    public Motor anti_support() {
         Flector right_dual = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
@@ -62,9 +60,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Horizon: AntiSupport {
-    public typedef Scalar AntiSupportOutput;
-    public func anti_support() -> Scalar {
+public extension Horizon {
+    public Scalar anti_support() {
         return Scalar.from_groups(
             /* scalar */
             this.e321
@@ -83,9 +80,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Line: AntiSupport {
-    public typedef Point AntiSupportOutput;
-    public func anti_support() -> Point {
+public extension Line {
+    public Point anti_support() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.group1.xyz * float3(-1.0)), 0.0)
@@ -104,9 +100,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Motor: AntiSupport {
-    public typedef Flector AntiSupportOutput;
-    public func anti_support() -> Flector {
+public extension Motor {
+    public Flector anti_support() {
         Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
@@ -130,11 +125,6 @@ public extension MultiVector {
     public MultiVector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiSupportPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.anti_support();
-        return *this;
-    }
 }
 public extension AntiSupportPrefixOrPostfix {
     // Fancy prefix trick
@@ -142,9 +132,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension MultiVector: AntiSupport {
-    public typedef MultiVector AntiSupportOutput;
-    public func anti_support() -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_support() {
         Horizon right_complement = Horizon.from_groups(
             /* e321 */
             1.0
@@ -187,9 +176,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Plane: AntiSupport {
-    public typedef Scalar AntiSupportOutput;
-    public func anti_support() -> Scalar {
+public extension Plane {
+    public Scalar anti_support() {
         return Scalar.from_groups(
             /* scalar */
             this.e321
@@ -208,9 +196,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Point: AntiSupport {
-    public typedef Line AntiSupportOutput;
-    public func anti_support() -> Line {
+public extension Point {
+    public Line anti_support() {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -231,9 +218,8 @@ public extension AntiSupportPrefixOrPostfix {
         return rhs.anti_support();
     }
 }
-public extension Scalar: AntiSupport {
-    public typedef Horizon AntiSupportOutput;
-    public func anti_support() -> Horizon {
+public extension Scalar {
+    public Horizon anti_support() {
         return Horizon.from_groups(
             /* e321 */
             this.scalar

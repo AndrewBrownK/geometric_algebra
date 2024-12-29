@@ -23,14 +23,14 @@ public extension Plane {
         get { return group0[3]; }
         set { group0[3] = newValue; }
     }
-    public static func from_elements(
-        e423: float, e431: float, e412: float, e321: float
-    ) -> Plane {
+    public static Plane from_elements(
+        float e423, float e431, float e412, float e321
+    ) {
         return Plane(float4(e423, e431, e412, e321));
     }
-    internal static func from_groups(
-        g0: float4
-    ) -> Plane {
+    internal static Plane from_groups(
+        float4 g0
+    ) {
         return Plane(g0);
     }
 }

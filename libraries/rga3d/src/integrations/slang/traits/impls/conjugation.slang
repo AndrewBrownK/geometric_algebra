@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension AntiScalar: Conjugation {
-    public typedef AntiScalar ConjugationOutput;
-    public func conjugation() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar conjugation() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension DualNum {
     public DualNum operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> DualNum& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension DualNum: Conjugation {
-    public typedef DualNum ConjugationOutput;
-    public func conjugation() -> DualNum {
+public extension DualNum {
+    public DualNum conjugation() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Flector {
     public Flector operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Flector& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Flector: Conjugation {
-    public typedef Flector ConjugationOutput;
-    public func conjugation() -> Flector {
+public extension Flector {
+    public Flector conjugation() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -79,11 +61,6 @@ public extension Horizon {
     public Horizon operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Horizon& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -91,9 +68,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Horizon: Conjugation {
-    public typedef Horizon ConjugationOutput;
-    public func conjugation() -> Horizon {
+public extension Horizon {
+    public Horizon conjugation() {
         return this;
     }
 }
@@ -102,11 +78,6 @@ public extension Line {
     public Line operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Line& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -114,9 +85,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Line: Conjugation {
-    public typedef Line ConjugationOutput;
-    public func conjugation() -> Line {
+public extension Line {
+    public Line conjugation() {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
@@ -130,11 +100,6 @@ public extension Motor {
     public Motor operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Motor& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -142,9 +107,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Motor: Conjugation {
-    public typedef Motor ConjugationOutput;
-    public func conjugation() -> Motor {
+public extension Motor {
+    public Motor conjugation() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -158,11 +122,6 @@ public extension MultiVector {
     public MultiVector operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -170,9 +129,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension MultiVector: Conjugation {
-    public typedef MultiVector ConjugationOutput;
-    public func conjugation() -> MultiVector {
+public extension MultiVector {
+    public MultiVector conjugation() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -192,11 +150,6 @@ public extension Origin {
     public Origin operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Origin& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -204,9 +157,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Origin: Conjugation {
-    public typedef Origin ConjugationOutput;
-    public func conjugation() -> Origin {
+public extension Origin {
+    public Origin conjugation() {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
@@ -218,11 +170,6 @@ public extension Plane {
     public Plane operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Plane& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -230,9 +177,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Plane: Conjugation {
-    public typedef Plane ConjugationOutput;
-    public func conjugation() -> Plane {
+public extension Plane {
+    public Plane conjugation() {
         return this;
     }
 }
@@ -241,11 +187,6 @@ public extension Point {
     public Point operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Point& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -253,9 +194,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Point: Conjugation {
-    public typedef Point ConjugationOutput;
-    public func conjugation() -> Point {
+public extension Point {
+    public Point conjugation() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
@@ -267,11 +207,6 @@ public extension Scalar {
     public Scalar operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConjugationPrefixOrPostfix& rhs) -> Scalar& {
-        this = this.conjugation();
-        return *this;
-    }
 }
 public extension ConjugationPrefixOrPostfix {
     // Fancy prefix trick
@@ -279,9 +214,8 @@ public extension ConjugationPrefixOrPostfix {
         return rhs.conjugation();
     }
 }
-public extension Scalar: Conjugation {
-    public typedef Scalar ConjugationOutput;
-    public func conjugation() -> Scalar {
+public extension Scalar {
+    public Scalar conjugation() {
         return this;
     }
 }

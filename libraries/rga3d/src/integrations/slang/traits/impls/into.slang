@@ -1,20 +1,20 @@
 implementing rga3d;
 using traits;
-public extension DualNum: From<AntiScalar> {
-    public static func from(AntiScalar from_anti_scalar) -> This {
+public extension DualNum {
+    public static DualNum from(AntiScalar from_anti_scalar) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(0.0, from_anti_scalar.e1234)
         );
     }
 }
-public extension AntiScalar: Into<DualNum> {
-    public func into() -> DualNum {
+public extension AntiScalar {
+    public DualNum into_DualNum() {
         return DualNum.from(this);
     }
 }
-public extension Motor: From<AntiScalar> {
-    public static func from(AntiScalar from_anti_scalar) -> This {
+public extension Motor {
+    public static Motor from(AntiScalar from_anti_scalar) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), from_anti_scalar.e1234), 
@@ -23,13 +23,13 @@ public extension Motor: From<AntiScalar> {
         );
     }
 }
-public extension AntiScalar: Into<Motor> {
-    public func into() -> Motor {
+public extension AntiScalar {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-public extension MultiVector: From<AntiScalar> {
-    public static func from(AntiScalar from_anti_scalar) -> This {
+public extension MultiVector {
+    public static MultiVector from(AntiScalar from_anti_scalar) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, from_anti_scalar.e1234), 
@@ -44,13 +44,13 @@ public extension MultiVector: From<AntiScalar> {
         );
     }
 }
-public extension AntiScalar: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiScalar {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Motor: From<DualNum> {
-    public static func from(DualNum from_dual_num) -> This {
+public extension Motor {
+    public static Motor from(DualNum from_dual_num) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), from_dual_num.e1234), 
@@ -59,13 +59,13 @@ public extension Motor: From<DualNum> {
         );
     }
 }
-public extension DualNum: Into<Motor> {
-    public func into() -> Motor {
+public extension DualNum {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-public extension MultiVector: From<DualNum> {
-    public static func from(DualNum from_dual_num) -> This {
+public extension MultiVector {
+    public static MultiVector from(DualNum from_dual_num) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             from_dual_num.group0.xy, 
@@ -80,13 +80,13 @@ public extension MultiVector: From<DualNum> {
         );
     }
 }
-public extension DualNum: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension DualNum {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension MultiVector: From<Flector> {
-    public static func from(Flector from_flector) -> This {
+public extension MultiVector {
+    public static MultiVector from(Flector from_flector) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -101,13 +101,13 @@ public extension MultiVector: From<Flector> {
         );
     }
 }
-public extension Flector: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Flector {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Flector: From<Horizon> {
-    public static func from(Horizon from_horizon) -> This {
+public extension Flector {
+    public static Flector from(Horizon from_horizon) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(0.0), 
@@ -116,13 +116,13 @@ public extension Flector: From<Horizon> {
         );
     }
 }
-public extension Horizon: Into<Flector> {
-    public func into() -> Flector {
+public extension Horizon {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-public extension MultiVector: From<Horizon> {
-    public static func from(Horizon from_horizon) -> This {
+public extension MultiVector {
+    public static MultiVector from(Horizon from_horizon) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -137,26 +137,26 @@ public extension MultiVector: From<Horizon> {
         );
     }
 }
-public extension Horizon: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Horizon {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Plane: From<Horizon> {
-    public static func from(Horizon from_horizon) -> This {
+public extension Plane {
+    public static Plane from(Horizon from_horizon) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(float3(0.0), from_horizon.e321)
         );
     }
 }
-public extension Horizon: Into<Plane> {
-    public func into() -> Plane {
+public extension Horizon {
+    public Plane into_Plane() {
         return Plane.from(this);
     }
 }
-public extension Motor: From<Line> {
-    public static func from(Line from_line) -> This {
+public extension Motor {
+    public static Motor from(Line from_line) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(from_line.group0.xyz, 0.0), 
@@ -165,13 +165,13 @@ public extension Motor: From<Line> {
         );
     }
 }
-public extension Line: Into<Motor> {
-    public func into() -> Motor {
+public extension Line {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-public extension MultiVector: From<Line> {
-    public static func from(Line from_line) -> This {
+public extension MultiVector {
+    public static MultiVector from(Line from_line) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -186,13 +186,13 @@ public extension MultiVector: From<Line> {
         );
     }
 }
-public extension Line: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Line {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension MultiVector: From<Motor> {
-    public static func from(Motor from_motor) -> This {
+public extension MultiVector {
+    public static MultiVector from(Motor from_motor) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(from_motor.scalar, from_motor.e1234), 
@@ -207,13 +207,13 @@ public extension MultiVector: From<Motor> {
         );
     }
 }
-public extension Motor: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Motor {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Flector: From<Origin> {
-    public static func from(Origin from_origin) -> This {
+public extension Flector {
+    public static Flector from(Origin from_origin) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), from_origin.e4), 
@@ -222,13 +222,13 @@ public extension Flector: From<Origin> {
         );
     }
 }
-public extension Origin: Into<Flector> {
-    public func into() -> Flector {
+public extension Origin {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-public extension MultiVector: From<Origin> {
-    public static func from(Origin from_origin) -> This {
+public extension MultiVector {
+    public static MultiVector from(Origin from_origin) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -243,26 +243,26 @@ public extension MultiVector: From<Origin> {
         );
     }
 }
-public extension Origin: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Origin {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Point: From<Origin> {
-    public static func from(Origin from_origin) -> This {
+public extension Point {
+    public static Point from(Origin from_origin) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), from_origin.e4)
         );
     }
 }
-public extension Origin: Into<Point> {
-    public func into() -> Point {
+public extension Origin {
+    public Point into_Point() {
         return Point.from(this);
     }
 }
-public extension Flector: From<Plane> {
-    public static func from(Plane from_plane) -> This {
+public extension Flector {
+    public static Flector from(Plane from_plane) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(0.0), 
@@ -271,13 +271,13 @@ public extension Flector: From<Plane> {
         );
     }
 }
-public extension Plane: Into<Flector> {
-    public func into() -> Flector {
+public extension Plane {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-public extension MultiVector: From<Plane> {
-    public static func from(Plane from_plane) -> This {
+public extension MultiVector {
+    public static MultiVector from(Plane from_plane) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -292,13 +292,13 @@ public extension MultiVector: From<Plane> {
         );
     }
 }
-public extension Plane: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Plane {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension Flector: From<Point> {
-    public static func from(Point from_point) -> This {
+public extension Flector {
+    public static Flector from(Point from_point) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             from_point.group0, 
@@ -307,13 +307,13 @@ public extension Flector: From<Point> {
         );
     }
 }
-public extension Point: Into<Flector> {
-    public func into() -> Flector {
+public extension Point {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-public extension MultiVector: From<Point> {
-    public static func from(Point from_point) -> This {
+public extension MultiVector {
+    public static MultiVector from(Point from_point) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -328,26 +328,26 @@ public extension MultiVector: From<Point> {
         );
     }
 }
-public extension Point: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Point {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-public extension DualNum: From<Scalar> {
-    public static func from(Scalar from_scalar) -> This {
+public extension DualNum {
+    public static DualNum from(Scalar from_scalar) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(from_scalar.scalar, 0.0)
         );
     }
 }
-public extension Scalar: Into<DualNum> {
-    public func into() -> DualNum {
+public extension Scalar {
+    public DualNum into_DualNum() {
         return DualNum.from(this);
     }
 }
-public extension Motor: From<Scalar> {
-    public static func from(Scalar from_scalar) -> This {
+public extension Motor {
+    public static Motor from(Scalar from_scalar) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -356,13 +356,13 @@ public extension Motor: From<Scalar> {
         );
     }
 }
-public extension Scalar: Into<Motor> {
-    public func into() -> Motor {
+public extension Scalar {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-public extension MultiVector: From<Scalar> {
-    public static func from(Scalar from_scalar) -> This {
+public extension MultiVector {
+    public static MultiVector from(Scalar from_scalar) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(from_scalar.scalar, 0.0), 
@@ -377,8 +377,8 @@ public extension MultiVector: From<Scalar> {
         );
     }
 }
-public extension Scalar: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Scalar {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }

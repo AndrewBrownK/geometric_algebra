@@ -1,8 +1,7 @@
 implementing rga3d;
 using traits;
 public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: AntiScalar) -> MultiVector {
+    public MultiVector operator +(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
@@ -18,8 +17,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: DualNum) -> MultiVector {
+    public MultiVector operator +(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -35,8 +33,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector AddOutput;
-    public func operator +(other: Flector) -> Flector {
+    public Flector operator +(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -46,8 +43,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Horizon AddOutput;
-    public func operator +(other: Horizon) -> Horizon {
+    public Horizon operator +(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             other.e321 + this.e321
@@ -55,16 +51,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public func operator +=(const Horizon& other) {
-        *this = Horizon.from_groups(
-            /* e321 */
-            other.e321 + this.e321
-        );
-    }
-}
-public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Line) -> MultiVector {
+    public MultiVector operator +(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -80,8 +67,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Motor) -> MultiVector {
+    public MultiVector operator +(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
@@ -97,8 +83,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: MultiVector) -> MultiVector {
+    public MultiVector operator +(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -114,8 +99,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector AddOutput;
-    public func operator +(other: Origin) -> Flector {
+    public Flector operator +(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4), 
@@ -125,8 +109,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Plane AddOutput;
-    public func operator +(other: Plane) -> Plane {
+    public Plane operator +(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             other.group0 + float4(float3(0.0), this.e321)
@@ -134,8 +117,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector AddOutput;
-    public func operator +(other: Point) -> Flector {
+    public Flector operator +(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -145,8 +127,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Scalar) -> MultiVector {
+    public MultiVector operator +(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
@@ -162,79 +143,62 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Origin MulOutput;
-    public func operator *(other: AntiScalar) -> Origin {
+    public Origin operator *(AntiScalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Flector MulOutput;
-    public func operator *(other: DualNum) -> Flector {
+    public Flector operator *(DualNum other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Motor MulOutput;
-    public func operator *(other: Flector) -> Motor {
+    public Motor operator *(Flector other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Scalar MulOutput;
-    public func operator *(other: Horizon) -> Scalar {
+    public Scalar operator *(Horizon other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Flector MulOutput;
-    public func operator *(other: Line) -> Flector {
+    public Flector operator *(Line other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Flector MulOutput;
-    public func operator *(other: Motor) -> Flector {
+    public Flector operator *(Motor other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef MultiVector MulOutput;
-    public func operator *(other: MultiVector) -> MultiVector {
+    public MultiVector operator *(MultiVector other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef AntiScalar MulOutput;
-    public func operator *(other: Origin) -> AntiScalar {
+    public AntiScalar operator *(Origin other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Motor MulOutput;
-    public func operator *(other: Plane) -> Motor {
+    public Motor operator *(Plane other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Motor MulOutput;
-    public func operator *(other: Point) -> Motor {
+    public Motor operator *(Point other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public typedef Horizon MulOutput;
-    public func operator *(other: Scalar) -> Horizon {
+    public Horizon operator *(Scalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Horizon {
-    public func operator *=(const Scalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Horizon {
-    public typedef Horizon NegOutput;
-    public func neg() -> Horizon {
+    public Horizon neg() {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
@@ -242,14 +206,12 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Origin NotOutput;
-    public func not() -> Origin {
+    public Origin not() {
         return this.right_dual();
     }
 }
 public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: AntiScalar) -> MultiVector {
+    public MultiVector operator -(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
@@ -265,8 +227,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: DualNum) -> MultiVector {
+    public MultiVector operator -(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -282,8 +243,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector SubOutput;
-    public func operator -(other: Flector) -> Flector {
+    public Flector operator -(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -293,8 +253,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Horizon SubOutput;
-    public func operator -(other: Horizon) -> Horizon {
+    public Horizon operator -(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             this.e321 - other.e321
@@ -302,16 +261,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public func operator -=(const Horizon& other) {
-        *this = Horizon.from_groups(
-            /* e321 */
-            this.e321 - other.e321
-        );
-    }
-}
-public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Line) -> MultiVector {
+    public MultiVector operator -(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -327,8 +277,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Motor) -> MultiVector {
+    public MultiVector operator -(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
@@ -344,8 +293,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: MultiVector) -> MultiVector {
+    public MultiVector operator -(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -361,8 +309,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector SubOutput;
-    public func operator -(other: Origin) -> Flector {
+    public Flector operator -(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e4 * -1.0), 
@@ -372,8 +319,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Plane SubOutput;
-    public func operator -(other: Plane) -> Plane {
+    public Plane operator -(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.group0.xyz, this.e321 - other.e321) * float4(-1.0, -1.0, -1.0, 1.0)
@@ -381,8 +327,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef Flector SubOutput;
-    public func operator -(other: Point) -> Flector {
+    public Flector operator -(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
@@ -392,8 +337,7 @@ public extension Horizon {
     }
 }
 public extension Horizon {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Scalar) -> MultiVector {
+    public MultiVector operator -(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 

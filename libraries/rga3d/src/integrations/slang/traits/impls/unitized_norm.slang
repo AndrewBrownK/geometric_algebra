@@ -12,9 +12,8 @@ public extension UnitizedNormPrefixOrPostfix {
         return rhs.unitized_norm();
     }
 }
-public extension Flector: UnitizedNorm {
-    public typedef float UnitizedNormOutput;
-    public func unitized_norm() -> float {
+public extension Flector {
+    public float unitized_norm() {
         return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }
@@ -30,9 +29,8 @@ public extension UnitizedNormPrefixOrPostfix {
         return rhs.unitized_norm();
     }
 }
-public extension Line: UnitizedNorm {
-    public typedef float UnitizedNormOutput;
-    public func unitized_norm() -> float {
+public extension Line {
+    public float unitized_norm() {
         return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }
@@ -48,9 +46,8 @@ public extension UnitizedNormPrefixOrPostfix {
         return rhs.unitized_norm();
     }
 }
-public extension Motor: UnitizedNorm {
-    public typedef float UnitizedNormOutput;
-    public func unitized_norm() -> float {
+public extension Motor {
+    public float unitized_norm() {
         return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }
@@ -66,9 +63,8 @@ public extension UnitizedNormPrefixOrPostfix {
         return rhs.unitized_norm();
     }
 }
-public extension MultiVector: UnitizedNorm {
-    public typedef float UnitizedNormOutput;
-    public func unitized_norm() -> float {
+public extension MultiVector {
+    public float unitized_norm() {
         return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }
@@ -84,9 +80,8 @@ public extension UnitizedNormPrefixOrPostfix {
         return rhs.unitized_norm();
     }
 }
-public extension Point: UnitizedNorm {
-    public typedef float UnitizedNormOutput;
-    public func unitized_norm() -> float {
+public extension Point {
+    public float unitized_norm() {
         return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }

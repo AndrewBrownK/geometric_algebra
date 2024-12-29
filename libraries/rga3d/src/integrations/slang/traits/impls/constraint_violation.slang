@@ -12,9 +12,8 @@ public extension ConstraintViolationPrefixOrPostfix {
         return rhs.constraint_violation();
     }
 }
-public extension DualNum: ConstraintViolation {
-    public typedef AntiScalar ConstraintViolationOutput;
-    public func constraint_violation() -> AntiScalar {
+public extension DualNum {
+    public AntiScalar constraint_violation() {
         return AntiScalar.from_groups(
             /* e1234 */
             this.scalar * this.e1234 * 2.0
@@ -33,9 +32,8 @@ public extension ConstraintViolationPrefixOrPostfix {
         return rhs.constraint_violation();
     }
 }
-public extension Flector: ConstraintViolation {
-    public typedef AntiScalar ConstraintViolationOutput;
-    public func constraint_violation() -> AntiScalar {
+public extension Flector {
+    public AntiScalar constraint_violation() {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -60,9 +58,8 @@ public extension ConstraintViolationPrefixOrPostfix {
         return rhs.constraint_violation();
     }
 }
-public extension Line: ConstraintViolation {
-    public typedef AntiScalar ConstraintViolationOutput;
-    public func constraint_violation() -> AntiScalar {
+public extension Line {
+    public AntiScalar constraint_violation() {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
@@ -87,9 +84,8 @@ public extension ConstraintViolationPrefixOrPostfix {
         return rhs.constraint_violation();
     }
 }
-public extension Motor: ConstraintViolation {
-    public typedef AntiScalar ConstraintViolationOutput;
-    public func constraint_violation() -> AntiScalar {
+public extension Motor {
+    public AntiScalar constraint_violation() {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -107,11 +103,6 @@ public extension MultiVector {
     public MultiVector operator /(ConstraintViolationPrefixOrPostfix rhs)  {
         return this.constraint_violation();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ConstraintViolationPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.constraint_violation();
-        return *this;
-    }
 }
 public extension ConstraintViolationPrefixOrPostfix {
     // Fancy prefix trick
@@ -119,9 +110,8 @@ public extension ConstraintViolationPrefixOrPostfix {
         return rhs.constraint_violation();
     }
 }
-public extension MultiVector: ConstraintViolation {
-    public typedef MultiVector ConstraintViolationOutput;
-    public func constraint_violation() -> MultiVector {
+public extension MultiVector {
+    public MultiVector constraint_violation() {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 

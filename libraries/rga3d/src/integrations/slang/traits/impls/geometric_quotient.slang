@@ -12,18 +12,16 @@ public extension GeometricQuotientInfixPartial<AntiScalar> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension AntiScalar: GeometricQuotient<DualNum> {
-    public typedef AntiScalar GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar geometric_quotient(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (other.scalar)
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Flector> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Flector {
+public extension AntiScalar {
+    public Flector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -48,18 +46,16 @@ public extension AntiScalar: GeometricQuotient<Flector> {
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Horizon> {
-    public typedef Origin GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Origin {
+public extension AntiScalar {
+    public Origin geometric_quotient(Horizon other) {
         return Origin.from_groups(
             /* e4 */
             this.e1234 / (other.e321)
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Line> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Line {
+public extension AntiScalar {
+    public Line geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -78,9 +74,8 @@ public extension AntiScalar: GeometricQuotient<Line> {
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Motor> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Motor {
+public extension AntiScalar {
+    public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -99,9 +94,8 @@ public extension AntiScalar: GeometricQuotient<Motor> {
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension AntiScalar {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -144,18 +138,16 @@ public extension AntiScalar: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Plane> {
-    public typedef Origin GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Origin {
+public extension AntiScalar {
+    public Origin geometric_quotient(Plane other) {
         return Origin.from_groups(
             /* e4 */
             this.e1234 / (other.e321)
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Point> {
-    public typedef Plane GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Plane {
+public extension AntiScalar {
+    public Plane geometric_quotient(Point other) {
         Scalar other_2 = Scalar.from_groups(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
@@ -166,9 +158,8 @@ public extension AntiScalar: GeometricQuotient<Point> {
         );
     }
 }
-public extension AntiScalar: GeometricQuotient<Scalar> {
-    public typedef AntiScalar GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar geometric_quotient(Scalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (other.scalar)
@@ -187,9 +178,8 @@ public extension GeometricQuotientInfixPartial<DualNum> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension DualNum: GeometricQuotient<DualNum> {
-    public typedef DualNum GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> DualNum {
+public extension DualNum {
+    public DualNum geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -200,9 +190,8 @@ public extension DualNum: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Flector> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Flector {
+public extension DualNum {
+    public Flector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -227,9 +216,8 @@ public extension DualNum: GeometricQuotient<Flector> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Horizon> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Flector {
+public extension DualNum {
+    public Flector geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -242,9 +230,8 @@ public extension DualNum: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Line> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Line {
+public extension DualNum {
+    public Line geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -269,9 +256,8 @@ public extension DualNum: GeometricQuotient<Line> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Motor> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Motor {
+public extension DualNum {
+    public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -296,9 +282,8 @@ public extension DualNum: GeometricQuotient<Motor> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension DualNum {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -341,9 +326,8 @@ public extension DualNum: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Plane> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Flector {
+public extension DualNum {
+    public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -356,9 +340,8 @@ public extension DualNum: GeometricQuotient<Plane> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Point> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Flector {
+public extension DualNum {
+    public Flector geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -371,9 +354,8 @@ public extension DualNum: GeometricQuotient<Point> {
         );
     }
 }
-public extension DualNum: GeometricQuotient<Scalar> {
-    public typedef DualNum GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> DualNum {
+public extension DualNum {
+    public DualNum geometric_quotient(Scalar other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0/other.scalar) * this.group0.xy
@@ -392,9 +374,8 @@ public extension GeometricQuotientInfixPartial<Flector> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Flector: GeometricQuotient<DualNum> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Flector {
+public extension Flector {
+    public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -407,9 +388,8 @@ public extension Flector: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Flector> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Motor {
+public extension Flector {
+    public Motor geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -434,9 +414,8 @@ public extension Flector: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Horizon> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Motor {
+public extension Flector {
+    public Motor geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -449,9 +428,8 @@ public extension Flector: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Line> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Flector {
+public extension Flector {
+    public Flector geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -476,9 +454,8 @@ public extension Flector: GeometricQuotient<Line> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Motor> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Flector {
+public extension Flector {
+    public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -503,9 +480,8 @@ public extension Flector: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Flector: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Flector {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -548,9 +524,8 @@ public extension Flector: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Plane> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Motor {
+public extension Flector {
+    public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -563,9 +538,8 @@ public extension Flector: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Point> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Motor {
+public extension Flector {
+    public Motor geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -578,9 +552,8 @@ public extension Flector: GeometricQuotient<Point> {
         );
     }
 }
-public extension Flector: GeometricQuotient<Scalar> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Flector {
+public extension Flector {
+    public Flector geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -605,9 +578,8 @@ public extension GeometricQuotientInfixPartial<Horizon> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Horizon: GeometricQuotient<DualNum> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Flector {
+public extension Horizon {
+    public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -620,9 +592,8 @@ public extension Horizon: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Flector> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Motor {
+public extension Horizon {
+    public Motor geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -647,18 +618,16 @@ public extension Horizon: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Horizon> {
-    public typedef Scalar GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Scalar {
+public extension Horizon {
+    public Scalar geometric_quotient(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             this.e321 / (other.e321)
         );
     }
 }
-public extension Horizon: GeometricQuotient<Line> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Flector {
+public extension Horizon {
+    public Flector geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -683,9 +652,8 @@ public extension Horizon: GeometricQuotient<Line> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Motor> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Flector {
+public extension Horizon {
+    public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -710,9 +678,8 @@ public extension Horizon: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Horizon {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -755,9 +722,8 @@ public extension Horizon: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Plane> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Motor {
+public extension Horizon {
+    public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -770,9 +736,8 @@ public extension Horizon: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Point> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Motor {
+public extension Horizon {
+    public Motor geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -785,9 +750,8 @@ public extension Horizon: GeometricQuotient<Point> {
         );
     }
 }
-public extension Horizon: GeometricQuotient<Scalar> {
-    public typedef Horizon GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Horizon {
+public extension Horizon {
+    public Horizon geometric_quotient(Scalar other) {
         return Horizon.from_groups(
             /* e321 */
             this.e321 / (other.scalar)
@@ -806,9 +770,8 @@ public extension GeometricQuotientInfixPartial<Line> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Line: GeometricQuotient<DualNum> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Line {
+public extension Line {
+    public Line geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -821,9 +784,8 @@ public extension Line: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Line: GeometricQuotient<Flector> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Flector {
+public extension Line {
+    public Flector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -848,9 +810,8 @@ public extension Line: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Line: GeometricQuotient<Horizon> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Flector {
+public extension Line {
+    public Flector geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -863,9 +824,8 @@ public extension Line: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension Line: GeometricQuotient<Line> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Motor {
+public extension Line {
+    public Motor geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -890,9 +850,8 @@ public extension Line: GeometricQuotient<Line> {
         );
     }
 }
-public extension Line: GeometricQuotient<Motor> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Motor {
+public extension Line {
+    public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -917,9 +876,8 @@ public extension Line: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Line: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Line {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -962,9 +920,8 @@ public extension Line: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Line: GeometricQuotient<Plane> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Flector {
+public extension Line {
+    public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -977,9 +934,8 @@ public extension Line: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Line: GeometricQuotient<Point> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Flector {
+public extension Line {
+    public Flector geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -992,9 +948,8 @@ public extension Line: GeometricQuotient<Point> {
         );
     }
 }
-public extension Line: GeometricQuotient<Scalar> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Line {
+public extension Line {
+    public Line geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -1019,9 +974,8 @@ public extension GeometricQuotientInfixPartial<Motor> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Motor: GeometricQuotient<DualNum> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Motor {
+public extension Motor {
+    public Motor geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -1034,9 +988,8 @@ public extension Motor: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Flector> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Flector {
+public extension Motor {
+    public Flector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1061,9 +1014,8 @@ public extension Motor: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Horizon> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Flector {
+public extension Motor {
+    public Flector geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1076,9 +1028,8 @@ public extension Motor: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Line> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Motor {
+public extension Motor {
+    public Motor geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -1103,9 +1054,8 @@ public extension Motor: GeometricQuotient<Line> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Motor> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Motor {
+public extension Motor {
+    public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1130,9 +1080,8 @@ public extension Motor: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Motor: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Motor {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -1175,9 +1124,8 @@ public extension Motor: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Plane> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Flector {
+public extension Motor {
+    public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1190,9 +1138,8 @@ public extension Motor: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Point> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Flector {
+public extension Motor {
+    public Flector geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -1205,9 +1152,8 @@ public extension Motor: GeometricQuotient<Point> {
         );
     }
 }
-public extension Motor: GeometricQuotient<Scalar> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Motor {
+public extension Motor {
+    public Motor geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -1232,9 +1178,8 @@ public extension GeometricQuotientInfixPartial<MultiVector> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension MultiVector: GeometricQuotient<DualNum> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -1253,9 +1198,8 @@ public extension MultiVector: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Flector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1286,9 +1230,8 @@ public extension MultiVector: GeometricQuotient<Flector> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Horizon> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1307,9 +1250,8 @@ public extension MultiVector: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Line> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -1340,9 +1282,8 @@ public extension MultiVector: GeometricQuotient<Line> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Motor> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1373,9 +1314,8 @@ public extension MultiVector: GeometricQuotient<Motor> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -1418,9 +1358,8 @@ public extension MultiVector: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Plane> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1439,9 +1378,8 @@ public extension MultiVector: GeometricQuotient<Plane> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Point> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -1460,9 +1398,8 @@ public extension MultiVector: GeometricQuotient<Point> {
         );
     }
 }
-public extension MultiVector: GeometricQuotient<Scalar> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> MultiVector {
+public extension MultiVector {
+    public MultiVector geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar.from_groups(
             /* scalar */
             1.0/other.scalar
@@ -1493,18 +1430,16 @@ public extension GeometricQuotientInfixPartial<Origin> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Origin: GeometricQuotient<DualNum> {
-    public typedef Origin GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Origin {
+public extension Origin {
+    public Origin geometric_quotient(DualNum other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (other.scalar)
         );
     }
 }
-public extension Origin: GeometricQuotient<Flector> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Motor {
+public extension Origin {
+    public Motor geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1529,18 +1464,16 @@ public extension Origin: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Origin: GeometricQuotient<Horizon> {
-    public typedef AntiScalar GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> AntiScalar {
+public extension Origin {
+    public AntiScalar geometric_quotient(Horizon other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
         );
     }
 }
-public extension Origin: GeometricQuotient<Line> {
-    public typedef Plane GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Plane {
+public extension Origin {
+    public Plane geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -1557,9 +1490,8 @@ public extension Origin: GeometricQuotient<Line> {
         );
     }
 }
-public extension Origin: GeometricQuotient<Motor> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Flector {
+public extension Origin {
+    public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1584,9 +1516,8 @@ public extension Origin: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Origin: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Origin {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -1629,18 +1560,16 @@ public extension Origin: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Origin: GeometricQuotient<Plane> {
-    public typedef AntiScalar GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> AntiScalar {
+public extension Origin {
+    public AntiScalar geometric_quotient(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
         );
     }
 }
-public extension Origin: GeometricQuotient<Point> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Line {
+public extension Origin {
+    public Line geometric_quotient(Point other) {
         Scalar other_2 = Scalar.from_groups(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
@@ -1653,9 +1582,8 @@ public extension Origin: GeometricQuotient<Point> {
         );
     }
 }
-public extension Origin: GeometricQuotient<Scalar> {
-    public typedef Origin GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Origin {
+public extension Origin {
+    public Origin geometric_quotient(Scalar other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (other.scalar)
@@ -1674,9 +1602,8 @@ public extension GeometricQuotientInfixPartial<Plane> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Plane: GeometricQuotient<DualNum> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Flector {
+public extension Plane {
+    public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -1689,9 +1616,8 @@ public extension Plane: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Flector> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Motor {
+public extension Plane {
+    public Motor geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1716,9 +1642,8 @@ public extension Plane: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Horizon> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Motor {
+public extension Plane {
+    public Motor geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1731,9 +1656,8 @@ public extension Plane: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Line> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Flector {
+public extension Plane {
+    public Flector geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -1758,9 +1682,8 @@ public extension Plane: GeometricQuotient<Line> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Motor> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Flector {
+public extension Plane {
+    public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1785,9 +1708,8 @@ public extension Plane: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Plane: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Plane {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -1830,9 +1752,8 @@ public extension Plane: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Plane> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Motor {
+public extension Plane {
+    public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -1845,9 +1766,8 @@ public extension Plane: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Point> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Motor {
+public extension Plane {
+    public Motor geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -1860,9 +1780,8 @@ public extension Plane: GeometricQuotient<Point> {
         );
     }
 }
-public extension Plane: GeometricQuotient<Scalar> {
-    public typedef Plane GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Plane {
+public extension Plane {
+    public Plane geometric_quotient(Scalar other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0/other.scalar) * this.group0
@@ -1881,9 +1800,8 @@ public extension GeometricQuotientInfixPartial<Point> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Point: GeometricQuotient<DualNum> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> Flector {
+public extension Point {
+    public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
@@ -1896,9 +1814,8 @@ public extension Point: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Point: GeometricQuotient<Flector> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Motor {
+public extension Point {
+    public Motor geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -1923,9 +1840,8 @@ public extension Point: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Point: GeometricQuotient<Horizon> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Motor {
+public extension Point {
+    public Motor geometric_quotient(Horizon other) {
         Horizon geometric_product = Horizon.from_groups(
             /* e321 */
             1.0/other.e321 * -1.0
@@ -1938,9 +1854,8 @@ public extension Point: GeometricQuotient<Horizon> {
         );
     }
 }
-public extension Point: GeometricQuotient<Line> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Flector {
+public extension Point {
+    public Flector geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -1965,9 +1880,8 @@ public extension Point: GeometricQuotient<Line> {
         );
     }
 }
-public extension Point: GeometricQuotient<Motor> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Flector {
+public extension Point {
+    public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1992,9 +1906,8 @@ public extension Point: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Point: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Point {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -2037,9 +1950,8 @@ public extension Point: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Point: GeometricQuotient<Plane> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Motor {
+public extension Point {
+    public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
@@ -2052,9 +1964,8 @@ public extension Point: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Point: GeometricQuotient<Point> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Motor {
+public extension Point {
+    public Motor geometric_quotient(Point other) {
         Point geometric_product = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
@@ -2067,9 +1978,8 @@ public extension Point: GeometricQuotient<Point> {
         );
     }
 }
-public extension Point: GeometricQuotient<Scalar> {
-    public typedef Point GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Point {
+public extension Point {
+    public Point geometric_quotient(Scalar other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0/other.scalar) * this.group0
@@ -2088,9 +1998,8 @@ public extension GeometricQuotientInfixPartial<Scalar> {
         return this.a.geometric_quotient(rhs);
     }
 }
-public extension Scalar: GeometricQuotient<DualNum> {
-    public typedef DualNum GeometricQuotientOutput;
-    public func geometric_quotient(other: DualNum) -> DualNum {
+public extension Scalar {
+    public DualNum geometric_quotient(DualNum other) {
         Scalar other_2 = Scalar.from_groups(
             /* scalar */
             pow(other.scalar, -2)
@@ -2101,9 +2010,8 @@ public extension Scalar: GeometricQuotient<DualNum> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Flector> {
-    public typedef Flector GeometricQuotientOutput;
-    public func geometric_quotient(other: Flector) -> Flector {
+public extension Scalar {
+    public Flector geometric_quotient(Flector other) {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0, 
@@ -2128,18 +2036,16 @@ public extension Scalar: GeometricQuotient<Flector> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Horizon> {
-    public typedef Horizon GeometricQuotientOutput;
-    public func geometric_quotient(other: Horizon) -> Horizon {
+public extension Scalar {
+    public Horizon geometric_quotient(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             this.scalar / (other.e321) * -1.0
         );
     }
 }
-public extension Scalar: GeometricQuotient<Line> {
-    public typedef Line GeometricQuotientOutput;
-    public func geometric_quotient(other: Line) -> Line {
+public extension Scalar {
+    public Line geometric_quotient(Line other) {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
@@ -2164,9 +2070,8 @@ public extension Scalar: GeometricQuotient<Line> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Motor> {
-    public typedef Motor GeometricQuotientOutput;
-    public func geometric_quotient(other: Motor) -> Motor {
+public extension Scalar {
+    public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -2191,9 +2096,8 @@ public extension Scalar: GeometricQuotient<Motor> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<MultiVector> {
-    public typedef MultiVector GeometricQuotientOutput;
-    public func geometric_quotient(other: MultiVector) -> MultiVector {
+public extension Scalar {
+    public MultiVector geometric_quotient(MultiVector other) {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -2236,9 +2140,8 @@ public extension Scalar: GeometricQuotient<MultiVector> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Plane> {
-    public typedef Plane GeometricQuotientOutput;
-    public func geometric_quotient(other: Plane) -> Plane {
+public extension Scalar {
+    public Plane geometric_quotient(Plane other) {
         Plane reverse = Plane.from_groups(
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
@@ -2253,9 +2156,8 @@ public extension Scalar: GeometricQuotient<Plane> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Point> {
-    public typedef Point GeometricQuotientOutput;
-    public func geometric_quotient(other: Point) -> Point {
+public extension Scalar {
+    public Point geometric_quotient(Point other) {
         Scalar other_2 = Scalar.from_groups(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
@@ -2266,9 +2168,8 @@ public extension Scalar: GeometricQuotient<Point> {
         );
     }
 }
-public extension Scalar: GeometricQuotient<Scalar> {
-    public typedef Scalar GeometricQuotientOutput;
-    public func geometric_quotient(other: Scalar) -> Scalar {
+public extension Scalar {
+    public Scalar geometric_quotient(Scalar other) {
         return Scalar.from_groups(
             /* scalar */
             this.scalar / (other.scalar)

@@ -79,14 +79,14 @@ public extension MultiVector {
         get { return group4[3]; }
         set { group4[3] = newValue; }
     }
-    public static func from_elements(
-        scalar: float, e1234: float, e1: float, e2: float, e3: float, e4: float, e41: float, e42: float, e43: float, e23: float, e31: float, e12: float, e423: float, e431: float, e412: float, e321: float
-    ) -> MultiVector {
+    public static MultiVector from_elements(
+        float scalar, float e1234, float e1, float e2, float e3, float e4, float e41, float e42, float e43, float e23, float e31, float e12, float e423, float e431, float e412, float e321
+    ) {
         return MultiVector(float4(scalar, e1234, 0.0, 0.0), float4(e1, e2, e3, e4), float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0), float4(e423, e431, e412, e321));
     }
-    internal static func from_groups(
-        g0: float2, g1: float4, g2: float3, g3: float3, g4: float4
-    ) -> MultiVector {
+    internal static MultiVector from_groups(
+        float2 g0, float4 g1, float3 g2, float3 g3, float4 g4
+    ) {
         return MultiVector(float4(g0, 0.0, 0.0), g1, float4(g2, 0.0), float4(g3, 0.0), g4);
     }
 }

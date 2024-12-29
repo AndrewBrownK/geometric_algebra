@@ -1,8 +1,7 @@
 implementing rga3d;
 using traits;
 public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: AntiScalar) -> MultiVector {
+    public MultiVector operator +(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
@@ -18,8 +17,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: DualNum) -> MultiVector {
+    public MultiVector operator +(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -35,8 +33,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector AddOutput;
-    public func operator +(other: Flector) -> Flector {
+    public Flector operator +(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 + this.group0, 
@@ -46,18 +43,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator +=(const Flector& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            other.group0 + this.group0, 
-            /* e423, e431, e412, e321 */
-            other.group1 + this.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector AddOutput;
-    public func operator +(other: Horizon) -> Flector {
+    public Flector operator +(Horizon other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -67,18 +53,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator +=(const Horizon& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1 + float4(float3(0.0), other.e321)
-        );
-    }
-}
-public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Line) -> MultiVector {
+    public MultiVector operator +(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -94,8 +69,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Motor) -> MultiVector {
+    public MultiVector operator +(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
@@ -111,8 +85,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: MultiVector) -> MultiVector {
+    public MultiVector operator +(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -128,8 +101,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector AddOutput;
-    public func operator +(other: Origin) -> Flector {
+    public Flector operator +(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4), 
@@ -139,18 +111,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator +=(const Origin& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 + float4(float3(0.0), other.e4), 
-            /* e423, e431, e412, e321 */
-            this.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector AddOutput;
-    public func operator +(other: Plane) -> Flector {
+    public Flector operator +(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -160,18 +121,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator +=(const Plane& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1 + other.group0
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector AddOutput;
-    public func operator +(other: Point) -> Flector {
+    public Flector operator +(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + other.group0, 
@@ -181,18 +131,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator +=(const Point& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 + other.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Scalar) -> MultiVector {
+    public MultiVector operator +(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
@@ -208,99 +147,62 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector MulOutput;
-    public func operator *(other: AntiScalar) -> Flector {
+    public Flector operator *(AntiScalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public func operator *=(const AntiScalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Flector {
-    public typedef Flector MulOutput;
-    public func operator *(other: DualNum) -> Flector {
+    public Flector operator *(DualNum other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public func operator *=(const DualNum& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Flector {
-    public typedef Motor MulOutput;
-    public func operator *(other: Flector) -> Motor {
+    public Motor operator *(Flector other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Motor MulOutput;
-    public func operator *(other: Horizon) -> Motor {
+    public Motor operator *(Horizon other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Flector MulOutput;
-    public func operator *(other: Line) -> Flector {
+    public Flector operator *(Line other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public func operator *=(const Line& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Flector {
-    public typedef Flector MulOutput;
-    public func operator *(other: Motor) -> Flector {
+    public Flector operator *(Motor other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public func operator *=(const Motor& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Flector {
-    public typedef MultiVector MulOutput;
-    public func operator *(other: MultiVector) -> MultiVector {
+    public MultiVector operator *(MultiVector other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Motor MulOutput;
-    public func operator *(other: Origin) -> Motor {
+    public Motor operator *(Origin other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Motor MulOutput;
-    public func operator *(other: Plane) -> Motor {
+    public Motor operator *(Plane other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Motor MulOutput;
-    public func operator *(other: Point) -> Motor {
+    public Motor operator *(Point other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public typedef Flector MulOutput;
-    public func operator *(other: Scalar) -> Flector {
+    public Flector operator *(Scalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Flector {
-    public func operator *=(const Scalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Flector {
-    public typedef Flector NegOutput;
-    public func neg() -> Flector {
+    public Flector neg() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -310,14 +212,12 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector NotOutput;
-    public func not() -> Flector {
+    public Flector not() {
         return this.right_dual();
     }
 }
 public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: AntiScalar) -> MultiVector {
+    public MultiVector operator -(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
@@ -333,8 +233,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: DualNum) -> MultiVector {
+    public MultiVector operator -(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -350,8 +249,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector SubOutput;
-    public func operator -(other: Flector) -> Flector {
+    public Flector operator -(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
@@ -361,18 +259,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator -=(const Flector& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 - other.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1 - other.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector SubOutput;
-    public func operator -(other: Horizon) -> Flector {
+    public Flector operator -(Horizon other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -382,18 +269,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator -=(const Horizon& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1 + float4(float3(0.0), other.e321 * -1.0)
-        );
-    }
-}
-public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Line) -> MultiVector {
+    public MultiVector operator -(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -409,8 +285,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Motor) -> MultiVector {
+    public MultiVector operator -(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
@@ -426,8 +301,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: MultiVector) -> MultiVector {
+    public MultiVector operator -(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -443,8 +317,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public typedef Flector SubOutput;
-    public func operator -(other: Origin) -> Flector {
+    public Flector operator -(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4 * -1.0), 
@@ -454,18 +327,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator -=(const Origin& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 + float4(float3(0.0), other.e4 * -1.0), 
-            /* e423, e431, e412, e321 */
-            this.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector SubOutput;
-    public func operator -(other: Plane) -> Flector {
+    public Flector operator -(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -475,18 +337,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator -=(const Plane& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1 - other.group0
-        );
-    }
-}
-public extension Flector {
-    public typedef Flector SubOutput;
-    public func operator -(other: Point) -> Flector {
+    public Flector operator -(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
@@ -496,18 +347,7 @@ public extension Flector {
     }
 }
 public extension Flector {
-    public func operator -=(const Point& other) {
-        *this = Flector.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 - other.group0, 
-            /* e423, e431, e412, e321 */
-            this.group1
-        );
-    }
-}
-public extension Flector {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Scalar) -> MultiVector {
+    public MultiVector operator -(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 

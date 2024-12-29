@@ -12,27 +12,24 @@ public extension AntiSandwichInfixPartial<AntiScalar> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension AntiScalar: AntiSandwich<AntiScalar> {
-    public typedef AntiScalar AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_sandwich(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<DualNum> {
-    public typedef DualNum AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> DualNum {
+public extension AntiScalar {
+    public DualNum anti_sandwich(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0.xy
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension AntiScalar {
+    public Flector anti_sandwich(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -41,18 +38,16 @@ public extension AntiScalar: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Horizon> {
-    public typedef Horizon AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Horizon {
+public extension AntiScalar {
+    public Horizon anti_sandwich(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Line> {
-    public typedef Line AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Line {
+public extension AntiScalar {
+    public Line anti_sandwich(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0.xyz, 
@@ -61,9 +56,8 @@ public extension AntiScalar: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension AntiScalar {
+    public Motor anti_sandwich(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -72,9 +66,8 @@ public extension AntiScalar: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension AntiScalar {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0.xy, 
@@ -89,36 +82,32 @@ public extension AntiScalar: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Origin> {
-    public typedef Origin AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Origin {
+public extension AntiScalar {
+    public Origin anti_sandwich(Origin other) {
         return Origin.from_groups(
             /* e4 */
             this.e1234 * other.e4
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Plane> {
-    public typedef Plane AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Plane {
+public extension AntiScalar {
+    public Plane anti_sandwich(Plane other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Point> {
-    public typedef Point AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Point {
+public extension AntiScalar {
+    public Point anti_sandwich(Point other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar: AntiSandwich<Scalar> {
-    public typedef Scalar AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Scalar {
+public extension AntiScalar {
+    public Scalar anti_sandwich(Scalar other) {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
@@ -137,27 +126,24 @@ public extension AntiSandwichInfixPartial<DualNum> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension DualNum: AntiSandwich<AntiScalar> {
-    public typedef DualNum AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> DualNum {
+public extension DualNum {
+    public DualNum anti_sandwich(AntiScalar other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0.xy
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<DualNum> {
-    public typedef DualNum AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> DualNum {
+public extension DualNum {
+    public DualNum anti_sandwich(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension DualNum {
+    public Flector anti_sandwich(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group0.xyz)), this.e1234 * other.e4), 
@@ -166,18 +152,16 @@ public extension DualNum: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Horizon> {
-    public typedef Horizon AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Horizon {
+public extension DualNum {
+    public Horizon anti_sandwich(Horizon other) {
         return Horizon.from_groups(
             /* e321 */
             this.e1234 * other.e321
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Line> {
-    public typedef Line AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Line {
+public extension DualNum {
+    public Line anti_sandwich(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0.xyz, 
@@ -186,9 +170,8 @@ public extension DualNum: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension DualNum {
+    public Motor anti_sandwich(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
@@ -197,9 +180,8 @@ public extension DualNum: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension DualNum {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
@@ -214,9 +196,8 @@ public extension DualNum: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension DualNum {
+    public Flector anti_sandwich(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * other.e4), 
@@ -225,9 +206,8 @@ public extension DualNum: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension DualNum {
+    public Flector anti_sandwich(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
@@ -236,9 +216,8 @@ public extension DualNum: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension DualNum {
+    public Flector anti_sandwich(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
@@ -247,9 +226,8 @@ public extension DualNum: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum: AntiSandwich<Scalar> {
-    public typedef Scalar AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Scalar {
+public extension DualNum {
+    public Scalar anti_sandwich(Scalar other) {
         return Scalar.from_groups(
             /* scalar */
             this.e1234 * other.scalar
@@ -268,9 +246,8 @@ public extension AntiSandwichInfixPartial<Flector> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Flector: AntiSandwich<AntiScalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> Motor {
+public extension Flector {
+    public Motor anti_sandwich(AntiScalar other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -279,9 +256,8 @@ public extension Flector: AntiSandwich<AntiScalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Flector {
+    public Motor anti_sandwich(DualNum other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group0.xyz) - (float3(other.scalar) * this.group1.xyz)), other.e1234 * this.e4), 
@@ -290,9 +266,8 @@ public extension Flector: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Flector {
+    public Flector anti_sandwich(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(other.e423 * this.e4) - (other.e412 * this.e431), -(other.e423 * this.e412) - (other.e431 * this.e4), -(other.e431 * this.e423) - (other.e412 * this.e4), (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group1.yzxx * this.group1.zxyx) - (float4(other.e4) * float4(this.group1.xyz, this.e4)), 
@@ -301,9 +276,8 @@ public extension Flector: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Horizon> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Flector {
+public extension Flector {
+    public Flector anti_sandwich(Horizon other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -312,9 +286,8 @@ public extension Flector: AntiSandwich<Horizon> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Flector {
+    public Motor anti_sandwich(Line other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42), (this.e1 * other.e42) + (this.e431 * other.e23) + (this.e321 * other.e43), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xyz.xxy, other.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.xyz.zyz, other.e43)) - float4((other.group0.xyz.yzx * this.group0.zxy), this.e423 * other.e41), 
@@ -323,9 +296,8 @@ public extension Flector: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Flector {
+    public Motor anti_sandwich(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e2 * other.e43) + (this.e412 * other.e31) + (this.e321 * other.e41) - (this.e431 * other.e12), (this.e3 * other.e41) + (this.e423 * other.e12) + (this.e321 * other.e42) - (this.e412 * other.e23), (this.e3 * other.e1234) + (this.e431 * other.e23) + (this.e321 * other.e43) - (this.e412 * other.scalar), 0.0) + (this.group0.xyxw * other.group0.wwyw) - (this.group1.xyxz * float4(other.group1.wwy, other.e43)) - (other.group0.yzxx * float4(this.group0.zxy, this.e423)) - float4((this.group0.www * other.group1.xyz), this.e431 * other.e42), 
@@ -334,9 +306,8 @@ public extension Flector: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Flector {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.e4 * other.e321) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group1.xw), 
@@ -351,9 +322,8 @@ public extension Flector: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension Flector {
+    public Flector anti_sandwich(Origin other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
@@ -362,9 +332,8 @@ public extension Flector: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Flector {
+    public Flector anti_sandwich(Plane other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(this.e4 * other.e423) - (this.e431 * other.e412), -(this.e4 * other.e431) - (this.e412 * other.e423), -(this.e4 * other.e412) - (this.e423 * other.e431), (this.e431 * other.e431) + (this.e412 * other.e412)) + (this.group1.zxyx * other.group0.yzxx), 
@@ -373,9 +342,8 @@ public extension Flector: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Flector {
+    public Flector anti_sandwich(Point other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
@@ -384,9 +352,8 @@ public extension Flector: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector: AntiSandwich<Scalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Motor {
+public extension Flector {
+    public Motor anti_sandwich(Scalar other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.scalar) * this.group1.xyz * float3(-1.0)), 0.0), 
@@ -407,9 +374,8 @@ public extension AntiSandwichInfixPartial<Horizon> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Horizon: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Horizon {
+    public Flector anti_sandwich(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -418,18 +384,16 @@ public extension Horizon: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Horizon: AntiSandwich<Line> {
-    public typedef Scalar AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Scalar {
+public extension Horizon {
+    public Scalar anti_sandwich(Line other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * other.group0.xyz), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Horizon: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Horizon {
+    public Motor anti_sandwich(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * other.group0.xyz), 0.0), 
@@ -438,9 +402,8 @@ public extension Horizon: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Horizon: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Horizon {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
@@ -455,9 +418,8 @@ public extension Horizon: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Horizon: AntiSandwich<Plane> {
-    public typedef Point AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Point {
+public extension Horizon {
+    public Point anti_sandwich(Plane other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -478,9 +440,8 @@ public extension AntiSandwichInfixPartial<Line> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Line: AntiSandwich<AntiScalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> Motor {
+public extension Line {
+    public Motor anti_sandwich(AntiScalar other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0.xyz, 
@@ -489,9 +450,8 @@ public extension Line: AntiSandwich<AntiScalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Line {
+    public Motor anti_sandwich(DualNum other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0.xyz, 
@@ -500,9 +460,8 @@ public extension Line: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Line {
+    public Flector anti_sandwich(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e1 * this.e43) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e321 * this.e42), (other.e2 * this.e41) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) - (other.group1.yzxy * float4(this.group1.xyz.zxy, this.e42)) - float4((this.group0.xyz.zxy * other.group0.yzx), other.e423 * this.e41), 
@@ -511,18 +470,16 @@ public extension Line: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Horizon> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Flector {
+public extension Line {
+    public Flector anti_sandwich(Horizon other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.e321) * this.group0.xyz), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Line {
+    public Motor anti_sandwich(Line other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e43 * this.e42, other.e41 * this.e43, other.e42 * this.e41, -(other.e42 * this.e42) - (other.e43 * this.e43)) - float4((other.group0.xyz.yzx * this.group0.xyz.zxy), other.e41 * this.e41), 
@@ -531,9 +488,8 @@ public extension Line: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Line {
+    public Motor anti_sandwich(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((this.e41 * other.e1234) + (this.e42 * other.e43), (this.e42 * other.e1234) + (this.e43 * other.e41), (this.e41 * other.e42) + (this.e43 * other.e1234), -(this.e42 * other.e42) - (this.e43 * other.e43)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e41)), 
@@ -542,9 +498,8 @@ public extension Line: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Line {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
@@ -559,9 +514,8 @@ public extension Line: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension Line {
+    public Flector anti_sandwich(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.e4) * this.group1.xyz), 0.0), 
@@ -570,9 +524,8 @@ public extension Line: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Line {
+    public Flector anti_sandwich(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.xyz.zxy, this.e41)), 
@@ -581,9 +534,8 @@ public extension Line: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Line {
+    public Flector anti_sandwich(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.e4) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * other.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * other.group0.yzx), 0.0), 
@@ -592,9 +544,8 @@ public extension Line: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line: AntiSandwich<Scalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Motor {
+public extension Line {
+    public Motor anti_sandwich(Scalar other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -615,9 +566,8 @@ public extension AntiSandwichInfixPartial<Motor> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Motor: AntiSandwich<AntiScalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> Motor {
+public extension Motor {
+    public Motor anti_sandwich(AntiScalar other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -626,9 +576,8 @@ public extension Motor: AntiSandwich<AntiScalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Motor {
+    public Motor anti_sandwich(DualNum other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
@@ -637,9 +586,8 @@ public extension Motor: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Motor {
+    public Flector anti_sandwich(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23) + (other.e423 * this.scalar) + (other.e412 * this.e31) + (other.e321 * this.e41), (other.e2 * this.e1234) + (other.e4 * this.e31) + (other.e423 * this.e12) + (other.e431 * this.scalar) + (other.e321 * this.e42), (other.e3 * this.e1234) + (other.e4 * this.e12) + (other.e431 * this.e23) + (other.e412 * this.scalar) + (other.e321 * this.e43), other.e412 * this.e43 * -1.0) + (other.group0.xxyw * this.group0.wzxw) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - (this.group0.zxyx * float4(other.group0.yzx, other.e423)), 
@@ -648,9 +596,8 @@ public extension Motor: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Horizon> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Flector {
+public extension Motor {
+    public Flector anti_sandwich(Horizon other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.e321) * this.group0.xyz), 0.0), 
@@ -659,9 +606,8 @@ public extension Motor: AntiSandwich<Horizon> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Motor {
+    public Motor anti_sandwich(Line other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e41 * this.e1234) + (other.e43 * this.e42), (other.e41 * this.e43) + (other.e42 * this.e1234), (other.e42 * this.e41) + (other.e43 * this.e1234), -(other.e42 * this.e42) - (other.e43 * this.e43)) - (this.group0.zxyx * float4(other.group0.xyz.yzx, other.e41)), 
@@ -670,9 +616,8 @@ public extension Motor: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Motor {
+    public Motor anti_sandwich(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((other.e43 * this.e42) + (other.e1234 * this.e41), (other.e42 * this.e1234) + (other.e1234 * this.e42), (other.e43 * this.e1234) + (other.e1234 * this.e43), -(other.e42 * this.e42) - (other.e43 * this.e43)) + (other.group0.xxyw * this.group0.wzxw) - (other.group0.yzxx * this.group0.zxyx), 
@@ -681,9 +626,8 @@ public extension Motor: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Motor {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12), 0.0) + (float2(this.e1234) * other.group0.xy) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
@@ -698,9 +642,8 @@ public extension Motor: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension Motor {
+    public Flector anti_sandwich(Origin other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e4) * float4(this.group1.xyz, this.e1234), 
@@ -709,9 +652,8 @@ public extension Motor: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Motor {
+    public Flector anti_sandwich(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412) + (this.scalar * other.e423), (this.e42 * other.e321) + (this.e12 * other.e423) + (this.scalar * other.e431), (this.e43 * other.e321) + (this.e23 * other.e431) + (this.scalar * other.e412), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
@@ -720,9 +662,8 @@ public extension Motor: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Motor {
+    public Flector anti_sandwich(Point other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(this.e1234) * other.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (this.group0.yzx * other.group0.zxy) - (this.group0.zxy * other.group0.yzx)), this.e1234 * other.e4), 
@@ -731,9 +672,8 @@ public extension Motor: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor: AntiSandwich<Scalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Motor {
+public extension Motor {
+    public Motor anti_sandwich(Scalar other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -754,9 +694,8 @@ public extension AntiSandwichInfixPartial<MultiVector> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension MultiVector: AntiSandwich<AntiScalar> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0.xy, 
@@ -771,9 +710,8 @@ public extension MultiVector: AntiSandwich<AntiScalar> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<DualNum> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 
@@ -788,9 +726,8 @@ public extension MultiVector: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Flector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Flector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * other.group0.xw), 
@@ -805,9 +742,8 @@ public extension MultiVector: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Horizon> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Horizon other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
@@ -822,9 +758,8 @@ public extension MultiVector: AntiSandwich<Horizon> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Line> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)), 
@@ -839,9 +774,8 @@ public extension MultiVector: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Motor> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12), 0.0) + (float2(other.e1234) * this.group0.xy) - (float2(this.e41) * float2(other.e23, other.e41)) - (float2(this.e42) * float2(other.e31, other.e42)) - (float2(this.e43) * float2(other.e12, other.e43)), 
@@ -856,9 +790,8 @@ public extension MultiVector: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e1234 * this.scalar) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * other.group0.xy) - (float2(other.e41) * float2(this.e23, this.e41)) - (float2(other.e42) * float2(this.e31, this.e42)) - (float2(other.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * other.group1.xw), 
@@ -873,9 +806,8 @@ public extension MultiVector: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Origin> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Origin other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e4) * float2(this.e321, this.e4) * float2(-1.0), 
@@ -890,9 +822,8 @@ public extension MultiVector: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Plane> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Plane other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e4 * other.e321, 0.0) + (float2(other.e423) * float2(this.e1, this.e423)) + (float2(other.e431) * float2(this.e2, this.e431)) + (float2(other.e412) * float2(this.e3, this.e412)), 
@@ -907,9 +838,8 @@ public extension MultiVector: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Point> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Point other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), this.e4 * other.e4) * float2(1.0, -1.0), 
@@ -924,9 +854,8 @@ public extension MultiVector: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector: AntiSandwich<Scalar> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_sandwich(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e1234 * other.scalar, 1.0) * float2(1.0, 0.0), 
@@ -953,18 +882,16 @@ public extension AntiSandwichInfixPartial<Origin> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Origin: AntiSandwich<AntiScalar> {
-    public typedef AntiScalar AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> AntiScalar {
+public extension Origin {
+    public AntiScalar anti_sandwich(AntiScalar other) {
         return Origin.from_groups(
             /* e4 */
             other.e1234 * this.e4
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Origin {
+    public Motor anti_sandwich(DualNum other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.e1234 * this.e4), 
@@ -973,9 +900,8 @@ public extension Origin: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Origin {
+    public Flector anti_sandwich(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group1.xyz, other.e4) * float4(-1.0), 
@@ -984,18 +910,16 @@ public extension Origin: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Horizon> {
-    public typedef Horizon AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Horizon {
+public extension Origin {
+    public Horizon anti_sandwich(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Origin {
+    public Motor anti_sandwich(Line other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(this.e4) * other.group1.xyz * float3(-1.0)), 0.0), 
@@ -1004,9 +928,8 @@ public extension Origin: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Origin {
+    public Motor anti_sandwich(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.e4) * float4(other.group1.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -1015,9 +938,8 @@ public extension Origin: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Origin {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.e4) * float2(other.e321, other.e4) * float2(1.0, -1.0), 
@@ -1032,18 +954,16 @@ public extension Origin: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Origin> {
-    public typedef Origin AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Origin {
+public extension Origin {
+    public Origin anti_sandwich(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4 * -1.0
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Origin {
+    public Flector anti_sandwich(Plane other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(this.e4) * other.group0.xyz * float3(-1.0)), 0.0), 
@@ -1052,9 +972,8 @@ public extension Origin: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Origin {
+    public Flector anti_sandwich(Point other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e4 * other.e4 * -1.0), 
@@ -1063,9 +982,8 @@ public extension Origin: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Origin: AntiSandwich<Scalar> {
-    public typedef Scalar AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Scalar {
+public extension Origin {
+    public Scalar anti_sandwich(Scalar other) {
         return Horizon.from_groups(
             /* e321 */
             this.e4 * other.scalar * -1.0
@@ -1084,18 +1002,16 @@ public extension AntiSandwichInfixPartial<Plane> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Plane: AntiSandwich<AntiScalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> Motor {
+public extension Plane {
+    public Motor anti_sandwich(AntiScalar other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Plane {
+    public Motor anti_sandwich(DualNum other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.group0.xy.xx, other.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1104,9 +1020,8 @@ public extension Plane: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Plane {
+    public Flector anti_sandwich(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(-(other.e4 * this.e423) - (other.e412 * this.e431), -(other.e4 * this.e431) - (other.e423 * this.e412), -(other.e4 * this.e412) - (other.e431 * this.e423), (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group1.yzxx * this.group0.zxyx), 
@@ -1115,9 +1030,8 @@ public extension Plane: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Horizon> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Flector {
+public extension Plane {
+    public Flector anti_sandwich(Horizon other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -1126,9 +1040,8 @@ public extension Plane: AntiSandwich<Horizon> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Plane {
+    public Motor anti_sandwich(Line other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.xyz.zxy, other.e41)), 
@@ -1137,9 +1050,8 @@ public extension Plane: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Plane {
+    public Motor anti_sandwich(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), other.e43 * this.e412 * -1.0) - (this.group0.xyzy * float4(other.group1.www, other.e42)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
@@ -1148,9 +1060,8 @@ public extension Plane: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Plane {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)), 
@@ -1165,9 +1076,8 @@ public extension Plane: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension Plane {
+    public Flector anti_sandwich(Origin other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(other.e4) * this.group0.xyz * float3(-1.0)), 0.0), 
@@ -1176,9 +1086,8 @@ public extension Plane: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Plane {
+    public Flector anti_sandwich(Plane other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e412 * this.e431 * -1.0, other.e423 * this.e412 * -1.0, other.e431 * this.e423 * -1.0, (other.e431 * this.e431) + (other.e412 * this.e412)) + (other.group0.yzxx * this.group0.zxyx), 
@@ -1187,9 +1096,8 @@ public extension Plane: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Plane {
+    public Flector anti_sandwich(Point other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1198,9 +1106,8 @@ public extension Plane: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane: AntiSandwich<Scalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Motor {
+public extension Plane {
+    public Motor anti_sandwich(Scalar other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(other.scalar) * this.group0.xyz * float3(-1.0)), 0.0)
@@ -1219,18 +1126,16 @@ public extension AntiSandwichInfixPartial<Point> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Point: AntiSandwich<AntiScalar> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: AntiScalar) -> Motor {
+public extension Point {
+    public Motor anti_sandwich(AntiScalar other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<DualNum> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: DualNum) -> Motor {
+public extension Point {
+    public Motor anti_sandwich(DualNum other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
@@ -1239,9 +1144,8 @@ public extension Point: AntiSandwich<DualNum> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Point {
+    public Flector anti_sandwich(Flector other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group1.xyz, other.e4) * float4(-1.0), 
@@ -1250,18 +1154,16 @@ public extension Point: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Horizon> {
-    public typedef Horizon AntiSandwichOutput;
-    public func anti_sandwich(other: Horizon) -> Horizon {
+public extension Point {
+    public Horizon anti_sandwich(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             other.e321 * this.e4
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Line> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Motor {
+public extension Point {
+    public Motor anti_sandwich(Line other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((other.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * other.group1.xyz), 0.0) - float4((other.group0.xyz.yzx * this.group0.zxy), 0.0), 
@@ -1270,9 +1172,8 @@ public extension Point: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Point {
+    public Motor anti_sandwich(Motor other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(((float3(other.e1234) * this.group0.xyz) + (other.group0.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.yzx * this.group0.zxy)), other.e1234 * this.e4), 
@@ -1281,9 +1182,8 @@ public extension Point: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Point {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), other.e4 * this.e4) * float2(1.0, -1.0), 
@@ -1298,9 +1198,8 @@ public extension Point: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Origin> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Origin) -> Flector {
+public extension Point {
+    public Flector anti_sandwich(Origin other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), other.e4 * this.e4 * -1.0), 
@@ -1309,9 +1208,8 @@ public extension Point: AntiSandwich<Origin> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Plane> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Flector {
+public extension Point {
+    public Flector anti_sandwich(Plane other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
@@ -1320,9 +1218,8 @@ public extension Point: AntiSandwich<Plane> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Point> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Point) -> Flector {
+public extension Point {
+    public Flector anti_sandwich(Point other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), other.e4 * this.e4 * -1.0), 
@@ -1331,9 +1228,8 @@ public extension Point: AntiSandwich<Point> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Point: AntiSandwich<Scalar> {
-    public typedef Scalar AntiSandwichOutput;
-    public func anti_sandwich(other: Scalar) -> Scalar {
+public extension Point {
+    public Scalar anti_sandwich(Scalar other) {
         return Horizon.from_groups(
             /* e321 */
             this.e4 * other.scalar * -1.0
@@ -1352,9 +1248,8 @@ public extension AntiSandwichInfixPartial<Scalar> {
         return this.a.anti_sandwich(rhs);
     }
 }
-public extension Scalar: AntiSandwich<Flector> {
-    public typedef Flector AntiSandwichOutput;
-    public func anti_sandwich(other: Flector) -> Flector {
+public extension Scalar {
+    public Flector anti_sandwich(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(this.scalar) * other.group1.xyz), 0.0), 
@@ -1363,9 +1258,8 @@ public extension Scalar: AntiSandwich<Flector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Scalar: AntiSandwich<Line> {
-    public typedef Line AntiSandwichOutput;
-    public func anti_sandwich(other: Line) -> Line {
+public extension Scalar {
+    public Line anti_sandwich(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(0.0), 
@@ -1374,9 +1268,8 @@ public extension Scalar: AntiSandwich<Line> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Scalar: AntiSandwich<Motor> {
-    public typedef Motor AntiSandwichOutput;
-    public func anti_sandwich(other: Motor) -> Motor {
+public extension Scalar {
+    public Motor anti_sandwich(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -1385,9 +1278,8 @@ public extension Scalar: AntiSandwich<Motor> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Scalar: AntiSandwich<MultiVector> {
-    public typedef MultiVector AntiSandwichOutput;
-    public func anti_sandwich(other: MultiVector) -> MultiVector {
+public extension Scalar {
+    public MultiVector anti_sandwich(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 
@@ -1402,9 +1294,8 @@ public extension Scalar: AntiSandwich<MultiVector> {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Scalar: AntiSandwich<Plane> {
-    public typedef Horizon AntiSandwichOutput;
-    public func anti_sandwich(other: Plane) -> Horizon {
+public extension Scalar {
+    public Horizon anti_sandwich(Plane other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4((float3(this.scalar) * other.group0.xyz), 0.0)

@@ -12,18 +12,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<AntiScalar> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension AntiScalar: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef AntiScalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_reject_via_horizon_from(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * pow(other.scalar, 2)
         );
     }
 }
-public extension AntiScalar: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Motor {
+public extension AntiScalar {
+    public Motor anti_reject_via_horizon_from(Motor other) {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e1234 * other.scalar) * float4(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0, other.scalar), 
@@ -32,9 +30,8 @@ public extension AntiScalar: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension AntiScalar: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension AntiScalar {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.scalar
@@ -65,9 +62,8 @@ public extension AntiScalar: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension AntiScalar: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef AntiScalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_reject_via_horizon_from(Scalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * pow(other.scalar, 2)
@@ -86,18 +82,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<DualNum> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef DualNum AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> DualNum {
+public extension DualNum {
+    public DualNum anti_reject_via_horizon_from(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Motor {
+public extension DualNum {
+    public Motor anti_reject_via_horizon_from(Flector other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -118,18 +112,16 @@ public extension DualNum: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Scalar {
+public extension DualNum {
+    public Scalar anti_reject_via_horizon_from(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             this.scalar * pow(other.e321, 2)
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Line> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Scalar {
+public extension DualNum {
+    public Scalar anti_reject_via_horizon_from(Line other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(this.scalar) * other.group0.xyz, 
@@ -148,9 +140,8 @@ public extension DualNum: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Motor {
+public extension DualNum {
+    public Motor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.group0.xy.xx, this.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)) * float4(other.group0.xyz, 1.0), 
@@ -171,9 +162,8 @@ public extension DualNum: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension DualNum {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar * other.scalar, (this.scalar * other.e1234) + (this.e1234 * other.scalar)), 
@@ -212,18 +202,16 @@ public extension DualNum: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Scalar {
+public extension DualNum {
+    public Scalar anti_reject_via_horizon_from(Plane other) {
         return Scalar.from_groups(
             /* scalar */
             this.scalar * pow(other.e321, 2)
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Point> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Scalar {
+public extension DualNum {
+    public Scalar anti_reject_via_horizon_from(Point other) {
         Point wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
@@ -238,9 +226,8 @@ public extension DualNum: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension DualNum: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef DualNum AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> DualNum {
+public extension DualNum {
+    public DualNum anti_reject_via_horizon_from(Scalar other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * float2(this.scalar * other.scalar, this.e1234 * other.scalar)
@@ -259,9 +246,8 @@ public extension AntiRejectViaHorizonFromInfixPartial<Flector> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Flector {
+public extension Flector {
+    public Flector anti_reject_via_horizon_from(DualNum other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -280,9 +266,8 @@ public extension Flector: AntiRejectViaHorizonFrom<DualNum> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Flector {
+public extension Flector {
+    public Flector anti_reject_via_horizon_from(Flector other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (this.group0.wwwx * float4(other.group0.xyz, other.e423)) + float4(float3(0.0), (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -303,18 +288,16 @@ public extension Flector: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Origin {
+public extension Flector {
+    public Origin anti_reject_via_horizon_from(Horizon other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 * pow(other.e321, 2) * -1.0
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Line> {
-    public typedef Point AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Point {
+public extension Flector {
+    public Point anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e3 * other.e42) + (this.e4 * other.e23), (this.e1 * other.e43) + (this.e4 * other.e31), (this.e2 * other.e41) + (this.e4 * other.e12), -(this.e2 * other.e31) - (this.e3 * other.e12)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
@@ -331,9 +314,8 @@ public extension Flector: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Flector {
+public extension Flector {
+    public Flector anti_reject_via_horizon_from(Motor other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -354,9 +336,8 @@ public extension Flector: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Flector {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
@@ -395,18 +376,16 @@ public extension Flector: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Origin {
+public extension Flector {
+    public Origin anti_reject_via_horizon_from(Plane other) {
         return Origin.from_groups(
             /* e4 */
             -(pow(other.e321, 2) * this.e4) - (this.e1 * other.e423 * other.e321) - (this.e2 * other.e431 * other.e321) - (this.e3 * other.e412 * other.e321)
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Point> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Flector {
+public extension Flector {
+    public Flector anti_reject_via_horizon_from(Point other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4 * other.e1, this.e4 * other.e2, this.e4 * other.e3, -(this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423)), 
@@ -425,9 +404,8 @@ public extension Flector: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Flector: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Flector {
+public extension Flector {
+    public Flector anti_reject_via_horizon_from(Scalar other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -458,18 +436,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<Horizon> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Horizon AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Horizon {
+public extension Horizon {
+    public Horizon anti_reject_via_horizon_from(DualNum other) {
         return Horizon.from_groups(
             /* e321 */
             pow(other.scalar, 2) * this.e321
         );
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Flector {
+public extension Horizon {
+    public Flector anti_reject_via_horizon_from(Flector other) {
         AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e321 * -1.0
@@ -488,9 +464,8 @@ public extension Horizon: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Flector {
+public extension Horizon {
+    public Flector anti_reject_via_horizon_from(Motor other) {
         Horizon wedge = Horizon.from_groups(
             /* e321 */
             this.e321 * other.scalar
@@ -509,9 +484,8 @@ public extension Horizon: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Horizon {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, this.e321 * other.e4) * float2(0.0, -1.0), 
@@ -550,18 +524,16 @@ public extension Horizon: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<Point> {
-    public typedef Plane AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Plane {
+public extension Horizon {
+    public Plane anti_reject_via_horizon_from(Point other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(this.e321 * other.e4 * -1.0) * other.group0.xyz), 0.0)
         );
     }
 }
-public extension Horizon: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Horizon AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Horizon {
+public extension Horizon {
+    public Horizon anti_reject_via_horizon_from(Scalar other) {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * pow(other.scalar, 2)
@@ -580,9 +552,8 @@ public extension AntiRejectViaHorizonFromInfixPartial<Line> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Line AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Line {
+public extension Line {
+    public Line anti_reject_via_horizon_from(DualNum other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(other.scalar) * this.group0.xyz, 
@@ -601,9 +572,8 @@ public extension Line: AntiRejectViaHorizonFrom<DualNum> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Motor {
+public extension Line {
+    public Motor anti_reject_via_horizon_from(Flector other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23), (other.e1 * this.e43) + (other.e4 * this.e31), (other.e2 * this.e41) + (other.e4 * this.e12), -(other.e2 * this.e31) - (other.e3 * this.e12)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
@@ -622,9 +592,8 @@ public extension Line: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<Line> {
-    public typedef Line AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Line {
+public extension Line {
+    public Line anti_reject_via_horizon_from(Line other) {
         return Line.from_groups(
             /* e41, e42, e43 */
             float3(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)) * float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 
@@ -633,9 +602,8 @@ public extension Line: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Motor {
+public extension Line {
+    public Motor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(other.scalar) * this.group0.xyz), -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -656,9 +624,8 @@ public extension Line: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Line {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -697,9 +664,8 @@ public extension Line: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<Point> {
-    public typedef Line AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Line {
+public extension Line {
+    public Line anti_reject_via_horizon_from(Point other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
@@ -716,9 +682,8 @@ public extension Line: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Line: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Line AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Line {
+public extension Line {
+    public Line anti_reject_via_horizon_from(Scalar other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(other.scalar) * this.group0.xyz, 
@@ -749,9 +714,8 @@ public extension AntiRejectViaHorizonFromInfixPartial<Motor> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(DualNum other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xy.xx, other.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)) * float4(this.group0.xyz, 1.0), 
@@ -770,9 +734,8 @@ public extension Motor: AntiRejectViaHorizonFrom<DualNum> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(Flector other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -793,18 +756,16 @@ public extension Motor: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Scalar {
+public extension Motor {
+    public Scalar anti_reject_via_horizon_from(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             pow(other.e321, 2) * this.scalar
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Line> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(Line other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4((float3(this.scalar) * other.group0.xyz), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -825,9 +786,8 @@ public extension Motor: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             (float4(other.scalar) * this.group0) + (float4(this.scalar) * other.group0) + float4(float3(0.0), -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -848,9 +808,8 @@ public extension Motor: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Motor {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar * other.scalar, (this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)), 
@@ -889,18 +848,16 @@ public extension Motor: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Scalar {
+public extension Motor {
+    public Scalar anti_reject_via_horizon_from(Plane other) {
         return Scalar.from_groups(
             /* scalar */
             this.scalar * pow(other.e321, 2)
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Point> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(Point other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -919,9 +876,8 @@ public extension Motor: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Motor: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Motor {
+public extension Motor {
+    public Motor anti_reject_via_horizon_from(Scalar other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.scalar) * this.group0, 
@@ -952,9 +908,8 @@ public extension AntiRejectViaHorizonFromInfixPartial<MultiVector> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(DualNum other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar)), 
@@ -985,9 +940,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<DualNum> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Flector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Flector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
@@ -1020,9 +974,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Horizon other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
@@ -1053,9 +1006,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Horizon> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Line> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Line other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -1088,9 +1040,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Motor> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Motor other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -1123,9 +1074,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)), 
@@ -1164,9 +1114,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Plane> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Plane other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321)), 
@@ -1197,9 +1146,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Plane> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Point> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Point other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)), 
@@ -1230,9 +1178,8 @@ public extension MultiVector: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension MultiVector: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reject_via_horizon_from(Scalar other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * this.group0.xy, 
@@ -1275,18 +1222,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<Origin> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(DualNum other) {
         return Origin.from_groups(
             /* e4 */
             pow(other.scalar, 2) * this.e4
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Flector {
+public extension Origin {
+    public Flector anti_reject_via_horizon_from(Flector other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(other.group0.xyz, other.e321), 
@@ -1307,18 +1252,16 @@ public extension Origin: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(Horizon other) {
         return Origin.from_groups(
             /* e4 */
             pow(other.e321, 2) * this.e4 * -1.0
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Line> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * other.group1.xyz), 0.0)
@@ -1335,9 +1278,8 @@ public extension Origin: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Flector {
+public extension Origin {
+    public Flector anti_reject_via_horizon_from(Motor other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), other.scalar * this.e4), 
@@ -1358,9 +1300,8 @@ public extension Origin: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Origin {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e321 * this.e4) * float2(0.0, 1.0), 
@@ -1399,18 +1340,16 @@ public extension Origin: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(Plane other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 * pow(other.e321, 2) * -1.0
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Point> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(Point other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(this.e4) * other.group0.xyz, 
@@ -1427,9 +1366,8 @@ public extension Origin: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Origin: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Origin {
+public extension Origin {
+    public Origin anti_reject_via_horizon_from(Scalar other) {
         return Origin.from_groups(
             /* e4 */
             this.e4 * pow(other.scalar, 2)
@@ -1448,18 +1386,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<Plane> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Plane AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Plane {
+public extension Plane {
+    public Plane anti_reject_via_horizon_from(DualNum other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * float4(other.scalar * this.e423, other.scalar * this.e431, other.scalar * this.e412, other.scalar * this.e321)
         );
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Flector {
+public extension Plane {
+    public Flector anti_reject_via_horizon_from(Flector other) {
         AntiScalar wedge = AntiScalar.from_groups(
             /* e1234 */
             -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)
@@ -1478,9 +1414,8 @@ public extension Plane: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Flector {
+public extension Plane {
+    public Flector anti_reject_via_horizon_from(Motor other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * this.group0
@@ -1499,9 +1434,8 @@ public extension Plane: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Plane {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)), 
@@ -1540,18 +1474,16 @@ public extension Plane: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<Point> {
-    public typedef Plane AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Plane {
+public extension Plane {
+    public Plane anti_reject_via_horizon_from(Point other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((float3(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)) * other.group0.xyz), 0.0)
         );
     }
 }
-public extension Plane: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Plane AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Plane {
+public extension Plane {
+    public Plane anti_reject_via_horizon_from(Scalar other) {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(other.scalar) * float4(this.e423 * other.scalar, this.e431 * other.scalar, this.e412 * other.scalar, this.e321 * other.scalar)
@@ -1570,18 +1502,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<Point> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef Point AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> Point {
+public extension Point {
+    public Point anti_reject_via_horizon_from(DualNum other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * float4(other.scalar * this.e1, other.scalar * this.e2, other.scalar * this.e3, other.scalar * this.e4)
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Flector {
+public extension Point {
+    public Flector anti_reject_via_horizon_from(Flector other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)) + (this.group0.wwwx * float4(other.group0.xyz, other.e423)), 
@@ -1602,18 +1532,16 @@ public extension Point: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Origin {
+public extension Point {
+    public Origin anti_reject_via_horizon_from(Horizon other) {
         return Origin.from_groups(
             /* e4 */
             pow(other.e321, 2) * this.e4 * -1.0
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Line> {
-    public typedef Point AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Point {
+public extension Point {
+    public Point anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4((other.e42 * this.e3) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
@@ -1630,9 +1558,8 @@ public extension Point: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Flector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Flector {
+public extension Point {
+    public Flector anti_reject_via_horizon_from(Motor other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
@@ -1653,9 +1580,8 @@ public extension Point: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Point {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)), 
@@ -1694,18 +1620,16 @@ public extension Point: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Origin AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Origin {
+public extension Point {
+    public Origin anti_reject_via_horizon_from(Plane other) {
         return Origin.from_groups(
             /* e4 */
             -(pow(other.e321, 2) * this.e4) - (other.e423 * other.e321 * this.e1) - (other.e431 * other.e321 * this.e2) - (other.e412 * other.e321 * this.e3)
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Point> {
-    public typedef Point AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Point {
+public extension Point {
+    public Point anti_reject_via_horizon_from(Point other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 
@@ -1722,9 +1646,8 @@ public extension Point: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Point: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Point AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Point {
+public extension Point {
+    public Point anti_reject_via_horizon_from(Scalar other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * float4(this.e1 * other.scalar, this.e2 * other.scalar, this.e3 * other.scalar, this.e4 * other.scalar)
@@ -1743,18 +1666,16 @@ public extension AntiRejectViaHorizonFromInfixPartial<Scalar> {
         return this.a.anti_reject_via_horizon_from(rhs);
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<DualNum> {
-    public typedef DualNum AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: DualNum) -> DualNum {
+public extension Scalar {
+    public DualNum anti_reject_via_horizon_from(DualNum other) {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(other.scalar) * float2(other.scalar * this.scalar, other.e1234 * this.scalar)
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Flector> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Flector) -> Motor {
+public extension Scalar {
+    public Motor anti_reject_via_horizon_from(Flector other) {
         Flector wedge = Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
@@ -1775,18 +1696,16 @@ public extension Scalar: AntiRejectViaHorizonFrom<Flector> {
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Horizon> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Horizon) -> Scalar {
+public extension Scalar {
+    public Scalar anti_reject_via_horizon_from(Horizon other) {
         return Scalar.from_groups(
             /* scalar */
             pow(other.e321, 2) * this.scalar
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Line> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Line) -> Scalar {
+public extension Scalar {
+    public Scalar anti_reject_via_horizon_from(Line other) {
         Line wedge = Line.from_groups(
             /* e41, e42, e43 */
             float3(this.scalar) * other.group0.xyz, 
@@ -1805,9 +1724,8 @@ public extension Scalar: AntiRejectViaHorizonFrom<Line> {
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Motor> {
-    public typedef Motor AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Motor) -> Motor {
+public extension Scalar {
+    public Motor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * other.group0, 
@@ -1828,9 +1746,8 @@ public extension Scalar: AntiRejectViaHorizonFrom<Motor> {
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<MultiVector> {
-    public typedef MultiVector AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: MultiVector) -> MultiVector {
+public extension Scalar {
+    public MultiVector anti_reject_via_horizon_from(MultiVector other) {
         MultiVector wedge = MultiVector.from_groups(
             /* scalar, e1234 */
             float2(this.scalar) * other.group0.xy, 
@@ -1869,18 +1786,16 @@ public extension Scalar: AntiRejectViaHorizonFrom<MultiVector> {
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Plane> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Plane) -> Scalar {
+public extension Scalar {
+    public Scalar anti_reject_via_horizon_from(Plane other) {
         return Scalar.from_groups(
             /* scalar */
             pow(other.e321, 2) * this.scalar
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Point> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Point) -> Scalar {
+public extension Scalar {
+    public Scalar anti_reject_via_horizon_from(Point other) {
         Point wedge = Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0
@@ -1895,9 +1810,8 @@ public extension Scalar: AntiRejectViaHorizonFrom<Point> {
         );
     }
 }
-public extension Scalar: AntiRejectViaHorizonFrom<Scalar> {
-    public typedef Scalar AntiRejectViaHorizonFromOutput;
-    public func anti_reject_via_horizon_from(other: Scalar) -> Scalar {
+public extension Scalar {
+    public Scalar anti_reject_via_horizon_from(Scalar other) {
         return Scalar.from_groups(
             /* scalar */
             pow(other.scalar, 2) * this.scalar

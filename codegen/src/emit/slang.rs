@@ -216,7 +216,7 @@ impl Slang {
                 tx2.send(file_path.clone())?;
                 let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut file = BufWriter::new(file);
-                write!(&mut file, "implementing {algebra_name};")?;
+                writeln!(&mut file, "implementing {algebra_name};")?;
                 // TODO remove these imports when they are unused
                 writeln!(&mut file, "using data;")?;
                 self.declare_trait_def(&mut file, td)?;
@@ -1488,8 +1488,9 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
         let other_lsc = TraitKey::new(other).as_lower_snake();
         let other_lsc = format!("from_{other_lsc}");
 
-        writeln!(w, "public extension {owner}: From<{other}> {{")?;
-        writeln!(w, "    public static func from({other} {other_lsc}) -> This {{")?;
+        // writeln!(w, "public extension {owner}: From<{other}> {{")?;
+        writeln!(w, "public extension {owner} {{")?;
+        writeln!(w, "    public static {owner} from({other} {other_lsc}) {{")?;
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1506,8 +1507,9 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
         self.write_expression(w, &ret, true)?;
         writeln!(w, ";\n    }}")?;
         writeln!(w, "}}")?;
-        writeln!(w, "public extension {other}: Into<{owner}> {{")?;
-        writeln!(w, "    public func into() -> {owner} {{")?;
+        writeln!(w, "public extension {other} {{")?;
+        // writeln!(w, "public extension {other}: Into<{owner}> {{")?;
+        writeln!(w, "    public {owner} into_{owner}() {{")?;
         writeln!(w, "        return {owner}.from(this);")?;
         writeln!(w, "    }}")?;
         writeln!(w, "}}")?;
@@ -1527,12 +1529,9 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
         let other = other.name();
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
-        write!(
-            w,
-            r#"
-public extension {owner}: TryFrom<{other}> {{
-    public static func try_from({other} {lsc}) -> Optional<This> {{"#
-        )?;
+        // writeln!(w, "public extension {owner}: TryFrom<{other}> {{")?;
+        writeln!(w, "public extension {owner} {{")?;
+        writeln!(w, "    public static Optional<{owner}> try_from({other} {lsc}) {{")?;
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -1559,8 +1558,9 @@ public extension {owner}: TryFrom<{other}> {{
         self.write_expression(w, &ret, true)?;
         writeln!(w, ";\n    }}\n}}")?;
 
-        writeln!(w, "public extension {other}: TryInto<{owner}> {{")?;
-        writeln!(w, "    public func try_into() -> Optional<{owner}> {{")?;
+        // writeln!(w, "public extension {other}: TryInto<{owner}> {{")?;
+        writeln!(w, "public extension {other} {{")?;
+        writeln!(w, "    public Optional<{owner}> try_into_{owner}() {{")?;
         writeln!(w, "        return {owner}.try_from(this);")?;
         writeln!(w, "    }}")?;
         writeln!(w, "}}")?;
@@ -1621,16 +1621,16 @@ public extension {owner}: TryFrom<{other}> {{
             }
         }
 
-        writeln!(w, "    public static func from_elements(")?;
+        writeln!(w, "    public static {ucc} from_elements(")?;
         for (i, el) in multi_vec.elements().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
             } else {
                 write!(w, "        ")?;
             }
-            write!(w, "{el}: float")?;
+            write!(w, "float {el}")?;
         }
-        writeln!(w, "\n    ) -> {ucc} {{")?;
+        writeln!(w, "\n    ) {{")?;
         write!(w, "        return {ucc}(")?;
         for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
             if outer_idx > 0 {
@@ -1653,17 +1653,17 @@ public extension {owner}: TryFrom<{other}> {{
         }
         writeln!(w, ");")?;
         writeln!(w, "    }}")?;
-        writeln!(w, "    internal static func from_groups(")?;
+        writeln!(w, "    internal static {ucc} from_groups(")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
             } else {
                 write!(w, "        ")?;
             }
-            write!(w, "g{i}: ")?;
             self.write_type(w, g.expr_type())?;
+            write!(w, " g{i}")?;
         }
-        writeln!(w, "\n    ) -> {ucc} {{")?;
+        writeln!(w, "\n    ) {{")?;
         write!(w, "        return {ucc}(")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
@@ -1724,58 +1724,58 @@ public extension {owner}: TryFrom<{other}> {{
         let lsc = def.names.trait_key.as_lower_snake();
         self.emit_comment(w, true, &def.documentation)?;
         // todo alias documentation
-        write!(w, "public interface {ucc}")?;
-        if let TraitArity::Two = def.arity {
-            write!(w, "<T>")?;
-        }
-        if ucc == "Into" || ucc == "TryInto" {
-            write!(w, "<Output>")?;
-        }
-        writeln!(w, " {{")?;
-
-        let output_ty = def.output.read();
-        match *output_ty {
-            TraitTypeConsensus::AlwaysSelf | TraitTypeConsensus::AllAgree(_, _) => {
-                // We don't actually output it here
-                // self.write_type(w, et)?;
-            }
-            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
-                if ucc != "Into" && ucc != "TryInto" {
-                    writeln!(w, "    associatedtype {ucc}Output;")?;
-                }
-            }
-        }
-        write!(w, "    func {lsc}(")?;
-        match def.arity {
-            TraitArity::Zero => {}
-            TraitArity::One => {},
-            TraitArity::Two => write!(w, "other: T")?,
-        }
-        write!(w, ") -> ")?;
-        if ucc == "TryInto" {
-            write!(w, "Optional<Output>")?;
-        } else {
-            match *output_ty {
-                // TODO is "This" a valid type? If so, update 'From' and 'TryFrom' to be rid of redundant associated type
-                TraitTypeConsensus::AlwaysSelf => write!(w, "This")?,
-                TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "{ucc}Output")?,
-            }
-        }
-        writeln!(w, ";\n}}")?;
-
-        if ucc == "Into" {
-            writeln!(w, "public interface From<Other> {{")?;
-            writeln!(w, "    static func from(Other other) -> This;")?;
-            writeln!(w, "}}")?;
-            return Ok(())
-        }
-        if ucc == "TryInto" {
-            writeln!(w, "public interface TryFrom<Other> {{")?;
-            writeln!(w, "    static func try_from(Other other) -> Optional<This>;")?;
-            writeln!(w, "}}")?;
-            return Ok(())
-        }
+        // write!(w, "public interface {ucc}")?;
+        // if let TraitArity::Two = def.arity {
+        //     write!(w, "<T>")?;
+        // }
+        // if ucc == "Into" || ucc == "TryInto" {
+        //     write!(w, "<Output>")?;
+        // }
+        // writeln!(w, " {{")?;
+        //
+        // let output_ty = def.output.read();
+        // match *output_ty {
+        //     TraitTypeConsensus::AlwaysSelf | TraitTypeConsensus::AllAgree(_, _) => {
+        //         // We don't actually output it here
+        //         // self.write_type(w, et)?;
+        //     }
+        //     TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
+        //         if ucc != "Into" && ucc != "TryInto" {
+        //             writeln!(w, "    associatedtype {ucc}Output;")?;
+        //         }
+        //     }
+        // }
+        // write!(w, "    func {lsc}(")?;
+        // match def.arity {
+        //     TraitArity::Zero => {}
+        //     TraitArity::One => {},
+        //     TraitArity::Two => write!(w, "other: T")?,
+        // }
+        // write!(w, ") -> ")?;
+        // if ucc == "TryInto" {
+        //     write!(w, "Optional<Output>")?;
+        // } else {
+        //     match *output_ty {
+        //         // TODO is "This" a valid type? If so, update 'From' and 'TryFrom' to be rid of redundant associated type
+        //         TraitTypeConsensus::AlwaysSelf => write!(w, "This")?,
+        //         TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+        //         TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "{ucc}Output")?,
+        //     }
+        // }
+        // writeln!(w, ";\n}}")?;
+        //
+        // if ucc == "Into" {
+        //     writeln!(w, "public interface From<Other> {{")?;
+        //     writeln!(w, "    static func from(Other other) -> This;")?;
+        //     writeln!(w, "}}")?;
+        //     return Ok(())
+        // }
+        // if ucc == "TryInto" {
+        //     writeln!(w, "public interface TryFrom<Other> {{")?;
+        //     writeln!(w, "    static func try_from(Other other) -> Optional<This>;")?;
+        //     writeln!(w, "}}")?;
+        //     return Ok(())
+        // }
 
         let infix_term = match def.arity {
             TraitArity::Zero => None,
@@ -1864,13 +1864,12 @@ public extension {owner}: TryFrom<{other}> {{
                             self.write_type(w, output_ty)?;
                             writeln!(w, " {operator_method}({ucc}{infix_term} rhs)  {{")?;
                             writeln!(w, "        return this.{lsc}();\n    }}")?;
-                            if &output_ty == owner_ty {
-                                // TODO it's really dubious that this is correct yet
-                                writeln!(w, "    // Fancy postfix self-assign")?;
-                                writeln!(w, "    public func {operator_method}=(const {ucc}{infix_term}& rhs) -> {n}& {{")?;
-                                writeln!(w, "        this = this.{lsc}();")?;
-                                writeln!(w, "        return *this;\n    }}")?;
-                            }
+                            // if &output_ty == owner_ty {
+                            //     writeln!(w, "    // Fancy postfix self-assign")?;
+                            //     writeln!(w, "    public {n}& {operator_method}=(const {ucc}{infix_term}& rhs) {{")?;
+                            //     writeln!(w, "        this = this.{lsc}();")?;
+                            //     writeln!(w, "        return *this;\n    }}")?;
+                            // }
                         }
                         writeln!(w, "}}")?;
                         if let (TraitArity::Two, Some(other_ty)) = (def.arity, var_param) {
@@ -1907,31 +1906,33 @@ public extension {owner}: TryFrom<{other}> {{
         // todo alias documentation
         write!(w, "public extension ")?;
         self.write_type(w, *owner_ty)?;
-        if !is_op {
-            write!(w, ": {ucc}")?;
-            if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
-                write!(w, "<")?;
-                self.write_type(w, *var_param)?;
-                write!(w, ">")?;
-            }
-        }
+        // if !is_op {
+        //     write!(w, ": {ucc}")?;
+        //     if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
+        //         write!(w, "<")?;
+        //         self.write_type(w, *var_param)?;
+        //         write!(w, ">")?;
+        //     }
+        // }
         writeln!(w, " {{")?;
-        write!(w, "    public typedef ")?;
+        // write!(w, "    public typedef ")?;
+        // self.write_type(w, output_ty)?;
+        // writeln!(w, " {ucc}Output;")?;
+        write!(w, "    public ")?;
         self.write_type(w, output_ty)?;
-        writeln!(w, " {ucc}Output;")?;
-        write!(w, "    public func {lsc}(")?;
+        write!(w, " {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {},
             (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "other: ")?;
                 self.write_type(w, *other_ty)?;
+                write!(w, " other")?;
             }
             _ => panic!("Arity 2 should always have other type"),
         }
-        write!(w, ") -> ")?;
-        self.write_type(w, output_ty)?;
-        writeln!(w, " {{")?;
+        // write!(w, ") -> ")?;
+        // self.write_type(w, output_ty)?;
+        writeln!(w, ") {{")?;
         // write!(w, ") -> ")?;
         // self.write_type(w, *owner_ty)?;
         // writeln!(w, ".{ucc}Output {{")?;
@@ -1973,60 +1974,62 @@ public extension {owner}: TryFrom<{other}> {{
 
 
 
-        if !do_assign_impl {
-            return Ok(());
-        }
-
-        write!(w, "public extension ")?;
-        self.write_type(w, *owner_ty)?;
-        writeln!(w, " {{")?;
-        write!(w, "    public func {lsc}=(")?;
-        match (def.arity, var_param) {
-            (TraitArity::Zero, _) => {}
-            (TraitArity::One, _) => {},
-            (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "const ")?;
-                self.write_type(w, *other_ty)?;
-                write!(w, "& other")?;
-            }
-            _ => panic!("Arity 2 should always have other type"),
-        }
-        writeln!(w, ") {{")?;
-        for line in impls.lines.iter() {
-            match line {
-                CommentOrVariableDeclaration::Comment(c) => {
-                    self.emit_comment(w, false, c.to_string())?;
-                }
-                CommentOrVariableDeclaration::VarDec(var_dec) => {
-                    let Some(var_dec) = var_dec.upgrade() else { continue };
-                    let Some(expr) = &var_dec.expr else { continue };
-                    if let Some(c) = &var_dec.comment {
-                        self.emit_comment(w, false, c.to_string())?;
-                    }
-                    let name = var_dec.name.0.to_string();
-                    let no = var_dec.name.1;
-                    let expr = expr.read();
-                    let expr = expr.deref();
-                    write!(w, "        ")?;
-                    self.write_type(w, expr.expression_type())?;
-                    if no == 0 {
-                        write!(w, " {name} = ")?;
-                    } else {
-                        let no = no + 1;
-                        write!(w, " {name}_{no} = ")?;
-                    }
-                    self.write_expression(w, expr, true)?;
-                    writeln!(w, ";")?;
-                }
-            }
-        }
-        if let Some(c) = &impls.return_comment {
-            self.emit_comment(w, false, c.to_string())?;
-        }
-        write!(w, "        *this = ")?;
-        self.write_expression(w, &impls.return_expr, true)?;
-        writeln!(w, ";")?;
-        writeln!(w, "    }}\n}}")?;
+        // if !do_assign_impl {
+        //     return Ok(());
+        // }
+        //
+        // write!(w, "public extension ")?;
+        // self.write_type(w, *owner_ty)?;
+        // writeln!(w, " {{")?;
+        // write!(w, "    public ")?;
+        // self.write_type(w, output_ty)?;
+        // write!(w, "& {lsc}=(")?;
+        // match (def.arity, var_param) {
+        //     (TraitArity::Zero, _) => {}
+        //     (TraitArity::One, _) => {},
+        //     (TraitArity::Two, Some(other_ty)) => {
+        //         write!(w, "const ")?;
+        //         self.write_type(w, *other_ty)?;
+        //         write!(w, "& other")?;
+        //     }
+        //     _ => panic!("Arity 2 should always have other type"),
+        // }
+        // writeln!(w, ") {{")?;
+        // for line in impls.lines.iter() {
+        //     match line {
+        //         CommentOrVariableDeclaration::Comment(c) => {
+        //             self.emit_comment(w, false, c.to_string())?;
+        //         }
+        //         CommentOrVariableDeclaration::VarDec(var_dec) => {
+        //             let Some(var_dec) = var_dec.upgrade() else { continue };
+        //             let Some(expr) = &var_dec.expr else { continue };
+        //             if let Some(c) = &var_dec.comment {
+        //                 self.emit_comment(w, false, c.to_string())?;
+        //             }
+        //             let name = var_dec.name.0.to_string();
+        //             let no = var_dec.name.1;
+        //             let expr = expr.read();
+        //             let expr = expr.deref();
+        //             write!(w, "        ")?;
+        //             self.write_type(w, expr.expression_type())?;
+        //             if no == 0 {
+        //                 write!(w, " {name} = ")?;
+        //             } else {
+        //                 let no = no + 1;
+        //                 write!(w, " {name}_{no} = ")?;
+        //             }
+        //             self.write_expression(w, expr, true)?;
+        //             writeln!(w, ";")?;
+        //         }
+        //     }
+        // }
+        // if let Some(c) = &impls.return_comment {
+        //     self.emit_comment(w, false, c.to_string())?;
+        // }
+        // write!(w, "        *this = ")?;
+        // self.write_expression(w, &impls.return_expr, true)?;
+        // writeln!(w, ";")?;
+        // writeln!(w, "    }}\n}}")?;
 
         Ok(())
     }

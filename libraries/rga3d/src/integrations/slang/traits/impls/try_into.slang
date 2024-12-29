@@ -1,8 +1,8 @@
 implementing rga3d;
 using traits;
+public extension AntiScalar {
+    public static Optional<AntiScalar> try_from(DualNum dual_num) {
 
-public extension AntiScalar: TryFrom<DualNum> {
-    public static func try_from(DualNum dual_num) -> Optional<This> {
         float disallowed_scalar = dual_num.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -13,14 +13,14 @@ public extension AntiScalar: TryFrom<DualNum> {
         );
     }
 }
-public extension DualNum: TryInto<AntiScalar> {
-    public func try_into() -> Optional<AntiScalar> {
+public extension DualNum {
+    public Optional<AntiScalar> try_into_AntiScalar() {
         return AntiScalar.try_from(this);
     }
 }
+public extension Scalar {
+    public static Optional<Scalar> try_from(DualNum dual_num) {
 
-public extension Scalar: TryFrom<DualNum> {
-    public static func try_from(DualNum dual_num) -> Optional<This> {
         float disallowed_e1234 = dual_num.e1234;
         if (disallowed_e1234 != 0.0) {
             return none;
@@ -31,14 +31,14 @@ public extension Scalar: TryFrom<DualNum> {
         );
     }
 }
-public extension DualNum: TryInto<Scalar> {
-    public func try_into() -> Optional<Scalar> {
+public extension DualNum {
+    public Optional<Scalar> try_into_Scalar() {
         return Scalar.try_from(this);
     }
 }
+public extension Horizon {
+    public static Optional<Horizon> try_from(Flector flector) {
 
-public extension Horizon: TryFrom<Flector> {
-    public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -73,14 +73,14 @@ public extension Horizon: TryFrom<Flector> {
         );
     }
 }
-public extension Flector: TryInto<Horizon> {
-    public func try_into() -> Optional<Horizon> {
+public extension Flector {
+    public Optional<Horizon> try_into_Horizon() {
         return Horizon.try_from(this);
     }
 }
+public extension Origin {
+    public static Optional<Origin> try_from(Flector flector) {
 
-public extension Origin: TryFrom<Flector> {
-    public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -115,14 +115,14 @@ public extension Origin: TryFrom<Flector> {
         );
     }
 }
-public extension Flector: TryInto<Origin> {
-    public func try_into() -> Optional<Origin> {
+public extension Flector {
+    public Optional<Origin> try_into_Origin() {
         return Origin.try_from(this);
     }
 }
+public extension Plane {
+    public static Optional<Plane> try_from(Flector flector) {
 
-public extension Plane: TryFrom<Flector> {
-    public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e1 = flector.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -145,14 +145,14 @@ public extension Plane: TryFrom<Flector> {
         );
     }
 }
-public extension Flector: TryInto<Plane> {
-    public func try_into() -> Optional<Plane> {
+public extension Flector {
+    public Optional<Plane> try_into_Plane() {
         return Plane.try_from(this);
     }
 }
+public extension Point {
+    public static Optional<Point> try_from(Flector flector) {
 
-public extension Point: TryFrom<Flector> {
-    public static func try_from(Flector flector) -> Optional<This> {
         float disallowed_e423 = flector.e423;
         if (disallowed_e423 != 0.0) {
             return none;
@@ -175,14 +175,14 @@ public extension Point: TryFrom<Flector> {
         );
     }
 }
-public extension Flector: TryInto<Point> {
-    public func try_into() -> Optional<Point> {
+public extension Flector {
+    public Optional<Point> try_into_Point() {
         return Point.try_from(this);
     }
 }
+public extension AntiScalar {
+    public static Optional<AntiScalar> try_from(Motor motor) {
 
-public extension AntiScalar: TryFrom<Motor> {
-    public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
         if (disallowed_e41 != 0.0) {
             return none;
@@ -217,14 +217,14 @@ public extension AntiScalar: TryFrom<Motor> {
         );
     }
 }
-public extension Motor: TryInto<AntiScalar> {
-    public func try_into() -> Optional<AntiScalar> {
+public extension Motor {
+    public Optional<AntiScalar> try_into_AntiScalar() {
         return AntiScalar.try_from(this);
     }
 }
+public extension DualNum {
+    public static Optional<DualNum> try_from(Motor motor) {
 
-public extension DualNum: TryFrom<Motor> {
-    public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
         if (disallowed_e41 != 0.0) {
             return none;
@@ -255,14 +255,14 @@ public extension DualNum: TryFrom<Motor> {
         );
     }
 }
-public extension Motor: TryInto<DualNum> {
-    public func try_into() -> Optional<DualNum> {
+public extension Motor {
+    public Optional<DualNum> try_into_DualNum() {
         return DualNum.try_from(this);
     }
 }
+public extension Line {
+    public static Optional<Line> try_from(Motor motor) {
 
-public extension Line: TryFrom<Motor> {
-    public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e1234 = motor.e1234;
         if (disallowed_e1234 != 0.0) {
             return none;
@@ -279,14 +279,14 @@ public extension Line: TryFrom<Motor> {
         );
     }
 }
-public extension Motor: TryInto<Line> {
-    public func try_into() -> Optional<Line> {
+public extension Motor {
+    public Optional<Line> try_into_Line() {
         return Line.try_from(this);
     }
 }
+public extension Scalar {
+    public static Optional<Scalar> try_from(Motor motor) {
 
-public extension Scalar: TryFrom<Motor> {
-    public static func try_from(Motor motor) -> Optional<This> {
         float disallowed_e41 = motor.e41;
         if (disallowed_e41 != 0.0) {
             return none;
@@ -321,14 +321,14 @@ public extension Scalar: TryFrom<Motor> {
         );
     }
 }
-public extension Motor: TryInto<Scalar> {
-    public func try_into() -> Optional<Scalar> {
+public extension Motor {
+    public Optional<Scalar> try_into_Scalar() {
         return Scalar.try_from(this);
     }
 }
+public extension AntiScalar {
+    public static Optional<AntiScalar> try_from(MultiVector multi_vector) {
 
-public extension AntiScalar: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -395,14 +395,14 @@ public extension AntiScalar: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<AntiScalar> {
-    public func try_into() -> Optional<AntiScalar> {
+public extension MultiVector {
+    public Optional<AntiScalar> try_into_AntiScalar() {
         return AntiScalar.try_from(this);
     }
 }
+public extension DualNum {
+    public static Optional<DualNum> try_from(MultiVector multi_vector) {
 
-public extension DualNum: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1 = multi_vector.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -465,14 +465,14 @@ public extension DualNum: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<DualNum> {
-    public func try_into() -> Optional<DualNum> {
+public extension MultiVector {
+    public Optional<DualNum> try_into_DualNum() {
         return DualNum.try_from(this);
     }
 }
+public extension Flector {
+    public static Optional<Flector> try_from(MultiVector multi_vector) {
 
-public extension Flector: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -513,14 +513,14 @@ public extension Flector: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Flector> {
-    public func try_into() -> Optional<Flector> {
+public extension MultiVector {
+    public Optional<Flector> try_into_Flector() {
         return Flector.try_from(this);
     }
 }
+public extension Horizon {
+    public static Optional<Horizon> try_from(MultiVector multi_vector) {
 
-public extension Horizon: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -587,14 +587,14 @@ public extension Horizon: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Horizon> {
-    public func try_into() -> Optional<Horizon> {
+public extension MultiVector {
+    public Optional<Horizon> try_into_Horizon() {
         return Horizon.try_from(this);
     }
 }
+public extension Line {
+    public static Optional<Line> try_from(MultiVector multi_vector) {
 
-public extension Line: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -643,14 +643,14 @@ public extension Line: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Line> {
-    public func try_into() -> Optional<Line> {
+public extension MultiVector {
+    public Optional<Line> try_into_Line() {
         return Line.try_from(this);
     }
 }
+public extension Motor {
+    public static Optional<Motor> try_from(MultiVector multi_vector) {
 
-public extension Motor: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1 = multi_vector.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -691,14 +691,14 @@ public extension Motor: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Motor> {
-    public func try_into() -> Optional<Motor> {
+public extension MultiVector {
+    public Optional<Motor> try_into_Motor() {
         return Motor.try_from(this);
     }
 }
+public extension Origin {
+    public static Optional<Origin> try_from(MultiVector multi_vector) {
 
-public extension Origin: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -765,14 +765,14 @@ public extension Origin: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Origin> {
-    public func try_into() -> Optional<Origin> {
+public extension MultiVector {
+    public Optional<Origin> try_into_Origin() {
         return Origin.try_from(this);
     }
 }
+public extension Plane {
+    public static Optional<Plane> try_from(MultiVector multi_vector) {
 
-public extension Plane: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -827,14 +827,14 @@ public extension Plane: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Plane> {
-    public func try_into() -> Optional<Plane> {
+public extension MultiVector {
+    public Optional<Plane> try_into_Plane() {
         return Plane.try_from(this);
     }
 }
+public extension Point {
+    public static Optional<Point> try_from(MultiVector multi_vector) {
 
-public extension Point: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_scalar = multi_vector.scalar;
         if (disallowed_scalar != 0.0) {
             return none;
@@ -889,14 +889,14 @@ public extension Point: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Point> {
-    public func try_into() -> Optional<Point> {
+public extension MultiVector {
+    public Optional<Point> try_into_Point() {
         return Point.try_from(this);
     }
 }
+public extension Scalar {
+    public static Optional<Scalar> try_from(MultiVector multi_vector) {
 
-public extension Scalar: TryFrom<MultiVector> {
-    public static func try_from(MultiVector multi_vector) -> Optional<This> {
         float disallowed_e1234 = multi_vector.e1234;
         if (disallowed_e1234 != 0.0) {
             return none;
@@ -963,14 +963,14 @@ public extension Scalar: TryFrom<MultiVector> {
         );
     }
 }
-public extension MultiVector: TryInto<Scalar> {
-    public func try_into() -> Optional<Scalar> {
+public extension MultiVector {
+    public Optional<Scalar> try_into_Scalar() {
         return Scalar.try_from(this);
     }
 }
+public extension Horizon {
+    public static Optional<Horizon> try_from(Plane plane) {
 
-public extension Horizon: TryFrom<Plane> {
-    public static func try_from(Plane plane) -> Optional<This> {
         float disallowed_e423 = plane.e423;
         if (disallowed_e423 != 0.0) {
             return none;
@@ -989,14 +989,14 @@ public extension Horizon: TryFrom<Plane> {
         );
     }
 }
-public extension Plane: TryInto<Horizon> {
-    public func try_into() -> Optional<Horizon> {
+public extension Plane {
+    public Optional<Horizon> try_into_Horizon() {
         return Horizon.try_from(this);
     }
 }
+public extension Origin {
+    public static Optional<Origin> try_from(Point point) {
 
-public extension Origin: TryFrom<Point> {
-    public static func try_from(Point point) -> Optional<This> {
         float disallowed_e1 = point.e1;
         if (disallowed_e1 != 0.0) {
             return none;
@@ -1015,8 +1015,8 @@ public extension Origin: TryFrom<Point> {
         );
     }
 }
-public extension Point: TryInto<Origin> {
-    public func try_into() -> Optional<Origin> {
+public extension Point {
+    public Optional<Origin> try_into_Origin() {
         return Origin.try_from(this);
     }
 }

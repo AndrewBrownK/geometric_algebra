@@ -1,44 +1,37 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension AntiScalar {
+    public uint grade() {
         return 4;
     }
 }
-public extension Horizon: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Horizon {
+    public uint grade() {
         return 3;
     }
 }
-public extension Line: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Line {
+    public uint grade() {
         return 2;
     }
 }
-public extension Origin: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Origin {
+    public uint grade() {
         return 1;
     }
 }
-public extension Plane: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Plane {
+    public uint grade() {
         return 3;
     }
 }
-public extension Point: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Point {
+    public uint grade() {
         return 1;
     }
 }
-public extension Scalar: Grade {
-    public typedef uint GradeOutput;
-    public func grade() -> uint {
+public extension Scalar {
+    public uint grade() {
         return 0;
     }
 }

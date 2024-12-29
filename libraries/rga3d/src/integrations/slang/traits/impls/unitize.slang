@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension AntiScalar: Unitize {
-    public typedef AntiScalar UnitizeOutput;
-    public func unitize() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar unitize() {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 / (this.flat_weight_norm_squared().anti_square_root().e1234)
@@ -31,11 +25,6 @@ public extension DualNum {
     public DualNum operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> DualNum& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -43,9 +32,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension DualNum: Unitize {
-    public typedef DualNum UnitizeOutput;
-    public func unitize() -> DualNum {
+public extension DualNum {
+    public DualNum unitize() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0.xy
@@ -57,11 +45,6 @@ public extension Flector {
     public Flector operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Flector& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -69,9 +52,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Flector: Unitize {
-    public typedef Flector UnitizeOutput;
-    public func unitize() -> Flector {
+public extension Flector {
+    public Flector unitize() {
         AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -89,11 +71,6 @@ public extension Line {
     public Line operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Line& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -101,9 +78,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Line: Unitize {
-    public typedef Line UnitizeOutput;
-    public func unitize() -> Line {
+public extension Line {
+    public Line unitize() {
         AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -121,11 +97,6 @@ public extension Motor {
     public Motor operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Motor& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -133,9 +104,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Motor: Unitize {
-    public typedef Motor UnitizeOutput;
-    public func unitize() -> Motor {
+public extension Motor {
+    public Motor unitize() {
         AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -153,11 +123,6 @@ public extension MultiVector {
     public MultiVector operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -165,9 +130,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension MultiVector: Unitize {
-    public typedef MultiVector UnitizeOutput;
-    public func unitize() -> MultiVector {
+public extension MultiVector {
+    public MultiVector unitize() {
         AntiScalar geometric_anti_product = AntiScalar.from_groups(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
@@ -191,11 +155,6 @@ public extension Origin {
     public Origin operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Origin& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -203,9 +162,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Origin: Unitize {
-    public typedef Origin UnitizeOutput;
-    public func unitize() -> Origin {
+public extension Origin {
+    public Origin unitize() {
         return Origin.from_groups(
             /* e4 */
             this.e4 / (this.flat_weight_norm_squared().anti_square_root().e1234)
@@ -217,11 +175,6 @@ public extension Plane {
     public Plane operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Plane& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -229,9 +182,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Plane: Unitize {
-    public typedef Plane UnitizeOutput;
-    public func unitize() -> Plane {
+public extension Plane {
+    public Plane unitize() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
@@ -243,11 +195,6 @@ public extension Point {
     public Point operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const UnitizePrefixOrPostfix& rhs) -> Point& {
-        this = this.unitize();
-        return *this;
-    }
 }
 public extension UnitizePrefixOrPostfix {
     // Fancy prefix trick
@@ -255,9 +202,8 @@ public extension UnitizePrefixOrPostfix {
         return rhs.unitize();
     }
 }
-public extension Point: Unitize {
-    public typedef Point UnitizeOutput;
-    public func unitize() -> Point {
+public extension Point {
+    public Point unitize() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0

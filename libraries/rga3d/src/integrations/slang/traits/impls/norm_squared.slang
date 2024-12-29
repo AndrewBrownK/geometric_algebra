@@ -12,9 +12,8 @@ public extension NormSquaredPrefixOrPostfix {
         return rhs.norm_squared();
     }
 }
-public extension Flector: NormSquared {
-    public typedef DualNum NormSquaredOutput;
-    public func norm_squared() -> DualNum {
+public extension Flector {
+    public DualNum norm_squared() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
@@ -33,9 +32,8 @@ public extension NormSquaredPrefixOrPostfix {
         return rhs.norm_squared();
     }
 }
-public extension Line: NormSquared {
-    public typedef DualNum NormSquaredOutput;
-    public func norm_squared() -> DualNum {
+public extension Line {
+    public DualNum norm_squared() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
@@ -54,9 +52,8 @@ public extension NormSquaredPrefixOrPostfix {
         return rhs.norm_squared();
     }
 }
-public extension Motor: NormSquared {
-    public typedef DualNum NormSquaredOutput;
-    public func norm_squared() -> DualNum {
+public extension Motor {
+    public DualNum norm_squared() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
@@ -75,9 +72,8 @@ public extension NormSquaredPrefixOrPostfix {
         return rhs.norm_squared();
     }
 }
-public extension MultiVector: NormSquared {
-    public typedef DualNum NormSquaredOutput;
-    public func norm_squared() -> DualNum {
+public extension MultiVector {
+    public DualNum norm_squared() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)
@@ -96,9 +92,8 @@ public extension NormSquaredPrefixOrPostfix {
         return rhs.norm_squared();
     }
 }
-public extension Point: NormSquared {
-    public typedef DualNum NormSquaredOutput;
-    public func norm_squared() -> DualNum {
+public extension Point {
+    public DualNum norm_squared() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e1234)

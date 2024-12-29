@@ -15,14 +15,14 @@ public extension DualNum {
         get { return group0[1]; }
         set { group0[1] = newValue; }
     }
-    public static func from_elements(
-        scalar: float, e1234: float
-    ) -> DualNum {
+    public static DualNum from_elements(
+        float scalar, float e1234
+    ) {
         return DualNum(float4(scalar, e1234, 0.0, 0.0));
     }
-    internal static func from_groups(
-        g0: float2
-    ) -> DualNum {
+    internal static DualNum from_groups(
+        float2 g0
+    ) {
         return DualNum(float4(g0, 0.0, 0.0));
     }
 }

@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension AntiScalar: Reverse {
-    public typedef AntiScalar ReverseOutput;
-    public func reverse() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar reverse() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension DualNum {
     public DualNum operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> DualNum& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension DualNum: Reverse {
-    public typedef DualNum ReverseOutput;
-    public func reverse() -> DualNum {
+public extension DualNum {
+    public DualNum reverse() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Flector {
     public Flector operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Flector& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Flector: Reverse {
-    public typedef Flector ReverseOutput;
-    public func reverse() -> Flector {
+public extension Flector {
+    public Flector reverse() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -79,11 +61,6 @@ public extension Horizon {
     public Horizon operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Horizon& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -91,9 +68,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Horizon: Reverse {
-    public typedef Horizon ReverseOutput;
-    public func reverse() -> Horizon {
+public extension Horizon {
+    public Horizon reverse() {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
@@ -105,11 +81,6 @@ public extension Line {
     public Line operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Line& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -117,9 +88,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Line: Reverse {
-    public typedef Line ReverseOutput;
-    public func reverse() -> Line {
+public extension Line {
+    public Line reverse() {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
@@ -133,11 +103,6 @@ public extension Motor {
     public Motor operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Motor& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -145,9 +110,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Motor: Reverse {
-    public typedef Motor ReverseOutput;
-    public func reverse() -> Motor {
+public extension Motor {
+    public Motor reverse() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -161,11 +125,6 @@ public extension MultiVector {
     public MultiVector operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -173,9 +132,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension MultiVector: Reverse {
-    public typedef MultiVector ReverseOutput;
-    public func reverse() -> MultiVector {
+public extension MultiVector {
+    public MultiVector reverse() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -195,11 +153,6 @@ public extension Origin {
     public Origin operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Origin& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -207,9 +160,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Origin: Reverse {
-    public typedef Origin ReverseOutput;
-    public func reverse() -> Origin {
+public extension Origin {
+    public Origin reverse() {
         return this;
     }
 }
@@ -218,11 +170,6 @@ public extension Plane {
     public Plane operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Plane& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -230,9 +177,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Plane: Reverse {
-    public typedef Plane ReverseOutput;
-    public func reverse() -> Plane {
+public extension Plane {
+    public Plane reverse() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
@@ -244,11 +190,6 @@ public extension Point {
     public Point operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Point& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -256,9 +197,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Point: Reverse {
-    public typedef Point ReverseOutput;
-    public func reverse() -> Point {
+public extension Point {
+    public Point reverse() {
         return this;
     }
 }
@@ -267,11 +207,6 @@ public extension Scalar {
     public Scalar operator /(ReversePrefixOrPostfix rhs)  {
         return this.reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const ReversePrefixOrPostfix& rhs) -> Scalar& {
-        this = this.reverse();
-        return *this;
-    }
 }
 public extension ReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -279,9 +214,8 @@ public extension ReversePrefixOrPostfix {
         return rhs.reverse();
     }
 }
-public extension Scalar: Reverse {
-    public typedef Scalar ReverseOutput;
-    public func reverse() -> Scalar {
+public extension Scalar {
+    public Scalar reverse() {
         return this;
     }
 }

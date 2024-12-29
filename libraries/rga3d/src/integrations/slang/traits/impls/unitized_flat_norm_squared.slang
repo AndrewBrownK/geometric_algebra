@@ -12,9 +12,8 @@ public extension UnitizedFlatNormSquaredPrefixOrPostfix {
         return rhs.unitized_flat_norm_squared();
     }
 }
-public extension Flector: UnitizedFlatNormSquared {
-    public typedef float UnitizedFlatNormSquaredOutput;
-    public func unitized_flat_norm_squared() -> float {
+public extension Flector {
+    public float unitized_flat_norm_squared() {
         return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
@@ -30,9 +29,8 @@ public extension UnitizedFlatNormSquaredPrefixOrPostfix {
         return rhs.unitized_flat_norm_squared();
     }
 }
-public extension Line: UnitizedFlatNormSquared {
-    public typedef float UnitizedFlatNormSquaredOutput;
-    public func unitized_flat_norm_squared() -> float {
+public extension Line {
+    public float unitized_flat_norm_squared() {
         return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
@@ -48,9 +46,8 @@ public extension UnitizedFlatNormSquaredPrefixOrPostfix {
         return rhs.unitized_flat_norm_squared();
     }
 }
-public extension Motor: UnitizedFlatNormSquared {
-    public typedef float UnitizedFlatNormSquaredOutput;
-    public func unitized_flat_norm_squared() -> float {
+public extension Motor {
+    public float unitized_flat_norm_squared() {
         return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
@@ -66,9 +63,8 @@ public extension UnitizedFlatNormSquaredPrefixOrPostfix {
         return rhs.unitized_flat_norm_squared();
     }
 }
-public extension MultiVector: UnitizedFlatNormSquared {
-    public typedef float UnitizedFlatNormSquaredOutput;
-    public func unitized_flat_norm_squared() -> float {
+public extension MultiVector {
+    public float unitized_flat_norm_squared() {
         return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }
@@ -84,9 +80,8 @@ public extension UnitizedFlatNormSquaredPrefixOrPostfix {
         return rhs.unitized_flat_norm_squared();
     }
 }
-public extension Point: UnitizedFlatNormSquared {
-    public typedef float UnitizedFlatNormSquaredOutput;
-    public func unitized_flat_norm_squared() -> float {
+public extension Point {
+    public float unitized_flat_norm_squared() {
         return this.flat_bulk_norm_squared().scalar / (this.flat_weight_norm_squared().e1234);
     }
 }

@@ -12,36 +12,32 @@ public extension AntiDotProductInfixPartial<AntiScalar> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension AntiScalar: AntiDotProduct<AntiScalar> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_dot_product(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension AntiScalar: AntiDotProduct<DualNum> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: DualNum) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.e1234
         );
     }
 }
-public extension AntiScalar: AntiDotProduct<Motor> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Motor) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.e1234
         );
     }
 }
-public extension AntiScalar: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.e1234
@@ -60,36 +56,32 @@ public extension AntiDotProductInfixPartial<DualNum> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension DualNum: AntiDotProduct<AntiScalar> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
+public extension DualNum {
+    public AntiScalar anti_dot_product(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension DualNum: AntiDotProduct<DualNum> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: DualNum) -> AntiScalar {
+public extension DualNum {
+    public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension DualNum: AntiDotProduct<Motor> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Motor) -> AntiScalar {
+public extension DualNum {
+    public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.e1234
         );
     }
 }
-public extension DualNum: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension DualNum {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e1234 * other.e1234
@@ -108,45 +100,40 @@ public extension AntiDotProductInfixPartial<Flector> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Flector: AntiDotProduct<Flector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Flector) -> AntiScalar {
+public extension Flector {
+    public AntiScalar anti_dot_product(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-public extension Flector: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Flector {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-public extension Flector: AntiDotProduct<Origin> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Origin) -> AntiScalar {
+public extension Flector {
+    public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e4
         );
     }
 }
-public extension Flector: AntiDotProduct<Plane> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Plane) -> AntiScalar {
+public extension Flector {
+    public AntiScalar anti_dot_product(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-public extension Flector: AntiDotProduct<Point> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Point) -> AntiScalar {
+public extension Flector {
+    public AntiScalar anti_dot_product(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e4
@@ -165,27 +152,24 @@ public extension AntiDotProductInfixPartial<Line> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Line: AntiDotProduct<Line> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Line) -> AntiScalar {
+public extension Line {
+    public AntiScalar anti_dot_product(Line other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-public extension Line: AntiDotProduct<Motor> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Motor) -> AntiScalar {
+public extension Line {
+    public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
     }
 }
-public extension Line: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Line {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
@@ -204,45 +188,40 @@ public extension AntiDotProductInfixPartial<Motor> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Motor: AntiDotProduct<AntiScalar> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
+public extension Motor {
+    public AntiScalar anti_dot_product(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension Motor: AntiDotProduct<DualNum> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: DualNum) -> AntiScalar {
+public extension Motor {
+    public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension Motor: AntiDotProduct<Line> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Line) -> AntiScalar {
+public extension Motor {
+    public AntiScalar anti_dot_product(Line other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-public extension Motor: AntiDotProduct<Motor> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Motor) -> AntiScalar {
+public extension Motor {
+    public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
     }
 }
-public extension Motor: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Motor {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234)
@@ -261,81 +240,72 @@ public extension AntiDotProductInfixPartial<MultiVector> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension MultiVector: AntiDotProduct<AntiScalar> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: AntiScalar) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(AntiScalar other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension MultiVector: AntiDotProduct<DualNum> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: DualNum) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e1234 * this.e1234
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Flector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Flector) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Line> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Line) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Line other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Motor> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Motor) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
     }
 }
-public extension MultiVector: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Origin> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Origin) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e4
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Plane> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Plane) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
     }
 }
-public extension MultiVector: AntiDotProduct<Point> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Point) -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar anti_dot_product(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e4
@@ -354,36 +324,32 @@ public extension AntiDotProductInfixPartial<Origin> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Origin: AntiDotProduct<Flector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Flector) -> AntiScalar {
+public extension Origin {
+    public AntiScalar anti_dot_product(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Origin: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Origin {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Origin: AntiDotProduct<Origin> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Origin) -> AntiScalar {
+public extension Origin {
+    public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Origin: AntiDotProduct<Point> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Point) -> AntiScalar {
+public extension Origin {
+    public AntiScalar anti_dot_product(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             this.e4 * other.e4
@@ -402,27 +368,24 @@ public extension AntiDotProductInfixPartial<Plane> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Plane: AntiDotProduct<Flector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Flector) -> AntiScalar {
+public extension Plane {
+    public AntiScalar anti_dot_product(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-public extension Plane: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Plane {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
 }
-public extension Plane: AntiDotProduct<Plane> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Plane) -> AntiScalar {
+public extension Plane {
+    public AntiScalar anti_dot_product(Plane other) {
         return AntiScalar.from_groups(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
@@ -441,36 +404,32 @@ public extension AntiDotProductInfixPartial<Point> {
         return this.a.anti_dot_product(rhs);
     }
 }
-public extension Point: AntiDotProduct<Flector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Flector) -> AntiScalar {
+public extension Point {
+    public AntiScalar anti_dot_product(Flector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Point: AntiDotProduct<MultiVector> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: MultiVector) -> AntiScalar {
+public extension Point {
+    public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Point: AntiDotProduct<Origin> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Origin) -> AntiScalar {
+public extension Point {
+    public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4
         );
     }
 }
-public extension Point: AntiDotProduct<Point> {
-    public typedef AntiScalar AntiDotProductOutput;
-    public func anti_dot_product(other: Point) -> AntiScalar {
+public extension Point {
+    public AntiScalar anti_dot_product(Point other) {
         return AntiScalar.from_groups(
             /* e1234 */
             other.e4 * this.e4

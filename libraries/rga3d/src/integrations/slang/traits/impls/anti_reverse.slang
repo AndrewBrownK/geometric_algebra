@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension AntiScalar: AntiReverse {
-    public typedef AntiScalar AntiReverseOutput;
-    public func anti_reverse() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_reverse() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension DualNum {
     public DualNum operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> DualNum& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension DualNum: AntiReverse {
-    public typedef DualNum AntiReverseOutput;
-    public func anti_reverse() -> DualNum {
+public extension DualNum {
+    public DualNum anti_reverse() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Flector {
     public Flector operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Flector& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Flector: AntiReverse {
-    public typedef Flector AntiReverseOutput;
-    public func anti_reverse() -> Flector {
+public extension Flector {
+    public Flector anti_reverse() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -79,11 +61,6 @@ public extension Horizon {
     public Horizon operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Horizon& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -91,9 +68,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Horizon: AntiReverse {
-    public typedef Horizon AntiReverseOutput;
-    public func anti_reverse() -> Horizon {
+public extension Horizon {
+    public Horizon anti_reverse() {
         return this;
     }
 }
@@ -102,11 +78,6 @@ public extension Line {
     public Line operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Line& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -114,9 +85,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Line: AntiReverse {
-    public typedef Line AntiReverseOutput;
-    public func anti_reverse() -> Line {
+public extension Line {
+    public Line anti_reverse() {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
@@ -130,11 +100,6 @@ public extension Motor {
     public Motor operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Motor& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -142,9 +107,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Motor: AntiReverse {
-    public typedef Motor AntiReverseOutput;
-    public func anti_reverse() -> Motor {
+public extension Motor {
+    public Motor anti_reverse() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -158,11 +122,6 @@ public extension MultiVector {
     public MultiVector operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -170,9 +129,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension MultiVector: AntiReverse {
-    public typedef MultiVector AntiReverseOutput;
-    public func anti_reverse() -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_reverse() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -192,11 +150,6 @@ public extension Origin {
     public Origin operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Origin& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -204,9 +157,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Origin: AntiReverse {
-    public typedef Origin AntiReverseOutput;
-    public func anti_reverse() -> Origin {
+public extension Origin {
+    public Origin anti_reverse() {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
@@ -218,11 +170,6 @@ public extension Plane {
     public Plane operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Plane& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -230,9 +177,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Plane: AntiReverse {
-    public typedef Plane AntiReverseOutput;
-    public func anti_reverse() -> Plane {
+public extension Plane {
+    public Plane anti_reverse() {
         return this;
     }
 }
@@ -241,11 +187,6 @@ public extension Point {
     public Point operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Point& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -253,9 +194,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Point: AntiReverse {
-    public typedef Point AntiReverseOutput;
-    public func anti_reverse() -> Point {
+public extension Point {
+    public Point anti_reverse() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
@@ -267,11 +207,6 @@ public extension Scalar {
     public Scalar operator /(AntiReversePrefixOrPostfix rhs)  {
         return this.anti_reverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiReversePrefixOrPostfix& rhs) -> Scalar& {
-        this = this.anti_reverse();
-        return *this;
-    }
 }
 public extension AntiReversePrefixOrPostfix {
     // Fancy prefix trick
@@ -279,9 +214,8 @@ public extension AntiReversePrefixOrPostfix {
         return rhs.anti_reverse();
     }
 }
-public extension Scalar: AntiReverse {
-    public typedef Scalar AntiReverseOutput;
-    public func anti_reverse() -> Scalar {
+public extension Scalar {
+    public Scalar anti_reverse() {
         return this;
     }
 }

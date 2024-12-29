@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(WeightNormPrefixOrPostfix rhs)  {
         return this.weight_norm();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const WeightNormPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.weight_norm();
-        return *this;
-    }
 }
 public extension WeightNormPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension AntiScalar: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -35,9 +29,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension DualNum: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension DualNum {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -53,9 +46,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Flector: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Flector {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -71,9 +63,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Line: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Line {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -89,9 +80,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Motor: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Motor {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -107,9 +97,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension MultiVector: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -125,9 +114,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Origin: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Origin {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -143,9 +131,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Plane: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Plane {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -161,9 +148,8 @@ public extension WeightNormPrefixOrPostfix {
         return rhs.weight_norm();
     }
 }
-public extension Point: WeightNorm {
-    public typedef AntiScalar WeightNormOutput;
-    public func weight_norm() -> AntiScalar {
+public extension Point {
+    public AntiScalar weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }

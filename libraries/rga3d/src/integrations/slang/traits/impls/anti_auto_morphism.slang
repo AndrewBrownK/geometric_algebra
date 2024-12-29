@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension AntiScalar: AntiAutoMorphism {
-    public typedef AntiScalar AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_auto_morphism() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension DualNum {
     public DualNum operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> DualNum& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension DualNum: AntiAutoMorphism {
-    public typedef DualNum AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> DualNum {
+public extension DualNum {
+    public DualNum anti_auto_morphism() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Flector {
     public Flector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Flector& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Flector: AntiAutoMorphism {
-    public typedef Flector AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Flector {
+public extension Flector {
+    public Flector anti_auto_morphism() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -79,11 +61,6 @@ public extension Horizon {
     public Horizon operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Horizon& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -91,9 +68,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Horizon: AntiAutoMorphism {
-    public typedef Horizon AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Horizon {
+public extension Horizon {
+    public Horizon anti_auto_morphism() {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
@@ -105,11 +81,6 @@ public extension Line {
     public Line operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Line& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -117,9 +88,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Line: AntiAutoMorphism {
-    public typedef Line AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Line {
+public extension Line {
+    public Line anti_auto_morphism() {
         return this;
     }
 }
@@ -128,11 +98,6 @@ public extension Motor {
     public Motor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Motor& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -140,9 +105,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Motor: AntiAutoMorphism {
-    public typedef Motor AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Motor {
+public extension Motor {
+    public Motor anti_auto_morphism() {
         return this;
     }
 }
@@ -151,11 +115,6 @@ public extension MultiVector {
     public MultiVector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -163,9 +122,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension MultiVector: AntiAutoMorphism {
-    public typedef MultiVector AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> MultiVector {
+public extension MultiVector {
+    public MultiVector anti_auto_morphism() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -185,11 +143,6 @@ public extension Origin {
     public Origin operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Origin& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -197,9 +150,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Origin: AntiAutoMorphism {
-    public typedef Origin AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Origin {
+public extension Origin {
+    public Origin anti_auto_morphism() {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
@@ -211,11 +163,6 @@ public extension Plane {
     public Plane operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Plane& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -223,9 +170,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Plane: AntiAutoMorphism {
-    public typedef Plane AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Plane {
+public extension Plane {
+    public Plane anti_auto_morphism() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
@@ -237,11 +183,6 @@ public extension Point {
     public Point operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Point& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -249,9 +190,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Point: AntiAutoMorphism {
-    public typedef Point AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Point {
+public extension Point {
+    public Point anti_auto_morphism() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
@@ -263,11 +203,6 @@ public extension Scalar {
     public Scalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiAutoMorphismPrefixOrPostfix& rhs) -> Scalar& {
-        this = this.anti_auto_morphism();
-        return *this;
-    }
 }
 public extension AntiAutoMorphismPrefixOrPostfix {
     // Fancy prefix trick
@@ -275,9 +210,8 @@ public extension AntiAutoMorphismPrefixOrPostfix {
         return rhs.anti_auto_morphism();
     }
 }
-public extension Scalar: AntiAutoMorphism {
-    public typedef Scalar AntiAutoMorphismOutput;
-    public func anti_auto_morphism() -> Scalar {
+public extension Scalar {
+    public Scalar anti_auto_morphism() {
         return this;
     }
 }

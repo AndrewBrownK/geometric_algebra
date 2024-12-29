@@ -23,14 +23,14 @@ public extension Point {
         get { return group0[3]; }
         set { group0[3] = newValue; }
     }
-    public static func from_elements(
-        e1: float, e2: float, e3: float, e4: float
-    ) -> Point {
+    public static Point from_elements(
+        float e1, float e2, float e3, float e4
+    ) {
         return Point(float4(e1, e2, e3, e4));
     }
-    internal static func from_groups(
-        g0: float4
-    ) -> Point {
+    internal static Point from_groups(
+        float4 g0
+    ) {
         return Point(g0);
     }
 }

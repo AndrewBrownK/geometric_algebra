@@ -1,8 +1,7 @@
 implementing rga3d;
 using traits;
 public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: AntiScalar) -> MultiVector {
+    public MultiVector operator +(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
@@ -18,8 +17,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: DualNum) -> MultiVector {
+    public MultiVector operator +(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -35,8 +33,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Flector AddOutput;
-    public func operator +(other: Flector) -> Flector {
+    public Flector operator +(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 + this.group0, 
@@ -46,8 +43,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Flector AddOutput;
-    public func operator +(other: Horizon) -> Flector {
+    public Flector operator +(Horizon other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -57,8 +53,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Line) -> MultiVector {
+    public MultiVector operator +(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -74,8 +69,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Motor) -> MultiVector {
+    public MultiVector operator +(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
@@ -91,8 +85,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: MultiVector) -> MultiVector {
+    public MultiVector operator +(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy, 
@@ -108,8 +101,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Point AddOutput;
-    public func operator +(other: Origin) -> Point {
+    public Point operator +(Origin other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4)
@@ -117,16 +109,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public func operator +=(const Origin& other) {
-        *this = Point.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 + float4(float3(0.0), other.e4)
-        );
-    }
-}
-public extension Point {
-    public typedef Flector AddOutput;
-    public func operator +(other: Plane) -> Flector {
+    public Flector operator +(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -136,8 +119,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Point AddOutput;
-    public func operator +(other: Point) -> Point {
+    public Point operator +(Point other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             other.group0 + this.group0
@@ -145,16 +127,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public func operator +=(const Point& other) {
-        *this = Point.from_groups(
-            /* e1, e2, e3, e4 */
-            other.group0 + this.group0
-        );
-    }
-}
-public extension Point {
-    public typedef MultiVector AddOutput;
-    public func operator +(other: Scalar) -> MultiVector {
+    public MultiVector operator +(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
@@ -170,79 +143,62 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Plane MulOutput;
-    public func operator *(other: AntiScalar) -> Plane {
+    public Plane operator *(AntiScalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Flector MulOutput;
-    public func operator *(other: DualNum) -> Flector {
+    public Flector operator *(DualNum other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Motor MulOutput;
-    public func operator *(other: Flector) -> Motor {
+    public Motor operator *(Flector other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Motor MulOutput;
-    public func operator *(other: Horizon) -> Motor {
+    public Motor operator *(Horizon other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Flector MulOutput;
-    public func operator *(other: Line) -> Flector {
+    public Flector operator *(Line other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Flector MulOutput;
-    public func operator *(other: Motor) -> Flector {
+    public Flector operator *(Motor other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef MultiVector MulOutput;
-    public func operator *(other: MultiVector) -> MultiVector {
+    public MultiVector operator *(MultiVector other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Line MulOutput;
-    public func operator *(other: Origin) -> Line {
+    public Line operator *(Origin other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Motor MulOutput;
-    public func operator *(other: Plane) -> Motor {
+    public Motor operator *(Plane other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Motor MulOutput;
-    public func operator *(other: Point) -> Motor {
+    public Motor operator *(Point other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public typedef Point MulOutput;
-    public func operator *(other: Scalar) -> Point {
+    public Point operator *(Scalar other) {
         return this.geometric_product(other);
     }
 }
 public extension Point {
-    public func operator *=(const Scalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-public extension Point {
-    public typedef Point NegOutput;
-    public func neg() -> Point {
+    public Point neg() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
@@ -250,14 +206,12 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Plane NotOutput;
-    public func not() -> Plane {
+    public Plane not() {
         return this.right_dual();
     }
 }
 public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: AntiScalar) -> MultiVector {
+    public MultiVector operator -(AntiScalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
@@ -273,8 +227,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: DualNum) -> MultiVector {
+    public MultiVector operator -(DualNum other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -290,8 +243,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Flector SubOutput;
-    public func operator -(other: Flector) -> Flector {
+    public Flector operator -(Flector other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
@@ -301,8 +253,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Flector SubOutput;
-    public func operator -(other: Horizon) -> Flector {
+    public Flector operator -(Horizon other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -312,8 +263,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Line) -> MultiVector {
+    public MultiVector operator -(Line other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0), 
@@ -329,8 +279,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Motor) -> MultiVector {
+    public MultiVector operator -(Motor other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
@@ -346,8 +295,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: MultiVector) -> MultiVector {
+    public MultiVector operator -(MultiVector other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
@@ -363,8 +311,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Point SubOutput;
-    public func operator -(other: Origin) -> Point {
+    public Point operator -(Origin other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4 * -1.0)
@@ -372,16 +319,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public func operator -=(const Origin& other) {
-        *this = Point.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 + float4(float3(0.0), other.e4 * -1.0)
-        );
-    }
-}
-public extension Point {
-    public typedef Flector SubOutput;
-    public func operator -(other: Plane) -> Flector {
+    public Flector operator -(Plane other) {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -391,8 +329,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public typedef Point SubOutput;
-    public func operator -(other: Point) -> Point {
+    public Point operator -(Point other) {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0
@@ -400,16 +337,7 @@ public extension Point {
     }
 }
 public extension Point {
-    public func operator -=(const Point& other) {
-        *this = Point.from_groups(
-            /* e1, e2, e3, e4 */
-            this.group0 - other.group0
-        );
-    }
-}
-public extension Point {
-    public typedef MultiVector SubOutput;
-    public func operator -(other: Scalar) -> MultiVector {
+    public MultiVector operator -(Scalar other) {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 

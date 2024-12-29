@@ -11,14 +11,14 @@ public extension AntiScalar {
         get { return group0[0]; }
         set { group0[0] = newValue; }
     }
-    public static func from_elements(
-        e1234: float
-    ) -> AntiScalar {
+    public static AntiScalar from_elements(
+        float e1234
+    ) {
         return AntiScalar(float4(e1234, 0.0, 0.0, 0.0));
     }
-    internal static func from_groups(
-        g0: float
-    ) -> AntiScalar {
+    internal static AntiScalar from_groups(
+        float g0
+    ) {
         return AntiScalar(float4(g0, 0.0, 0.0, 0.0));
     }
 }

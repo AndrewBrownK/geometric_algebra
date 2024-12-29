@@ -41,14 +41,14 @@ public extension Flector {
         get { return group1[3]; }
         set { group1[3] = newValue; }
     }
-    public static func from_elements(
-        e1: float, e2: float, e3: float, e4: float, e423: float, e431: float, e412: float, e321: float
-    ) -> Flector {
+    public static Flector from_elements(
+        float e1, float e2, float e3, float e4, float e423, float e431, float e412, float e321
+    ) {
         return Flector(float4(e1, e2, e3, e4), float4(e423, e431, e412, e321));
     }
-    internal static func from_groups(
-        g0: float4, g1: float4
-    ) -> Flector {
+    internal static Flector from_groups(
+        float4 g0, float4 g1
+    ) {
         return Flector(g0, g1);
     }
 }

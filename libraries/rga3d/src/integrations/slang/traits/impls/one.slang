@@ -1,17 +1,15 @@
 implementing rga3d;
 using traits;
-public extension DualNum: One {
-    public typedef DualNum OneOutput;
-    public func one() -> DualNum {
+public extension DualNum {
+    public DualNum one() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(1.0, 0.0)
         );
     }
 }
-public extension Motor: One {
-    public typedef Motor OneOutput;
-    public func one() -> Motor {
+public extension Motor {
+    public Motor one() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
@@ -20,9 +18,8 @@ public extension Motor: One {
         );
     }
 }
-public extension MultiVector: One {
-    public typedef MultiVector OneOutput;
-    public func one() -> MultiVector {
+public extension MultiVector {
+    public MultiVector one() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(1.0, 0.0), 
@@ -37,9 +34,8 @@ public extension MultiVector: One {
         );
     }
 }
-public extension Scalar: One {
-    public typedef Scalar OneOutput;
-    public func one() -> Scalar {
+public extension Scalar {
+    public Scalar one() {
         return Scalar.from_groups(
             /* scalar */
             1.0

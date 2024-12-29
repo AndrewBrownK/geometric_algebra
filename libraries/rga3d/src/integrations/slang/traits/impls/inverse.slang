@@ -5,11 +5,6 @@ public extension DualNum {
     public DualNum operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> DualNum& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension DualNum: Inverse {
-    public typedef DualNum InverseOutput;
-    public func inverse() -> DualNum {
+public extension DualNum {
+    public DualNum inverse() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(pow(this.scalar, -2)) * this.group0.xy
@@ -31,11 +25,6 @@ public extension Flector {
     public Flector operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Flector& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -43,9 +32,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Flector: Inverse {
-    public typedef Flector InverseOutput;
-    public func inverse() -> Flector {
+public extension Flector {
+    public Flector inverse() {
         Flector reverse = Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0, 
@@ -69,11 +57,6 @@ public extension Horizon {
     public Horizon operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Horizon& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -81,9 +64,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Horizon: Inverse {
-    public typedef Horizon InverseOutput;
-    public func inverse() -> Horizon {
+public extension Horizon {
+    public Horizon inverse() {
         return Horizon.from_groups(
             /* e321 */
             1.0/this.e321 * -1.0
@@ -95,11 +77,6 @@ public extension Line {
     public Line operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Line& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -107,9 +84,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Line: Inverse {
-    public typedef Line InverseOutput;
-    public func inverse() -> Line {
+public extension Line {
+    public Line inverse() {
         Line reverse = Line.from_groups(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
@@ -133,11 +109,6 @@ public extension Motor {
     public Motor operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Motor& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -145,9 +116,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Motor: Inverse {
-    public typedef Motor InverseOutput;
-    public func inverse() -> Motor {
+public extension Motor {
+    public Motor inverse() {
         Motor reverse = Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -171,11 +141,6 @@ public extension MultiVector {
     public MultiVector operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -183,9 +148,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension MultiVector: Inverse {
-    public typedef MultiVector InverseOutput;
-    public func inverse() -> MultiVector {
+public extension MultiVector {
+    public MultiVector inverse() {
         MultiVector reverse = MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -221,11 +185,6 @@ public extension Plane {
     public Plane operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Plane& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -233,9 +192,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Plane: Inverse {
-    public typedef Plane InverseOutput;
-    public func inverse() -> Plane {
+public extension Plane {
+    public Plane inverse() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(pow(this.e321, -2)) * float4(this.e423 * -1.0, this.e431 * -1.0, this.e412 * -1.0, this.e321 * -1.0)
@@ -247,11 +205,6 @@ public extension Point {
     public Point operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Point& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -259,9 +212,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Point: Inverse {
-    public typedef Point InverseOutput;
-    public func inverse() -> Point {
+public extension Point {
+    public Point inverse() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             float4(pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2)) * this.group0
@@ -273,11 +225,6 @@ public extension Scalar {
     public Scalar operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const InversePrefixOrPostfix& rhs) -> Scalar& {
-        this = this.inverse();
-        return *this;
-    }
 }
 public extension InversePrefixOrPostfix {
     // Fancy prefix trick
@@ -285,9 +232,8 @@ public extension InversePrefixOrPostfix {
         return rhs.inverse();
     }
 }
-public extension Scalar: Inverse {
-    public typedef Scalar InverseOutput;
-    public func inverse() -> Scalar {
+public extension Scalar {
+    public Scalar inverse() {
         return Scalar.from_groups(
             /* scalar */
             1.0/this.scalar

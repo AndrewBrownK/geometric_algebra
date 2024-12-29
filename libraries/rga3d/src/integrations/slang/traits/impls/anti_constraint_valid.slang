@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension AntiScalar: AntiConstraintValid {
-    public typedef AntiScalar AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar anti_constraint_valid() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension Horizon {
     public Horizon operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> Horizon& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension Horizon: AntiConstraintValid {
-    public typedef Horizon AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> Horizon {
+public extension Horizon {
+    public Horizon anti_constraint_valid() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Origin {
     public Origin operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> Origin& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension Origin: AntiConstraintValid {
-    public typedef Origin AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> Origin {
+public extension Origin {
+    public Origin anti_constraint_valid() {
         return this;
     }
 }
@@ -74,11 +56,6 @@ public extension Plane {
     public Plane operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> Plane& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -86,9 +63,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension Plane: AntiConstraintValid {
-    public typedef Plane AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> Plane {
+public extension Plane {
+    public Plane anti_constraint_valid() {
         return this;
     }
 }
@@ -97,11 +73,6 @@ public extension Point {
     public Point operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> Point& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -109,9 +80,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension Point: AntiConstraintValid {
-    public typedef Point AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> Point {
+public extension Point {
+    public Point anti_constraint_valid() {
         return this;
     }
 }
@@ -120,11 +90,6 @@ public extension Scalar {
     public Scalar operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const AntiConstraintValidPrefixOrPostfix& rhs) -> Scalar& {
-        this = this.anti_constraint_valid();
-        return *this;
-    }
 }
 public extension AntiConstraintValidPrefixOrPostfix {
     // Fancy prefix trick
@@ -132,9 +97,8 @@ public extension AntiConstraintValidPrefixOrPostfix {
         return rhs.anti_constraint_valid();
     }
 }
-public extension Scalar: AntiConstraintValid {
-    public typedef Scalar AntiConstraintValidOutput;
-    public func anti_constraint_valid() -> Scalar {
+public extension Scalar {
+    public Scalar anti_constraint_valid() {
         return this;
     }
 }

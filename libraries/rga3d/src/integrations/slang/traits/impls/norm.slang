@@ -12,9 +12,8 @@ public extension NormPrefixOrPostfix {
         return rhs.norm();
     }
 }
-public extension Flector: Norm {
-    public typedef DualNum NormOutput;
-    public func norm() -> DualNum {
+public extension Flector {
+    public DualNum norm() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
@@ -33,9 +32,8 @@ public extension NormPrefixOrPostfix {
         return rhs.norm();
     }
 }
-public extension Line: Norm {
-    public typedef DualNum NormOutput;
-    public func norm() -> DualNum {
+public extension Line {
+    public DualNum norm() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
@@ -54,9 +52,8 @@ public extension NormPrefixOrPostfix {
         return rhs.norm();
     }
 }
-public extension Motor: Norm {
-    public typedef DualNum NormOutput;
-    public func norm() -> DualNum {
+public extension Motor {
+    public DualNum norm() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
@@ -75,9 +72,8 @@ public extension NormPrefixOrPostfix {
         return rhs.norm();
     }
 }
-public extension MultiVector: Norm {
-    public typedef DualNum NormOutput;
-    public func norm() -> DualNum {
+public extension MultiVector {
+    public DualNum norm() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
@@ -96,9 +92,8 @@ public extension NormPrefixOrPostfix {
         return rhs.norm();
     }
 }
-public extension Point: Norm {
-    public typedef DualNum NormOutput;
-    public func norm() -> DualNum {
+public extension Point {
+    public DualNum norm() {
         return DualNum.from_groups(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)

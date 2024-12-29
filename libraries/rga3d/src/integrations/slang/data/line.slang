@@ -33,14 +33,14 @@ public extension Line {
         get { return group1[2]; }
         set { group1[2] = newValue; }
     }
-    public static func from_elements(
-        e41: float, e42: float, e43: float, e23: float, e31: float, e12: float
-    ) -> Line {
+    public static Line from_elements(
+        float e41, float e42, float e43, float e23, float e31, float e12
+    ) {
         return Line(float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0));
     }
-    internal static func from_groups(
-        g0: float3, g1: float3
-    ) -> Line {
+    internal static Line from_groups(
+        float3 g0, float3 g1
+    ) {
         return Line(float4(g0, 0.0), float4(g1, 0.0));
     }
 }

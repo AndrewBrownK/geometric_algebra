@@ -12,9 +12,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension DualNum: RightDual {
-    public typedef AntiScalar RightDualOutput;
-    public func right_dual() -> AntiScalar {
+public extension DualNum {
+    public AntiScalar right_dual() {
         return AntiScalar.from_groups(
             /* e1234 */
             this.scalar
@@ -26,11 +25,6 @@ public extension Flector {
     public Flector operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Flector& {
-        this = this.right_dual();
-        return *this;
-    }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
@@ -38,9 +32,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Flector: RightDual {
-    public typedef Flector RightDualOutput;
-    public func right_dual() -> Flector {
+public extension Flector {
+    public Flector right_dual() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
@@ -61,9 +54,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Horizon: RightDual {
-    public typedef Origin RightDualOutput;
-    public func right_dual() -> Origin {
+public extension Horizon {
+    public Origin right_dual() {
         return Origin.from_groups(
             /* e4 */
             this.e321 * -1.0
@@ -75,11 +67,6 @@ public extension Line {
     public Line operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Line& {
-        this = this.right_dual();
-        return *this;
-    }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
@@ -87,9 +74,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Line: RightDual {
-    public typedef Line RightDualOutput;
-    public func right_dual() -> Line {
+public extension Line {
+    public Line right_dual() {
         return Line.from_groups(
             /* e41, e42, e43 */
             this.group1.xyz * float3(-1.0), 
@@ -103,11 +89,6 @@ public extension Motor {
     public Motor operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> Motor& {
-        this = this.right_dual();
-        return *this;
-    }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
@@ -115,9 +96,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Motor: RightDual {
-    public typedef Motor RightDualOutput;
-    public func right_dual() -> Motor {
+public extension Motor {
+    public Motor right_dual() {
         return Motor.from_groups(
             /* e41, e42, e43, e1234 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
@@ -131,11 +111,6 @@ public extension MultiVector {
     public MultiVector operator /(RightDualPrefixOrPostfix rhs)  {
         return this.right_dual();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const RightDualPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.right_dual();
-        return *this;
-    }
 }
 public extension RightDualPrefixOrPostfix {
     // Fancy prefix trick
@@ -143,9 +118,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension MultiVector: RightDual {
-    public typedef MultiVector RightDualOutput;
-    public func right_dual() -> MultiVector {
+public extension MultiVector {
+    public MultiVector right_dual() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             float2(0.0, this.scalar), 
@@ -172,9 +146,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Plane: RightDual {
-    public typedef Origin RightDualOutput;
-    public func right_dual() -> Origin {
+public extension Plane {
+    public Origin right_dual() {
         return Origin.from_groups(
             /* e4 */
             this.e321 * -1.0
@@ -193,9 +166,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Point: RightDual {
-    public typedef Plane RightDualOutput;
-    public func right_dual() -> Plane {
+public extension Point {
+    public Plane right_dual() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             float4(this.group0.xyz, 0.0)
@@ -214,9 +186,8 @@ public extension RightDualPrefixOrPostfix {
         return rhs.right_dual();
     }
 }
-public extension Scalar: RightDual {
-    public typedef AntiScalar RightDualOutput;
-    public func right_dual() -> AntiScalar {
+public extension Scalar {
+    public AntiScalar right_dual() {
         return AntiScalar.from_groups(
             /* e1234 */
             this.scalar

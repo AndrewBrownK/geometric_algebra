@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_weight_norm_squared();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const FlatWeightNormSquaredPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.flat_weight_norm_squared();
-        return *this;
-    }
 }
 public extension FlatWeightNormSquaredPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension AntiScalar: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar flat_weight_norm_squared() {
         AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -36,9 +30,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension DualNum: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension DualNum {
+    public AntiScalar flat_weight_norm_squared() {
         AntiScalar flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -55,9 +48,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Flector: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Flector {
+    public AntiScalar flat_weight_norm_squared() {
         Flector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -74,9 +66,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Line: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Line {
+    public AntiScalar flat_weight_norm_squared() {
         Line flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -93,9 +84,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Motor: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Motor {
+    public AntiScalar flat_weight_norm_squared() {
         Motor flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -112,9 +102,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension MultiVector: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar flat_weight_norm_squared() {
         MultiVector flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -131,9 +120,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Origin: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Origin {
+    public AntiScalar flat_weight_norm_squared() {
         Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -150,9 +138,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Plane: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Plane {
+    public AntiScalar flat_weight_norm_squared() {
         Plane flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }
@@ -169,9 +156,8 @@ public extension FlatWeightNormSquaredPrefixOrPostfix {
         return rhs.flat_weight_norm_squared();
     }
 }
-public extension Point: FlatWeightNormSquared {
-    public typedef AntiScalar FlatWeightNormSquaredOutput;
-    public func flat_weight_norm_squared() -> AntiScalar {
+public extension Point {
+    public AntiScalar flat_weight_norm_squared() {
         Origin flat_weight = this.flat_weight();
         return flat_weight.anti_dot_product(flat_weight);
     }

@@ -12,9 +12,8 @@ public extension FlatWeightNormPrefixOrPostfix {
         return rhs.flat_weight_norm();
     }
 }
-public extension Flector: FlatWeightNorm {
-    public typedef AntiScalar FlatWeightNormOutput;
-    public func flat_weight_norm() -> AntiScalar {
+public extension Flector {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -30,9 +29,8 @@ public extension FlatWeightNormPrefixOrPostfix {
         return rhs.flat_weight_norm();
     }
 }
-public extension Line: FlatWeightNorm {
-    public typedef AntiScalar FlatWeightNormOutput;
-    public func flat_weight_norm() -> AntiScalar {
+public extension Line {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -48,9 +46,8 @@ public extension FlatWeightNormPrefixOrPostfix {
         return rhs.flat_weight_norm();
     }
 }
-public extension Motor: FlatWeightNorm {
-    public typedef AntiScalar FlatWeightNormOutput;
-    public func flat_weight_norm() -> AntiScalar {
+public extension Motor {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -66,9 +63,8 @@ public extension FlatWeightNormPrefixOrPostfix {
         return rhs.flat_weight_norm();
     }
 }
-public extension MultiVector: FlatWeightNorm {
-    public typedef AntiScalar FlatWeightNormOutput;
-    public func flat_weight_norm() -> AntiScalar {
+public extension MultiVector {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
@@ -84,9 +80,8 @@ public extension FlatWeightNormPrefixOrPostfix {
         return rhs.flat_weight_norm();
     }
 }
-public extension Point: FlatWeightNorm {
-    public typedef AntiScalar FlatWeightNormOutput;
-    public func flat_weight_norm() -> AntiScalar {
+public extension Point {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }

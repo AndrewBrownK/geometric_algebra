@@ -5,11 +5,6 @@ public extension AntiScalar {
     public AntiScalar operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> AntiScalar& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -17,9 +12,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension AntiScalar: DoubleComplement {
-    public typedef AntiScalar DoubleComplementOutput;
-    public func double_complement() -> AntiScalar {
+public extension AntiScalar {
+    public AntiScalar double_complement() {
         return this;
     }
 }
@@ -28,11 +22,6 @@ public extension DualNum {
     public DualNum operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> DualNum& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -40,9 +29,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension DualNum: DoubleComplement {
-    public typedef DualNum DoubleComplementOutput;
-    public func double_complement() -> DualNum {
+public extension DualNum {
+    public DualNum double_complement() {
         return this;
     }
 }
@@ -51,11 +39,6 @@ public extension Flector {
     public Flector operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Flector& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -63,9 +46,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Flector: DoubleComplement {
-    public typedef Flector DoubleComplementOutput;
-    public func double_complement() -> Flector {
+public extension Flector {
+    public Flector double_complement() {
         return Flector.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
@@ -79,11 +61,6 @@ public extension Horizon {
     public Horizon operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Horizon& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -91,9 +68,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Horizon: DoubleComplement {
-    public typedef Horizon DoubleComplementOutput;
-    public func double_complement() -> Horizon {
+public extension Horizon {
+    public Horizon double_complement() {
         return Horizon.from_groups(
             /* e321 */
             this.e321 * -1.0
@@ -105,11 +81,6 @@ public extension Line {
     public Line operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Line& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -117,9 +88,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Line: DoubleComplement {
-    public typedef Line DoubleComplementOutput;
-    public func double_complement() -> Line {
+public extension Line {
+    public Line double_complement() {
         return this;
     }
 }
@@ -128,11 +98,6 @@ public extension Motor {
     public Motor operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Motor& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -140,9 +105,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Motor: DoubleComplement {
-    public typedef Motor DoubleComplementOutput;
-    public func double_complement() -> Motor {
+public extension Motor {
+    public Motor double_complement() {
         return this;
     }
 }
@@ -151,11 +115,6 @@ public extension MultiVector {
     public MultiVector operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> MultiVector& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -163,9 +122,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension MultiVector: DoubleComplement {
-    public typedef MultiVector DoubleComplementOutput;
-    public func double_complement() -> MultiVector {
+public extension MultiVector {
+    public MultiVector double_complement() {
         return MultiVector.from_groups(
             /* scalar, e1234 */
             this.group0.xy, 
@@ -185,11 +143,6 @@ public extension Origin {
     public Origin operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Origin& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -197,9 +150,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Origin: DoubleComplement {
-    public typedef Origin DoubleComplementOutput;
-    public func double_complement() -> Origin {
+public extension Origin {
+    public Origin double_complement() {
         return Origin.from_groups(
             /* e4 */
             this.e4 * -1.0
@@ -211,11 +163,6 @@ public extension Plane {
     public Plane operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Plane& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -223,9 +170,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Plane: DoubleComplement {
-    public typedef Plane DoubleComplementOutput;
-    public func double_complement() -> Plane {
+public extension Plane {
+    public Plane double_complement() {
         return Plane.from_groups(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
@@ -237,11 +183,6 @@ public extension Point {
     public Point operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Point& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -249,9 +190,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Point: DoubleComplement {
-    public typedef Point DoubleComplementOutput;
-    public func double_complement() -> Point {
+public extension Point {
+    public Point double_complement() {
         return Point.from_groups(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
@@ -263,11 +203,6 @@ public extension Scalar {
     public Scalar operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    // Fancy postfix self-assign
-    public func operator /=(const DoubleComplementPrefixOrPostfix& rhs) -> Scalar& {
-        this = this.double_complement();
-        return *this;
-    }
 }
 public extension DoubleComplementPrefixOrPostfix {
     // Fancy prefix trick
@@ -275,9 +210,8 @@ public extension DoubleComplementPrefixOrPostfix {
         return rhs.double_complement();
     }
 }
-public extension Scalar: DoubleComplement {
-    public typedef Scalar DoubleComplementOutput;
-    public func double_complement() -> Scalar {
+public extension Scalar {
+    public Scalar double_complement() {
         return this;
     }
 }

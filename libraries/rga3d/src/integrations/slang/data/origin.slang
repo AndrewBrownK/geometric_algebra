@@ -14,14 +14,14 @@ public extension Origin {
         get { return group0[0]; }
         set { group0[0] = newValue; }
     }
-    public static func from_elements(
-        e4: float
-    ) -> Origin {
+    public static Origin from_elements(
+        float e4
+    ) {
         return Origin(float4(e4, 0.0, 0.0, 0.0));
     }
-    internal static func from_groups(
-        g0: float
-    ) -> Origin {
+    internal static Origin from_groups(
+        float g0
+    ) {
         return Origin(float4(g0, 0.0, 0.0, 0.0));
     }
 }
